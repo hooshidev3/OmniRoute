@@ -14,6 +14,10 @@ import {
   appendSearchCitations,
   type DeepSeekSearchResult,
 } from "./deepseek-web/stream-format.ts";
+import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
+import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
+import { resolveThinkMode } from "../services/thinkOutputMode.ts";
+import { applyThinkMode } from "../utils/thinkModeProcessor.ts";
 
 export const DEEPSEEK_WEB_BASE = "https://chat.deepseek.com";
 const DEEPSEEK_API_BASE = `${DEEPSEEK_WEB_BASE}/api`;
@@ -42,7 +46,213 @@ const FAKE_HEADERS: Record<string, string> = {
   "X-Client-Version": "2.0.0",
 };
 
-// ── Types ────────────────────────────────────────────────────────────────
+/**
+ * Browser fingerprint pool ?�� 17 internally-consistent profiles covering Chrome /
+ * Edge / Safari / Firefox across macOS / Windows / Linux. A profile is picked
+ * once per logical session so all requests from the same adapter instance share
+ * the same User-Agent + Sec-Ch-Ua + Accept-Language bundle. Ported from
+ * Chat2API-web's deepseek adapter (zhaiiker/Chat2API-web) which rotates these
+ * to distribute risk across fingerprint buckets.
+ *
+ * When DeepSeek tightens anti-bot, having a pool of 17 distinct fingerprints
+ * lets us sidestep per-UA rate limits and reduces the blast radius if one
+ * profile gets flagged.
+ */
+interface BrowserProfile {
+  "User-Agent": string;
+  "Sec-Ch-Ua": string;
+  "Sec-Ch-Ua-Platform": string;
+  "Accept-Language": string;
+}
+
+const BROWSER_PROFILES: BrowserProfile[] = [
+  // macOS Chrome 136
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  },
+  // macOS Chrome 135
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="135", "Google Chrome";v="135", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  },
+  // Windows Chrome 136
+  {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Windows Chrome 135
+  {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="135", "Google Chrome";v="135", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Linux Chrome 136
+  {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Linux"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // macOS Edge 136
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0",
+    "Sec-Ch-Ua": '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Windows Edge 136
+  {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0",
+    "Sec-Ch-Ua": '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // macOS Safari 18.3
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
+    "Sec-Ch-Ua": '""',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // macOS Safari 17.6
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15",
+    "Sec-Ch-Ua": '""',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Windows Firefox 134
+  {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0",
+    "Sec-Ch-Ua": '""',
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Linux Firefox 134
+  {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0",
+    "Sec-Ch-Ua": '""',
+    "Sec-Ch-Ua-Platform": '"Linux"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // macOS Firefox 134
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0",
+    "Sec-Ch-Ua": '""',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Windows Chrome 134
+  {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="134", "Google Chrome";v="134", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // macOS Chrome 134
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="134", "Google Chrome";v="134", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Linux Chrome 134
+  {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+    "Sec-Ch-Ua": '"Chromium";v="134", "Google Chrome";v="134", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Linux"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // Windows Edge 135
+  {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.0.0",
+    "Sec-Ch-Ua": '"Chromium";v="135", "Microsoft Edge";v="135", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+  // macOS Edge 135
+  {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.0.0",
+    "Sec-Ch-Ua": '"Chromium";v="135", "Microsoft Edge";v="135", "Not.A/Brand";v="99"',
+    "Sec-Ch-Ua-Platform": '"macOS"',
+    "Accept-Language": "en-US,en;q=0.9",
+  },
+];
+
+/**
+ * Pick a random browser profile. Callers should cache the result for the
+ * lifetime of a single logical session so all requests from the same adapter
+ * instance share the same fingerprint (matches Chat2API-web behavior).
+ */
+function pickBrowserProfile(): BrowserProfile {
+  return BROWSER_PROFILES[Math.floor(Math.random() * BROWSER_PROFILES.length)];
+}
+
+/**
+ * Per-account browser-profile cache. Keyed by userToken so all requests for
+ * the same DeepSeek account share the same User-Agent / Sec-Ch-Ua bundle for
+ * the lifetime of the process ?�� mirroring Chat2API-web's per-adapter-instance
+ * profile selection. Falls back to a process-wide random profile for requests
+ * that don't yet have a userToken bound (e.g. the initial /users/current call
+ * itself, which exchanges userToken ?�� accessToken).
+ *
+ * Without this, each fetch would roll a new fingerprint and DeepSeek's anti-bot
+ * could flag the inconsistency (a real browser keeps the same UA across all
+ * requests in a session).
+ */
+const profileByUserToken = new Map<string, BrowserProfile>();
+const PROCESS_WIDE_PROFILE = pickBrowserProfile();
+
+/**
+ * Resolve the browser profile to use for a given request. If we've already
+ * bound a profile to this userToken, reuse it; otherwise pick one and cache it.
+ * Pass `null` to use the process-wide fallback (used by the userToken?��accessToken
+ * exchange itself, which happens before we'd want to bind).
+ */
+function getProfileForUserToken(userToken: string | null): BrowserProfile {
+  if (!userToken) return PROCESS_WIDE_PROFILE;
+  let p = profileByUserToken.get(userToken);
+  if (!p) {
+    p = pickBrowserProfile();
+    profileByUserToken.set(userToken, p);
+    // Evict oldest entries to bound memory usage ?�� cap at 1000 accounts.
+    if (profileByUserToken.size > 1000) {
+      const firstKey = profileByUserToken.keys().next().value;
+      if (firstKey) profileByUserToken.delete(firstKey);
+    }
+  }
+  return p;
+}
+
+/**
+ * Build a headers object that merges FAKE_HEADERS with a browser-profile's
+ * User-Agent / Sec-Ch-Ua / Sec-Ch-Ua-Platform / Accept-Language, so each
+ * request carries a consistent fingerprint bundle.
+ */
+function buildFingerprintedHeaders(profile: BrowserProfile): Record<string, string> {
+  const headers: Record<string, string> = { ...FAKE_HEADERS };
+  headers["User-Agent"] = profile["User-Agent"];
+  if (profile["Sec-Ch-Ua"]) {
+    headers["Sec-Ch-Ua"] = profile["Sec-Ch-Ua"];
+  }
+  if (profile["Sec-Ch-Ua-Platform"]) {
+    headers["Sec-Ch-Ua-Platform"] = profile["Sec-Ch-Ua-Platform"];
+  }
+  headers["Accept-Language"] = profile["Accept-Language"];
+  // Sec-Ch-Ua-Mobile is always ?0 for desktop browsers
+  headers["Sec-Ch-Ua-Mobile"] = "?0";
+  return headers;
+}
+
+// ?��?�� Types ?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��
 
 interface PowChallenge {
   algorithm: string;
@@ -160,7 +370,7 @@ async function solvePow(challenge: PowChallenge): Promise<string> {
 
 // ── SSE Transform (DeepSeek → OpenAI) ───────────────────────────────────
 
-function transformSSE(deepseekStream: ReadableStream, model: string): ReadableStream {
+function transformSSE(deepseekStream: ReadableStream, model: string, onComplete?: (responseMessageId: number | undefined, tokenUsage: number) => void): ReadableStream {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
   const streamModel = model || "deepseek-web";
@@ -170,6 +380,8 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
   let currentPath: "thinking" | "content" | "" = "";
   const thinkingModel = isThinkingModel(streamModel);
   const searchResults: DeepSeekSearchResult[] = [];
+  let tokenUsage = 0;
+  let responseMessageId: number | undefined;
 
   return new ReadableStream(
     {
@@ -191,6 +403,19 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
           });
         };
 
+        // Terminal usage chunk (OmniRoute standard: empty choices + usage before [DONE])
+        const emitUsageChunk = () => {
+          if (tokenUsage <= 0) return;
+          emit({
+            id,
+            object: "chat.completion.chunk",
+            created,
+            model: streamModel,
+            choices: [],
+            usage: { prompt_tokens: 0, completion_tokens: tokenUsage, total_tokens: tokenUsage },
+          });
+        };
+
         const ensureRole = () => {
           if (!emittedRole) {
             emittedRole = true;
@@ -206,8 +431,10 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
           }
           ensureRole();
           chunk({}, "stop");
+          emitUsageChunk();
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
+          onComplete?.(responseMessageId, tokenUsage);
         };
 
         const sendByPath = (raw: string) => {
@@ -273,10 +500,28 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
               if (v && typeof v === "object" && v.response) {
                 if (v.response.thinking_enabled === true) currentPath = "thinking";
                 else if (v.response.thinking_enabled === false) currentPath = "content";
+                // Capture accumulated_token_usage from initial response frame
+                if (typeof v.response.accumulated_token_usage === "number") {
+                  tokenUsage = v.response.accumulated_token_usage;
+                }
+                // Capture message_id (assistant message ID for parent_message_id chaining)
+                if (v.response.message_id != null && responseMessageId === undefined) {
+                  responseMessageId = Number(v.response.message_id);
+                }
                 const fragments = v.response.fragments;
                 if (Array.isArray(fragments)) {
                   for (const frag of fragments) handleFragment(frag, false);
                 }
+              }
+
+              // Capture usage from JSON Patch: {"p":"response/accumulated_token_usage","v":39}
+              if (p === "response/accumulated_token_usage" && typeof v === "number") {
+                tokenUsage = v;
+              }
+
+              // Capture response_message_id from the first frame
+              if ((data as any)?.response_message_id != null && responseMessageId === undefined) {
+                responseMessageId = Number((data as any).response_message_id);
               }
 
               if (p === "response/fragments") {
@@ -291,6 +536,10 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
                 for (const entry of v) {
                   if (entry?.p === "response" && entry?.v?.thinking_enabled === true) {
                     currentPath = "thinking";
+                  }
+                  // Capture accumulated_token_usage from BATCH: {"p":"accumulated_token_usage","v":42}
+                  if (entry?.p === "accumulated_token_usage" && typeof entry?.v === "number") {
+                    tokenUsage = entry.v;
                   }
                 }
               }
@@ -332,6 +581,7 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
           }
         } catch (err) {
           controller.error(err);
+          onComplete?.(responseMessageId, tokenUsage);
           return;
         }
 
@@ -345,7 +595,7 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
 async function collectSSEContent(
   deepseekStream: ReadableStream,
   model: string
-): Promise<{ content: string; reasoningContent: string }> {
+): Promise<{ content: string; reasoningContent: string; usage?: Record<string, unknown>; responseMessageId?: number }> {
   const decoder = new TextDecoder();
   const reader = deepseekStream.getReader();
   let buffer = "";
@@ -355,6 +605,8 @@ async function collectSSEContent(
   const streamModel = model || "deepseek-web";
   const thinkingModel = isThinkingModel(streamModel);
   const searchResults: DeepSeekSearchResult[] = [];
+  let tokenUsage = 0;
+  let responseMessageId: number | undefined;
 
   const appendByPath = (raw: string) => {
     const text = formatStreamContent(raw, streamModel);
@@ -401,9 +653,27 @@ async function collectSSEContent(
         if (v && typeof v === "object" && v.response) {
           if (v.response.thinking_enabled === true) currentPath = "thinking";
           else if (v.response.thinking_enabled === false) currentPath = "content";
+          // Capture accumulated_token_usage from initial response frame
+          if (typeof v.response.accumulated_token_usage === "number") {
+            tokenUsage = v.response.accumulated_token_usage;
+          }
+          // Capture message_id (assistant message ID for parent_message_id chaining)
+          if (v.response.message_id != null) {
+            responseMessageId = Number(v.response.message_id);
+          }
           if (Array.isArray(v.response.fragments)) {
             for (const frag of v.response.fragments) handleFragment(frag, false);
           }
+        }
+
+        // Capture usage from JSON Patch: {"p":"response/accumulated_token_usage","v":39}
+        if (p === "response/accumulated_token_usage" && typeof v === "number") {
+          tokenUsage = v;
+        }
+
+        // Capture response_message_id from the first frame
+        if (data?.response_message_id != null && !responseMessageId) {
+          responseMessageId = Number(data.response_message_id);
         }
 
         if (p === "response/fragments") {
@@ -418,6 +688,10 @@ async function collectSSEContent(
           for (const entry of v) {
             if (entry?.p === "response" && entry?.v?.thinking_enabled === true) {
               currentPath = "thinking";
+            }
+            // Capture accumulated_token_usage from BATCH: {"p":"accumulated_token_usage","v":42}
+            if (entry?.p === "accumulated_token_usage" && typeof entry?.v === "number") {
+              tokenUsage = entry.v;
             }
           }
         }
@@ -459,7 +733,14 @@ async function collectSSEContent(
   const citations = appendSearchCitations(searchResults, streamModel);
   if (citations) content += `\n\n${citations}`;
 
-  return { content, reasoningContent };
+  // Build usage object if we captured token count
+  // DeepSeek only provides accumulated_token_usage (total tokens) — we don't have
+  // separate prompt/completion counts, so we split heuristically (prompt = 0).
+  const usage: Record<string, unknown> | undefined = tokenUsage > 0
+    ? { prompt_tokens: 0, completion_tokens: tokenUsage, total_tokens: tokenUsage }
+    : undefined;
+
+  return { content, reasoningContent, usage, responseMessageId };
 }
 
 // ── Prompt builder (DeepSeek native format, matches Chat2API) ────────────
@@ -560,10 +841,13 @@ async function acquireAccessToken(
   }
 
   log?.info?.("DEEPSEEK-WEB", "Acquiring access token from /users/current...");
+  // Pick (or reuse) a browser profile for this account so all subsequent
+  // requests for the same userToken share the same fingerprint.
+  const profile = getProfileForUserToken(userToken);
   const resp = await fetch(`${DEEPSEEK_API_BASE}/v0/users/current`, {
     headers: {
       Authorization: `Bearer ${userToken}`,
-      ...FAKE_HEADERS,
+      ...buildFingerprintedHeaders(profile),
     },
     signal: signal ?? undefined,
   });
@@ -613,11 +897,15 @@ function parseDeepSeekErrorPayload(payload: unknown): { code?: number; message: 
   return null;
 }
 
-async function createSession(accessToken: string, signal?: AbortSignal | null): Promise<string> {
+async function createSession(
+  accessToken: string,
+  profile: BrowserProfile,
+  signal?: AbortSignal | null
+): Promise<string> {
   const resp = await fetch(`${DEEPSEEK_API_BASE}/v0/chat_session/create`, {
     method: "POST",
     headers: {
-      ...FAKE_HEADERS,
+      ...buildFingerprintedHeaders(profile),
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
       Cookie: generateFakeCookie(),
@@ -634,12 +922,16 @@ async function createSession(accessToken: string, signal?: AbortSignal | null): 
   return id;
 }
 
-async function deleteSessionOnDeepSeek(accessToken: string, sessionId: string): Promise<void> {
+async function deleteSessionOnDeepSeek(
+  accessToken: string,
+  sessionId: string,
+  profile: BrowserProfile
+): Promise<void> {
   try {
     await fetch(`${DEEPSEEK_API_BASE}/v0/chat_session/delete`, {
       method: "POST",
       headers: {
-        ...FAKE_HEADERS,
+        ...buildFingerprintedHeaders(profile),
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
@@ -674,12 +966,13 @@ function wrapStreamWithCleanup(
 
 async function getPowChallenge(
   accessToken: string,
+  profile: BrowserProfile,
   signal?: AbortSignal | null
 ): Promise<PowChallenge> {
   const resp = await fetch(`${DEEPSEEK_API_BASE}/v0/chat/create_pow_challenge`, {
     method: "POST",
     headers: {
-      ...FAKE_HEADERS,
+      ...buildFingerprintedHeaders(profile),
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
@@ -708,8 +1001,9 @@ function buildToolAwareResult(opts: {
   toolCalls: OpenAIToolCall[] | null;
   reqHeaders: Record<string, string>;
   requestPayload: unknown;
+  usage?: Record<string, unknown>;
 }) {
-  const { stream, clientModel, content, reasoningContent, toolCalls, reqHeaders, requestPayload } =
+  const { stream, clientModel, content, reasoningContent, toolCalls, reqHeaders, requestPayload, usage } =
     opts;
   const hasCalls = !!toolCalls && toolCalls.length > 0;
   const finishReason = hasCalls ? "tool_calls" : "stop";
@@ -731,6 +1025,22 @@ function buildToolAwareResult(opts: {
             created,
             model: clientModel,
             choices: [{ index: 0, delta, finish_reason: finish }],
+          })}\n\n`
+        )
+      );
+    };
+    // Terminal usage chunk (OmniRoute standard: empty choices + usage before [DONE])
+    const emitUsage = (controller: ReadableStreamDefaultController) => {
+      if (!usage) return;
+      controller.enqueue(
+        encoder.encode(
+          `data: ${JSON.stringify({
+            id,
+            object: "chat.completion.chunk",
+            created,
+            model: clientModel,
+            choices: [],
+            usage,
           })}\n\n`
         )
       );
@@ -757,6 +1067,7 @@ function buildToolAwareResult(opts: {
           );
         }
         emit(controller, {}, finishReason);
+        emitUsage(controller);
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
       },
@@ -784,7 +1095,7 @@ function buildToolAwareResult(opts: {
     created,
     model: clientModel,
     choices: [{ index: 0, message, finish_reason: finishReason }],
-    usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+    usage: usage ?? { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
   };
   return {
     response: new Response(JSON.stringify(openaiResponse), {
@@ -818,7 +1129,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
     }
   }
 
-  async execute({ model, body, stream, credentials, signal, log }: ExecuteInput) {
+  async execute({ model, body, stream, credentials, signal, log, clientHeaders }: ExecuteInput) {
     const bodyObj = (body || {}) as Record<string, unknown>;
 
     // chat.deepseek.com's web API only accepts {prompt, ref_file_ids,
@@ -865,6 +1176,40 @@ export class DeepSeekWebExecutor extends BaseExecutor {
     const historyWindow =
       typeof psd.historyWindow === "number" && psd.historyWindow > 0 ? psd.historyWindow : 0;
 
+    // Multi-turn registry: agentChatId → (sessionId, parentMessageId).
+    // When agentChatId is present, we use the registry for multi-turn conversation
+    // chaining (parent_message_id set to previous assistant response_message_id).
+    // This is separate from persistSession (which caches sessions per userToken).
+    // agentChatId takes priority: if present, registry session is used; otherwise
+    // fall back to persistSession/sessionCache behavior.
+    const connectionId = (credentials as { connectionId?: string })?.connectionId || "default";
+    const agentChatId = getAgentChatId(bodyObj, clientHeaders as Record<string, unknown> | undefined);
+    let existingSessionId: string | null = null;
+    let existingParentMessageId: number | null = null;
+    if (agentChatId) {
+      const existing = getMapping({ connectionId, agentChatId, provider: "deepseek" });
+      log?.debug?.("DEEPSEEK-WEB", `registry lookup: connectionId=${connectionId} agentChatId=${agentChatId.slice(0, 16)} → ${existing ? "found" : "not found"}`);
+      if (existing) {
+        existingSessionId = existing.providerConversationId;
+        const meta = existing.metadata as { parentMessageId?: number | string } | null;
+        // DeepSeek expects parent_message_id as a number (u32), not a string
+        existingParentMessageId = meta?.parentMessageId != null ? Number(meta.parentMessageId) : null;
+        log?.debug?.(
+          "DEEPSEEK-WEB",
+          `registry: agentChatId=${agentChatId.slice(0, 16)} -> sessionId=${existingSessionId.slice(0, 16)} parentMessageId=${existingParentMessageId ?? "(none)"} (reused)`
+        );
+      }
+    } else {
+      log?.debug?.("DEEPSEEK-WEB", `registry: no agentChatId in request (body keys: ${Object.keys(bodyObj).join(",")})`);
+    }
+
+    // Think mode (for strip/passthrough support — separate already has reasoning_content by default)
+    const thinkMode = resolveThinkMode({
+      headers: clientHeaders as Record<string, unknown> | undefined,
+      body: bodyObj,
+      providerSpecificData: psd as Record<string, unknown> | null,
+    });
+
     try {
       let t0 = Date.now();
       const accessToken = await acquireAccessToken(userToken, signal, log);
@@ -882,12 +1227,17 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         `model_type=${modelType}, thinking=${thinkingEnabled}, search=${searchEnabled}, files=${refFileIds.length}, stream=${stream !== false}, persist=${persistSession}, window=${historyWindow}`
       );
 
+      // Resolve the browser profile once for this request ?�� all helper calls
+      // (getPowChallenge, createSession, performCompletion, deleteSession) reuse
+      // it so the upstream sees one consistent fingerprint per logical session.
+      const profile = getProfileForUserToken(userToken);
+
       // One completion attempt against a given session id (fresh PoW per attempt).
-      const performCompletion = async (sid: string) => {
-        const powChallenge = await getPowChallenge(accessToken, signal);
+      const performCompletion = async (sid: string, parentMessageId: number | null) => {
+        const powChallenge = await getPowChallenge(accessToken, profile, signal);
         const powAnswer = await solvePow(powChallenge);
         const reqHeaders: Record<string, string> = {
-          ...FAKE_HEADERS,
+          ...buildFingerprintedHeaders(profile),
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
           "X-Ds-Pow-Response": powAnswer,
@@ -896,7 +1246,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         };
         const requestPayload = {
           chat_session_id: sid,
-          parent_message_id: null,
+          parent_message_id: parentMessageId,
           model_type: modelType,
           prompt,
           ref_file_ids: refFileIds,
@@ -913,32 +1263,47 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         return { resp, reqHeaders, requestPayload };
       };
 
-      // Acquire a session. With persistSession we reuse one upstream session per
-      // userToken (rolling-window memory); otherwise we create a fresh one per
-      // request (legacy behavior — dodges stale sessions when the user deletes
-      // chats in the DeepSeek UI). (#2942)
-      const acquireSession = async (): Promise<{ sessionId: string; reused: boolean }> => {
+      // Acquire a session. Priority:
+      // 1. agentChatId with existing registry mapping → reuse that session
+      // 2. persistSession → sessionCache (per userToken)
+      // 3. Otherwise → create fresh session
+      const acquireSession = async (): Promise<{ sessionId: string; reused: boolean; fromRegistry: boolean }> => {
+        // Priority 1: registry (agentChatId)
+        if (agentChatId && existingSessionId) {
+          return { sessionId: existingSessionId, reused: true, fromRegistry: true };
+        }
+        // Priority 2: persistSession (sessionCache)
         if (persistSession) {
           const cached = sessionCache.get(userToken);
-          if (cached) return { sessionId: cached.sessionId, reused: true };
-          const created = await createSession(accessToken, signal);
+          if (cached) return { sessionId: cached.sessionId, reused: true, fromRegistry: false };
+          const created = await createSession(accessToken, profile, signal);
           evictOldest(sessionCache);
           sessionCache.set(userToken, { sessionId: created, createdAt: Date.now() });
-          return { sessionId: created, reused: false };
+          return { sessionId: created, reused: false, fromRegistry: false };
         }
-        return { sessionId: await createSession(accessToken, signal), reused: false };
+        // Priority 3: fresh session
+        return { sessionId: await createSession(accessToken, profile, signal), reused: false, fromRegistry: false };
       };
 
       t0 = Date.now();
-      let { sessionId, reused: reusedSession } = await acquireSession();
+      let { sessionId, reused: reusedSession, fromRegistry } = await acquireSession();
       log?.info?.(
         "DEEPSEEK-WEB",
-        `Session ${reusedSession ? "reused" : "created"} in ${Date.now() - t0}ms`
+        `Session ${reusedSession ? "reused" : "created"} in ${Date.now() - t0}ms${fromRegistry ? " (from registry)" : ""}`
       );
+
+      // If this is a new session from agentChatId (no existing mapping), save to registry
+      if (agentChatId && !existingSessionId) {
+        saveMapping({
+          connectionId, agentChatId, provider: "deepseek",
+          providerConversationId: sessionId,
+        });
+        log?.debug?.("DEEPSEEK-WEB", `registry: saved agentChatId=${agentChatId.slice(0, 16)} -> sessionId=${sessionId.slice(0, 16)}`);
+      }
 
       t0 = Date.now();
       log?.info?.("DEEPSEEK-WEB", `POST ${COMPLETION_URL}`);
-      let { resp, reqHeaders, requestPayload } = await performCompletion(sessionId);
+      let { resp, reqHeaders, requestPayload } = await performCompletion(sessionId, existingParentMessageId);
       log?.info?.(
         "DEEPSEEK-WEB",
         `Completion response in ${Date.now() - t0}ms, status=${resp.status}`
@@ -946,14 +1311,28 @@ export class DeepSeekWebExecutor extends BaseExecutor {
 
       // A reused session that fails is likely stale (user deleted the chat in the
       // DeepSeek UI). Drop it, create a fresh session, and retry once. (#2942)
-      if (!resp.ok && persistSession && reusedSession) {
-        log?.warn?.("DEEPSEEK-WEB", "Reused session failed — retrying with a fresh session");
-        sessionCache.delete(userToken);
-        sessionId = await createSession(accessToken, signal);
-        evictOldest(sessionCache);
-        sessionCache.set(userToken, { sessionId, createdAt: Date.now() });
+      if (!resp.ok && reusedSession) {
+        const errText = await resp.text().catch(() => "");
+        log?.warn?.("DEEPSEEK-WEB", `Reused session failed (status=${resp.status}, body=${errText.slice(0, 200)}) — retrying with a fresh session`);
+        if (fromRegistry && agentChatId) {
+          // Registry session failed — create a new one and update registry
+          sessionId = await createSession(accessToken, profile, signal);
+          saveMapping({
+            connectionId, agentChatId, provider: "deepseek",
+            providerConversationId: sessionId,
+          });
+          existingParentMessageId = null; // reset parent for new session
+          existingSessionId = sessionId; // prevent re-saving below
+        } else if (persistSession) {
+          sessionCache.delete(userToken);
+          sessionId = await createSession(accessToken, profile, signal);
+          evictOldest(sessionCache);
+          sessionCache.set(userToken, { sessionId, createdAt: Date.now() });
+        } else {
+          sessionId = await createSession(accessToken, profile, signal);
+        }
         reusedSession = false;
-        ({ resp, reqHeaders, requestPayload } = await performCompletion(sessionId));
+        ({ resp, reqHeaders, requestPayload } = await performCompletion(sessionId, existingParentMessageId));
       }
 
       if (!resp.ok) {
@@ -977,7 +1356,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         }
 
         if (persistSession) sessionCache.delete(userToken);
-        deleteSessionOnDeepSeek(accessToken, sessionId).catch(() => {});
+        if (!agentChatId) deleteSessionOnDeepSeek(accessToken, sessionId, profile).catch(() => {});
         return {
           response: errorResponse(status, errMsg),
           url: COMPLETION_URL,
@@ -1000,7 +1379,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
               tokenCache.delete(userToken);
             }
             if (persistSession) sessionCache.delete(userToken);
-            deleteSessionOnDeepSeek(accessToken, sessionId).catch(() => {});
+            if (!agentChatId) deleteSessionOnDeepSeek(accessToken, sessionId, profile).catch(() => {});
             return {
               response: errorResponse(status, errMsg, parsed.code),
               url: COMPLETION_URL,
@@ -1008,7 +1387,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
               transformedBody: requestPayload,
             };
           }
-          if (!persistSession) deleteSessionOnDeepSeek(accessToken, sessionId).catch(() => {});
+          if (!persistSession && !agentChatId) deleteSessionOnDeepSeek(accessToken, sessionId, profile).catch(() => {});
           return {
             response: new Response(JSON.stringify(json), {
               status: 200,
@@ -1024,10 +1403,13 @@ export class DeepSeekWebExecutor extends BaseExecutor {
       }
 
       // Persistent sessions are kept across requests for reuse; only delete the
-      // upstream chat session when persistence is off (legacy behavior). (#2942)
-      const cleanupFn = persistSession
+      // upstream chat session when persistence is off AND there's no agentChatId
+      // (agentChatId-based sessions are managed by the registry and kept for
+      // multi-turn reuse). (#2942)
+      const shouldKeepSession = persistSession || !!agentChatId;
+      const cleanupFn = shouldKeepSession
         ? async () => {}
-        : () => deleteSessionOnDeepSeek(accessToken, sessionId);
+        : () => deleteSessionOnDeepSeek(accessToken, sessionId, profile);
 
       const clientModel = typeof model === "string" && model.trim() ? model.trim() : "deepseek-web";
 
@@ -1035,8 +1417,19 @@ export class DeepSeekWebExecutor extends BaseExecutor {
       // OpenAI tool_calls. Buffering (even for stream clients) is acceptable because
       // tool invocations are short and need the complete block to parse. (#2820)
       if (hasTools) {
-        const { content, reasoningContent } = await collectSSEContent(resp.body!, clientModel);
+        const { content, reasoningContent, usage: capturedUsage, responseMessageId } = await collectSSEContent(resp.body!, clientModel);
         await cleanupFn();
+
+        // Save response_message_id to registry for multi-turn parent_message_id chaining
+        if (agentChatId && responseMessageId) {
+          saveMapping({
+            connectionId, agentChatId, provider: "deepseek",
+            providerConversationId: sessionId,
+            metadata: { parentMessageId: responseMessageId },
+          });
+          log?.debug?.("DEEPSEEK-WEB", `registry: updated parentMessageId=${responseMessageId} for next turn (tool)`);
+        }
+
         const { content: cleanedContent, toolCalls } = parseDeepSeekToolCalls(
           content,
           `call-${Date.now()}`,
@@ -1050,11 +1443,22 @@ export class DeepSeekWebExecutor extends BaseExecutor {
           toolCalls,
           reqHeaders,
           requestPayload,
+          usage: capturedUsage,
         });
       }
 
       if (stream !== false) {
-        const openaiStream = transformSSE(resp.body!, clientModel);
+        const openaiStream = transformSSE(resp.body!, clientModel, (respMsgId, _tokenUsage) => {
+          // Save response_message_id to registry for multi-turn parent_message_id chaining
+          if (agentChatId && respMsgId) {
+            saveMapping({
+              connectionId, agentChatId, provider: "deepseek",
+              providerConversationId: sessionId,
+              metadata: { parentMessageId: respMsgId },
+            });
+            log?.debug?.("DEEPSEEK-WEB", `registry: updated parentMessageId=${respMsgId} for next turn (stream)`);
+          }
+        });
         const wrappedStream = wrapStreamWithCleanup(openaiStream, cleanupFn);
         return {
           response: new Response(wrappedStream, {
@@ -1067,10 +1471,32 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         };
       }
 
-      const { content, reasoningContent } = await collectSSEContent(resp.body!, clientModel);
+      const { content, reasoningContent, usage: capturedUsage, responseMessageId } = await collectSSEContent(resp.body!, clientModel);
       await cleanupFn();
-      const message: Record<string, string> = { role: "assistant", content };
-      if (reasoningContent) message.reasoning_content = reasoningContent;
+
+      // Save response_message_id to registry for multi-turn parent_message_id chaining
+      if (agentChatId && responseMessageId) {
+        saveMapping({
+          connectionId, agentChatId, provider: "deepseek",
+          providerConversationId: sessionId,
+          metadata: { parentMessageId: responseMessageId },
+        });
+        log?.debug?.("DEEPSEEK-WEB", `registry: updated parentMessageId=${responseMessageId} for next turn`);
+      }
+
+      // Apply think mode (strip mode removes reasoning_content)
+      let finalContent = content;
+      let finalReasoning = reasoningContent;
+      if (thinkMode === "strip") {
+        finalReasoning = "";
+      } else if (thinkMode === "passthrough" && reasoningContent) {
+        // Merge reasoning into content with <think> tags
+        finalContent = `<think>${reasoningContent}</think>${content}`;
+        finalReasoning = "";
+      }
+
+      const message: Record<string, string> = { role: "assistant", content: finalContent };
+      if (finalReasoning) message.reasoning_content = finalReasoning;
       const openaiResponse = {
         id: `chatcmpl-${Date.now()}`,
         object: "chat.completion",
@@ -1083,7 +1509,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
             finish_reason: "stop",
           },
         ],
-        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+        usage: capturedUsage ?? { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
       };
       return {
         response: new Response(JSON.stringify(openaiResponse), {

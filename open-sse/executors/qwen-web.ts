@@ -418,7 +418,7 @@ export class QwenWebExecutor extends BaseExecutor {
 
     if (!wantStream) {
       // Non-streaming: collect full response, then apply think mode
-      const { content, reasoning, responseId } = await this.collectStream(upstream);
+      const { content, reasoning, responseId, usage } = await this.collectStream(upstream);
       const { content: contentAfterThink, reasoning: reasoningAfterThink } = applyThinkMode(
         content + (reasoning ? `<think>${reasoning}</think>` : ""),
         thinkMode
@@ -440,13 +440,15 @@ export class QwenWebExecutor extends BaseExecutor {
       if (reasoningAfterThink) message.reasoning_content = reasoningAfterThink;
       if (toolCalls) message.tool_calls = toolCalls;
 
-      const completion = {
+      const completion: Record<string, unknown> = {
         id: `chatcmpl-qwen-${Date.now()}`,
         object: "chat.completion",
         created: Math.floor(Date.now() / 1000),
         model: modelId,
         choices: [{ index: 0, message, finish_reason: finishReason }],
       };
+      // Attach usage if captured from SSE (OmniRoute standard: OpenAI-compatible shape)
+      if (usage) completion.usage = usage;
 
       // Save response_id to registry metadata for multi-turn parentId chaining
       if (agentChatId && responseId) {
@@ -625,12 +627,13 @@ export class QwenWebExecutor extends BaseExecutor {
   /** Read the whole upstream SSE stream, returning the joined answer + reasoning + responseId. */
   private async collectStream(
     upstream: Response
-  ): Promise<{ content: string; reasoning: string; responseId?: string }> {
+  ): Promise<{ content: string; reasoning: string; responseId?: string; usage?: Record<string, unknown> }> {
     const reader = upstream.body?.getReader();
     const decoder = new TextDecoder();
     let content = "";
     let reasoning = "";
     let responseId: string | undefined;
+    let usage: Record<string, unknown> | undefined;
     if (!reader) return { content, reasoning };
 
     let buffer = "";
@@ -645,6 +648,7 @@ export class QwenWebExecutor extends BaseExecutor {
           const delta = parseSseDelta(line);
           if (!delta) continue;
           if (delta.responseId) responseId = delta.responseId;
+          if (delta.usage) usage = delta.usage;
           if (delta.kind === "answer") content += delta.text;
           else if (delta.kind === "think") reasoning += delta.text;
         }
@@ -652,7 +656,7 @@ export class QwenWebExecutor extends BaseExecutor {
     } catch {
       /* upstream closed mid-stream — return what we have */
     }
-    return { content, reasoning, responseId };
+    return { content, reasoning, responseId, usage };
   }
 
   /** Transform the Qwen phase SSE into OpenAI chat.completion.chunk SSE
@@ -666,13 +670,14 @@ export class QwenWebExecutor extends BaseExecutor {
     requestedTools: unknown,
     thinkMode: ReturnType<typeof resolveThinkMode>,
     signal: AbortSignal | null | undefined,
-    onComplete?: (responseId: string | undefined) => void
+    onComplete?: (responseId: string | undefined, usage?: Record<string, unknown>) => void
   ): ReadableStream {
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
     const id = `chatcmpl-qwen-${Date.now()}`;
     const created = Math.floor(Date.now() / 1000);
     let responseId: string | undefined;
+    let capturedUsage: Record<string, unknown> | undefined;
     const emitChunk = (delta: Record<string, unknown>, finishReason: string | null) =>
       `data: ${JSON.stringify({
         id,
@@ -681,6 +686,17 @@ export class QwenWebExecutor extends BaseExecutor {
         model: modelId,
         choices: [{ index: 0, delta, finish_reason: finishReason }],
       })}\n\n`;
+    // Terminal usage chunk (OpenAI stream_options.include_usage convention):
+    // empty choices array + usage field, sent before [DONE].
+    const emitUsageChunk = (usage: Record<string, unknown>) =>
+      `data: ${JSON.stringify({
+        id,
+        object: "chat.completion.chunk",
+        created,
+        model: modelId,
+        choices: [],
+        usage,
+      })}\n\n`;
 
     return new ReadableStream({
       async start(controller) {
@@ -688,7 +704,7 @@ export class QwenWebExecutor extends BaseExecutor {
         if (!reader) {
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
-          onComplete?.(responseId);
+          onComplete?.(responseId, capturedUsage);
           return;
         }
         let buffer = "";
@@ -707,6 +723,7 @@ export class QwenWebExecutor extends BaseExecutor {
               const delta = parseSseDelta(line);
               if (!delta) continue;
               if (delta.responseId) responseId = delta.responseId;
+              if (delta.usage) capturedUsage = delta.usage;
               if (!delta.text) continue;
               if (delta.kind === "answer") {
                 fullContent += delta.text;
@@ -736,7 +753,7 @@ export class QwenWebExecutor extends BaseExecutor {
         } catch (err) {
           if (!signal?.aborted) {
             controller.error(err);
-            onComplete?.(responseId);
+            onComplete?.(responseId, capturedUsage);
             return;
           }
         }
@@ -768,9 +785,13 @@ export class QwenWebExecutor extends BaseExecutor {
         } else {
           controller.enqueue(encoder.encode(emitChunk({}, "stop")));
         }
+        // Emit terminal usage chunk before [DONE] (OmniRoute standard for streaming)
+        if (capturedUsage) {
+          controller.enqueue(encoder.encode(emitUsageChunk(capturedUsage)));
+        }
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
-        onComplete?.(responseId);
+        onComplete?.(responseId, capturedUsage);
       },
     });
   }
@@ -779,10 +800,18 @@ export class QwenWebExecutor extends BaseExecutor {
 /** Parse one SSE line into a typed delta, or null if it carries no content.
  *  Also extracts response_id from the response.created frame and from
  *  subsequent delta frames (the assistant message ID, needed for multi-turn
- *  parentId chaining). */
+ *  parentId chaining). Also extracts usage from the terminal frame. */
+interface QwenUsage {
+  input_tokens?: number;
+  output_tokens?: number;
+  total_tokens?: number;
+  prompt_tokens_details?: { cached_tokens?: number };
+  completion_tokens_details?: { reasoning_tokens?: number };
+}
+
 function parseSseDelta(
   line: string
-): { kind: "answer" | "think"; text: string; responseId?: string } | null {
+): { kind: "answer" | "think"; text: string; responseId?: string; usage?: Record<string, unknown> } | null {
   if (!line.startsWith("data:")) return null;
   const payload = line.slice(5).trim();
   if (!payload || payload === "[DONE]") return null;
@@ -790,6 +819,7 @@ function parseSseDelta(
     choices?: Array<{ delta?: { phase?: string | null; content?: unknown } }>;
     response_id?: string;
     "response.created"?: { response_id?: string };
+    usage?: QwenUsage;
   };
   try {
     parsed = JSON.parse(payload);
@@ -800,20 +830,34 @@ function parseSseDelta(
   // Extract response_id from either response.created frame or delta frame
   const responseId = parsed["response.created"]?.response_id || parsed.response_id || undefined;
 
+  // Extract usage (Qwen sends it on the terminal frame)
+  const rawUsage = parsed.usage;
+  let usage: Record<string, unknown> | undefined;
+  if (rawUsage) {
+    usage = {
+      prompt_tokens: rawUsage.input_tokens ?? 0,
+      completion_tokens: rawUsage.output_tokens ?? 0,
+      total_tokens: rawUsage.total_tokens ?? 0,
+      ...(rawUsage.prompt_tokens_details ? { prompt_tokens_details: rawUsage.prompt_tokens_details } : {}),
+      ...(rawUsage.completion_tokens_details ? { completion_tokens_details: rawUsage.completion_tokens_details } : {}),
+    };
+  }
+
   const delta = parsed?.choices?.[0]?.delta;
   if (!delta) {
-    // Could be the response.created frame — return it with just the responseId
-    if (responseId) return { kind: "answer", text: "", responseId };
+    // Could be the response.created frame or usage-only frame
+    if (responseId) return { kind: "answer", text: "", responseId, usage };
+    if (usage) return { kind: "answer", text: "", usage };
     return null;
   }
   const phase = delta.phase;
   const content = typeof delta.content === "string" ? delta.content : "";
   if (phase === "think" || phase === "thinking_summary") {
-    return { kind: "think", text: content, responseId };
+    return { kind: "think", text: content, responseId, usage };
   }
   // `answer` phase or a null/absent phase both carry assistant content.
   if (phase === "answer" || phase === null || phase === undefined) {
-    return { kind: "answer", text: content, responseId };
+    return { kind: "answer", text: content, responseId, usage };
   }
   return null;
 }
