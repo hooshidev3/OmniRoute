@@ -816,6 +816,18 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
             if (usage) chunk.usage = usage;
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
           };
+          // Terminal usage chunk (OmniRoute standard: empty choices array + usage before [DONE])
+          const emitUsage = (usage: Record<string, unknown>) => {
+            const chunk = {
+              id,
+              object: "chat.completion.chunk",
+              created,
+              model,
+              choices: [] as unknown[],
+              usage,
+            };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+          };
 
           emit({ role: "assistant", content: "" });
 
@@ -891,7 +903,7 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
             emit({}, "stop");
             if (usage) {
               const openaiUsage = mimoUsageToOpenAI(usage);
-              if (openaiUsage) emit({}, null, openaiUsage as Record<string, number>);
+              if (openaiUsage) emitUsage(openaiUsage);
             }
             controller.enqueue(encoder.encode("data: [DONE]\n\n"));
 
