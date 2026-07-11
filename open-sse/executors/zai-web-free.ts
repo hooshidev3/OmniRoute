@@ -55,6 +55,7 @@ import { getFreshDeviceTokenViaBrowser, getCaptchaParamViaBrowser } from "./zai-
 const log = logger("ZAI-WEB-FREE");
 
 const CHAT_COMPLETIONS_URL = "https://chat.z.ai/api/v2/chat/completions";
+const CHATS_NEW_URL = "https://chat.z.ai/api/v1/chats/new";
 
 // Fallback model list (used when Z.AI's /api/models is unreachable)
 const FALLBACK_MODELS = [
@@ -80,7 +81,15 @@ interface ZaiSSEChunk {
     edit_content?: string;
     delta_content?: string;
     content?: string;
+    done?: boolean;
     error?: { detail?: string; message?: string; code?: unknown };
+    usage?: {
+      prompt_tokens?: number;
+      completion_tokens?: number;
+      total_tokens?: number;
+      prompt_tokens_details?: { cached_tokens?: number };
+      completion_tokens_details?: { reasoning_tokens?: number };
+    };
   };
   choices?: Array<{
     delta?: { content?: string };
@@ -327,12 +336,51 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 4. Compute the X-Signature header
     const sig = generateZaSignature(prompt, session.token, session.userId);
 
-    // 5. Build the request body
-    //    Confirmed from browser capture: Z.AI requires chat_id (UUID),
-    //    and accepts optional fields like id, variables, background_tasks.
-    //    The signature_prompt must match the prompt used for x-signature.
-    const chatId = randomUUID();
-    const msgId = randomUUID();
+    // 5. Create a chat via /api/v1/chats/new (like the browser does)
+    //    This returns a real chat_id and sets up the message tree.
+    let chatId = randomUUID();
+    let userMessageId = randomUUID();
+    try {
+      const newChatResp = await fetch(CHATS_NEW_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+          "Content-Type": "application/json",
+          "x-region": "overseas",
+          Origin: "https://chat.z.ai",
+          Referer: "https://chat.z.ai/",
+        },
+        body: JSON.stringify({
+          chat: {
+            title: "New Chat",
+            models: [requestedModel],
+            params: {},
+            history: {
+              messages: {},
+              currentId: null,
+            },
+            tags: [],
+            features: [],
+            timestamp: Date.now(),
+          },
+        }),
+        signal,
+      });
+      if (newChatResp.ok) {
+        const newChatData = await newChatResp.json() as {
+          id?: string;
+          chat?: { id?: string; history?: { currentId?: string } };
+        };
+        chatId = newChatData.id || newChatData.chat?.id || chatId;
+        // The chats/new response includes the first user message ID in history.currentId
+        userMessageId = newChatData.chat?.history?.currentId || userMessageId;
+      }
+    } catch {
+      // Best-effort — use generated UUIDs
+    }
+
+    // 6. Build the request body (matching browser capture exactly)
+    const completionId = randomUUID(); // This is the assistant message ID, different from user message ID
     const now = new Date();
     const dateTimeStr = now.toISOString().replace("T", " ").slice(0, 19);
     const dateStr = dateTimeStr.slice(0, 10);
@@ -358,55 +406,15 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
         "{{USER_LANGUAGE}}": "en-US",
       },
       chat_id: chatId,
-      id: msgId,
-      current_user_message_id: msgId,
+      id: completionId,
+      current_user_message_id: userMessageId,
       current_user_message_parent_id: null,
       background_tasks: { title_generation: true, tags_generation: true },
       captcha_verify_param: captchaParam,
     };
 
-    // URL params — Z.AI requires extensive browser fingerprint params
-    const urlParams = new URLSearchParams({
-      timestamp: sig.timestamp,
-      requestId: sig.requestId,
-      user_id: session.userId,
-      version: "0.0.1",
-      platform: "web",
-      token: session.token,
-      user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      language: "en-US",
-      languages: "en-US,en",
-      timezone: "Asia/Tehran",
-      cookie_enabled: "true",
-      screen_width: "1536",
-      screen_height: "864",
-      screen_resolution: "1536x864",
-      viewport_height: "695",
-      viewport_width: "934",
-      viewport_size: "934x695",
-      color_depth: "24",
-      pixel_ratio: "1.25",
-      current_url: `https://chat.z.ai/c/${chatId}`,
-      pathname: `/c/${chatId}`,
-      search: "",
-      hash: "",
-      host: "chat.z.ai",
-      hostname: "chat.z.ai",
-      protocol: "https:",
-      referrer: "",
-      title: "Z.ai - Advanced AI Chatbot & Agent powered by GLM-5.2",
-      timezone_offset: "-210",
-      local_time: now.toISOString(),
-      utc_time: now.toUTCString(),
-      is_mobile: "false",
-      is_touch: "false",
-      max_touch_points: "0",
-      browser_name: "Chrome",
-      os_name: "Windows",
-      signature_timestamp: sig.timestamp,
-    }).toString();
-
-    const requestUrl = `${CHAT_COMPLETIONS_URL}?${urlParams}`;
+    // Minimal URL params (like zai-api golang implementation)
+    const requestUrl = `${CHAT_COMPLETIONS_URL}?timestamp=${sig.timestamp}&requestId=${sig.requestId}&user_id=${session.userId}&version=0.0.1&platform=web&token=${encodeURIComponent(session.token)}&signature_timestamp=${sig.timestamp}`;
     const reqHeaders: Record<string, string> = {
       Authorization: `Bearer ${session.token}`,
       "Content-Type": "application/json",
@@ -492,6 +500,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
           let fullContent = "";
           let sentContent = "";
+          let capturedUsage: Record<string, unknown> | undefined;
           let buffer = "";
           const reader = sourceStream.getReader();
           const decoder = new TextDecoder();
@@ -538,10 +547,26 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
                 // Detect phase "done"
                 if (j.data?.phase === "done") {
+                  // Emit terminal usage chunk before [DONE]
+                  if (capturedUsage) {
+                    const usageChunk = { id, object: "chat.completion.chunk", created, model: requestedModel, choices: [] as unknown[], usage: capturedUsage };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(usageChunk)}\n\n`));
+                  }
                   emit({}, "stop");
                   controller.enqueue(encoder.encode("data: [DONE]\n\n"));
                   controller.close();
                   return;
+                }
+
+                // Capture usage from phase "other" frames
+                if (j.data?.usage) {
+                  capturedUsage = {
+                    prompt_tokens: j.data.usage.prompt_tokens ?? 0,
+                    completion_tokens: j.data.usage.completion_tokens ?? 0,
+                    total_tokens: j.data.usage.total_tokens ?? 0,
+                    ...(j.data.usage.prompt_tokens_details ? { prompt_tokens_details: j.data.usage.prompt_tokens_details } : {}),
+                    ...(j.data.usage.completion_tokens_details ? { completion_tokens_details: j.data.usage.completion_tokens_details } : {}),
+                  };
                 }
 
                 // Extract content delta — phase "thinking" is reasoning content
@@ -608,6 +633,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // Non-streaming: collect all deltas into a single chat.completion JSON
     let fullContent = "";
     let reasoningContent = "";
+    let capturedUsage: Record<string, unknown> | undefined;
     let buffer = "";
     const reader = sourceStream.getReader();
     const decoder = new TextDecoder();
@@ -659,6 +685,17 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
               fullContent += chunk;
             }
           }
+
+          // Capture usage
+          if (j.data?.usage) {
+            capturedUsage = {
+              prompt_tokens: j.data.usage.prompt_tokens ?? 0,
+              completion_tokens: j.data.usage.completion_tokens ?? 0,
+              total_tokens: j.data.usage.total_tokens ?? 0,
+              ...(j.data.usage.prompt_tokens_details ? { prompt_tokens_details: j.data.usage.prompt_tokens_details } : {}),
+              ...(j.data.usage.completion_tokens_details ? { completion_tokens_details: j.data.usage.completion_tokens_details } : {}),
+            };
+          }
         }
         if (buffer === "") break;
       }
@@ -668,13 +705,14 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
     const message: Record<string, unknown> = { role: "assistant", content: fullContent };
     if (reasoningContent) message.reasoning_content = reasoningContent;
-    const completion = {
+    const completion: Record<string, unknown> = {
       id,
       object: "chat.completion",
       created,
       model: requestedModel,
       choices: [{ index: 0, message, finish_reason: "stop" }],
     };
+    if (capturedUsage) completion.usage = capturedUsage;
 
     log?.debug?.("ZAI-WEB-FREE", `completed model=${requestedModel} contentLen=${fullContent.length}`);
 
