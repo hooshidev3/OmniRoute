@@ -166,16 +166,12 @@ function resolveFeatures(
   bodyObj: Record<string, unknown>
 ): Record<string, unknown> {
   const features: Record<string, unknown> = {
-    image_generation: false,
     web_search: false,
     auto_web_search: false,
-    preview_mode: true,
-    flags: [],
-    vlm_tools_enable: false,
-    vlm_web_search_enable: false,
-    vlm_website_mode: false,
+    think: false,
     enable_thinking: false,
-    reasoning_effort: "default",
+    image_generation: false,
+    flags: [],
   };
 
   // Per-request overrides
@@ -184,15 +180,12 @@ function resolveFeatures(
     features.auto_web_search = true;
   }
   if (bodyObj.reasoning_effort && bodyObj.reasoning_effort !== "none") {
+    features.think = true;
     features.enable_thinking = true;
-    const effort = bodyObj.reasoning_effort as string;
-    if (effort === "max" || effort === "high") features.reasoning_effort = "max";
-    else if (effort === "medium") features.reasoning_effort = "medium";
-    else features.reasoning_effort = "low";
   }
   if (bodyObj.deepThink === true) {
+    features.think = true;
     features.enable_thinking = true;
-    features.reasoning_effort = "max";
   }
 
   return features;
@@ -336,93 +329,29 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 4. Compute the X-Signature header
     const sig = generateZaSignature(prompt, session.token, session.userId);
 
-    // 5. Create a chat via /api/v1/chats/new (like the browser does)
-    //    This returns a real chat_id and sets up the message tree.
-    let chatId = randomUUID();
-    let userMessageId = randomUUID();
-    try {
-      const newChatResp = await fetch(CHATS_NEW_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session.token}`,
-          "Content-Type": "application/json",
-          "x-region": "overseas",
-          Origin: "https://chat.z.ai",
-          Referer: "https://chat.z.ai/",
-        },
-        body: JSON.stringify({
-          chat: {
-            title: "New Chat",
-            models: [requestedModel],
-            params: {},
-            history: {
-              messages: {},
-              currentId: null,
-            },
-            tags: [],
-            features: [],
-            timestamp: Date.now(),
-          },
-        }),
-        signal,
-      });
-      if (newChatResp.ok) {
-        const newChatData = await newChatResp.json() as {
-          id?: string;
-          chat?: { id?: string; history?: { currentId?: string } };
-        };
-        chatId = newChatData.id || newChatData.chat?.id || chatId;
-        // The chats/new response includes the first user message ID in history.currentId
-        userMessageId = newChatData.chat?.history?.currentId || userMessageId;
-      }
-    } catch {
-      // Best-effort — use generated UUIDs
-    }
-
-    // 6. Build the request body (matching browser capture exactly)
-    const completionId = randomUUID(); // This is the assistant message ID, different from user message ID
-    const now = new Date();
-    const dateTimeStr = now.toISOString().replace("T", " ").slice(0, 19);
-    const dateStr = dateTimeStr.slice(0, 10);
-    const timeStr = dateTimeStr.slice(11);
-    const weekday = now.toLocaleDateString("en-US", { weekday: "long" });
+    // 5. Build the request body (matching Go zai-api exactly)
+    //    Go code: simple body with model, chat_id, messages, signature_prompt,
+    //    stream, captcha_verify_param, features. No URL params on the request.
+    const chatId = randomUUID();
 
     const requestBody: Record<string, unknown> = {
-      stream: true,
       model: requestedModel,
+      chat_id: chatId,
       messages,
       signature_prompt: prompt,
-      params: {},
-      extra: {},
-      features,
-      variables: {
-        "{{USER_NAME}}": session.userName || "User",
-        "{{USER_LOCATION}}": "Unknown",
-        "{{CURRENT_DATETIME}}": dateTimeStr,
-        "{{CURRENT_DATE}}": dateStr,
-        "{{CURRENT_TIME}}": timeStr,
-        "{{CURRENT_WEEKDAY}}": weekday,
-        "{{CURRENT_TIMEZONE}}": "Asia/Tehran",
-        "{{USER_LANGUAGE}}": "en-US",
-      },
-      chat_id: chatId,
-      id: completionId,
-      current_user_message_id: userMessageId,
-      current_user_message_parent_id: null,
-      background_tasks: { title_generation: true, tags_generation: true },
+      stream: true,
       captcha_verify_param: captchaParam,
+      features,
     };
 
-    // Minimal URL params (like zai-api golang implementation)
-    const requestUrl = `${CHAT_COMPLETIONS_URL}?timestamp=${sig.timestamp}&requestId=${sig.requestId}&user_id=${session.userId}&version=0.0.1&platform=web&token=${encodeURIComponent(session.token)}&signature_timestamp=${sig.timestamp}`;
+    // Go code: POST to BASE_URL + "/api/v2/chat/completions" (no URL params)
+    const requestUrl = CHAT_COMPLETIONS_URL;
     const reqHeaders: Record<string, string> = {
       Authorization: `Bearer ${session.token}`,
       "Content-Type": "application/json",
       "x-fe-Version": session.feVersion,
       "x-region": "overseas",
       "x-signature": sig.signature,
-      Origin: "https://chat.z.ai",
-      Referer: `https://chat.z.ai/c/${chatId}`,
     };
 
     // 6. Send the request (with one 401 retry that re-inits the session)
