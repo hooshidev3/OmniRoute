@@ -15,9 +15,12 @@ import {
 
 // kimi-web uses the international `www.kimi.com` Connect-RPC API. The legacy
 // `kimi.moonshot.cn` domain now 307-redirects every non-CN visitor, and even
-// if you bypass the redirect the old `/api/chat` REST endpoint is gone. The
-// SPA exposes a profile probe at `GET /api/user` that returns the user object
-// at the top level when the `Authorization: Bearer <JWT>` header is valid.
+// if you bypass the redirect the old `/api/chat` REST endpoint is gone.
+//
+// We probe the user profile via the Connect-RPC endpoint
+// `POST /apiv2/kimi.gateway.account.v1.UserService/GetCurrentUser` (the same
+// endpoint the SPA calls on boot). It returns `{user: {id, nickname, avatar,
+// region, globalId}}` when the JWT is valid.
 //
 // Auth source: the `kimi-auth` cookie set after login. The user pastes the
 // full Cookie header; we extract `kimi-auth` and send it as both the Bearer
@@ -44,17 +47,26 @@ export async function validateKimiWebProvider({ apiKey }: any) {
   }
 
   try {
-    const resp = await fetch("https://www.kimi.com/api/user", {
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        Authorization: `Bearer ${jwt}`,
-        Cookie: `kimi-auth=${jwt}`,
-        Origin: "https://www.kimi.com",
-        Referer: "https://www.kimi.com/",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
-      },
-    });
+    // Use the Connect-RPC GetCurrentUser endpoint (Connect-protocol-version: 1,
+    // Content-Type: application/json, body: "{}").
+    const resp = await fetch(
+      "https://www.kimi.com/apiv2/kimi.gateway.account.v1.UserService/GetCurrentUser",
+      {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+          "connect-protocol-version": "1",
+          Cookie: `kimi-auth=${jwt}`,
+          Origin: "https://www.kimi.com",
+          Referer: "https://www.kimi.com/",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
+        },
+        body: "{}",
+      }
+    );
 
     if (resp.status === 401 || resp.status === 403) {
       return {
@@ -67,21 +79,29 @@ export async function validateKimiWebProvider({ apiKey }: any) {
       return { valid: false, error: `Kimi returned HTTP ${resp.status}` };
     }
 
-    // Profile response: `{ id, name, email, region, ... }` at the top level.
+    // Response shape: {user: {id, nickname, avatar, phone, region, globalId}}
     try {
       const data = await resp.json();
-      if (!data?.id) {
+      const user = data?.user;
+      if (!user?.id) {
         return {
           valid: false,
           error:
             "Kimi session token is invalid or expired — re-login at https://www.kimi.com and paste a fresh Cookie header",
         };
       }
+      return {
+        valid: true,
+        error: null,
+        accountInfo: {
+          userName: user.nickname || "",
+          avatar: user.avatar || "",
+          region: user.region || "",
+        },
+      };
     } catch {
       return { valid: false, error: "Kimi returned invalid JSON response" };
     }
-
-    return { valid: true, error: null };
   } catch (error) {
     return toValidationErrorResult(error);
   }
@@ -802,6 +822,115 @@ export async function validateBlackboxWebProvider({ apiKey, providerSpecificData
     }
 
     return { valid: false, error: `Validation failed: ${subscriptionResponse.status}` };
+  } catch (error: any) {
+    return toValidationErrorResult(error);
+  }
+}
+
+/**
+ * MiMo (xiaomimimo-web) validator.
+ *
+ * Probes GET /open-apis/user/info with the user's cookies to verify:
+ *   1. Cookies are valid (not expired)
+ *   2. Account is not banned (bannedStatus === "BANNED" -> invalid)
+ *
+ * Returns accountInfo (userName, avatar, bannedStatus) for the dashboard
+ * to display on the connection page.
+ */
+export async function validateXiaomimimoWebProvider({ apiKey, providerSpecificData = {} }: any) {
+  const psd = (providerSpecificData || {}) as Record<string, unknown>;
+  let serviceToken = typeof psd.serviceToken === "string" ? psd.serviceToken : "";
+  let userId = typeof psd.userId === "string" ? psd.userId : "";
+  let phToken =
+    typeof psd.phToken === "string"
+      ? psd.phToken
+      : typeof psd.xiaomichatbot_ph === "string"
+        ? psd.xiaomichatbot_ph
+        : "";
+
+  // Also try parsing from cookie header (apiKey or psd.cookie)
+  if (!serviceToken || !userId || !phToken) {
+    const cookieHeader =
+      typeof psd.cookie === "string" ? psd.cookie : typeof apiKey === "string" ? apiKey : "";
+    if (cookieHeader) {
+      for (const part of cookieHeader.split(";")) {
+        const eq = part.indexOf("=");
+        if (eq === -1) continue;
+        const key = part.slice(0, eq).trim();
+        const val = part.slice(eq + 1).trim();
+        if (key === "serviceToken" && !serviceToken) serviceToken = val;
+        if (key === "userId" && !userId) userId = val;
+        if (key === "xiaomichatbot_ph" && !phToken) phToken = val;
+      }
+    }
+  }
+
+  if (!serviceToken || !userId || !phToken) {
+    return {
+      valid: false,
+      error:
+        "Missing MiMo cookies - paste the full Cookie header from aistudio.xiaomimimo.com (must contain serviceToken, userId, xiaomichatbot_ph)",
+    };
+  }
+
+  try {
+    const url = `https://aistudio.xiaomimimo.com/open-apis/user/info?xiaomichatbot_ph=${encodeURIComponent(phToken)}`;
+    const resp = await fetch(url, {
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        Cookie: `serviceToken=${serviceToken}; userId=${userId}; xiaomichatbot_ph=${phToken}`,
+        Origin: "https://aistudio.xiaomimimo.com",
+        Referer: "https://aistudio.xiaomimimo.com/",
+      },
+    });
+
+    if (resp.status === 401 || resp.status === 403) {
+      return {
+        valid: false,
+        error:
+          "MiMo cookies are invalid or expired - re-login at https://aistudio.xiaomimimo.com and paste a fresh Cookie header",
+      };
+    }
+    if (!resp.ok) {
+      return { valid: false, error: `MiMo returned HTTP ${resp.status}` };
+    }
+
+    const data = await resp.json();
+    if (data?.code !== 0 || !data?.data) {
+      return { valid: false, error: "MiMo returned unexpected response format" };
+    }
+
+    const userInfo = data.data;
+    const bannedStatus =
+      typeof userInfo.bannedStatus === "string" ? userInfo.bannedStatus : "NOT_BANNED";
+    const isBanned = bannedStatus === "BANNED";
+
+    if (isBanned) {
+      return {
+        valid: false,
+        error: `MiMo account is banned (status: ${bannedStatus}). Requests will not be sent to this account.`,
+        accountInfo: {
+          userName: userInfo.userName || "Unknown",
+          avatar: userInfo.avatar || null,
+          bannedStatus: true,
+          userId: userInfo.userId || userId,
+        },
+      };
+    }
+
+    return {
+      valid: true,
+      error: null,
+      accountInfo: {
+        userName: userInfo.userName || "Unknown",
+        avatar: userInfo.avatar || null,
+        bannedStatus: false,
+        userId: userInfo.userId || userId,
+        tokenPlan: userInfo.tokenPlan || null,
+        idc: userInfo.idc || null,
+      },
+    };
   } catch (error: any) {
     return toValidationErrorResult(error);
   }

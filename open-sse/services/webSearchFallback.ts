@@ -137,6 +137,12 @@ function buildFallbackTool(tool: JsonRecord, targetFormat?: string | null): Json
 // fallback — which these models accept as a normal function tool (#4481).
 const CLAUDE_FORMAT_PROVIDERS_WITHOUT_SERVER_TOOLS = new Set(["minimax"]);
 
+// Providers that natively support web_search server tools (OpenAI-style built-in).
+// The fallback rewrite must be skipped for these so the executor sees the original
+// `web_search` tool and can route it to the provider's native search implementation.
+// kimi-web: maps OpenAI `web_search` → Kimi's `TOOL_TYPE_SEARCH` in the executor.
+const PROVIDERS_WITH_NATIVE_WEB_SEARCH = new Set(["kimi-web"]);
+
 export function supportsNativeWebSearchFallbackBypass({
   provider,
   sourceFormat,
@@ -161,6 +167,8 @@ export function supportsNativeWebSearchFallbackBypass({
     if (provider && CLAUDE_FORMAT_PROVIDERS_WITHOUT_SERVER_TOOLS.has(provider)) return false;
     return true;
   }
+  // Providers with their own native web search handling in the executor.
+  if (provider && PROVIDERS_WITH_NATIVE_WEB_SEARCH.has(provider)) return true;
   return false;
 }
 

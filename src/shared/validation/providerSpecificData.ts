@@ -160,6 +160,22 @@ export function validateProviderSpecificData(
           path: ["requestDefaults", booleanKey],
         });
       }
+
+      // Think output mode (passthrough | strip | separate)
+      const thinkMode = requestDefaultsRecord.thinkMode;
+      if (
+        thinkMode !== undefined &&
+        thinkMode !== null &&
+        typeof thinkMode === "string" &&
+        !["passthrough", "strip", "separate"].includes(thinkMode)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "providerSpecificData.requestDefaults.thinkMode must be one of passthrough, strip, separate",
+          path: ["requestDefaults", "thinkMode"],
+        });
+      }
     }
   }
 

@@ -16,12 +16,12 @@ export const kimi_webProvider: RegistryEntry = {
   models: [
     // Model ids are the `key` field from www.kimi.com's
     // `/apiv2/kimi.gateway.config.v1.ConfigService/GetAvailableModels` response.
-    // Agent / Agent-Swarm variants (`k2d6-agent`, `k2d6-agent-ultra`) are
-    // intentionally NOT exposed — they need a different scenario
-    // (`SCENARIO_OK_COMPUTER`) plus `kimiPlusId` / `agentMode` fields, which
-    // the executor does not yet shape. Use `kimi-coding` (api.kimi.com) for
-    // agentic flows.
     { id: "k2d6", name: "K2.6 Instant" },
     { id: "k2d6-thinking", name: "K2.6 Thinking", supportsReasoning: true },
+    // Agent variants use SCENARIO_OK_COMPUTER + kimiPlusId:"ok-computer".
+    // They have built-in web search and produce tool-call/result frames.
+    // TYPE_NORMAL runs a single agent; TYPE_ULTRA runs a worker swarm (3x cost).
+    { id: "k2d6-agent", name: "K2.6 Agent", supportsTools: true },
+    { id: "k2d6-agent-ultra", name: "K2.6 Agent Swarm", supportsTools: true },
   ],
 };

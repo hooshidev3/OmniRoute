@@ -63,3 +63,15 @@ export function isStripReasoningRequested(
     .toLowerCase();
   return value === "true" || value === "1" || value === "yes";
 }
+
+/**
+ * Per-request think output mode override via `x-omniroute-think-mode` header.
+ * Values: passthrough | strip | separate
+ * Returns null when absent — caller falls back to per-connection/global default.
+ */
+export function resolveThinkModeHeader(
+  headers: Record<string, unknown> | Headers | null | undefined
+): string | null {
+  const value = (getHeaderValueCaseInsensitive(headers, "x-omniroute-think-mode") || "").trim();
+  return value || null;
+}
