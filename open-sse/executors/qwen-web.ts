@@ -291,13 +291,17 @@ export class QwenWebExecutor extends BaseExecutor {
     const agentChatId = getAgentChatId(bodyObj, input.clientHeaders as Record<string, unknown>);
 
     let existingChatId: string | null = null;
+    let existingParentId: string | null = null;
     if (agentChatId) {
       const existing = getMapping({ connectionId, agentChatId, provider: "qwen" });
       if (existing) {
         existingChatId = existing.providerConversationId;
+        // Extract parentId from metadata (stored from previous turn's response_id)
+        const meta = existing.metadata as { parentId?: string } | null;
+        existingParentId = meta?.parentId || null;
         log?.debug?.(
           "QWEN-WEB",
-          `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${existingChatId.slice(0, 16)} (reused)`
+          `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${existingChatId.slice(0, 16)} parentId=${existingParentId?.slice(0, 16) || "(none)"} (reused)`
         );
       }
     }
@@ -356,7 +360,14 @@ export class QwenWebExecutor extends BaseExecutor {
 
     // 4. Send the message
     const completionUrl = `${CHAT_COMPLETIONS_URL}?chat_id=${chatId}`;
-    const msgPayload = this.buildMessagePayload(chatId, modelId, prompt, requestedModel, bodyObj);
+    const msgPayload = this.buildMessagePayload(
+      chatId,
+      modelId,
+      prompt,
+      requestedModel,
+      bodyObj,
+      existingParentId
+    );
 
     let upstream: Response;
     try {
@@ -407,7 +418,7 @@ export class QwenWebExecutor extends BaseExecutor {
 
     if (!wantStream) {
       // Non-streaming: collect full response, then apply think mode
-      const { content, reasoning } = await this.collectStream(upstream);
+      const { content, reasoning, responseId } = await this.collectStream(upstream);
       const { content: contentAfterThink, reasoning: reasoningAfterThink } = applyThinkMode(
         content + (reasoning ? `<think>${reasoning}</think>` : ""),
         thinkMode
@@ -437,6 +448,21 @@ export class QwenWebExecutor extends BaseExecutor {
         choices: [{ index: 0, message, finish_reason: finishReason }],
       };
 
+      // Save response_id to registry metadata for multi-turn parentId chaining
+      if (agentChatId && responseId) {
+        saveMapping({
+          connectionId,
+          agentChatId,
+          provider: "qwen",
+          providerConversationId: chatId,
+          metadata: { parentId: responseId },
+        });
+        log?.debug?.(
+          "QWEN-WEB",
+          `registry: updated parentId=${responseId.slice(0, 16)} for next turn`
+        );
+      }
+
       await doCleanup().catch(() => {});
       log?.debug?.(
         "QWEN-WEB",
@@ -461,7 +487,23 @@ export class QwenWebExecutor extends BaseExecutor {
       hasTools,
       requestedTools,
       thinkMode,
-      signal
+      signal,
+      // onComplete: save response_id to registry for multi-turn parentId chaining
+      (responseId: string | undefined) => {
+        if (agentChatId && responseId) {
+          saveMapping({
+            connectionId,
+            agentChatId,
+            provider: "qwen",
+            providerConversationId: chatId,
+            metadata: { parentId: responseId },
+          });
+          log?.debug?.(
+            "QWEN-WEB",
+            `registry: updated parentId=${responseId.slice(0, 16)} for next turn (stream)`
+          );
+        }
+      }
     );
     const response = new Response(stream, {
       headers: {
@@ -523,7 +565,8 @@ export class QwenWebExecutor extends BaseExecutor {
     modelId: string,
     prompt: string,
     requestedModel: string,
-    bodyObj: Record<string, unknown>
+    bodyObj: Record<string, unknown>,
+    parentId: string | null
   ): Record<string, unknown> {
     const fid = uuid();
     // Thinking is controlled by:
@@ -556,10 +599,14 @@ export class QwenWebExecutor extends BaseExecutor {
       chat_id: chatId,
       chat_mode: "normal",
       model: modelId,
+      // parentId chains the message tree: for follow-up turns, set this to
+      // the previous assistant message's response_id so Qwen creates a proper
+      // conversation branch (not a new root). null for first turn.
+      parent_id: parentId,
       messages: [
         {
           fid,
-          parentId: null,
+          parentId,
           childrenIds: [],
           role: "user",
           content: prompt,
@@ -575,12 +622,15 @@ export class QwenWebExecutor extends BaseExecutor {
     };
   }
 
-  /** Read the whole upstream SSE stream, returning the joined answer + reasoning. */
-  private async collectStream(upstream: Response): Promise<{ content: string; reasoning: string }> {
+  /** Read the whole upstream SSE stream, returning the joined answer + reasoning + responseId. */
+  private async collectStream(
+    upstream: Response
+  ): Promise<{ content: string; reasoning: string; responseId?: string }> {
     const reader = upstream.body?.getReader();
     const decoder = new TextDecoder();
     let content = "";
     let reasoning = "";
+    let responseId: string | undefined;
     if (!reader) return { content, reasoning };
 
     let buffer = "";
@@ -594,6 +644,7 @@ export class QwenWebExecutor extends BaseExecutor {
         for (const line of lines) {
           const delta = parseSseDelta(line);
           if (!delta) continue;
+          if (delta.responseId) responseId = delta.responseId;
           if (delta.kind === "answer") content += delta.text;
           else if (delta.kind === "think") reasoning += delta.text;
         }
@@ -601,23 +652,27 @@ export class QwenWebExecutor extends BaseExecutor {
     } catch {
       /* upstream closed mid-stream — return what we have */
     }
-    return { content, reasoning };
+    return { content, reasoning, responseId };
   }
 
   /** Transform the Qwen phase SSE into OpenAI chat.completion.chunk SSE
-   *  with think mode processing (passthrough/strip/separate). */
+   *  with think mode processing (passthrough/strip/separate).
+   *  Calls onComplete with the responseId when the stream ends, so the caller
+   *  can save it to the registry for multi-turn parentId chaining. */
   private buildClientStream(
     upstream: Response,
     modelId: string,
     hasTools: boolean,
     requestedTools: unknown,
     thinkMode: ReturnType<typeof resolveThinkMode>,
-    signal: AbortSignal | null | undefined
+    signal: AbortSignal | null | undefined,
+    onComplete?: (responseId: string | undefined) => void
   ): ReadableStream {
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
     const id = `chatcmpl-qwen-${Date.now()}`;
     const created = Math.floor(Date.now() / 1000);
+    let responseId: string | undefined;
     const emitChunk = (delta: Record<string, unknown>, finishReason: string | null) =>
       `data: ${JSON.stringify({
         id,
@@ -633,6 +688,7 @@ export class QwenWebExecutor extends BaseExecutor {
         if (!reader) {
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
+          onComplete?.(responseId);
           return;
         }
         let buffer = "";
@@ -649,7 +705,9 @@ export class QwenWebExecutor extends BaseExecutor {
             buffer = lines.pop() || "";
             for (const line of lines) {
               const delta = parseSseDelta(line);
-              if (!delta || !delta.text) continue;
+              if (!delta) continue;
+              if (delta.responseId) responseId = delta.responseId;
+              if (!delta.text) continue;
               if (delta.kind === "answer") {
                 fullContent += delta.text;
                 if (!hasTools) {
@@ -678,6 +736,7 @@ export class QwenWebExecutor extends BaseExecutor {
         } catch (err) {
           if (!signal?.aborted) {
             controller.error(err);
+            onComplete?.(responseId);
             return;
           }
         }
@@ -711,34 +770,50 @@ export class QwenWebExecutor extends BaseExecutor {
         }
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
+        onComplete?.(responseId);
       },
     });
   }
 }
 
-/** Parse one SSE line into a typed delta, or null if it carries no content. */
-function parseSseDelta(line: string): { kind: "answer" | "think"; text: string } | null {
+/** Parse one SSE line into a typed delta, or null if it carries no content.
+ *  Also extracts response_id from the response.created frame and from
+ *  subsequent delta frames (the assistant message ID, needed for multi-turn
+ *  parentId chaining). */
+function parseSseDelta(
+  line: string
+): { kind: "answer" | "think"; text: string; responseId?: string } | null {
   if (!line.startsWith("data:")) return null;
   const payload = line.slice(5).trim();
   if (!payload || payload === "[DONE]") return null;
   let parsed: {
     choices?: Array<{ delta?: { phase?: string | null; content?: unknown } }>;
+    response_id?: string;
+    "response.created"?: { response_id?: string };
   };
   try {
     parsed = JSON.parse(payload);
   } catch {
     return null;
   }
+
+  // Extract response_id from either response.created frame or delta frame
+  const responseId = parsed["response.created"]?.response_id || parsed.response_id || undefined;
+
   const delta = parsed?.choices?.[0]?.delta;
-  if (!delta) return null;
+  if (!delta) {
+    // Could be the response.created frame — return it with just the responseId
+    if (responseId) return { kind: "answer", text: "", responseId };
+    return null;
+  }
   const phase = delta.phase;
   const content = typeof delta.content === "string" ? delta.content : "";
   if (phase === "think" || phase === "thinking_summary") {
-    return { kind: "think", text: content };
+    return { kind: "think", text: content, responseId };
   }
   // `answer` phase or a null/absent phase both carry assistant content.
   if (phase === "answer" || phase === null || phase === undefined) {
-    return { kind: "answer", text: content };
+    return { kind: "answer", text: content, responseId };
   }
   return null;
 }
