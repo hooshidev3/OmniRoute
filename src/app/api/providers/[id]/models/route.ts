@@ -21,7 +21,10 @@ import {
   getSafeOutboundFetchErrorStatus,
   safeOutboundFetch,
 } from "@/shared/network/safeOutboundFetch";
-import { getProviderOutboundGuard } from "@/shared/network/outboundUrlGuard";
+import {
+  getProviderOutboundGuard,
+  getProviderValidationGuard,
+} from "@/shared/network/outboundUrlGuard";
 import { sanitizeErrorMessage } from "@omniroute/open-sse/utils/error";
 import { getStaticQoderModels } from "@omniroute/open-sse/services/qoderCli.ts";
 import { deriveConfigFromRegistryModelsUrl } from "./discoveryConfig";
@@ -97,6 +100,12 @@ import {
   type ProviderModelsConfigEntry,
   PROVIDER_MODELS_CONFIG,
 } from "./discovery/providerModelsConfig";
+import {
+  buildCodexDiscoveryCatalog,
+  enrichCodexModelsFromGithubCatalog,
+  fetchCodexDiscoveryModels,
+  fetchCodexGithubCatalogModels,
+} from "./discovery/codex";
 
 /**
  * GET /api/providers/[id]/models - Get models list from provider
@@ -112,6 +121,7 @@ export async function GET(
     // Check if we should exclude hidden models (used by MCP tools to prevent hidden model leaks)
     const { searchParams } = new URL(request.url);
     const excludeHidden = searchParams.get("excludeHidden") === "true";
+    const excludeCustom = searchParams.get("excludeCustom") === "true";
     const refresh = searchParams.get("refresh") === "true";
 
     const connection = await getProviderConnectionById(id);
@@ -217,15 +227,19 @@ export async function GET(
     // per-connection route (used by MCP list_models_catalog + the dashboard
     // import view) never did, so custom models were dropped on both the
     // discovery-success and local_catalog paths. Read them once here and fold
-    // them into every models response via buildResponse below (dedup by id).
+    // them into every user-facing models response via buildResponse below
+    // (dedup by id). Internal model-sync discovery opts out because these rows
+    // are a response projection, not provider-discovered models.
     let customModelsForProvider: Array<{ id: string; name?: string }> = [];
-    try {
-      const custom = await getCustomModels(provider);
-      if (Array.isArray(custom)) {
-        customModelsForProvider = custom as Array<{ id: string; name?: string }>;
+    if (!excludeCustom) {
+      try {
+        const custom = await getCustomModels(provider);
+        if (Array.isArray(custom)) {
+          customModelsForProvider = custom as Array<{ id: string; name?: string }>;
+        }
+      } catch {
+        // DB unavailable — proceed without custom models.
       }
-    } catch {
-      // DB unavailable — proceed without custom models.
     }
 
     const mergeCustomModels = (models: any[]) => {
@@ -330,20 +344,24 @@ export async function GET(
     const buildDiscoveryFallbackResponse = ({
       cacheWarning = "API unavailable — using cached catalog",
       localWarning = "API unavailable — using local catalog",
+      localIntentional = false,
     }: {
       cacheWarning?: string;
       localWarning?: string;
+      localIntentional?: boolean;
     } = {}) => {
       if (cachedDiscoveryModels.length > 0) {
         return buildCachedDiscoveryResponse(cacheWarning);
       }
-      // If the provider has a static model catalog or registry models,
+      // If the caller explicitly marked this as intentional (localIntentional),
+      // or if the provider has a static model catalog or registry models,
       // the local catalog is intentional (not degraded) — model-sync should
       // import it, not 502. This covers web-cookie providers whose API
       // discovery fails due to WAF/anti-bot (qwen-web, zai-web-free, etc).
       const hasStaticCatalog = getStaticModelsForProvider(provider)?.length > 0;
       const hasRegistryModels = (getModelsByProviderId(provider) || []).length > 0;
-      return buildLocalCatalogResponse(localWarning, hasStaticCatalog || hasRegistryModels);
+      const intentional = localIntentional || hasStaticCatalog || hasRegistryModels;
+      return buildLocalCatalogResponse(localWarning, intentional);
     };
 
     const buildDiscoveryErrorFallbackResponse = (
@@ -391,7 +409,11 @@ export async function GET(
       });
     };
 
-    const buildApiDiscoveryResponse = async (models: any[], warning?: string) => {
+    const buildApiDiscoveryResponse = async (
+      models: any[],
+      warning?: string,
+      extraPayload: Record<string, unknown> = {}
+    ) => {
       const discoveredModels = await persistDiscoveredModels(provider, connectionId, models);
       if (discoveredModels.length > 0) {
         return buildResponse({
@@ -400,6 +422,7 @@ export async function GET(
           models,
           source: "api",
           ...(warning ? { warning } : {}),
+          ...extraPayload,
         });
       }
 
@@ -460,6 +483,13 @@ export async function GET(
     if (provider === "reka") {
       // reka has no remote model-discovery endpoint — the local catalog is the
       // intended source, not a degraded fallback (#5460).
+      const localCatalog = buildLocalCatalogResponse(undefined, true);
+      if (localCatalog) return localCatalog;
+    }
+
+    if (provider === "lmarena") {
+      // Direct-chat allowlist is the intended source — no arena.ai HTML scrape
+      // (avoids CF bot burn and thrashy initialModels rows).
       const localCatalog = buildLocalCatalogResponse(undefined, true);
       if (localCatalog) return localCatalog;
     }
@@ -616,7 +646,11 @@ export async function GET(
         try {
           const response = await safeOutboundFetch(modelsUrl, {
             ...SAFE_OUTBOUND_FETCH_PRESETS.modelsProbe,
-            guard: getProviderOutboundGuard(),
+            // #6939: model-list discovery for local/OpenAI-compatible providers (e.g. LM
+            // Studio on a LAN host) must use the same guard tier as the test-connection path
+            // (getProviderValidationGuard — respects the local-first default) rather than the
+            // stricter outbound guard, which never allows LAN hosts by default.
+            guard: getProviderValidationGuard(),
             proxyConfig: proxy,
             method: "GET",
             headers: isNamedOpenAIStyleProvider(provider)
@@ -1711,6 +1745,99 @@ export async function GET(
       });
     }
 
+    if (provider === "codex") {
+      // Auto-merge live/GitHub/local (future-proof discovery), then apply explicit
+      // denylist filters (e.g. drop GPT-5.4 family). Do not gate remote-only IDs.
+      const staticCodexCatalog = mergeLocalCatalogModels(
+        getModelsByProviderId("codex") || [],
+        getStaticModelsForProvider("codex") || []
+      );
+      const finalizeCodexCatalog = (remoteModels: typeof cachedDiscoveryModels) =>
+        buildCodexDiscoveryCatalog(remoteModels, staticCodexCatalog);
+      const cachedCatalogModels = finalizeCodexCatalog(cachedDiscoveryModels);
+      const cachedIdsMatchFinalCatalog =
+        cachedDiscoveryModels.length === cachedCatalogModels.length &&
+        cachedDiscoveryModels.every((model, index) => model.id === cachedCatalogModels[index]?.id);
+      const persistFilteredCacheIfNeeded = async () => {
+        if (cachedIdsMatchFinalCatalog) return;
+        await persistDiscoveredModels(provider, connectionId, cachedCatalogModels);
+      };
+
+      if (!refresh && cachedDiscoveryModels.length > 0) {
+        await persistFilteredCacheIfNeeded();
+        return buildResponse({
+          provider,
+          connectionId,
+          models: cachedCatalogModels,
+          source: "cache",
+        });
+      }
+
+      if (!refresh && !autoFetchModels) {
+        return buildResponse({
+          provider,
+          connectionId,
+          models: finalizeCodexCatalog([]),
+          source: "local_catalog",
+          warning: "Auto-fetch disabled — using local catalog",
+        });
+      }
+
+      const liveModels = await fetchCodexDiscoveryModels({
+        accessToken: accessToken || null,
+        providerSpecificData: connection.providerSpecificData,
+        fetchImpl: (url, init) =>
+          safeOutboundFetch(url, {
+            ...SAFE_OUTBOUND_FETCH_PRESETS.modelsDiscovery,
+            guard: getProviderOutboundGuard(),
+            proxyConfig: proxy,
+            ...init,
+          }),
+      });
+      const githubCatalogModels = await fetchCodexGithubCatalogModels({
+        fetchImpl: (url, init) =>
+          safeOutboundFetch(url, {
+            ...SAFE_OUTBOUND_FETCH_PRESETS.modelsDiscovery,
+            guard: "public-only",
+            proxyConfig: proxy,
+            ...init,
+          }),
+      });
+      if (liveModels && liveModels.length > 0) {
+        const enrichedLiveModels =
+          githubCatalogModels && githubCatalogModels.length > 0
+            ? enrichCodexModelsFromGithubCatalog(liveModels, githubCatalogModels)
+            : liveModels;
+        return buildApiDiscoveryResponse(finalizeCodexCatalog(enrichedLiveModels));
+      }
+
+      if (githubCatalogModels && githubCatalogModels.length > 0) {
+        return buildApiDiscoveryResponse(
+          finalizeCodexCatalog(githubCatalogModels),
+          "Codex live catalog unavailable — using GitHub model catalog"
+        );
+      }
+
+      if (cachedDiscoveryModels.length > 0) {
+        await persistFilteredCacheIfNeeded();
+        return buildResponse({
+          provider,
+          connectionId,
+          models: cachedCatalogModels,
+          source: "cache",
+          warning: "Codex live catalog unavailable — using cached catalog",
+        });
+      }
+      return buildResponse({
+        provider,
+        connectionId,
+        models: finalizeCodexCatalog([]),
+        source: "local_catalog",
+        intentional: true,
+        warning: "Codex live and GitHub catalogs unavailable — using local catalog",
+      });
+    }
+
     const localCatalog = mergeLocalCatalogModels(registryCatalogModels, specialtyCatalogModels);
     if (!config && localCatalog.length > 0) {
       return buildResponse({
@@ -1812,8 +1939,8 @@ export async function GET(
     }
 
     // Build headers
-    const headers = { ...config.headers };
-    if (config.authHeader && !config.authQuery) {
+    const headers = config.buildHeaders ? config.buildHeaders(token) : { ...config.headers };
+    if (!config.buildHeaders && config.authHeader && !config.authQuery) {
       headers[config.authHeader] = (config.authPrefix || "") + token;
     }
 

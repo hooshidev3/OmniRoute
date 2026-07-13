@@ -18,6 +18,10 @@ import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
 import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
 import { resolveThinkMode } from "../services/thinkOutputMode.ts";
 import { applyThinkMode, type ThinkMode } from "../utils/thinkModeProcessor.ts";
+import {
+  createFinishOnceGuard,
+  createFinishedDrainScheduler,
+} from "./deepseek-web-done-terminator.ts";
 
 export const DEEPSEEK_WEB_BASE = "https://chat.deepseek.com";
 const DEEPSEEK_API_BASE = `${DEEPSEEK_WEB_BASE}/api`;
@@ -423,7 +427,7 @@ function transformSSE(deepseekStream: ReadableStream, model: string, thinkMode: 
           }
         };
 
-        const finishStream = () => {
+        const { finishOnce: finishStream, hasFinished } = createFinishOnceGuard(() => {
           const citations = appendSearchCitations(searchResults, streamModel);
           if (citations) {
             ensureRole();
@@ -432,10 +436,17 @@ function transformSSE(deepseekStream: ReadableStream, model: string, thinkMode: 
           ensureRole();
           chunk({}, "stop");
           emitUsageChunk();
+          // OpenAI-compatible clients (SDK, OpenCode) hang without this terminator.
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
           onComplete?.(responseMessageId, tokenUsage);
-        };
+        });
+
+        // Do not close *immediately* on FINISHED — DeepSeek may still send
+        // search_results afterward. Drain briefly, then always emit
+        // stop + [DONE] so clients do not hang if the upstream body stays open.
+        const { scheduleFinishAfterDrain, clearFinishedDrain, isDrainPending } =
+          createFinishedDrainScheduler(finishStream);
 
         const sendByPath = (raw: string) => {
           const text = formatStreamContent(raw, streamModel);
@@ -586,19 +597,32 @@ function transformSSE(deepseekStream: ReadableStream, model: string, thinkMode: 
                 }
               }
 
-              // Do not close on FINISHED — DeepSeek may still send search_results afterward.
               if (p === "response/status" && v === "FINISHED") {
+                scheduleFinishAfterDrain();
                 continue;
+              }
+
+              // Any other post-FINISHED payload extends the drain window so we
+              // still capture late search_results before closing.
+              if (isDrainPending()) {
+                scheduleFinishAfterDrain();
               }
             }
           }
         } catch (err) {
-          controller.error(err);
+          clearFinishedDrain();
+          if (!hasFinished()) {
+            controller.error(err);
+          }
           onComplete?.(responseMessageId, tokenUsage);
           return;
         }
 
         finishStream();
+      },
+      cancel() {
+        // Best-effort: cancel upstream reader if the client aborts mid-stream.
+        // finishStream is not required here — the controller is already cancelled.
       },
     },
     { highWaterMark: 16384 }
