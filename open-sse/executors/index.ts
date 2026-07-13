@@ -49,6 +49,8 @@ import { V0VercelWebExecutor } from "./v0-vercel-web.ts";
 import { KimiWebExecutor } from "./kimi-web.ts";
 import { DoubaoWebExecutor } from "./doubao-web.ts";
 import { QwenWebExecutor } from "./qwen-web.ts";
+import { ZaiWebFreeExecutor } from "./zai-web-free.ts";
+import { XiaomimimoWebExecutor } from "./xiaomimimo-web.ts";
 import { KimiExecutor } from "./kimi.ts";
 import { TheOldLlmExecutor } from "./theoldllm.ts";
 import { ChipotleExecutor } from "./chipotle.ts";
@@ -147,6 +149,12 @@ const executors = {
   db: new DoubaoWebExecutor(), // Alias
   "qwen-web": new QwenWebExecutor(),
   qw: new QwenWebExecutor(), // Alias
+  "zai-web-free": new ZaiWebFreeExecutor(),
+  "zai-web-token": new ZaiWebFreeExecutor(), // Same executor, different auth
+  zaifree: new ZaiWebFreeExecutor(), // Alias
+  zaitoken: new ZaiWebFreeExecutor(), // Alias
+  "xiaomimimo-web": new XiaomimimoWebExecutor(),
+  mimo: new XiaomimimoWebExecutor(), // Alias
   theoldllm: new TheOldLlmExecutor(),
   tllm: new TheOldLlmExecutor(), // Alias
   chipotle: new ChipotleExecutor(),
@@ -222,6 +230,8 @@ export { YuanbaoWebExecutor } from "./yuanbao-web.ts";
 export { T3ChatWebExecutor } from "./t3-chat-web.ts";
 export { InnerAiExecutor } from "./inner-ai.ts";
 export { QwenWebExecutor } from "./qwen-web.ts";
+export { ZaiWebFreeExecutor } from "./zai-web-free.ts";
+export { XiaomimimoWebExecutor } from "./xiaomimimo-web.ts";
 export { TheOldLlmExecutor } from "./theoldllm.ts";
 export { ChipotleExecutor } from "./chipotle.ts";
 export { LMArenaExecutor } from "./lmarena.ts";
