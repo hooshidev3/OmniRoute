@@ -7,6 +7,7 @@ import {
   getPoolSize,
   initDeviceTokenPool,
 } from "@omniroute/open-sse/executors/zai-web-free/device-token-pool.ts";
+import { isZaiWebFreeDisabled } from "@omniroute/open-sse/executors/zai-web-free/feature-flag.ts";
 import { resolveProxyForScopeFromRegistry } from "@/lib/localDb";
 
 const log = logger("ZAI-WEB-FREE-ADMIN");
@@ -23,13 +24,18 @@ const log = logger("ZAI-WEB-FREE-ADMIN");
  *   - `http://host:port`
  *   - `https://user:pass@host:port`
  */
-function proxyConfigToUrl(proxy: {
-  type?: string;
-  host?: string;
-  port?: number | string;
-  username?: string;
-  password?: string;
-} | null | undefined): string | undefined {
+function proxyConfigToUrl(
+  proxy:
+    | {
+        type?: string;
+        host?: string;
+        port?: number | string;
+        username?: string;
+        password?: string;
+      }
+    | null
+    | undefined
+): string | undefined {
   if (!proxy || !proxy.host || !proxy.port) return undefined;
 
   const type = (proxy.type || "http").toLowerCase();
@@ -86,6 +92,19 @@ export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+  // Refuse to spawn a Playwright browser when the provider is disabled —
+  // it would collect tokens that the executor can never consume, wasting
+  // resources (each Playwright launch is ~50MB of memory + ~30s of CPU).
+  if (isZaiWebFreeDisabled()) {
+    return NextResponse.json(
+      {
+        error:
+          "zai-web-free is disabled via OMNIROUTE_ZAI_WEB_FREE_DISABLED env var. Token refresh refused.",
+      },
+      { status: 503 }
+    );
+  }
+
   let body: {
     tokens?: number;
     batches?: number;
@@ -102,8 +121,7 @@ export async function POST(request: Request) {
 
   // Initialize the pool with the OmniRoute database path
   const dataDir =
-    process.env.OMNIROUTE_DATA_DIR ||
-    (process.env.HOME ? `${process.env.HOME}/.omniroute` : ".");
+    process.env.OMNIROUTE_DATA_DIR || (process.env.HOME ? `${process.env.HOME}/.omniroute` : ".");
   initDeviceTokenPool(`${dataDir}/omniroute.db`);
 
   // Resolve the global proxy from OmniRoute's proxy registry.

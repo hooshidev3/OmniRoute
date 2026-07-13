@@ -215,9 +215,8 @@ export async function registerNodejs(): Promise<void> {
     // without this the dashboard mode (auto/custom/adaptive) silently reverts to
     // the passthrough default on every restart. Previously this was only wired into
     // the unused `server-init.ts`, so it never ran in production.
-    const { hydrateThinkingBudgetConfig } = await import(
-      "@omniroute/open-sse/services/thinkingBudget.ts"
-    );
+    const { hydrateThinkingBudgetConfig } =
+      await import("@omniroute/open-sse/services/thinkingBudget.ts");
     if (hydrateThinkingBudgetConfig(settings)) {
       console.log("[STARTUP] Thinking-Budget config restored from settings");
     }
@@ -320,6 +319,32 @@ export async function registerNodejs(): Promise<void> {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.warn("[STARTUP] Connection recovery scheduler failed to start (non-fatal):", msg);
+    }
+
+    // Z.AI Free Web device-token auto-refresh daemon — periodically checks the
+    // pool size and triggers a Playwright token-collection run when it drops
+    // below `minPoolSize` (default 10). Without this, the pool empties after
+    // ~20 requests and the executor falls back to slow browser-captcha on
+    // every call. Skipped when the provider is disabled via env or when
+    // background services are disabled. Non-fatal — Playwright may not be
+    // installed in all deployment shapes (e.g. minimal Docker images).
+    try {
+      const { isZaiWebFreeDisabled } =
+        await import("@omniroute/open-sse/executors/zai-web-free/feature-flag.ts");
+      if (!isZaiWebFreeDisabled()) {
+        const { startAutoRefreshDaemon } =
+          await import("@omniroute/open-sse/executors/zai-web-free/auto-refresh-daemon.ts");
+        const dataDir =
+          process.env.OMNIROUTE_DATA_DIR ||
+          (process.env.HOME ? `${process.env.HOME}/.omniroute` : ".");
+        startAutoRefreshDaemon(`${dataDir}/omniroute.db`);
+        console.log("[STARTUP] Z.AI Free Web device-token auto-refresh daemon started");
+      } else {
+        console.log("[STARTUP] Z.AI Free Web device-token daemon skipped (provider disabled)");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn("[STARTUP] Z.AI Free Web daemon failed to start (non-fatal):", msg);
     }
 
     try {

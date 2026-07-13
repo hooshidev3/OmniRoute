@@ -77,6 +77,7 @@ import {
 } from "./zai-web-free/tool-bridge.ts";
 import { applyThinkMode } from "../utils/thinkModeProcessor.ts";
 import { resolveThinkMode } from "../services/thinkOutputMode.ts";
+import { isZaiWebFreeDisabled } from "./zai-web-free/feature-flag.ts";
 
 const log = logger("ZAI-WEB-FREE");
 
@@ -252,6 +253,20 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
   }> {
     const { body, credentials, signal, stream: wantStream, log: inputLog } = input;
     const bodyObj = (body || {}) as Record<string, unknown>;
+
+    // Feature flag — default ENABLED. Operator can disable via
+    // OMNIROUTE_ZAI_WEB_FREE_DISABLED=1 or OMNIROUTE_ZAI_WEB_FREE_ENABLED=0.
+    // When disabled, fail fast with 503 so the upstream retry/fallback
+    // logic can route to another provider instead of burning a captcha
+    // attempt + device token on a doomed request.
+    if (isZaiWebFreeDisabled()) {
+      return makeErrorResult(
+        503,
+        "zai-web-free is disabled via OMNIROUTE_ZAI_WEB_FREE_DISABLED env var",
+        body,
+        CHAT_COMPLETIONS_URL
+      );
+    }
 
     // 1. Resolve the Z.AI session (guest JWT or user-supplied token)
     // The token can come from:

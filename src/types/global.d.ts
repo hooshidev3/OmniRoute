@@ -28,6 +28,12 @@ declare namespace NodeJS {
     OMNIROUTE_DISABLE_BACKGROUND_SERVICES?: string;
     OMNIROUTE_PORT?: string;
     PRICING_SYNC_ENABLED?: string;
+    /** When set to a truthy value (1/true/yes/on), disables the zai-web-free provider. Default: enabled. */
+    OMNIROUTE_ZAI_WEB_FREE_DISABLED?: string;
+    /** When set to a falsy value (0/false/no/off), disables the zai-web-free provider. Default: enabled. */
+    OMNIROUTE_ZAI_WEB_FREE_ENABLED?: string;
+    /** Override device-token TTL in milliseconds (default: 1500000 = 25 min). */
+    OMNIROUTE_ZAI_WEB_FREE_TOKEN_TTL_MS?: string;
     NODE_ENV?: "development" | "production" | "test";
   }
 }
