@@ -472,6 +472,10 @@ const LOBE_PROVIDER_ALIASES = {
   xiaomimimo: "XiaomiMiMo",
   xinference: "Xinference",
   zai: "ZAI",
+  "zai-web-free": "ZAI",
+  "zai-web-token": "ZAI",
+  zaifree: "ZAI",
+  zaitoken: "ZAI",
   yi: "Yi",
   zhipu: "Zhipu",
 } satisfies Record<string, keyof typeof LOBE_ICON_COMPONENTS>;
