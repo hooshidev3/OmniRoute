@@ -164,6 +164,24 @@ function extractZaiError(j: ZaiSSEChunk): string {
 }
 
 /**
+ * Map a Z.AI inline error string to an appropriate HTTP status code.
+ * Capacity/concurrency errors → 503 (retry-able), others → 502.
+ */
+function zaiErrorToStatus(errDetail: string): number {
+  const lower = errDetail.toLowerCase();
+  if (lower.includes("capacity") || lower.includes("concurrency") || lower.includes("rate limit")) {
+    return 503;
+  }
+  if (lower.includes("auth") || lower.includes("unauthorized") || lower.includes("token")) {
+    return 401;
+  }
+  if (lower.includes("paywall") || lower.includes("subscription") || lower.includes("plan")) {
+    return 402;
+  }
+  return 502;
+}
+
+/**
  * Resolve the feature map for a model. Z.AI's web endpoint accepts a
  * `features` object that toggles web_search, thinking, etc.
  *
@@ -712,7 +730,12 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
           const errDetail = extractZaiError(j);
           if (errDetail) {
-            return makeErrorResult(502, `Z.AI inline error: ${errDetail}`, body, requestUrl);
+            return makeErrorResult(
+              zaiErrorToStatus(errDetail),
+              `Z.AI inline error: ${errDetail}`,
+              body,
+              requestUrl
+            );
           }
 
           if (j.data?.phase === "done") {

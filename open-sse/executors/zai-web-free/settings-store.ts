@@ -46,31 +46,23 @@ type SqliteDb = {
   close(): void;
 };
 let _settings: ZaiWebFreeSettings | null = null;
-let _db: SqliteDb | null = null;
-let _dbPath: string | null = null;
 
 /**
- * Initialize the settings store with a database path.
- * Called once at server startup.
+ * Initialize the settings store. Kept for backward compatibility —
+ * settings now use globalThis.__omnirouteDb, so no path is needed.
  */
-export function initSettingsStore(dbPath: string): void {
-  _dbPath = dbPath;
+export function initSettingsStore(_dbPath?: string): void {
+  // No-op — DB is accessed via globalThis.__omnirouteDb
 }
 
 /**
- * Get a database handle (better-sqlite3 via createRequire, matching
- * the device-token-pool pattern).
+ * Get a database handle via globalThis.__omnirouteDb (same pattern as
+ * providerSessionRegistry.ts — uses the OmniRoute main DB).
  */
 function getDb(): SqliteDb | null {
-  if (_db) return _db;
-  if (!_dbPath) return null;
   try {
-    const { createRequire } = require("node:module");
-    const _require = createRequire(import.meta.url);
-    const Database = _require("better-sqlite3");
-    _db = new Database(_dbPath);
-    _db.pragma("journal_mode = WAL");
-    return _db;
+    const db = (globalThis as unknown as { __omnirouteDb?: SqliteDb }).__omnirouteDb;
+    return db ?? null;
   } catch {
     return null;
   }
