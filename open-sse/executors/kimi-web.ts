@@ -28,6 +28,8 @@
 import { BaseExecutor, type ExecuteInput } from "./base.ts";
 import { makeExecutorErrorResult as makeErrorResult, sanitizeErrorMessage } from "../utils/error.ts";
 import { extractKimiJwt, buildKimiCookieHeader } from "@/lib/providers/webCookieAuth";
+import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
+import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
 
 export { extractKimiJwt, buildKimiCookieHeader };
 
@@ -482,11 +484,32 @@ export class KimiWebExecutor extends BaseExecutor {
     return headers;
   }
 
-  private buildRequestBody(prompt: string, wantThinking: boolean, scenario: string): string {
+  /**
+   * Build the Connect-RPC request body.
+   *
+   * @param prompt — folded user prompt (last user message for agentic clients
+   *   with agentChatId; full transcript for standard OpenAI clients)
+   * @param wantThinking — enable thinking mode
+   * @param scenario — Kimi scenario string
+   * @param chatId — server-side chat_id for multi-turn chaining (empty for
+   *   first turn or when no agentChatId). When set, Kimi reuses the server-side
+   *   conversation context.
+   * @param parentId — previous assistant message_id for parent_id chaining
+   *   (empty for first turn). When set, Kimi creates a proper conversation
+   *   branch instead of a new root.
+   */
+  private buildRequestBody(prompt: string, wantThinking: boolean, scenario: string, chatId?: string, parentId?: string): string {
     return JSON.stringify({
       scenario,
+      // Phase 1 (qwen-web pattern): chat_id chains multi-turn conversations.
+      // Empty for first turn → Kimi creates a new chat. Non-empty → reuse.
+      chat_id: chatId || "",
       tools: [{ type: "TOOL_TYPE_SEARCH", search: {} }, { type: "TOOL_TYPE_CRON_JOB" }],
       message: {
+        // parent_id chains the message tree. Empty for first turn.
+        // When set to the previous assistant message_id, Kimi creates a
+        // proper conversation branch (not a new root).
+        parent_id: parentId || "",
         role: "user",
         blocks: [{ message_id: "", text: { content: prompt } }],
         scenario,
@@ -526,6 +549,27 @@ export class KimiWebExecutor extends BaseExecutor {
     // (preserves auxiliary anti-bot cookies), otherwise emit `kimi-auth=<jwt>`.
     const cookieHeader = buildKimiCookieHeader(rawCredential);
 
+    // Multi-turn registry (qwen-web pattern): agentChatId → (chatId, parentId).
+    // When agentChatId is present, we use the registry for multi-turn chaining:
+    //   - chat_id: reuse the server-generated chat id from the first turn
+    //   - parent_id: set to the previous assistant message_id
+    // When agentChatId is absent (standard OpenAI client), we send the full
+    // conversation history in the prompt (zai-web pattern) and don't use the
+    // registry.
+    const connectionId = (credentials as { connectionId?: string })?.connectionId || "default";
+    const agentChatId = getAgentChatId(bodyObj, input.clientHeaders as Record<string, unknown> | undefined);
+
+    let existingChatId: string | null = null;
+    let existingParentId: string | null = null;
+    if (agentChatId) {
+      const existing = getMapping({ connectionId, agentChatId, provider: "kimi" });
+      if (existing) {
+        existingChatId = existing.providerConversationId;
+        const meta = existing.metadata as { parentId?: string } | null;
+        existingParentId = meta?.parentId || null;
+      }
+    }
+
     const messages = (bodyObj.messages as Array<{ role: string; content: unknown; tool_call_id?: string; tool_calls?: unknown }>) || [];
     const modelId = (bodyObj.model as string) || "kimi-default";
     // Resolve scenario + default thinking flag from the model id (catalog truth),
@@ -549,8 +593,14 @@ export class KimiWebExecutor extends BaseExecutor {
       }
     }
 
-    const prompt = foldMessages(messagesForFold);
-    const reqBody = this.buildRequestBody(prompt, wantThinking, modelConfig.scenario);
+    // Phase 3: When agentChatId is present, send only the last user message
+    // (server-side chaining via chat_id + parent_id, like qwen-web). When
+    // agentChatId is absent, foldMessages already sends the full transcript
+    // (zai-web pattern).
+    const prompt = agentChatId
+      ? foldMessages(messagesForFold.slice(-1)) // last message only
+      : foldMessages(messagesForFold);           // full transcript
+    const reqBody = this.buildRequestBody(prompt, wantThinking, modelConfig.scenario, existingChatId ?? undefined, existingParentId ?? undefined);
     const reqHeaders = this.buildKimiHeaders(jwt, cookieHeader);
 
     // Connect framing wraps the JSON body in a 5-byte envelope. Without it the
@@ -632,6 +682,32 @@ export class KimiWebExecutor extends BaseExecutor {
                   if (consumed === 0) break; // need more bytes
                   offset += consumed;
                   if (!frame?.message) continue;
+
+                  // Phase 1 (qwen-web pattern): Capture chat.id and assistant
+                  // message.id from the SSE frames. Save to registry IMMEDIATELY
+                  // (not at stream end) so turn 2 can find them even if it
+                  // arrives before the stream is fully consumed (race-condition fix).
+                  if (agentChatId) {
+                    const msg = frame.message as Record<string, unknown>;
+                    const chat = msg.chat as { id?: string } | undefined;
+                    const message = msg.message as { id?: string; role?: string } | undefined;
+                    if (chat?.id && !existingChatId) {
+                      existingChatId = chat.id;
+                      saveMapping({
+                        connectionId, agentChatId, provider: "kimi",
+                        providerConversationId: chat.id,
+                        metadata: existingParentId ? { parentId: existingParentId } : undefined,
+                      });
+                    }
+                    if (message?.id && message.role === "assistant" && !existingParentId) {
+                      existingParentId = message.id;
+                      saveMapping({
+                        connectionId, agentChatId, provider: "kimi",
+                        providerConversationId: existingChatId || "",
+                        metadata: { parentId: message.id },
+                      });
+                    }
+                  }
 
                   // Multi-stage thinking detection: some Kimi frames carry a
                   // `multiStage.stages[0].name === "STAGE_NAME_THINKING"` marker
@@ -749,6 +825,31 @@ export class KimiWebExecutor extends BaseExecutor {
           if (consumed === 0) break;
           offset += consumed;
           if (!frame?.message) continue;
+
+          // Phase 1 (qwen-web pattern): Capture chat.id and assistant
+          // message.id for multi-turn chaining (non-streaming path).
+          if (agentChatId) {
+            const msg = frame.message as Record<string, unknown>;
+            const chat = msg.chat as { id?: string } | undefined;
+            const message = msg.message as { id?: string; role?: string } | undefined;
+            if (chat?.id && !existingChatId) {
+              existingChatId = chat.id;
+              saveMapping({
+                connectionId, agentChatId, provider: "kimi",
+                providerConversationId: chat.id,
+                metadata: existingParentId ? { parentId: existingParentId } : undefined,
+              });
+            }
+            if (message?.id && message.role === "assistant" && !existingParentId) {
+              existingParentId = message.id;
+              saveMapping({
+                connectionId, agentChatId, provider: "kimi",
+                providerConversationId: existingChatId || "",
+                metadata: { parentId: message.id },
+              });
+            }
+          }
+
           const delta = extractDelta(frame.message);
           if (delta) {
             if (delta.kind === "think") reasoning += delta.text;

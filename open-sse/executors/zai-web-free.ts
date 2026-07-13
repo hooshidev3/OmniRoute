@@ -78,6 +78,9 @@ import {
 import { applyThinkMode } from "../utils/thinkModeProcessor.ts";
 import { resolveThinkMode } from "../services/thinkOutputMode.ts";
 import { isZaiWebFreeDisabled } from "./zai-web-free/feature-flag.ts";
+import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
+import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
+import { randomUUID } from "node:crypto";
 
 const log = logger("ZAI-WEB-FREE");
 
@@ -396,11 +399,50 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       providerSpecificData: credentials?.providerSpecificData as Record<string, unknown> | null,
     });
 
+    // 4d. Multi-turn registry (qwen-web pattern): agentChatId → chatId.
+    // Z.AI's web API accepts a client-generated UUID as chat_id. When the same
+    // chat_id is reused across turns, Z.AI groups the messages and maintains
+    // server-side conversation context.
+    //
+    // When agentChatId is present (agentic clients like Claude Code):
+    //   - First turn: generate a new UUID, save to registry, send only the
+    //     last user message (server-side context via chat_id).
+    //   - Subsequent turns: reuse the UUID from registry, send only the last
+    //     user message.
+    // When agentChatId is absent (standard OpenAI client):
+    //   - Generate a new UUID per request (no registry), send the FULL
+    //     messages array (zai-web pattern — client-side context).
+    const connectionId = (credentials as { connectionId?: string })?.connectionId || "default";
+    const agentChatId = getAgentChatId(bodyObj, input.clientHeaders as Record<string, unknown> | undefined);
+
+    let chatId: string;
+    if (agentChatId) {
+      const existing = getMapping({ connectionId, agentChatId, provider: "zai" });
+      if (existing?.providerConversationId) {
+        chatId = existing.providerConversationId;
+        log?.debug?.("ZAI-WEB-FREE", `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (reused)`);
+      } else {
+        chatId = randomUUID();
+        saveMapping({
+          connectionId, agentChatId, provider: "zai",
+          providerConversationId: chatId,
+        });
+        log?.debug?.("ZAI-WEB-FREE", `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (new)`);
+      }
+    } else {
+      // No agentChatId — generate a fresh UUID per request (stateless).
+      chatId = randomUUID();
+    }
+
     // 5. Build the request body
+    // When agentChatId is present, send only the last user message (server-side
+    // context via chat_id). When absent, send the full messages array
+    // (client-side context — zai-web pattern).
+    const messagesToSend = agentChatId ? messages.slice(-1) : messages;
     const requestBody: Record<string, unknown> = {
       model: requestedModel,
-      chat_id: "", // empty = new conversation each request
-      messages, // forward the original OpenAI messages array
+      chat_id: chatId,
+      messages: messagesToSend,
       signature_prompt: prompt,
       stream: true, // Z.AI always streams
       captcha_verify_param: captchaParam,
