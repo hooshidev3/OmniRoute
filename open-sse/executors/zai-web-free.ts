@@ -35,12 +35,19 @@
  */
 
 import { BaseExecutor, type ExecuteInput } from "./base.ts";
-import { makeExecutorErrorResult as makeErrorResult, sanitizeErrorMessage } from "../utils/error.ts";
+import {
+  makeExecutorErrorResult as makeErrorResult,
+  sanitizeErrorMessage,
+} from "../utils/error.ts";
 import { Buffer } from "node:buffer";
-import { randomUUID } from "node:crypto";
 import { logger } from "../utils/logger.ts";
 
-import { getSession, resetSession, setHardcodedToken, type ZaiSession } from "./zai-web-free/session.ts";
+import {
+  getSession,
+  resetSession,
+  setHardcodedToken,
+  type ZaiSession,
+} from "./zai-web-free/session.ts";
 import { generateZaSignature } from "./zai-web-free/signature.ts";
 import { getCaptchaVerifyParam } from "./zai-web-free/captcha.ts";
 import {
@@ -50,21 +57,22 @@ import {
   initDeviceTokenPool,
   addDeviceTokens,
 } from "./zai-web-free/device-token-pool.ts";
-import { getFreshDeviceTokenViaBrowser, getCaptchaParamViaBrowser } from "./zai-web-free/browser-captcha.ts";
+import {
+  getFreshDeviceTokenViaBrowser,
+  getCaptchaParamViaBrowser,
+} from "./zai-web-free/browser-captcha.ts";
+import {
+  tlsFetchZai,
+  TlsClientUnavailableError,
+  isAliyunWafChallenge,
+} from "../services/zaiTlsClient.ts";
 
 const log = logger("ZAI-WEB-FREE");
 
 const CHAT_COMPLETIONS_URL = "https://chat.z.ai/api/v2/chat/completions";
-const CHATS_NEW_URL = "https://chat.z.ai/api/v1/chats/new";
 
 // Fallback model list (used when Z.AI's /api/models is unreachable)
-const FALLBACK_MODELS = [
-  "glm-5.2",
-  "GLM-5.1",
-  "GLM-5-Turbo",
-  "GLM-5v-Turbo",
-  "glm-4.7",
-];
+const FALLBACK_MODELS = ["glm-5.2", "GLM-5.1", "GLM-5-Turbo", "GLM-5v-Turbo", "glm-4.7"];
 
 const DEFAULT_MODEL = "glm-4.7"; // Guest sessions only allow glm-4.7
 
@@ -81,15 +89,7 @@ interface ZaiSSEChunk {
     edit_content?: string;
     delta_content?: string;
     content?: string;
-    done?: boolean;
     error?: { detail?: string; message?: string; code?: unknown };
-    usage?: {
-      prompt_tokens?: number;
-      completion_tokens?: number;
-      total_tokens?: number;
-      prompt_tokens_details?: { cached_tokens?: number };
-      completion_tokens_details?: { reasoning_tokens?: number };
-    };
   };
   choices?: Array<{
     delta?: { content?: string };
@@ -124,8 +124,7 @@ function messagesToPrompt(messages: ZaiMessage[]): string {
   for (const m of messages) {
     const text = extractTextContent(m.content).trim();
     if (!text) continue;
-    const role =
-      m.role === "system" ? "System" : m.role === "assistant" ? "Assistant" : "User";
+    const role = m.role === "system" ? "System" : m.role === "assistant" ? "Assistant" : "User";
     entries.push({ role, text });
   }
   if (entries.length === 1 && entries[0].role === "User") {
@@ -162,14 +161,15 @@ function extractZaiError(j: ZaiSSEChunk): string {
  * Per-request overrides (from the OpenAI body's `web_search` /
  * `reasoning_effort` fields) take precedence over the model's defaults.
  */
-function resolveFeatures(
-  bodyObj: Record<string, unknown>
-): Record<string, unknown> {
-  // Match Go zai-api: only send flags + image_generation by default.
-  // web_search, think, preview_mode are only included if explicitly requested.
+function resolveFeatures(bodyObj: Record<string, unknown>): Record<string, unknown> {
   const features: Record<string, unknown> = {
+    web_search: false,
+    auto_web_search: false,
+    think: false,
+    enable_thinking: false,
+    preview_mode: false,
+    image_generation: false, // ALWAYS false ?�� Z.AI rejects image gen on web
     flags: [],
-    image_generation: false,
   };
 
   // Per-request overrides
@@ -230,7 +230,8 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     //   - credentials.apiKey (the standard web-session token field ?��
     //     `resolveWebSessionImportApiKey` stores token-kind credentials there)
     const psd = credentials?.providerSpecificData as { token?: string } | undefined;
-    const hardcodedToken = psd?.token || (credentials?.apiKey ? String(credentials.apiKey).trim() : "");
+    const hardcodedToken =
+      psd?.token || (credentials?.apiKey ? String(credentials.apiKey).trim() : "");
     if (hardcodedToken) {
       setHardcodedToken(hardcodedToken);
     }
@@ -249,7 +250,12 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 2. Build the request
     const messages = (bodyObj.messages as ZaiMessage[]) || [];
     if (messages.length === 0) {
-      return makeErrorResult(400, "messages is required and must be a non-empty array", body, CHAT_COMPLETIONS_URL);
+      return makeErrorResult(
+        400,
+        "messages is required and must be a non-empty array",
+        body,
+        CHAT_COMPLETIONS_URL
+      );
     }
 
     const requestedModel = (bodyObj.model as string) || DEFAULT_MODEL;
@@ -279,9 +285,15 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           setTimeout(() => reject(new Error("Captcha generation timeout after 90s")), 90_000)
         );
         captchaParam = await Promise.race([captchaPromise, timeoutPromise]);
-        log?.debug?.("ZAI-WEB-FREE", `captcha via fast path A (pool: ${poolSize} ?�� ${getPoolSize()})`);
+        log?.debug?.(
+          "ZAI-WEB-FREE",
+          `captcha via fast path A (pool: ${poolSize} ?�� ${getPoolSize()})`
+        );
       } catch (fastErr) {
-        log?.warn?.("ZAI-WEB-FREE", `Fast path A failed: ${fastErr instanceof Error ? fastErr.message : String(fastErr)}`);
+        log?.warn?.(
+          "ZAI-WEB-FREE",
+          `Fast path A failed: ${fastErr instanceof Error ? fastErr.message : String(fastErr)}`
+        );
         captchaParam = "";
       }
     } else {
@@ -304,7 +316,10 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
         captchaParam = await Promise.race([captchaPromise, timeoutPromise]);
         log?.debug?.("ZAI-WEB-FREE", "captcha via fast path B (fresh token)");
       } catch (freshErr) {
-        log?.warn?.("ZAI-WEB-FREE", `Fast path B failed: ${freshErr instanceof Error ? freshErr.message : String(freshErr)}`);
+        log?.warn?.(
+          "ZAI-WEB-FREE",
+          `Fast path B failed: ${freshErr instanceof Error ? freshErr.message : String(freshErr)}`
+        );
       }
     }
 
@@ -327,67 +342,129 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 4. Compute the X-Signature header
     const sig = generateZaSignature(prompt, session.token, session.userId);
 
-    // 5. Build the request body (matching Go zai-api exactly)
-    //    Go code: simple body with model, chat_id, messages, signature_prompt,
-    //    stream, captcha_verify_param, features. No URL params on the request.
-    const chatId = randomUUID();
-
+    // 5. Build the request body
     const requestBody: Record<string, unknown> = {
       model: requestedModel,
-      chat_id: chatId,
-      messages,
+      chat_id: "", // empty = new conversation each request
+      messages, // forward the original OpenAI messages array
       signature_prompt: prompt,
-      stream: true,
+      stream: true, // Z.AI always streams
       captcha_verify_param: captchaParam,
       features,
     };
 
-    // Go code: POST to BASE_URL + "/api/v2/chat/completions" (no URL params)
-    const requestUrl = CHAT_COMPLETIONS_URL;
+    const requestUrl = `${CHAT_COMPLETIONS_URL}?${sig.urlParams}`;
     const reqHeaders: Record<string, string> = {
       Authorization: `Bearer ${session.token}`,
       "Content-Type": "application/json",
+      Accept: "text/event-stream",
       "x-fe-Version": session.feVersion,
       "x-region": "overseas",
       "x-signature": sig.signature,
+      // Browser headers — required by Aliyun WAF (without these, WAF returns 405)
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+      Origin: "https://chat.z.ai",
+      Referer: "https://chat.z.ai/",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Sec-Ch-Ua": '"Chromium";v="131", "Not_A Brand";v="24"',
+      "Sec-Ch-Ua-Mobile": "?0",
+      "Sec-Ch-Ua-Platform": '"macOS"',
     };
 
-    // 6. Send the request (with one 401 retry that re-inits the session)
+    // 6. Send the request via TLS-impersonating client (bypasses Aliyun WAF)
     let upstream: Response;
+    const bodyStr = JSON.stringify(requestBody);
+
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        upstream = await fetch(requestUrl, {
+        const tlsResult = await tlsFetchZai(requestUrl, {
           method: "POST",
           headers: reqHeaders,
-          body: JSON.stringify(requestBody),
-          signal,
+          body: bodyStr,
+          stream: true,
+          streamEofSymbol: "[DONE]",
+          signal: signal ?? null,
         });
-      } catch (err) {
-        return makeErrorResult(
-          502,
-          `Z.AI fetch failed: ${err instanceof Error ? err.message : String(err)}`,
-          body,
-          requestUrl
-        );
-      }
 
-      if (upstream.status === 401 && attempt === 0) {
-        // Session expired ?�� re-init and retry once
-        log?.info?.("ZAI-WEB-FREE", "401 from Z.AI, re-initializing guest session");
-        resetSession();
-        try {
-          const newSession = await getSession();
-          reqHeaders.Authorization = `Bearer ${newSession.token}`;
-          reqHeaders["x-fe-Version"] = newSession.feVersion;
-        } catch (err) {
+        if (tlsResult.status === 405 || isAliyunWafChallenge(tlsResult.text)) {
           return makeErrorResult(
-            502,
-            `Z.AI session re-init failed: ${err instanceof Error ? err.message : String(err)}`,
+            405,
+            `Z.AI WAF blocked the request. The Aliyun WAF may be rate-limiting this IP.`,
             body,
             requestUrl
           );
         }
-        continue;
+
+        if (tlsResult.status === 401 && attempt === 0) {
+          log?.info?.("ZAI-WEB-FREE", "401 from Z.AI, re-initializing session");
+          resetSession();
+          try {
+            const newSession = await getSession();
+            reqHeaders.Authorization = `Bearer ${newSession.token}`;
+            reqHeaders["x-fe-Version"] = newSession.feVersion;
+          } catch (err) {
+            return makeErrorResult(
+              502,
+              `Z.AI session re-init failed: ${err instanceof Error ? err.message : String(err)}`,
+              body,
+              requestUrl
+            );
+          }
+          continue;
+        }
+
+        if (tlsResult.status === 429) {
+          return makeErrorResult(
+            429,
+            `Z.AI rate limited. Wait a moment and retry.`,
+            body,
+            requestUrl
+          );
+        }
+
+        // Build a Response object from the TLS result
+        if (tlsResult.body) {
+          upstream = new Response(tlsResult.body, {
+            status: tlsResult.status,
+            headers: tlsResult.headers,
+          });
+        } else {
+          upstream = new Response(tlsResult.text ?? "", {
+            status: tlsResult.status,
+            headers: tlsResult.headers,
+          });
+        }
+      } catch (err) {
+        if (err instanceof TlsClientUnavailableError) {
+          log?.warn?.(
+            "ZAI-WEB-FREE",
+            `TLS client unavailable, falling back to fetch: ${err.message}`
+          );
+          // Fallback to regular fetch if TLS client is unavailable
+          try {
+            upstream = await fetch(requestUrl, {
+              method: "POST",
+              headers: reqHeaders,
+              body: bodyStr,
+              signal,
+            });
+          } catch (fetchErr) {
+            return makeErrorResult(
+              502,
+              `Z.AI fetch failed: ${fetchErr instanceof Error ? fetchErr.message : String(fetchErr)}`,
+              body,
+              requestUrl
+            );
+          }
+        } else {
+          return makeErrorResult(
+            502,
+            `Z.AI TLS fetch failed: ${err instanceof Error ? err.message : String(err)}`,
+            body,
+            requestUrl
+          );
+        }
       }
       break;
     }
@@ -427,7 +504,6 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
           let fullContent = "";
           let sentContent = "";
-          let capturedUsage: Record<string, unknown> | undefined;
           let buffer = "";
           const reader = sourceStream.getReader();
           const decoder = new TextDecoder();
@@ -474,48 +550,25 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
                 // Detect phase "done"
                 if (j.data?.phase === "done") {
-                  // Emit terminal usage chunk before [DONE]
-                  if (capturedUsage) {
-                    const usageChunk = { id, object: "chat.completion.chunk", created, model: requestedModel, choices: [] as unknown[], usage: capturedUsage };
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(usageChunk)}\n\n`));
-                  }
                   emit({}, "stop");
                   controller.enqueue(encoder.encode("data: [DONE]\n\n"));
                   controller.close();
                   return;
                 }
 
-                // Capture usage from phase "other" frames
-                if (j.data?.usage) {
-                  capturedUsage = {
-                    prompt_tokens: j.data.usage.prompt_tokens ?? 0,
-                    completion_tokens: j.data.usage.completion_tokens ?? 0,
-                    total_tokens: j.data.usage.total_tokens ?? 0,
-                    ...(j.data.usage.prompt_tokens_details ? { prompt_tokens_details: j.data.usage.prompt_tokens_details } : {}),
-                    ...(j.data.usage.completion_tokens_details ? { completion_tokens_details: j.data.usage.completion_tokens_details } : {}),
-                  };
-                }
-
-                // Extract content delta — phase "thinking" is reasoning content
+                // Extract content delta
                 let chunk = "";
-                const phase = j.data?.phase;
                 if (j.data?.edit_content) chunk = j.data.edit_content;
                 else if (j.data?.delta_content) chunk = j.data.delta_content;
                 else if (j.data?.content) chunk = j.data.content;
                 else if (j.choices?.[0]?.delta?.content) chunk = j.choices[0].delta.content;
 
                 if (chunk) {
-                  if (phase === "thinking") {
-                    // Reasoning content — emit as reasoning_content
-                    emit({ reasoning_content: chunk });
-                  } else {
-                    // Normal content
-                    fullContent += chunk;
-                    if (fullContent.length > sentContent.length) {
-                      const delta = fullContent.slice(sentContent.length);
-                      sentContent = fullContent;
-                      emit({ content: delta });
-                    }
+                  fullContent += chunk;
+                  if (fullContent.length > sentContent.length) {
+                    const delta = fullContent.slice(sentContent.length);
+                    sentContent = fullContent;
+                    emit({ content: delta });
                   }
                 }
               }
@@ -559,8 +612,6 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
     // Non-streaming: collect all deltas into a single chat.completion JSON
     let fullContent = "";
-    let reasoningContent = "";
-    let capturedUsage: Record<string, unknown> | undefined;
     let buffer = "";
     const reader = sourceStream.getReader();
     const decoder = new TextDecoder();
@@ -605,24 +656,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           else if (j.data?.content) chunk = j.data.content;
           else if (j.choices?.[0]?.delta?.content) chunk = j.choices[0].delta.content;
 
-          if (chunk) {
-            if (j.data?.phase === "thinking") {
-              reasoningContent += chunk;
-            } else {
-              fullContent += chunk;
-            }
-          }
-
-          // Capture usage
-          if (j.data?.usage) {
-            capturedUsage = {
-              prompt_tokens: j.data.usage.prompt_tokens ?? 0,
-              completion_tokens: j.data.usage.completion_tokens ?? 0,
-              total_tokens: j.data.usage.total_tokens ?? 0,
-              ...(j.data.usage.prompt_tokens_details ? { prompt_tokens_details: j.data.usage.prompt_tokens_details } : {}),
-              ...(j.data.usage.completion_tokens_details ? { completion_tokens_details: j.data.usage.completion_tokens_details } : {}),
-            };
-          }
+          if (chunk) fullContent += chunk;
         }
         if (buffer === "") break;
       }
@@ -630,18 +664,20 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       /* best-effort ?�� return what we have */
     }
 
-    const message: Record<string, unknown> = { role: "assistant", content: fullContent };
-    if (reasoningContent) message.reasoning_content = reasoningContent;
-    const completion: Record<string, unknown> = {
+    const completion = {
       id,
       object: "chat.completion",
       created,
       model: requestedModel,
-      choices: [{ index: 0, message, finish_reason: "stop" }],
+      choices: [
+        { index: 0, message: { role: "assistant", content: fullContent }, finish_reason: "stop" },
+      ],
     };
-    if (capturedUsage) completion.usage = capturedUsage;
 
-    log?.debug?.("ZAI-WEB-FREE", `completed model=${requestedModel} contentLen=${fullContent.length}`);
+    log?.debug?.(
+      "ZAI-WEB-FREE",
+      `completed model=${requestedModel} contentLen=${fullContent.length}`
+    );
 
     return {
       response: new Response(JSON.stringify(completion), {
