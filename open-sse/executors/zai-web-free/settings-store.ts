@@ -166,32 +166,30 @@ function resolveSecretKey(): string {
  * Falls back to defaults if not configured.
  */
 export function getSettings(): ZaiWebFreeSettings {
-  if (_settings) return _settings;
+  // Always re-read captcha strategy/retries/timeout from DB to pick up changes
+  // made via the dashboard (updateSettings writes to DB). The DB read is cheap
+  // (single SELECT per key_value row). For accessKey/secretKey, use the cached
+  // resolver (which checks env → DB → default).
+  const dbStrategy = readSetting("captchaStrategy") as CaptchaStrategy | null;
+  const dbRetries = readSetting("captchaRetries");
+  const dbTimeout = readSetting("captchaTimeoutMs");
+  const dbMinPool = readSetting("minPoolSize");
+  const dbAutoRefresh = readSetting("autoRefreshEnabled");
+  const dbAutoRefreshInterval = readSetting("autoRefreshIntervalMs");
 
   _settings = {
     accessKey: resolveAccessKey(),
     secretKey: resolveSecretKey(),
-    minPoolSize: parseInt(readSetting("minPoolSize") || "", 10) || DEFAULT_MIN_POOL_SIZE,
-    autoRefreshEnabled: readSetting("autoRefreshEnabled") !== "false",
+    minPoolSize: (dbMinPool && parseInt(dbMinPool, 10)) || _settings?.minPoolSize || DEFAULT_MIN_POOL_SIZE,
+    autoRefreshEnabled: dbAutoRefresh !== null ? dbAutoRefresh !== "false" : (_settings?.autoRefreshEnabled ?? true),
     autoRefreshIntervalMs:
-      parseInt(readSetting("autoRefreshIntervalMs") || "", 10) || DEFAULT_AUTO_REFRESH_INTERVAL_MS,
-    captchaStrategy: (readSetting("captchaStrategy") as CaptchaStrategy) || DEFAULT_CAPTCHA_STRATEGY,
-    captchaRetries: parseInt(readSetting("captchaRetries") || "", 10) || DEFAULT_CAPTCHA_RETRIES,
-    captchaTimeoutMs: parseInt(readSetting("captchaTimeoutMs") || "", 10) || DEFAULT_CAPTCHA_TIMEOUT_MS,
+      (dbAutoRefreshInterval && parseInt(dbAutoRefreshInterval, 10)) ||
+      _settings?.autoRefreshIntervalMs ||
+      DEFAULT_AUTO_REFRESH_INTERVAL_MS,
+    captchaStrategy: dbStrategy || _settings?.captchaStrategy || DEFAULT_CAPTCHA_STRATEGY,
+    captchaRetries: (dbRetries && parseInt(dbRetries, 10)) || _settings?.captchaRetries || DEFAULT_CAPTCHA_RETRIES,
+    captchaTimeoutMs: (dbTimeout && parseInt(dbTimeout, 10)) || _settings?.captchaTimeoutMs || DEFAULT_CAPTCHA_TIMEOUT_MS,
   };
-
-  log.info?.("settings.loaded", {
-    accessKey: _settings.accessKey.slice(0, 8) + "...",
-    accessKeySource: process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY
-      ? "env"
-      : readSetting("accessKey")
-        ? "db"
-        : "default",
-    minPoolSize: _settings.minPoolSize,
-    autoRefresh: _settings.autoRefreshEnabled,
-    captchaStrategy: _settings.captchaStrategy,
-    captchaRetries: _settings.captchaRetries,
-  });
 
   return _settings;
 }
