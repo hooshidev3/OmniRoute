@@ -461,16 +461,21 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     const connectionId = (credentials as { connectionId?: string })?.connectionId || "default";
     const agentChatId = getAgentChatId(bodyObj, input.clientHeaders as Record<string, unknown> | undefined);
 
+    // Registry provider key: use "zai-web-token" or "zai-web-free" (NOT "zai")
+    // to avoid collision with the `zai` apikey provider which may add registry
+    // support in the future.
+    const registryProvider = hasUserToken ? "zai-web-token" : "zai-web-free";
+
     let chatId: string;
     if (agentChatId) {
-      const existing = getMapping({ connectionId, agentChatId, provider: "zai" });
+      const existing = getMapping({ connectionId, agentChatId, provider: registryProvider });
       if (existing?.providerConversationId) {
         chatId = existing.providerConversationId;
         dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (reused)`);
       } else {
         chatId = randomUUID();
         saveMapping({
-          connectionId, agentChatId, provider: "zai",
+          connectionId, agentChatId, provider: registryProvider,
           providerConversationId: chatId,
         });
         dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (new)`);
