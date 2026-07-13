@@ -319,6 +319,32 @@ export const WEB_COOKIE_PROVIDERS = {
     authHint:
       "Login at zenmux.ai, then export all cookies using EditThisCookie or Cookie-Editor and paste the full Cookie header string here. Refresh every ~30 days.",
   },
+  "zai-web-token": {
+    id: "zai-web-token",
+    alias: "zaitoken",
+    name: "Z.AI Web (JWT)",
+    icon: "auto_awesome",
+    color: "#7C3AED",
+    textIcon: "ZT",
+    website: "https://chat.z.ai",
+    authHint:
+      'Open chat.z.ai, log in, then open DevTools → Application → Local Storage → copy the "token" value (JWT). Unlocks all models (GLM-5.2, GLM-5.1, etc.).',
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+  },
+  "xiaomimimo-web": {
+    id: "xiaomimimo-web",
+    alias: "mimo",
+    name: "Xiaomi MiMo Web",
+    icon: "auto_awesome",
+    color: "#FF6700",
+    textIcon: "MM",
+    website: "https://aistudio.xiaomimimo.com",
+    authHint:
+      "Open aistudio.xiaomimimo.com, log in, then open DevTools → Application → Cookies → copy the full Cookie header (must contain serviceToken, userId, xiaomichatbot_ph).",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+  },
 };
 
 /** Resolved public site for a web-session provider (href + display host). */

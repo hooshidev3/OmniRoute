@@ -120,4 +120,23 @@ export const NOAUTH_PROVIDERS = {
       text: "Augment (Auggie CLI) requires the `auggie` binary installed and authenticated locally (`auggie login`). OmniRoute spawns it as a subprocess and never sees or stores your Augment credentials.",
     },
   },
+  "zai-web-free": {
+    id: "zai-web-free",
+    alias: "zaifree",
+    name: "Z.AI Free Web",
+    icon: "auto_awesome",
+    color: "#7C3AED",
+    textIcon: "ZF",
+    website: "https://chat.z.ai",
+    noAuth: true,
+    hasFree: true,
+    serviceKinds: ["llm"],
+    authHint:
+      "No API key required — uses Z.AI's free guest session with Aliyun captcha verification. Device tokens must be refreshed periodically via the dashboard.",
+    freeNote:
+      "Free Z.AI web chat (chat.z.ai) with in-memory captcha. Guest sessions allow glm-4.7 only. For all models, use zai-web-token with your JWT.",
+    notice: {
+      text: "Z.AI Free Web uses chat.z.ai's consumer web endpoint with Aliyun CaptchaV3 verification. Device tokens are collected via Playwright and consumed FIFO. Rate limits may apply.",
+    },
+  },
 };
