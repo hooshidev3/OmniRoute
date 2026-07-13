@@ -75,6 +75,8 @@ import {
   type ZaiToolRegistry,
   type OpenAIToolCall,
 } from "./zai-web-free/tool-bridge.ts";
+import { applyThinkMode } from "../utils/thinkModeProcessor.ts";
+import { resolveThinkMode } from "../services/thinkOutputMode.ts";
 
 const log = logger("ZAI-WEB-FREE");
 
@@ -372,6 +374,13 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 4b. Build tool registry (if tools are present in the request)
     const toolRegistry = buildZaiToolRegistry(bodyObj);
 
+    // 4c. Resolve think mode (passthrough / strip / separate)
+    const thinkMode = resolveThinkMode({
+      headers: input.clientHeaders as Record<string, unknown> | undefined,
+      body: bodyObj,
+      providerSpecificData: credentials?.providerSpecificData as Record<string, unknown> | null,
+    });
+
     // 5. Build the request body
     const requestBody: Record<string, unknown> = {
       model: requestedModel,
@@ -650,11 +659,18 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
                 else if (j.choices?.[0]?.delta?.content) chunk = j.choices[0].delta.content;
 
                 if (chunk) {
-                  fullContent += chunk;
-                  if (fullContent.length > sentContent.length) {
-                    const delta = fullContent.slice(sentContent.length);
-                    sentContent = fullContent;
-                    emit({ content: delta });
+                  if (j.data?.phase === "thinking") {
+                    // Reasoning content — apply thinkMode (strip = skip, separate = reasoning_content, passthrough = content)
+                    if (thinkMode !== "strip") {
+                      emit({ reasoning_content: chunk });
+                    }
+                  } else {
+                    fullContent += chunk;
+                    if (fullContent.length > sentContent.length) {
+                      const delta = fullContent.slice(sentContent.length);
+                      sentContent = fullContent;
+                      emit({ content: delta });
+                    }
                   }
                 }
               }
@@ -799,8 +815,14 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       };
     }
 
-    const message: Record<string, unknown> = { role: "assistant", content: fullContent };
-    if (reasoningContent) message.reasoning_content = reasoningContent;
+    // Apply think mode to non-streaming response
+    const { content: contentAfterThink, reasoning: reasoningAfterThink } = applyThinkMode(
+      fullContent + (reasoningContent ? `<think>${reasoningContent}</think>` : ""),
+      thinkMode
+    );
+
+    const message: Record<string, unknown> = { role: "assistant", content: contentAfterThink };
+    if (reasoningAfterThink) message.reasoning_content = reasoningAfterThink;
     const completion = {
       id,
       object: "chat.completion",

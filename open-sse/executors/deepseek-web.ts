@@ -17,7 +17,7 @@ import {
 import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
 import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
 import { resolveThinkMode } from "../services/thinkOutputMode.ts";
-import { applyThinkMode } from "../utils/thinkModeProcessor.ts";
+import { applyThinkMode, type ThinkMode } from "../utils/thinkModeProcessor.ts";
 
 export const DEEPSEEK_WEB_BASE = "https://chat.deepseek.com";
 const DEEPSEEK_API_BASE = `${DEEPSEEK_WEB_BASE}/api`;
@@ -370,7 +370,7 @@ async function solvePow(challenge: PowChallenge): Promise<string> {
 
 // ── SSE Transform (DeepSeek → OpenAI) ───────────────────────────────────
 
-function transformSSE(deepseekStream: ReadableStream, model: string, onComplete?: (responseMessageId: number | undefined, tokenUsage: number) => void): ReadableStream {
+function transformSSE(deepseekStream: ReadableStream, model: string, thinkMode: ThinkMode, onComplete?: (responseMessageId: number | undefined, tokenUsage: number) => void): ReadableStream {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
   const streamModel = model || "deepseek-web";
@@ -445,7 +445,13 @@ function transformSSE(deepseekStream: ReadableStream, model: string, onComplete?
           if (!path && thinkingModel) path = "thinking";
           else if (!path && isSearchModel(streamModel)) path = "content";
           if (path === "thinking") {
-            chunk({ reasoning_content: text });
+            // Apply thinkMode: strip = skip, passthrough = content, separate = reasoning_content
+            if (thinkMode === "strip") return;
+            if (thinkMode === "passthrough") {
+              chunk({ content: text });
+            } else {
+              chunk({ reasoning_content: text });
+            }
           } else {
             chunk({ content: text });
           }
@@ -1448,7 +1454,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
       }
 
       if (stream !== false) {
-        const openaiStream = transformSSE(resp.body!, clientModel, (respMsgId, _tokenUsage) => {
+        const openaiStream = transformSSE(resp.body!, clientModel, thinkMode, (respMsgId, _tokenUsage) => {
           // Save response_message_id to registry for multi-turn parent_message_id chaining
           if (agentChatId && respMsgId) {
             saveMapping({
@@ -1484,16 +1490,11 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         log?.debug?.("DEEPSEEK-WEB", `registry: updated parentMessageId=${responseMessageId} for next turn`);
       }
 
-      // Apply think mode (strip mode removes reasoning_content)
-      let finalContent = content;
-      let finalReasoning = reasoningContent;
-      if (thinkMode === "strip") {
-        finalReasoning = "";
-      } else if (thinkMode === "passthrough" && reasoningContent) {
-        // Merge reasoning into content with <think> tags
-        finalContent = `<think>${reasoningContent}</think>${content}`;
-        finalReasoning = "";
-      }
+      // Apply think mode using shared helper (same as qwen-web, kimi-web, xiaomimimo-web)
+      const { content: finalContent, reasoning: finalReasoning } = applyThinkMode(
+        content + (reasoningContent ? `<think>${reasoningContent}</think>` : ""),
+        thinkMode
+      );
 
       const message: Record<string, string> = { role: "assistant", content: finalContent };
       if (finalReasoning) message.reasoning_content = finalReasoning;
