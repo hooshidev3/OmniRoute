@@ -545,4 +545,5 @@ export const __test__ = {
   urlEncode,
   base64Encode,
   base64Decode,
+  ARG_PERM_TABLE_INITIAL,
 };
