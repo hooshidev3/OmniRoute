@@ -425,6 +425,10 @@ async function verifyCaptcha(
   const body = buildQueryString(params);
   const resp = await httpPost(VERIFY_CAPTCHA_URL, body, { Referer: "" });
 
+  // DIAGNOSTIC: log the full Aliyun response to diagnose VerifyResult=false
+  console.log(`[Captcha] verifyCaptcha: full response: ${resp}`);
+  console.log(`[Captcha] verifyCaptcha: AccessKeyId=${getAccessKey().slice(0, 12)}... certifyId=${certifyId} deviceToken=${deviceToken.slice(0, 20)}...`);
+
   const respJson = JSON.parse(resp) as {
     Success?: boolean;
     Result?: {
@@ -432,6 +436,8 @@ async function verifyCaptcha(
       securityToken?: string;
       certifyId?: string;
     };
+    Code?: string;
+    Message?: string;
   };
 
   if (respJson.Success && respJson.Result?.VerifyResult) {
