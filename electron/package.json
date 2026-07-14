@@ -40,7 +40,7 @@
   },
   "build": {
     "appId": "online.omniroute.desktop",
-    "productName": "OmniRoute",
+    "productName": "RouteChi",
     "copyright": "Copyright © 2025 OmniRoute",
     "buildDependenciesFromSource": true,
     "directories": {

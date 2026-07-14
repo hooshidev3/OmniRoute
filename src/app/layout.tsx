@@ -9,6 +9,7 @@ import { getSettings } from "@/lib/db/settings";
 import type { Viewport } from "next";
 import { PwaRegister } from "@/shared/components/PwaRegister";
 import { LocaleAutoDetect } from "@/shared/components/LocaleAutoDetect";
+import { APP_CONFIG } from "@/shared/constants/appConfig";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,13 +23,13 @@ export const viewport: Viewport = {
 
 export async function generateMetadata() {
   const settings = await getSettings();
-  const instanceName = settings?.instanceName || "OmniRoute";
+  const instanceName = settings?.instanceName || APP_CONFIG.name;
   const customFaviconUrl = settings?.customFaviconUrl || settings?.customFaviconBase64;
 
   return {
     title: `${instanceName} — AI Gateway for Multi-Provider LLMs`,
     description:
-      "OmniRoute is an AI gateway for multi-provider LLMs. One endpoint for all your AI providers.",
+      `${APP_CONFIG.name} is an AI gateway for multi-provider LLMs. One endpoint for all your AI providers.`,
     manifest: "/manifest.webmanifest",
     applicationName: instanceName,
     appleWebApp: {

@@ -51,7 +51,7 @@ function toHeaderValue(value: string): string {
   return encodeURIComponent(toWellFormedUnicode(withoutControls));
 }
 
-export function getOmniRouteTokenCounts(usage: UsageLike): { input: number; output: number } {
+export function getRouteChiTokenCounts(usage: UsageLike): { input: number; output: number } {
   if (!usage || typeof usage !== "object") {
     return { input: 0, output: 0 };
   }
@@ -74,12 +74,12 @@ export function getOmniRouteTokenCounts(usage: UsageLike): { input: number; outp
   };
 }
 
-export function formatOmniRouteCost(costUsd: unknown): string {
+export function formatRouteChiCost(costUsd: unknown): string {
   const normalized = toFiniteNumber(costUsd);
   return normalized > 0 ? normalized.toFixed(10) : "0.0000000000";
 }
 
-export function buildOmniRouteResponseMetaHeaders({
+export function buildRouteChiResponseMetaHeaders({
   cacheHit = false,
   costUsd = 0,
   costSavedUsd = undefined,
@@ -107,11 +107,11 @@ export function buildOmniRouteResponseMetaHeaders({
   requestId?: string | null;
   usage?: UsageLike;
 }): Record<string, string> {
-  const tokens = getOmniRouteTokenCounts(usage);
+  const tokens = getRouteChiTokenCounts(usage);
   const headers: Record<string, string> = {
     [OMNIROUTE_RESPONSE_HEADERS.cacheHit]: toHeaderValue(String(cacheHit)),
     [OMNIROUTE_RESPONSE_HEADERS.latencyMs]: toHeaderValue(String(toNonNegativeInteger(latencyMs))),
-    [OMNIROUTE_RESPONSE_HEADERS.responseCost]: toHeaderValue(formatOmniRouteCost(costUsd)),
+    [OMNIROUTE_RESPONSE_HEADERS.responseCost]: toHeaderValue(formatRouteChiCost(costUsd)),
     [OMNIROUTE_RESPONSE_HEADERS.tokensIn]: toHeaderValue(String(tokens.input)),
     [OMNIROUTE_RESPONSE_HEADERS.tokensOut]: toHeaderValue(String(tokens.output)),
     [OMNIROUTE_RESPONSE_HEADERS.version]: toHeaderValue(APP_CONFIG.version),
@@ -133,7 +133,7 @@ export function buildOmniRouteResponseMetaHeaders({
   // non-cache responses keep their existing header shape. `0` is a valid saved cost.
   if (costSavedUsd != null) {
     headers[OMNIROUTE_RESPONSE_HEADERS.costSaved] = toHeaderValue(
-      formatOmniRouteCost(costSavedUsd)
+      formatRouteChiCost(costSavedUsd)
     );
   }
 
@@ -145,10 +145,10 @@ export function buildOmniRouteResponseMetaHeaders({
   return headers;
 }
 
-export function buildOmniRouteSseMetadataComment(
-  options: Parameters<typeof buildOmniRouteResponseMetaHeaders>[0]
+export function buildRouteChiSseMetadataComment(
+  options: Parameters<typeof buildRouteChiResponseMetaHeaders>[0]
 ): string {
-  const headers = buildOmniRouteResponseMetaHeaders(options);
+  const headers = buildRouteChiResponseMetaHeaders(options);
   const lines = Object.entries(headers)
     .filter(([, value]) => typeof value === "string" && value.trim().length > 0)
     .map(([name, value]) => `: ${name.toLowerCase()}=${value}`);
@@ -161,11 +161,11 @@ export function buildOmniRouteSseMetadataComment(
  * Mutates `headers` in place (accepts a Headers instance OR a plain Record).
  * Use at EVERY non-streaming success return so no route forgets the telemetry.
  */
-export function attachOmniRouteMetaHeaders(
+export function attachRouteChiMetaHeaders(
   headers: Headers | Record<string, string>,
-  meta: Parameters<typeof buildOmniRouteResponseMetaHeaders>[0]
+  meta: Parameters<typeof buildRouteChiResponseMetaHeaders>[0]
 ): void {
-  const built = buildOmniRouteResponseMetaHeaders(meta);
+  const built = buildRouteChiResponseMetaHeaders(meta);
   if (headers instanceof Headers) {
     for (const [name, value] of Object.entries(built)) headers.set(name, value);
   } else {
@@ -181,14 +181,14 @@ export function attachOmniRouteMetaHeaders(
  * `chatHelpers.ts::withSessionHeader`). Use for opaque handler-built Responses
  * (audio streams, passthrough proxies) where the body cannot be re-serialized.
  */
-export function attachOmniRouteMetaToResponse(
+export function attachRouteChiMetaToResponse(
   response: Response,
-  meta: Parameters<typeof buildOmniRouteResponseMetaHeaders>[0]
+  meta: Parameters<typeof buildRouteChiResponseMetaHeaders>[0]
 ): Response {
   if (!response) return response;
 
   try {
-    attachOmniRouteMetaHeaders(response.headers, meta);
+    attachRouteChiMetaHeaders(response.headers, meta);
     return response;
   } catch {
     const cloned = new Response(response.body, {
@@ -196,7 +196,7 @@ export function attachOmniRouteMetaToResponse(
       statusText: response.statusText,
       headers: response.headers,
     });
-    attachOmniRouteMetaHeaders(cloned.headers, meta);
+    attachRouteChiMetaHeaders(cloned.headers, meta);
     return cloned;
   }
 }

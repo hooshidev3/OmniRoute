@@ -8,11 +8,11 @@ import LanguageSelector from "@/shared/components/LanguageSelector";
 
 export const metadata = {
   title: {
-    template: "%s — OmniRoute Docs",
-    default: "OmniRoute Documentation",
+    template: "%s — RouteChi Docs",
+    default: "RouteChi Documentation",
   },
   description:
-    "Comprehensive documentation for OmniRoute AI gateway — setup, API, compression, deployment, and more.",
+    "Comprehensive documentation for RouteChi AI gateway — setup, API, compression, deployment, and more.",
   robots: {
     index: true,
     follow: true,
@@ -21,7 +21,7 @@ export const metadata = {
 
 const docsLayoutOptions: BaseLayoutProps = {
   nav: {
-    title: "OmniRoute Docs",
+    title: "RouteChi Docs",
     url: "/docs",
     children: (
       <Suspense fallback={<div className="w-24 h-8" />}>
@@ -40,7 +40,7 @@ const docsLayoutOptions: BaseLayoutProps = {
       secondary: true,
     },
   ],
-  githubUrl: "https://github.com/diegosouzapw/OmniRoute",
+  githubUrl: "https://github.com/diegosouzapw/RouteChi",
 };
 
 export default function Layout({ children }: { children: ReactNode }) {

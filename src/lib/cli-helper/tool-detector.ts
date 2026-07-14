@@ -36,7 +36,7 @@ export interface DetectedTool {
     {
       model: string;
       provider?: string;
-      usingOmniRoute: boolean;
+      usingRouteChi: boolean;
     }
   >;
 }
@@ -143,7 +143,7 @@ export async function detectTool(id: string): Promise<DetectedTool | null> {
         richRoles[role] = {
           model: info.model,
           provider: info.provider,
-          usingOmniRoute: usingOmni,
+          usingRouteChi: usingOmni,
         };
       });
 

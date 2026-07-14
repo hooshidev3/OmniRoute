@@ -25,13 +25,13 @@ const getDeepseekTuiConfigPath = (): string =>
 const getDeepseekTuiDir = () => path.dirname(getDeepseekTuiConfigPath());
 
 /**
- * Render the OmniRoute config block in DeepSeek TUI TOML format.
+ * Render the RouteChi config block in DeepSeek TUI TOML format.
  * DeepSeek TUI reads OPENAI_BASE_URL and OPENAI_API_KEY from its config.
  * Reference: https://github.com/hunterbown/deepseek-tui
  */
 function renderDeepseekTuiConfig(baseUrl: string, apiKey: string, model: string): string {
   return [
-    "# DeepSeek TUI config — managed by OmniRoute (plan 14)",
+    "# DeepSeek TUI config — managed by RouteChi (plan 14)",
     "",
     "[openai]",
     `base_url = "${baseUrl}"`,
@@ -42,11 +42,11 @@ function renderDeepseekTuiConfig(baseUrl: string, apiKey: string, model: string)
 }
 
 /**
- * Check if the config file contains OmniRoute settings.
+ * Check if the config file contains RouteChi settings.
  */
-const hasOmniRouteConfig = (content: string | null): boolean => {
+const hasRouteChiConfig = (content: string | null): boolean => {
   if (!content) return false;
-  return content.includes("managed by OmniRoute");
+  return content.includes("managed by RouteChi");
 };
 
 // Read current config.toml
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
       runtimeMode: runtime.runtimeMode,
       reason: runtime.reason,
       config,
-      hasOmniRoute: hasOmniRouteConfig(config),
+      hasRouteChi: hasRouteChiConfig(config),
       configPath: getDeepseekTuiConfigPath(),
     });
   } catch (err) {
@@ -104,7 +104,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST — write OmniRoute settings to DeepSeek TUI config.toml
+// POST — write RouteChi settings to DeepSeek TUI config.toml
 export async function POST(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;
@@ -168,7 +168,7 @@ export async function POST(request: Request) {
   }
 }
 
-// DELETE — remove DeepSeek TUI OmniRoute config
+// DELETE — remove DeepSeek TUI RouteChi config
 export async function DELETE(request: Request) {
   const authError = await requireCliToolsAuth(request);
   if (authError) return authError;

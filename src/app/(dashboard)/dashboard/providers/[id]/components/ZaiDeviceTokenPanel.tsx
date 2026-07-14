@@ -628,12 +628,12 @@ export default function ZaiDeviceTokenPanel() {
                 <span className="material-symbols-outlined text-[14px] text-blue-500">shield</span>
                 <span className="font-medium text-text-main">Proxy</span>
                 <span className="ml-auto text-text-subtle">
-                  Uses OmniRoute&apos;s Global Proxy automatically
+                  Uses RouteChi&apos;s Global Proxy automatically
                 </span>
               </div>
               <p className="mt-1">
                 The Playwright browser routes through the same global proxy configured in
-                OmniRoute&apos;s Proxies ?�� Global settings. No separate proxy configuration needed
+                RouteChi&apos;s Proxies ?�� Global settings. No separate proxy configuration needed
                 ?�� if a global proxy is set, it&apos;s used; otherwise the browser connects
                 directly.
               </p>

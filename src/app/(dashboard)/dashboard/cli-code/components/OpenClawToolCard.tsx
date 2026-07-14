@@ -341,7 +341,7 @@ export default function OpenClawToolCard({
               </div>
               {/*
                 Always surface Manual Config even when the CLI is not
-                detected locally — typical of remote OmniRoute
+                detected locally — typical of remote RouteChi
                 deployments where the CLI lives on the user's machine,
                 not on the server. Upstream report: #579.
               */}
@@ -487,7 +487,7 @@ export default function OpenClawToolCard({
                   variant="outline"
                   size="sm"
                   onClick={handleResetSettings}
-                  disabled={!openclawStatus?.hasOmniRoute}
+                  disabled={!openclawStatus?.hasRouteChi}
                   loading={restoring}
                 >
                   <span className="material-symbols-outlined text-[14px] mr-1">restore</span>
