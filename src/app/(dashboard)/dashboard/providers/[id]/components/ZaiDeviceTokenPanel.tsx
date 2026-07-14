@@ -16,11 +16,13 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useNotificationStore } from "@/store/notificationStore";
 import { ZaiPrerequisiteBanner } from "./ZaiPrerequisiteBanner";
 
 export default function ZaiDeviceTokenPanel() {
   const notify = useNotificationStore();
+  const t = useTranslations("zaiWebFree");
   const [poolSize, setPoolSize] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -123,7 +125,7 @@ export default function ZaiDeviceTokenPanel() {
         method: "POST",
       });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      notify.success("Device token pool cleared");
+      notify.success(t("poolCleared"));
       setPoolSize(0);
     } catch (error) {
       notify.error(error instanceof Error ? error.message : "Failed to clear tokens");
@@ -152,7 +154,7 @@ export default function ZaiDeviceTokenPanel() {
           `AccessKey extracted${data.verified ? " and verified" : ""}: ${data.accessKey.slice(0, 12)}...`
         );
       } else {
-        notify.error("Could not extract AccessKey");
+        notify.error(t("extractFailed"));
       }
     } catch (error) {
       notify.error(error instanceof Error ? error.message : "Failed to extract key");
@@ -173,7 +175,7 @@ export default function ZaiDeviceTokenPanel() {
       if (!resp.ok) {
         throw new Error(data?.error || `HTTP ${resp.status}`);
       }
-      notify.success("Z.AI Free Web settings saved");
+      notify.success(t("settingsSaved"));
     } catch (error) {
       notify.error(error instanceof Error ? error.message : "Failed to save settings");
     } finally {
@@ -189,7 +191,7 @@ export default function ZaiDeviceTokenPanel() {
       <div className="rounded-lg border border-blue-500/25 bg-blue-500/5 p-4">
         <div className="flex items-center gap-2 mb-3">
           <span className="material-symbols-outlined text-[20px] text-blue-500">key</span>
-          <h3 className="text-sm font-medium text-text-main">Z.AI Device Token Pool</h3>
+          <h3 className="text-sm font-medium text-text-main">{t("deviceTokenPool")}</h3>
           {poolSize !== null && (
             <span
               className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-medium ${
@@ -219,7 +221,7 @@ export default function ZaiDeviceTokenPanel() {
             <span className="material-symbols-outlined text-[16px]">
               {refreshing ? "progress_activity" : "refresh"}
             </span>
-            {refreshing ? "Collecting..." : "Refresh Device Tokens"}
+            {refreshing ? t("collecting") : t("refreshDeviceTokens")}
           </button>
 
           <button
@@ -241,7 +243,7 @@ export default function ZaiDeviceTokenPanel() {
               <span className="material-symbols-outlined text-[16px]">
                 {clearing ? "progress_activity" : "delete"}
               </span>
-              {clearing ? "Clearing..." : "Clear Pool"}
+              {clearing ? t("clearing") : t("clearPool")}
             </button>
           )}
 
@@ -255,7 +257,7 @@ export default function ZaiDeviceTokenPanel() {
             <span className="material-symbols-outlined text-[16px]">
               {extractingKey ? "progress_activity" : "key"}
             </span>
-            {extractingKey ? "Extracting..." : "Extract AccessKey"}
+            {extractingKey ? t("extracting") : t("extractAccessKey")}
           </button>
         </div>
 
@@ -294,7 +296,7 @@ export default function ZaiDeviceTokenPanel() {
           {showKeySettings ? (
             <div className="space-y-2">
               <label className="block">
-                <span className="text-xs font-medium text-text-muted">AccessKey</span>
+                <span className="text-xs font-medium text-text-muted">{t("accessKey")}</span>
                 <input
                   type="text"
                   value={keySettings.accessKey}
@@ -306,7 +308,7 @@ export default function ZaiDeviceTokenPanel() {
                 />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-text-muted">SecretKey</span>
+                <span className="text-xs font-medium text-text-muted">{t("secretKey")}</span>
                 <input
                   type="text"
                   value={keySettings.secretKey}
@@ -324,7 +326,7 @@ export default function ZaiDeviceTokenPanel() {
                   disabled={savingKeys}
                   className="inline-flex items-center gap-1 rounded-md bg-purple-600 px-3 py-1 text-xs font-medium text-white hover:bg-purple-700 disabled:opacity-50"
                 >
-                  {savingKeys ? "Saving..." : "Save Keys"}
+                  {savingKeys ? t("saving") : t("saveKeys")}
                 </button>
                 <button
                   type="button"
@@ -332,7 +334,7 @@ export default function ZaiDeviceTokenPanel() {
                   disabled={extractingKey}
                   className="inline-flex items-center gap-1 rounded-md border border-purple-500/30 px-3 py-1 text-xs font-medium text-purple-600 hover:bg-purple-500/10 disabled:opacity-50"
                 >
-                  {extractingKey ? "Extracting..." : "Extract via Browser"}
+                  {extractingKey ? t("extracting") : t("extractViaBrowser")}
                 </button>
               </div>
               {accessKeySource === "env" && (
@@ -385,7 +387,7 @@ export default function ZaiDeviceTokenPanel() {
                 </span>
               </div>
               <label className="block">
-                <span className="text-xs font-medium text-text-muted">Strategy</span>
+                <span className="text-xs font-medium text-text-muted">{t("strategy")}</span>
                 <select
                   value={keySettings.captchaStrategy}
                   onChange={(e) =>
@@ -393,12 +395,12 @@ export default function ZaiDeviceTokenPanel() {
                   }
                   className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
                 >
-                  <option value="auto">Auto (A → B → C) — default, best reliability</option>
-                  <option value="a_only">A only — server-side crypto, fastest</option>
-                  <option value="b_only">B only — fresh token via Playwright + A</option>
-                  <option value="c_only">C only — full browser captcha, slowest</option>
-                  <option value="a_then_c">A → C — skip Playwright token fetch</option>
-                  <option value="a_then_b">A → B — no browser fallback</option>
+                  <option value="auto">{t("strategyAuto")}</option>
+                  <option value="a_only">{t("strategyAOnly")}</option>
+                  <option value="b_only">{t("strategyBOnly")}</option>
+                  <option value="c_only">{t("strategyCOnly")}</option>
+                  <option value="a_then_c">{t("strategyAThenC")}</option>
+                  <option value="a_then_b">{t("strategyAThenB")}</option>
                 </select>
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -458,7 +460,7 @@ export default function ZaiDeviceTokenPanel() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <label className="block">
-                  <span className="text-xs font-medium text-text-muted">Min Pool Size</span>
+                  <span className="text-xs font-medium text-text-muted">{t("minPoolSize")}</span>
                   <input
                     type="number"
                     min={1}
@@ -502,7 +504,7 @@ export default function ZaiDeviceTokenPanel() {
                   }
                   className="rounded"
                 />
-                Auto-refresh device tokens when pool is low
+                {t("autoRefreshWhenLow")}
               </label>
               <p className="text-xs text-text-subtle">
                 The daemon checks every {Math.round(keySettings.autoRefreshIntervalMs / 60000)} min.
@@ -619,14 +621,14 @@ export default function ZaiDeviceTokenPanel() {
                 }
                 className="rounded"
               />
-              Show browser window (debug mode)
+              {t("showBrowserWindow")}
             </label>
 
             {/* Proxy info */}
             <div className="rounded-md border border-blue-500/20 bg-blue-500/5 px-3 py-2 text-xs text-text-muted">
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[14px] text-blue-500">shield</span>
-                <span className="font-medium text-text-main">Proxy</span>
+                <span className="font-medium text-text-main">{t("proxy")}</span>
                 <span className="ml-auto text-text-subtle">
                   Uses OmniRoute&apos;s Global Proxy automatically
                 </span>
@@ -665,7 +667,7 @@ export default function ZaiDeviceTokenPanel() {
                 <span className="material-symbols-outlined text-[16px]">
                   {savingKeys ? "progress_activity" : "save"}
                 </span>
-                {savingKeys ? "Saving..." : "Save Settings"}
+                {savingKeys ? t("saving") : t("saveSettings")}
               </button>
               <span className="text-xs text-text-subtle">
                 Saves Captcha Strategy + Auto-Refresh settings to DB
