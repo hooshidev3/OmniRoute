@@ -526,8 +526,9 @@ export async function getCaptchaVerifyParam(
   for (let attempt = 0; attempt < retries; attempt++) {
     const deviceToken = getNextToken();
     if (!deviceToken) {
-      throw new Error(`No device tokens remaining (attempt ${attempt + 1}/${MAX_TOKEN_RETRIES})`);
+      throw new Error(`No device tokens remaining (attempt ${attempt + 1}/${retries})`);
     }
+    console.log(`[Captcha] Attempt ${attempt + 1}/${retries} using deviceToken=${deviceToken.slice(0, 30)}...`);
     try {
       const payload = await tryCompute(deviceToken, consumeToken);
       if (payload) return payload;
