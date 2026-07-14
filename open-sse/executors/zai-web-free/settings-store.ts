@@ -43,7 +43,7 @@ export const DEFAULT_AUTO_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 //   "a_then_c"  → A (retries) → C (skip B) — avoids the extra Playwright token fetch
 //   "a_then_b"  → A (retries) → B (no browser fallback) — no Method C
 // Default is "a_only" to match the GLM-Free-API Go reference behavior.
-export const DEFAULT_CAPTCHA_STRATEGY = "a_only" as const;
+export const DEFAULT_CAPTCHA_STRATEGY = "c_only" as const;
 // Default retries matches Go's maxTokenRetries = 2.
 export const DEFAULT_CAPTCHA_RETRIES = 2;
 // Default timeout: 90000ms (90 seconds) — matches Go reference:

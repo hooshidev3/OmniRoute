@@ -87,8 +87,6 @@ function getDb(): DbLike | null {
   } catch {
     // ignore
   }
-  // DIAGNOSTIC: log when DB is not available
-  console.warn("[DeviceTokenPool] globalThis.__omnirouteDb is not available — using in-memory fallback");
   return null;
 }
 
@@ -161,9 +159,7 @@ export function getNextToken(): string | null {
 
   const db = getDb();
   if (!db) {
-    const fallback = _pendingAdds.shift() ?? null;
-    console.log(`[DeviceTokenPool] getNextToken: DB unavailable, in-memory fallback: ${fallback ? fallback.slice(0, 30) + "..." : "null"} (pending: ${_pendingAdds.length})`);
-    return fallback;
+    return _pendingAdds.shift() ?? null;
   }
   const cutoff = ttlCutoffUtc();
   try {
@@ -181,14 +177,9 @@ export function getNextToken(): string | null {
          RETURNING token`
       )
       .get(cutoff) as { token: string } | undefined;
-    if (row?.token) {
-      console.log(`[DeviceTokenPool] getNextToken: got token from DB: ${row.token.slice(0, 30)}...`);
-      return row.token;
-    }
+    if (row?.token) return row.token;
     // No fresh token in DB; fall through to in-memory fallback.
-    const fallback = _pendingAdds.shift() ?? null;
-    console.log(`[DeviceTokenPool] getNextToken: no fresh token in DB, in-memory fallback: ${fallback ? fallback.slice(0, 30) + "..." : "null"}`);
-    return fallback;
+    return _pendingAdds.shift() ?? null;
   } catch (err) {
     // Fallback: older SQLite without RETURNING support. Use the legacy
     // non-atomic SELECT + consume path. This is racy under concurrency
