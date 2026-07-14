@@ -120,23 +120,23 @@ export default function ZaiWebTokenKeyPanel() {
             </span>
           )}
           <span className="ml-auto text-xs text-text-subtle">
-            Shared with Z.AI Free Web (Guest)
+            {t('sharedWithFree')}
           </span>
         </div>
 
         <p className="text-xs text-text-muted mb-4">
-          Z.AI&apos;s captcha verification requires Aliyun AccessKey and SecretKey. These keys are
-          shared between <strong>Z.AI Free Web (Guest)</strong> and{" "}
-          <strong>Z.AI Web (JWT Token)</strong>. If Aliyun rotates the keys, update them here or
-          click &quot;Extract via Browser&quot;.
+          {t('captchaKeysDescription')}
+          {" "}
+          
+          
         </p>
 
         {accessKeySource === "env" && (
           <p className="mb-3 rounded-md bg-amber-500/10 px-2 py-1 text-xs text-amber-700 dark:text-amber-300">
             <span className="font-semibold">Note:</span> An env var (
             <code className="font-mono">OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY</code>) is overriding the DB
-            value. Edits below still write to the DB (so they take effect when the env var is
-            unset), but the captcha module will use the env value until then.
+            
+            
           </p>
         )}
 
@@ -181,12 +181,12 @@ export default function ZaiWebTokenKeyPanel() {
               }
               className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
             >
-              <option value="auto">Auto (A → B → C) — default, best reliability</option>
-              <option value="a_only">A only — server-side crypto, fastest</option>
-              <option value="b_only">B only — fresh token via Playwright + A</option>
-              <option value="c_only">C only — full browser captcha, slowest</option>
-              <option value="a_then_c">A → C — skip Playwright token fetch</option>
-              <option value="a_then_b">A → B — no browser fallback</option>
+              <option value="auto">{t("strategyAuto")}</option>
+              <option value="a_only">{t("strategyAOnly")}</option>
+              <option value="b_only">{t("strategyBOnly")}</option>
+              <option value="c_only">{t("strategyCOnly")}</option>
+              <option value="a_then_c">{t("strategyAThenC")}</option>
+              <option value="a_then_b">{t("strategyAThenB")}</option>
             </select>
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -250,7 +250,7 @@ export default function ZaiWebTokenKeyPanel() {
           </button>
         </div>
         <p className="mt-2 text-xs text-text-subtle">
-          &quot;Save Settings&quot; saves keys + strategy. &quot;Extract via Browser&quot; only
+          {t('saveSettingsHelp')}
           extracts the AccessKey/SecretKey (save afterwards to persist).
         </p>
       </div>

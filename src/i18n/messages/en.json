@@ -9284,6 +9284,9 @@
     "prerequisiteDbError": "Database is not accessible",
     "prerequisitePoolLow": "Device token pool is low",
     "prerequisitePoolLowDetail": "Click 'Refresh Device Tokens' to collect tokens via Playwright. Without tokens, the captcha fallback (browser method) will be used for every request (~10s per request).",
-    "prerequisiteAllGood": "All prerequisites are met"
+    "prerequisiteAllGood": "All prerequisites are met",
+    "ifAliyunRotatesKeys": "If Aliyun rotates the keys, click \"Extract via Browser\" to automatically extract the new keys from chat.z.ai, or paste them manually from the GLM-Free-API Go source.",
+    "prerequisitePlaywrightNotInstalled": "Playwright is not installed",
+    "prerequisiteChromiumNotInstalled": "Chromium browser is not installed"
   }
 }

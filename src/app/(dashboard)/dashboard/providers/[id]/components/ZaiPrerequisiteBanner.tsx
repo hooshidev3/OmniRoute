@@ -19,6 +19,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface PrerequisiteResult {
   playwrightInstalled: boolean;
@@ -154,6 +155,7 @@ export function ZaiPrerequisiteBanner({
   providerId,
   showPoolWarning = false,
 }: ZaiPrerequisiteBannerProps) {
+  const t = useTranslations("zaiWebFree");
   const { playwrightInstalled, chromiumInstalled, poolSize, loading, checked } =
     useZaiPrerequisites(providerId);
 
@@ -164,13 +166,13 @@ export function ZaiPrerequisiteBanner({
   if (!playwrightInstalled) {
     warnings.push({
       icon: "download",
-      message: "Playwright is not installed",
+      message: t("prerequisitePlaywrightNotInstalled"),
       detail: "Run: npm install playwright && npx playwright install chromium",
     });
   } else if (!chromiumInstalled) {
     warnings.push({
       icon: "download",
-      message: "Chromium browser is not installed",
+      message: t("prerequisiteChromiumNotInstalled"),
       detail: "Run: npx playwright install chromium",
     });
   }
@@ -178,9 +180,7 @@ export function ZaiPrerequisiteBanner({
   if (showPoolWarning && poolSize === 0 && playwrightInstalled && chromiumInstalled) {
     warnings.push({
       icon: "token",
-      message: "Device token pool is empty",
-      detail:
-        "Click 'Refresh Device Tokens' to collect tokens via Playwright. Without tokens, the captcha fallback (browser method) will be used for every request (~10s per request).",
+      message: t("prerequisitePoolLowDetail"),
     });
   }
 

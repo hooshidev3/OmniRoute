@@ -206,7 +206,7 @@ export default function ZaiDeviceTokenPanel() {
         </div>
 
         <p className="text-xs text-text-muted mb-4">
-          Z.AI&apos;s captcha verification requires device tokens collected from a real browser
+          {t('poolDescription')}
           session. Click &quot;Refresh Device Tokens&quot; to launch a headless Chromium browser
           that visits chat.z.ai and extracts fresh tokens. Each chat request consumes 1?��2 tokens.
         </p>
@@ -345,8 +345,8 @@ export default function ZaiDeviceTokenPanel() {
                 </p>
               )}
               <p className="text-xs text-text-subtle">
-                If Aliyun rotates the keys, click &quot;Extract via Browser&quot; to automatically
-                extract the new keys from chat.z.ai, or paste them manually from the GLM-Free-API Go
+                {t('ifAliyunRotatesKeys')}
+                 GLM-Free-API Go
                 source.
               </p>
             </div>
@@ -395,12 +395,12 @@ export default function ZaiDeviceTokenPanel() {
                   }
                   className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
                 >
-                  <option value="auto">Auto (A → B → C) — default, best reliability</option>
-                  <option value="a_only">A only — server-side crypto, fastest</option>
-                  <option value="b_only">B only — fresh token via Playwright + A</option>
-                  <option value="c_only">C only — full browser captcha, slowest</option>
-                  <option value="a_then_c">A → C — skip Playwright token fetch</option>
-                  <option value="a_then_b">A → B — no browser fallback</option>
+                  <option value="auto">{t("strategyAuto")}</option>
+                  <option value="a_only">{t("strategyAOnly")}</option>
+                  <option value="b_only">{t("strategyBOnly")}</option>
+                  <option value="c_only">{t("strategyCOnly")}</option>
+                  <option value="a_then_c">{t("strategyAThenC")}</option>
+                  <option value="a_then_b">{t("strategyAThenB")}</option>
                 </select>
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -507,7 +507,7 @@ export default function ZaiDeviceTokenPanel() {
                 {t("autoRefreshWhenLow")}
               </label>
               <p className="text-xs text-text-subtle">
-                The daemon checks every {Math.round(keySettings.autoRefreshIntervalMs / 60000)} min.
+                {t('autoRefreshDescription', { interval: Math.round(keySettings.autoRefreshIntervalMs / 60000), minPoolSize: keySettings.minPoolSize })} {Math.round(keySettings.autoRefreshIntervalMs / 60000)} min.
                 If pool &lt; {keySettings.minPoolSize}, it automatically collects fresh tokens via
                 Playwright.
               </p>
@@ -630,11 +630,11 @@ export default function ZaiDeviceTokenPanel() {
                 <span className="material-symbols-outlined text-[14px] text-blue-500">shield</span>
                 <span className="font-medium text-text-main">{t("proxy")}</span>
                 <span className="ml-auto text-text-subtle">
-                  Uses RouteChi&apos;s Global Proxy automatically
+                  {t('proxyUsesGlobal')}
                 </span>
               </div>
               <p className="mt-1">
-                The Playwright browser routes through the same global proxy configured in
+                {t('proxyDescription')}
                 RouteChi&apos;s Proxies ?�� Global settings. No separate proxy configuration needed
                 ?�� if a global proxy is set, it&apos;s used; otherwise the browser connects
                 directly.
@@ -642,7 +642,7 @@ export default function ZaiDeviceTokenPanel() {
             </div>
 
             <p className="text-xs text-text-muted">
-              <strong>Note:</strong> Playwright Chromium must be installed (
+              <strong>Note:</strong> {t('playwrightNote')} (
               <code className="rounded bg-surface px-1">npx playwright install chromium</code>).
               Each batch takes ~30s. Total: ~{refreshOptions.batches * 30}s
               {refreshOptions.parallel > 1
@@ -670,7 +670,7 @@ export default function ZaiDeviceTokenPanel() {
                 {savingKeys ? t("saving") : t("saveSettings")}
               </button>
               <span className="text-xs text-text-subtle">
-                Saves Captcha Strategy + Auto-Refresh settings to DB
+                {t('saveSettingsDescription')}
               </span>
             </div>
           </div>
