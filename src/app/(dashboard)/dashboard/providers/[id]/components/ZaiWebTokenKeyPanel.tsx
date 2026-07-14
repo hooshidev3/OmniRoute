@@ -17,10 +17,12 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useNotificationStore } from "@/store/notificationStore";
 
 export default function ZaiWebTokenKeyPanel() {
   const notify = useNotificationStore();
+  const t = useTranslations("zaiWebFree");
   const [savingKeys, setSavingKeys] = useState(false);
   const [extractingKey, setExtractingKey] = useState(false);
   const [keySettings, setKeySettings] = useState({
@@ -66,7 +68,7 @@ export default function ZaiWebTokenKeyPanel() {
       if (!resp.ok) {
         throw new Error(data?.error || `HTTP ${resp.status}`);
       }
-      notify.success("Aliyun captcha keys + strategy saved");
+      notify.success(t("keysAndStrategySaved"));
     } catch (error) {
       notify.error(error instanceof Error ? error.message : "Failed to save settings");
     } finally {
@@ -108,7 +110,7 @@ export default function ZaiWebTokenKeyPanel() {
       <div className="rounded-lg border border-purple-500/25 bg-purple-500/5 p-4">
         <div className="flex items-center gap-2 mb-3">
           <span className="material-symbols-outlined text-[20px] text-purple-500">key</span>
-          <h3 className="text-sm font-medium text-text-main">Aliyun Captcha Keys (Shared)</h3>
+          <h3 className="text-sm font-medium text-text-main">{t("aliyunCaptchaKeysShared")}</h3>
           {accessKeySource === "env" && (
             <span
               className="ml-2 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
@@ -141,7 +143,7 @@ export default function ZaiWebTokenKeyPanel() {
         {/* AccessKey / SecretKey */}
         <div className="space-y-2">
           <label className="block">
-            <span className="text-xs font-medium text-text-muted">AccessKey</span>
+            <span className="text-xs font-medium text-text-muted">{t("accessKey")}</span>
             <input
               type="text"
               value={keySettings.accessKey}
@@ -151,7 +153,7 @@ export default function ZaiWebTokenKeyPanel() {
             />
           </label>
           <label className="block">
-            <span className="text-xs font-medium text-text-muted">SecretKey</span>
+            <span className="text-xs font-medium text-text-muted">{t("secretKey")}</span>
             <input
               type="text"
               value={keySettings.secretKey}
@@ -171,7 +173,7 @@ export default function ZaiWebTokenKeyPanel() {
             </span>
           </div>
           <label className="block">
-            <span className="text-xs font-medium text-text-muted">Strategy</span>
+            <span className="text-xs font-medium text-text-muted">{t("strategy")}</span>
             <select
               value={keySettings.captchaStrategy}
               onChange={(e) =>
@@ -189,7 +191,7 @@ export default function ZaiWebTokenKeyPanel() {
           </label>
           <div className="grid grid-cols-2 gap-2">
             <label className="block">
-              <span className="text-xs font-medium text-text-muted">Retries per method</span>
+              <span className="text-xs font-medium text-text-muted">{t("retriesPerMethod")}</span>
               <input
                 type="number"
                 min={1}
@@ -205,7 +207,7 @@ export default function ZaiWebTokenKeyPanel() {
               />
             </label>
             <label className="block">
-              <span className="text-xs font-medium text-text-muted">Timeout (seconds, 0 = no timeout)</span>
+              <span className="text-xs font-medium text-text-muted">{t("timeoutSeconds")}</span>
               <input
                 type="number"
                 min={0}
@@ -236,7 +238,7 @@ export default function ZaiWebTokenKeyPanel() {
             disabled={savingKeys}
             className="inline-flex items-center gap-1 rounded-md bg-purple-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-purple-700 disabled:opacity-50"
           >
-            {savingKeys ? "Saving..." : "Save Settings"}
+            {savingKeys ? t("saving") : t("saveSettings")}
           </button>
           <button
             type="button"
@@ -244,7 +246,7 @@ export default function ZaiWebTokenKeyPanel() {
             disabled={extractingKey}
             className="inline-flex items-center gap-1 rounded-md border border-purple-500/30 px-3 py-1.5 text-xs font-medium text-purple-600 hover:bg-purple-500/10 disabled:opacity-50"
           >
-            {extractingKey ? "Extracting..." : "Extract via Browser"}
+            {extractingKey ? t("extracting") : t("extractViaBrowser")}
           </button>
         </div>
         <p className="mt-2 text-xs text-text-subtle">
