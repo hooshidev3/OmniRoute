@@ -55,17 +55,30 @@ const SCENE_ID = "didk33e0";
 const INIT_CAPTCHA_URL = "https://no8xfe.captcha-open-southeast.aliyuncs.com/";
 const VERIFY_CAPTCHA_URL = "https://no8xfe-verify.captcha-open-southeast.aliyuncs.com/";
 
-// ?��?�� RC4-like permutation table (64-byte state) ?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��
+// ── RC4-like permutation table (64-byte state) ───────────────────────────
 // From GLM-Free-API main.go argPermTable. This is a fixed 64-element
 // permutation that both `generateArg` and `encrypt` use as their initial
 // state. The KSA pass mixes in a key-dependent value, then the PRGA pass
 // scrambles the input bytes.
-const ARG_PERM_TABLE = [
+//
+// CRITICAL: In Go, argPermTable is a package-level []int slice. Both
+// generateArg and encrypt do `r := argPermTable` which shares the backing
+// array. generateArg's KSA modifies the table IN-PLACE, and encrypt's
+// KSA then starts from the ALREADY-MODIFIED table.
+//
+// In TS, we must replicate this: use a mutable module-level array that
+// is shared (not copied) between generateArg and encrypt. Each call to
+// tryCompute() must reset the table to its initial state before
+// generateArg runs, so that generateArg modifies it, and encrypt sees
+// the modified version.
+const ARG_PERM_TABLE_INITIAL = [
   32, 50, 10, 51, 6, 44, 37, 16, 46, 11, 62, 19, 43, 25, 23, 30,
   60, 33, 53, 34, 7, 26, 12, 48, 5, 2, 20, 4, 61, 13, 47, 49,
   18, 29, 27, 22, 1, 17, 39, 56, 41, 38, 55, 31, 15, 58, 52, 40,
   8, 57, 45, 35, 59, 36, 42, 54, 63, 3, 24, 28, 14, 9, 0, 21,
 ];
+// Mutable working copy — reset before each tryCompute call.
+let _argPermTable = ARG_PERM_TABLE_INITIAL.slice();
 
 const ARG_CONSTANT = "4xrihv8zb8tf1mfj";
 const ENCRYPT_KEY = "3e627e1b4c63f913";
@@ -165,8 +178,10 @@ function buildQueryString(params: Record<string, string>): string {
 // `generateArg` and `encrypt` functions.
 
 function rc4LikeCipher(input: Buffer, key: string): Buffer {
-  // Work on a copy of the perm table (mutable)
-  const r = ARG_PERM_TABLE.slice();
+  // Use the shared mutable table (NOT a copy) — Go's argPermTable is a
+  // slice that is modified in-place. generateArg runs first and modifies
+  // the table; encrypt runs second and sees the modified table.
+  const r = _argPermTable;
   const n = Buffer.from(key, "utf-8");
   const rlen = 64;
 
@@ -445,6 +460,13 @@ async function tryCompute(
   deviceToken: string,
   consumeToken: (token: string) => void
 ): Promise<string> {
+  // Reset the shared permutation table to its initial state before
+  // generateArg runs. In Go, argPermTable is a package-level slice that
+  // is modified in-place by generateArg's KSA, then encrypt's KSA starts
+  // from the already-modified table. We must reset it here so each
+  // tryCompute call starts fresh.
+  _argPermTable = ARG_PERM_TABLE_INITIAL.slice();
+
   const certifyId = await initCaptcha();
   const argValue = generateArg(certifyId);
   const ct = Date.now();
