@@ -96,9 +96,7 @@ export function firstFailureLine(out) {
     .split("\n")
     .map((l) => l.trim())
     .filter(Boolean);
-  const hit = lines.find((l) =>
-    /✖|✗|not ok|AssertionError|error TS|FAIL|Error:|REGRESS/i.test(l)
-  );
+  const hit = lines.find((l) => /✖|✗|not ok|AssertionError|error TS|FAIL|Error:|REGRESS/i.test(l));
   return (hit || lines[lines.length - 1] || "failed").slice(0, 200);
 }
 
@@ -542,6 +540,14 @@ async function main() {
         label: "Package artifact (npm pack policy)",
         args: ["run", "check:pack-artifact"],
         timeout: 20 * 60 * 1000,
+      });
+      // WS1.2 (#7065 class): boot the REAL packed tarball from a clean install —
+      // the runtime gate structure checks cannot provide. Reuses the same dist/ build.
+      slow.push({
+        id: "pack-boot",
+        label: "Tarball boot-smoke (installed CLI serves /health)",
+        args: ["run", "check:pack-boot"],
+        timeout: 15 * 60 * 1000,
       });
     }
     slow.forEach((g) => announce(`${g.label} [parallel]`));
