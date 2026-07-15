@@ -99,9 +99,178 @@ interface ZaiSSEChunk {
     };
   };
   choices?: Array<{
-    delta?: { content?: string };
+    delta?: { content?: string; tool_calls?: unknown };
   }>;
   error?: { detail?: string; message?: string; code?: unknown };
+}
+
+// ? ?? OpenAI tool-call types (inline — no tool-bridge.ts dependency) ? ?
+
+interface OpenAIToolCall {
+  id: string;
+  type: "function";
+  function: {
+    name: string;
+    arguments: string;
+  };
+}
+
+interface ZaiToolRegistry {
+  enabled: boolean;
+  toolsByName: Map<string, { name: string; description?: string; parameters: unknown }>;
+}
+
+/**
+ * Build a tool registry from the OpenAI request body's `tools` field.
+ * Returns a disabled registry if no tools are present.
+ */
+function buildZaiToolRegistry(body: Record<string, unknown>): ZaiToolRegistry {
+  const tools = body.tools as Array<Record<string, unknown>> | undefined;
+  if (!Array.isArray(tools) || tools.length === 0) {
+    return { enabled: false, toolsByName: new Map() };
+  }
+
+  const toolsByName = new Map<
+    string,
+    { name: string; description?: string; parameters: unknown }
+  >();
+  for (const tool of tools) {
+    const fn = tool.function as Record<string, unknown> | undefined;
+    if (!fn || typeof fn.name !== "string") continue;
+    toolsByName.set(fn.name, {
+      name: fn.name,
+      description: typeof fn.description === "string" ? fn.description : undefined,
+      parameters: fn.parameters ?? {},
+    });
+  }
+
+  return { enabled: toolsByName.size > 0, toolsByName };
+}
+
+/**
+ * Parse a tool_calls delta from a Z.AI SSE chunk.
+ * Returns null if the chunk doesn't contain tool call data.
+ */
+function parseZaiToolCallDelta(
+  chunk: Record<string, unknown>
+): Array<{
+  index: number;
+  id?: string;
+  type?: string;
+  function?: { name?: string; arguments?: string };
+}> | null {
+  const choices = chunk.choices as Array<Record<string, unknown>> | undefined;
+  if (!Array.isArray(choices) || choices.length === 0) return null;
+
+  const delta = choices[0]?.delta as Record<string, unknown> | undefined;
+  if (!delta) return null;
+
+  const toolCalls = delta.tool_calls as Array<Record<string, unknown>> | undefined;
+  if (!Array.isArray(toolCalls) || toolCalls.length === 0) return null;
+
+  return toolCalls.map((tc) => ({
+    index: typeof tc.index === "number" ? tc.index : 0,
+    id: typeof tc.id === "string" ? tc.id : undefined,
+    type: typeof tc.type === "string" ? tc.type : "function",
+    function: tc.function as { name?: string; arguments?: string } | undefined,
+  }));
+}
+
+/**
+ * Enqueue OpenAI-shaped tool call SSE chunks into the streaming controller.
+ *
+ * Emits one chunk per tool call, followed by a finish chunk with
+ * `finish_reason: "tool_calls"`, then `[DONE]`.
+ */
+function enqueueStreamingToolCalls(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  encoder: TextEncoder,
+  params: {
+    id: string;
+    created: number;
+    model: string;
+    fingerprint: string;
+    toolCalls: OpenAIToolCall[];
+  }
+): void {
+  for (let i = 0; i < params.toolCalls.length; i++) {
+    controller.enqueue(
+      encoder.encode(
+        `data: ${JSON.stringify({
+          id: params.id,
+          object: "chat.completion.chunk",
+          created: params.created,
+          model: params.model,
+          system_fingerprint: params.fingerprint || null,
+          choices: [
+            {
+              index: 0,
+              delta: { tool_calls: [{ index: i, ...params.toolCalls[i] }] },
+              finish_reason: null,
+              logprobs: null,
+            },
+          ],
+        })}\n\n`
+      )
+    );
+  }
+  controller.enqueue(
+    encoder.encode(
+      `data: ${JSON.stringify({
+        id: params.id,
+        object: "chat.completion.chunk",
+        created: params.created,
+        model: params.model,
+        system_fingerprint: params.fingerprint || null,
+        choices: [{ index: 0, delta: {}, finish_reason: "tool_calls", logprobs: null }],
+      })}\n\n`
+    )
+  );
+  controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+}
+
+/**
+ * Accumulate tool call deltas across multiple SSE chunks.
+ * Returns the completed tool calls when all arguments are received.
+ */
+class ToolCallAccumulator {
+  private calls: Map<number, { id: string; name: string; arguments: string }> = new Map();
+
+  feed(
+    deltas: Array<{
+      index: number;
+      id?: string;
+      type?: string;
+      function?: { name?: string; arguments?: string };
+    }>
+  ): void {
+    for (const d of deltas) {
+      const existing = this.calls.get(d.index) ?? { id: "", name: "", arguments: "" };
+      if (d.id) existing.id = d.id;
+      if (d.function?.name) existing.name = d.function.name;
+      if (d.function?.arguments) existing.arguments += d.function.arguments;
+      this.calls.set(d.index, existing);
+    }
+  }
+
+  getCompleted(): OpenAIToolCall[] {
+    const result: OpenAIToolCall[] = [];
+    const sorted = [...this.calls.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [, tc] of sorted) {
+      if (tc.name) {
+        result.push({
+          id: tc.id || `call_${Date.now().toString(36)}`,
+          type: "function",
+          function: { name: tc.name, arguments: tc.arguments || "{}" },
+        });
+      }
+    }
+    return result;
+  }
+
+  hasPending(): boolean {
+    return this.calls.size > 0;
+  }
 }
 
 // ?��?�� Helpers ?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��
@@ -491,7 +660,10 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 4. Compute the X-Signature header
     const sig = generateZaSignature(prompt, session.token, session.userId);
 
-    // 4b. Resolve think mode (passthrough / strip / separate)
+    // 4b. Build tool registry (if tools are present in the request)
+    const toolRegistry = buildZaiToolRegistry(bodyObj);
+
+    // 4c. Resolve think mode (passthrough / strip / separate)
     const thinkMode = resolveThinkMode({
       headers: input.clientHeaders as Record<string, unknown> | undefined,
       body: bodyObj,
@@ -552,6 +724,14 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       captcha_verify_param: captchaParam,
       features,
     };
+
+    // Add tools if present in the request
+    if (toolRegistry.enabled && Array.isArray((bodyObj as Record<string, unknown>).tools)) {
+      requestBody.tools = (bodyObj as Record<string, unknown>).tools;
+    }
+    if (bodyObj.tool_choice) {
+      requestBody.tool_choice = bodyObj.tool_choice;
+    }
 
     const requestUrl = `${CHAT_COMPLETIONS_URL}?${sig.urlParams}`;
     const reqHeaders: Record<string, string> = {
@@ -618,6 +798,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // 7. Stream or collect the response
     const id = `chatcmpl-zaifree-${Date.now().toString(36)}`;
     const created = Math.floor(Date.now() / 1000);
+    const fingerprint = `zai-${requestedModel}`;
     const sourceStream = upstream!.body ?? new ReadableStream({ start: (c) => c.close() });
 
     if (wantStream) {
@@ -630,6 +811,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
               object: "chat.completion.chunk",
               created,
               model: requestedModel,
+              system_fingerprint: fingerprint,
               choices: [{ index: 0, delta, finish_reason: finish }],
             };
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
@@ -643,6 +825,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           let buffer = "";
           const reader = sourceStream.getReader();
           const decoder = new TextDecoder();
+          const toolAccumulator = new ToolCallAccumulator();
 
           // Keep-alive ticker ?�� Z.AI streams can have long pauses; send a
           // heartbeat every 5s so the client doesn't time out.
@@ -691,6 +874,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
                       object: "chat.completion.chunk",
                       created,
                       model: requestedModel,
+                      system_fingerprint: fingerprint,
                       choices: [{ index: 0, delta: {}, finish_reason: "stop" }],
                       error: {
                         message: `Z.AI inline error: ${errDetail}`,
@@ -712,10 +896,50 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
                 // Detect phase "done"
                 if (j.data?.phase === "done") {
+                  // Check for completed tool calls before finishing
+                  if (toolAccumulator.hasPending()) {
+                    const completedCalls = toolAccumulator.getCompleted();
+                    if (completedCalls.length > 0) {
+                      enqueueStreamingToolCalls(controller, encoder, {
+                        id,
+                        created,
+                        model: requestedModel,
+                        fingerprint,
+                        toolCalls: completedCalls,
+                      });
+                      controller.close();
+                      return;
+                    }
+                  }
                   emit({}, "stop");
                   controller.enqueue(encoder.encode("data: [DONE]\n\n"));
                   controller.close();
                   return;
+                }
+
+                // Check for tool_calls in the SSE chunk (OpenAI format)
+                const toolCallDeltas = parseZaiToolCallDelta(j as Record<string, unknown>);
+                if (toolCallDeltas) {
+                  toolAccumulator.feed(toolCallDeltas);
+                  // Emit tool call deltas directly
+                  for (const d of toolCallDeltas) {
+                    const toolChunk = {
+                      id,
+                      object: "chat.completion.chunk",
+                      created,
+                      model: requestedModel,
+                      system_fingerprint: fingerprint,
+                      choices: [
+                        {
+                          index: 0,
+                          delta: { tool_calls: [d] },
+                          finish_reason: null,
+                        },
+                      ],
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolChunk)}\n\n`));
+                  }
+                  continue;
                 }
 
                 // Extract content delta
@@ -785,6 +1009,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     let buffer = "";
     const reader = sourceStream.getReader();
     const decoder = new TextDecoder();
+    const nonStreamToolAccumulator = new ToolCallAccumulator();
 
     try {
       while (true) {
@@ -825,6 +1050,13 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
             break;
           }
 
+          // Check for tool calls
+          const toolCallDeltas = parseZaiToolCallDelta(j as Record<string, unknown>);
+          if (toolCallDeltas) {
+            nonStreamToolAccumulator.feed(toolCallDeltas);
+            continue;
+          }
+
           let chunk = "";
           if (j.data?.edit_content) chunk = j.data.edit_content;
           else if (j.data?.delta_content) chunk = j.data.delta_content;
@@ -845,6 +1077,35 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       /* best-effort ?�� return what we have */
     }
 
+    // Check for completed tool calls
+    const completedToolCalls = nonStreamToolAccumulator.getCompleted();
+    if (completedToolCalls.length > 0) {
+      const toolCompletion = {
+        id,
+        object: "chat.completion",
+        created,
+        model: requestedModel,
+        system_fingerprint: fingerprint,
+        choices: [
+          {
+            index: 0,
+            message: { role: "assistant", content: null, tool_calls: completedToolCalls },
+            finish_reason: "tool_calls",
+            logprobs: null,
+          },
+        ],
+        usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+      };
+      return {
+        response: new Response(JSON.stringify(toolCompletion), {
+          headers: { "Content-Type": "application/json" },
+        }),
+        url: requestUrl,
+        headers: reqHeaders,
+        transformedBody: requestBody,
+      };
+    }
+
     // Apply think mode to non-streaming response
     const { content: contentAfterThink, reasoning: reasoningAfterThink } = applyThinkMode(
       fullContent + (reasoningContent ? `<think>${reasoningContent}</think>` : ""),
@@ -858,6 +1119,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       object: "chat.completion",
       created,
       model: requestedModel,
+      system_fingerprint: fingerprint,
       choices: [{ index: 0, message, finish_reason: "stop" }],
     };
 
