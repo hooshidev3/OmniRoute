@@ -55,7 +55,7 @@ test("resolveConnectionParams accepts access_token in providerSpecificData and a
   assert.equal(p.host, "substrate.svc.cloud.microsoft");
 });
 
-test("resolveConnectionParams parses the pasted OmniRoute credential line", () => {
+test("resolveConnectionParams parses the pasted RouteChi credential line", () => {
   const r = resolveConnectionParams({
     apiKey: "access_token=tok3; chathubPath=redacted-account@redacted-tenant",
   });

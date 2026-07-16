@@ -1,5 +1,5 @@
 /**
- * OmniRoute — k6 Load / Performance Test (T-5)
+ * RouteChi — k6 Load / Performance Test (T-5)
  *
  * Tests the proxy endpoint under sustained load to measure:
  *   - Request throughput (RPS)

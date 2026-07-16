@@ -32,7 +32,7 @@ See the full OpenAPI specification at `GET /api/openapi/spec` or `docs/openapi.y
 <!-- skill:custom-start -->
 <!-- Migrated from skills/omniroute-monitoring/SKILL.md (preserved curated content) -->
 
-# OmniRoute — Monitoring & Health
+# RouteChi — Monitoring & Health
 
 Requires `OMNIROUTE_URL` and `OMNIROUTE_KEY`. See [entry-point SKILL](https://raw.githubusercontent.com/borhandarabi/routechi/main/skills/omniroute/SKILL.md) for setup.
 
@@ -85,7 +85,7 @@ Response shape per provider:
 }
 ```
 
-## Via MCP (if OmniRoute is your MCP server)
+## Via MCP (if RouteChi is your MCP server)
 
 ```
 omniroute_get_health            → full system health snapshot
@@ -127,7 +127,7 @@ curl -X POST $OMNIROUTE_URL/api/budget/guard \
 
 ## MCP audit log
 
-OmniRoute logs every MCP tool call to `mcp_audit` table. Query via API:
+RouteChi logs every MCP tool call to `mcp_audit` table. Query via API:
 
 ```bash
 curl "$OMNIROUTE_URL/api/mcp/status" \
@@ -138,7 +138,7 @@ Returns: server status, heartbeat, recent audit activity summary.
 
 ## Errors
 
-- `503` on health endpoint → OmniRoute is starting up; retry in 5s
+- `503` on health endpoint → RouteChi is starting up; retry in 5s
 - Circuit breaker `OPEN` → provider is temporarily blocked; check `resetAt` to know when it auto-recovers
 - `429 budget_exceeded` → budget guard limit reached; raise limit or wait for reset
 <!-- skill:custom-end -->

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
-# codex-ws — roda a OpenAI Codex CLI contra um OmniRoute LOCAL usando o
+# codex-ws — roda a OpenAI Codex CLI contra um RouteChi LOCAL usando o
 #            transporte Responses-over-WebSocket (em vez do HTTP da Cloud).
 #
 # POR QUE ESTE WRAPPER EXISTE
 # ---------------------------
-# O OmniRoute expõe um proxy WebSocket para a API de Responses do Codex em
+# O RouteChi expõe um proxy WebSocket para a API de Responses do Codex em
 #   ws(s)://<host>/v1/responses
 # A Codex CLI sabe falar esse transporte quando o provider tem
 # `supports_websockets = true` + `wire_api = "responses"`. Mas há DOIS detalhes
@@ -13,7 +13,7 @@
 #
 #  1) A Codex CLI valida o NOME do modelo no cliente. Ids com prefixo de provider
 #     (ex.: "codex/gpt-5.5") são REJEITADOS ("model is not supported ... ChatGPT
-#     account"). É preciso mandar o id "puro" -> "gpt-5.5". (O OmniRoute, no
+#     account"). É preciso mandar o id "puro" -> "gpt-5.5". (O RouteChi, no
 #     bridge WS, re-resolve "gpt-5.5" -> provider codex internamente.)
 #
 #  2) A Codex CLI v0.136 carrega TAMBÉM "$CWD/.codex/config.toml" como config
@@ -33,7 +33,7 @@
 #   codex-ws --help                  # repassa flags pra Codex CLI
 #
 # Variáveis de ambiente (todas com default; sobrescreva exportando antes):
-#   OMNIROUTE_WS_BASE   base URL do OmniRoute local   (default abaixo)
+#   OMNIROUTE_WS_BASE   base URL do RouteChi local   (default abaixo)
 #   OMNIROUTE_WS_MODEL  modelo codex (id puro)        (default "gpt-5.5")
 #   OMNIROUTE_LOCAL_KEY API key (qualquer valor se REQUIRE_API_KEY=false)
 #   CODEX_WS_HOME       dir de config isolado da Codex (default ~/.codex-ws)
@@ -42,7 +42,7 @@
 set -euo pipefail
 
 # ---- Configuração (com defaults seguros) ------------------------------------
-OMNIROUTE_WS_BASE="${OMNIROUTE_WS_BASE:-http://127.0.0.1:20128/v1}"  # base do OmniRoute local
+OMNIROUTE_WS_BASE="${OMNIROUTE_WS_BASE:-http://127.0.0.1:20128/v1}"  # base do RouteChi local
 OMNIROUTE_WS_MODEL="${OMNIROUTE_WS_MODEL:-gpt-5.5}"                  # id PURO (sem "codex/")
 CODEX_WS_HOME="${CODEX_WS_HOME:-$HOME/.codex-ws}"                    # CODEX_HOME isolado da Cloud
 
@@ -60,12 +60,12 @@ export CODEX_HOME="$CODEX_WS_HOME"
 if [ ! -f "$CODEX_HOME/config.toml" ]; then
   mkdir -p "$CODEX_HOME"
   cat > "$CODEX_HOME/config.toml" <<EOF
-# Gerado por codex-ws.sh — config isolada para o WS local do OmniRoute.
+# Gerado por codex-ws.sh — config isolada para o WS local do RouteChi.
 model = "$OMNIROUTE_WS_MODEL"
 model_provider = "omniroute-local"
 
 [model_providers.omniroute-local]
-name = "OmniRoute Local (WS)"
+name = "RouteChi Local (WS)"
 base_url = "$OMNIROUTE_WS_BASE"   # a URL WebSocket é derivada desta base pela CLI
 wire_api = "responses"            # único valor suportado desde fev/2026
 supports_websockets = true        # <- liga o transporte Responses-over-WebSocket

@@ -1,5 +1,5 @@
 [Unit]
-Description=OmniRoute — Unified AI Proxy
+Description=RouteChi — Unified AI Proxy
 After=network-online.target
 Wants=network-online.target
 Requires=omniroute-redis.service
@@ -20,7 +20,7 @@ PublishPort=20129:20129
 Volume=omniroute.volume:/app/data:Z
 
 # Use a bind mount if you need direct host access to the data:
-# Volume=/home/USER/code/docker/OmniRoute/data:/app/data:Z
+# Volume=/home/USER/code/docker/RouteChi/data:/app/data:Z
 
 Environment=DATA_DIR=/app/data
 Environment=PORT=20128
@@ -35,7 +35,7 @@ Environment=NODE_ENV=production
 Environment=REQUIRE_API_KEY=true
 
 # Load additional secrets (API keys, OAuth creds) from the project .env:
-# EnvironmentFile=%h/code/docker/OmniRoute/.env
+# EnvironmentFile=%h/code/docker/RouteChi/.env
 
 HealthCmd=node /app/healthcheck.mjs
 HealthInterval=30s

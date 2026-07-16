@@ -90,7 +90,7 @@ const BX_UA_BLOB =
 const QWEN_SPA_VERSION = "0.2.66";
 
 const MODEL_ALIASES: Record<string, string> = {
-  // Legacy OmniRoute ids → current upstream catalog (GET /api/models).
+  // Legacy RouteChi ids → current upstream catalog (GET /api/models).
   "qwen-plus": "qwen3.7-plus",
   "qwen-max": "qwen3.7-max",
   "qwen-turbo": "qwen3.6-plus",
@@ -447,7 +447,7 @@ export class QwenWebExecutor extends BaseExecutor {
         model: modelId,
         choices: [{ index: 0, message, finish_reason: finishReason }],
       };
-      // Attach usage if captured from SSE (OmniRoute standard: OpenAI-compatible shape)
+      // Attach usage if captured from SSE (RouteChi standard: OpenAI-compatible shape)
       if (usage) completion.usage = usage;
 
       // Save response_id to registry metadata for multi-turn parentId chaining
@@ -801,7 +801,7 @@ export class QwenWebExecutor extends BaseExecutor {
         } else {
           controller.enqueue(encoder.encode(emitChunk({}, "stop")));
         }
-        // Emit terminal usage chunk before [DONE] (OmniRoute standard for streaming)
+        // Emit terminal usage chunk before [DONE] (RouteChi standard for streaming)
         if (capturedUsage) {
           controller.enqueue(encoder.encode(emitUsageChunk(capturedUsage)));
         }

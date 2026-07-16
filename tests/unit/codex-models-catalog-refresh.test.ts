@@ -2,7 +2,7 @@
 //
 // The Codex CLI model-catalog refresh (codex_models_manager) does
 //   GET /v1/models?client_version=<v>
-// and decodes a JSON object with a TOP-LEVEL `models` array. OmniRoute answers in the
+// and decodes a JSON object with a TOP-LEVEL `models` array. RouteChi answers in the
 // OpenAI-standard `{ object: "list", data: [...] }` shape, so codex's serde fails with
 //   failed to decode models response: missing field `models`
 // and logs "failed to refresh available models" on every startup (verified live against

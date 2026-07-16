@@ -1,4 +1,4 @@
-# Contributing to OmniRoute
+# Contributing to RouteChi
 
 Thank you for your interest in contributing! This guide covers everything you need to get started.
 
@@ -16,7 +16,7 @@ Thank you for your interest in contributing! This guide covers everything you ne
 
 ```bash
 git clone https://github.com/borhandarabi/routechi.git
-cd OmniRoute
+cd RouteChi
 npm install
 ```
 
@@ -274,7 +274,7 @@ tests/
 docs/
 ├── adr/                     # Architecture Decision Records
 ├── architecture/            # System architecture & resilience
-├── comparison/              # OmniRoute vs alternatives
+├── comparison/              # RouteChi vs alternatives
 ├── compression/             # Compression guides & rules
 ├── dev/                     # Development guides
 ├── diagrams/                # Architecture diagrams

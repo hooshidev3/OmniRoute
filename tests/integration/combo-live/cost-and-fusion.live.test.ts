@@ -276,7 +276,7 @@ test("live cost-optimized — cheaper real provider served first", {
     // The cost sorter should have put the cheap provider first despite it being listed second.
     //
     // We use three signals in priority order:
-    //   1. X-OmniRoute-Selected-Connection-Id header (fallback paths only — may be absent on 200).
+    //   1. X-RouteChi-Selected-Connection-Id header (fallback paths only — may be absent on 200).
     //   2. Body model field provider prefix (e.g. "groq/model" → "groq").
     //   3. Raw model string comparison (model name matches cheap provider's known model).
 

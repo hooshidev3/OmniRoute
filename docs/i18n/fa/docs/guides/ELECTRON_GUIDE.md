@@ -9,7 +9,7 @@ lastUpdated: 2026-06-28
 > **منبع حقیقت:** workspace مربوط به `electron/`
 > **آخرین به‌روزرسانی:** 2026-06-28 — v3.8.40
 
-OmniRoute یک برنامهٔ دسکتاپ چندسکویی (ویندوز / macOS / لینوکس) مبتنی بر
+RouteChi یک برنامهٔ دسکتاپ چندسکویی (ویندوز / macOS / لینوکس) مبتنی بر
 **Electron 41** + **electron-builder 26.10** ارائه می‌دهد. برنامهٔ دسکتاپ سرور standalone
 مربوط به Next.js را به‌عنوان یک فرایند فرزند اجرا می‌کند، یک `BrowserWindow` به آن
 هدایت می‌کند و یک system tray، به‌روزرسان خودکار، پل IPC و bootstrap راز بدون پیکربندی اضافه می‌کند.
@@ -47,7 +47,7 @@ OmniRoute یک برنامهٔ دسکتاپ چندسکویی (ویندوز / macO
 | `better-sqlite3`  | `^12.9.0`                  |
 | نسخهٔ برنامه      | `3.8.0`                    |
 | شناسهٔ برنامه     | `online.omniroute.desktop` |
-| نام محصول         | `OmniRoute`                |
+| نام محصول         | `RouteChi`                |
 
 ## اسکریپت‌ها (`package.json` ریشه)
 
@@ -169,7 +169,7 @@ spawn(process.execPath, [serverScript], {
 - `BrowserWindow`: 1400×900 (حداقل 1024×700)، `backgroundColor: "#0a0a0a"`.
 - macOS: `titleBarStyle: "hiddenInset"`، چراغ‌های ترافیکی در `{ x: 16, y: 16 }`.
 - ویندوز/لینوکس: نوار عنوان بومی.
-- دکمهٔ بستن به tray کمینه می‌کند؛ منوی tray شامل **Open OmniRoute**، **Open Dashboard**
+- دکمهٔ بستن به tray کمینه می‌کند؛ منوی tray شامل **Open RouteChi**، **Open Dashboard**
   (مرورگر خارجی)، زیرمنوی **Server Port**، **Check for Updates**، **Quit** است.
 
 ## Content Security Policy
@@ -263,9 +263,9 @@ npm run electron:build:win
 
 مصنوعات در `electron/dist-electron/` قرار می‌گیرند:
 
-- `OmniRoute Setup X.Y.Z.exe`، `OmniRoute-X.Y.Z-portable.exe` (ویندوز)
-- `OmniRoute-X.Y.Z-mac.dmg`، `OmniRoute-X.Y.Z-arm64-mac.dmg` (macOS)
-- `OmniRoute-X.Y.Z.AppImage`، `omniroute-desktop_X.Y.Z_amd64.deb` (لینوکس)
+- `RouteChi Setup X.Y.Z.exe`، `RouteChi-X.Y.Z-portable.exe` (ویندوز)
+- `RouteChi-X.Y.Z-mac.dmg`، `RouteChi-X.Y.Z-arm64-mac.dmg` (macOS)
+- `RouteChi-X.Y.Z.AppImage`، `omniroute-desktop_X.Y.Z_amd64.deb` (لینوکس)
 
 انتشارات در GitHub Releases (`borhandarabi/routechi`) منتشر می‌شوند، که همان جایی است
 که `electron-updater` نسخه‌های جدید را بررسی می‌کند.

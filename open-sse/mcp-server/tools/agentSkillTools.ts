@@ -21,7 +21,7 @@ export const agentSkillTools = {
   omniroute_agent_skills_list: {
     name: "omniroute_agent_skills_list",
     description:
-      "List OmniRoute agent skills with optional filtering by category (api/cli) or area. Returns skill metadata including id, name, description, endpoints/commands, and URLs.",
+      "List RouteChi agent skills with optional filtering by category (api/cli) or area. Returns skill metadata including id, name, description, endpoints/commands, and URLs.",
     inputSchema: AgentSkillsListSchema,
     handler: async (args: z.infer<typeof AgentSkillsListSchema>) => {
       const skills: AgentSkill[] =

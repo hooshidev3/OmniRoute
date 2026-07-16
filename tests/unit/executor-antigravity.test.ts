@@ -77,27 +77,27 @@ test("AntigravityExecutor.buildUrl always targets the streaming endpoint", () =>
   );
 });
 
-test("AntigravityExecutor.buildHeaders includes native headers without OmniRoute internals", () => {
+test("AntigravityExecutor.buildHeaders includes native headers without RouteChi internals", () => {
   const executor = new AntigravityExecutor();
   const headers = executor.buildHeaders({ accessToken: "ag-token" }, false);
 
   assert.equal(headers.Authorization, "Bearer ag-token");
   assert.equal(headers.Accept, "text/event-stream");
   assert.match(headers["User-Agent"], /^Antigravity\/4\.2\.0 /);
-  assert.equal(headers["X-OmniRoute-Source"], undefined);
+  assert.equal(headers["X-RouteChi-Source"], undefined);
 });
 
-test("Antigravity header scrub removes OmniRoute internal headers", () => {
+test("Antigravity header scrub removes RouteChi internal headers", () => {
   const headers = scrubProxyAndFingerprintHeaders({
     Authorization: "Bearer ag-token",
-    "X-OmniRoute-Source": "omniroute",
-    "X-OmniRoute-No-Cache": "true",
+    "X-RouteChi-Source": "omniroute",
+    "X-RouteChi-No-Cache": "true",
     "X-Forwarded-For": "127.0.0.1",
   });
 
   assert.equal(headers.Authorization, "Bearer ag-token");
-  assert.equal(headers["X-OmniRoute-Source"], undefined);
-  assert.equal(headers["X-OmniRoute-No-Cache"], undefined);
+  assert.equal(headers["X-RouteChi-Source"], undefined);
+  assert.equal(headers["X-RouteChi-No-Cache"], undefined);
   assert.equal(headers["X-Forwarded-For"], undefined);
   assert.equal(headers["Accept-Encoding"], "gzip, deflate, br");
 });
@@ -527,7 +527,7 @@ test("AntigravityExecutor.collectStreamToResponse converts textual tool call SSE
   assert.deepEqual(JSON.parse(choice.message.tool_calls[0].function.arguments), {
     file_glob: "*gemini*",
     output_mode: "files_only",
-    path: "/opt/OmniRoute",
+    path: "/opt/RouteChi",
     target: "files",
   });
 });

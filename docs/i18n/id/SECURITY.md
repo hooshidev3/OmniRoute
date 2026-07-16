@@ -6,7 +6,7 @@
 
 ## Melaporkan Kerentanan
 
-Jika Anda menemukan kerentanan keamanan di OmniRoute, harap laporkan secara bertanggung jawab:
+Jika Anda menemukan kerentanan keamanan di RouteChi, harap laporkan secara bertanggung jawab:
 
 1. **JANGAN** membuka isu GitHub yang bersifat publik
 2. Gunakan [GitHub Security Advisories](https://github.com/borhandarabi/routechi/security/advisories/new)
@@ -32,7 +32,7 @@ Jika Anda menemukan kerentanan keamanan di OmniRoute, harap laporkan secara bert
 
 ## Arsitektur Keamanan
 
-OmniRoute menerapkan model keamanan berlapis:
+RouteChi menerapkan model keamanan berlapis:
 
 ```
 Request → CORS → API Key Auth → Prompt Injection Guard → Input Sanitizer → Rate Limiter → Circuit Breaker → Provider

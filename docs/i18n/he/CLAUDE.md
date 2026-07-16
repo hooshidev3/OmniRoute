@@ -39,7 +39,7 @@ npm run test:all
 
 ## פרויקט במבט חטוף
 
-**OmniRoute** — פרוקסי/נתב AI מאוחד. נקודת קצה אחת, 160+ ספקי LLM, חזרה אוטומטית.
+**RouteChi** — פרוקסי/נתב AI מאוחד. נקודת קצה אחת, 160+ ספקי LLM, חזרה אוטומטית.
 
 | שכבה          | מיקום                   | מטרה                                                             |
 | ------------- | ----------------------- | ---------------------------------------------------------------- |
@@ -82,7 +82,7 @@ Client → /v1/chat/completions (Next.js route)
 
 ## מצב ריצה של חוסן
 
-OmniRoute יש שלושה מנגנוני כישלון זמניים הקשורים אך שונים. שמור על התחום שלהם נפרד כאשר אתה מדבג התנהגות נתיב. ראה את
+RouteChi יש שלושה מנגנוני כישלון זמניים הקשורים אך שונים. שמור על התחום שלהם נפרד כאשר אתה מדבג התנהגות נתיב. ראה את
 [דיאגרמת חוסן ב-3 שכבות](./docs/diagrams/exported/resilience-3layers.svg)
 (מקור: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 למפת מבט-על.
@@ -405,4 +405,4 @@ git push -u origin feat/your-feature
 13. אל תבצע אינטרפולציה של מיתרים של נתיבים חיצוניים או ערכי ריצה לתוך סקריפטים של shell המועברים ל-`exec()`/`spawn()` — העבר דרך אפשרות `env` במקום זאת. הפניה: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. אל תדחה אזהרת CodeQL / סריקת סודות ללא (א) בדיקה ראשונה של מסמכי התבנית למעלה כדי לראות אם העוזר חל, ו-(ב) תיעוד ההצדקה הטכנית בהערת הדחייה. תקדים: `js/stack-trace-exposure` הועלה על אתרי קריאה שכבר נווטים דרך `sanitizeErrorMessage()` היא מגבלה ידועה של CodeQL (מסננים מותאמים אישית לא מוכרים) — דחה כ-`false positive` בהתייחסות ל-`docs/security/ERROR_SANITIZATION.md`.
 15. אל תחשוף נתיבים שמפעילים תהליכים ילדיים (`/api/mcp/`, `/api/cli-tools/runtime/`) ללא סיווג `isLocalOnlyPath()` ב-`src/server/authz/routeGuard.ts`. אכיפת לולאת חזרה מתבצעת ללא תנאים לפני כל בדיקת auth — JWT דלף דרך מנהרה לא יכול להפעיל תהליך. ראה `docs/security/ROUTE_GUARD_TIERS.md`.
-16. לעולם אל תכלול `Co-Authored-By` trailers שמיוחסים לעוזר AI, ל-LLM או לחשבון אוטומציה (למשל שמות המכילים "Claude", "GPT", "Copilot", "Bot"; אימיילים ב-`anthropic.com` / `openai.com` / כתובות `noreply.github.com` השייכות לבוטים). trailers כאלה מנתבים את הייחוס של ה-commit לחשבון הבוט ב-GitHub, ומסתירים את המחבר האמיתי (`diegosouzapw`) בהיסטוריית ה-PR. משתפי פעולה אנושיים — כולל מחברי PR upstream ומדווחי issues שמועתקים ל-OmniRoute — יכולים וחייבים לקבל קרדיט עם trailers סטנדרטיים `Co-authored-by: Name <email>`; תהליכי העבודה של upstream-port (`/port-upstream-features`, `/port-upstream-issues`) תלויים בזה.
+16. לעולם אל תכלול `Co-Authored-By` trailers שמיוחסים לעוזר AI, ל-LLM או לחשבון אוטומציה (למשל שמות המכילים "Claude", "GPT", "Copilot", "Bot"; אימיילים ב-`anthropic.com` / `openai.com` / כתובות `noreply.github.com` השייכות לבוטים). trailers כאלה מנתבים את הייחוס של ה-commit לחשבון הבוט ב-GitHub, ומסתירים את המחבר האמיתי (`diegosouzapw`) בהיסטוריית ה-PR. משתפי פעולה אנושיים — כולל מחברי PR upstream ומדווחי issues שמועתקים ל-RouteChi — יכולים וחייבים לקבל קרדיט עם trailers סטנדרטיים `Co-authored-by: Name <email>`; תהליכי העבודה של upstream-port (`/port-upstream-features`, `/port-upstream-issues`) תלויים בזה.

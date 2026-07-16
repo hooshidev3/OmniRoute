@@ -65,7 +65,7 @@ test("codebuddy-cn glm-5.2 carries 1M context and openai-style reasoning that ca
   const r = REGISTRY["codebuddy-cn"];
   const m = r.models.find((x) => x.id === "glm-5.2");
   assert.ok(m, "glm-5.2 must exist");
-  // contextLength is the OmniRoute analogue of upstream's contextWindow
+  // contextLength is the RouteChi analogue of upstream's contextWindow
   assert.equal(m.contextLength, 1000000);
   assert.equal(m.supportsReasoning, true);
 });

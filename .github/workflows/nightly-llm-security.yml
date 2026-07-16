@@ -18,7 +18,7 @@ jobs:
       - name: Build CLI bundle
         env: { JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation }
         run: npm run build:cli
-      - name: Start OmniRoute (block mode)
+      - name: Start RouteChi (block mode)
         env:
           JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation
           PORT: "20128"
@@ -71,7 +71,7 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         env: { JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation }
         run: npm run build:cli
-      - name: Start OmniRoute
+      - name: Start RouteChi
         if: steps.gate.outputs.run == 'true'
         env:
           JWT_SECRET: ci-build-secret-with-sufficient-length-for-validation

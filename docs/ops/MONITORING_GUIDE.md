@@ -6,7 +6,7 @@ lastUpdated: 2026-06-28
 
 # Monitoring & Observability Guide
 
-> **TL;DR**: OmniRoute ships with built-in health monitoring, provider autopilot, quota tracking, and observability hooks. This guide covers the dashboard, alerts, and troubleshooting.
+> **TL;DR**: RouteChi ships with built-in health monitoring, provider autopilot, quota tracking, and observability hooks. This guide covers the dashboard, alerts, and troubleshooting.
 
 **Sources:**
 
@@ -22,7 +22,7 @@ lastUpdated: 2026-06-28
 
 ## Overview
 
-OmniRoute has **3 layers of monitoring**:
+RouteChi has **3 layers of monitoring**:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -320,7 +320,7 @@ Token health check configuration is handled internally by `tokenHealthCheck.ts`.
 
 ### Built-in Channels
 
-OmniRoute supports **3 alert channels**:
+RouteChi supports **3 alert channels**:
 
 | Channel          | Setup         | Use case                     |
 | ---------------- | ------------- | ---------------------------- |
@@ -436,7 +436,7 @@ Create a `~/.omniroute/dashboard.json`:
 ### "Quota says healthy but I see 429s"
 
 - 429 means the provider says you've used your quota
-- OmniRoute's quota tracking may be **stale** — the provider's truth is upstream
+- RouteChi's quota tracking may be **stale** — the provider's truth is upstream
 - Quota data refreshes automatically via the internal quota monitor
 
 ### "Combo is failing but all targets look healthy"
@@ -449,7 +449,7 @@ Create a `~/.omniroute/dashboard.json`:
 
 - Run `sqlite3 ~/.omniroute/storage.sqlite "PRAGMA integrity_check;"`
 - If "ok" — false alarm, the health check is being too strict
-- If anything else — **stop OmniRoute** and follow the [disaster recovery guide](./DATABASE_GUIDE.md#disaster-recovery)
+- If anything else — **stop RouteChi** and follow the [disaster recovery guide](./DATABASE_GUIDE.md#disaster-recovery)
 
 ### "Memory heap pressure is critical"
 

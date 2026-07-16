@@ -799,9 +799,9 @@ test("web_search fallback converts built-in tools for unsupported providers and 
         JSON.stringify({
           organic: [
             {
-              title: "OmniRoute Search Result",
+              title: "RouteChi Search Result",
               link: "https://example.com/omniroute",
-              snippet: "Fresh OmniRoute web search fallback result",
+              snippet: "Fresh RouteChi web search fallback result",
             },
           ],
         }),
@@ -827,7 +827,7 @@ test("web_search fallback converts built-in tools for unsupported providers and 
         model: "openai/gpt-4o-mini",
         stream: false,
         messages: [
-          { role: "user", content: "Search the web for the latest OmniRoute release notes" },
+          { role: "user", content: "Search the web for the latest RouteChi release notes" },
         ],
         tools: [{ type: "web_search", search_context_size: "medium" }],
       },
@@ -845,7 +845,7 @@ test("web_search fallback converts built-in tools for unsupported providers and 
   const output = JSON.parse(json.tool_results[0].output);
   assert.equal(output.success, true);
   assert.equal(output.provider, "serper-search");
-  assert.equal(output.results[0].title, "OmniRoute Search Result");
+  assert.equal(output.results[0].title, "RouteChi Search Result");
 });
 
 test("web_search fallback preserves Responses API output by appending function_call_output", async () => {
@@ -891,7 +891,7 @@ test("web_search fallback preserves Responses API output by appending function_c
             type: "message",
             role: "user",
             content: [
-              { type: "input_text", text: "Search the web for the latest OmniRoute roadmap" },
+              { type: "input_text", text: "Search the web for the latest RouteChi roadmap" },
             ],
           },
         ],

@@ -39,7 +39,7 @@ För full testmatris, se `CONTRIBUTING.md` → "Köra Tester". För djup arkitek
 
 ## Projekt i Korthet
 
-**OmniRoute** — enad AI-proxy/router. En slutpunkt, 160+ LLM-leverantörer, automatisk återkoppling.
+**RouteChi** — enad AI-proxy/router. En slutpunkt, 160+ LLM-leverantörer, automatisk återkoppling.
 
 | Lager        | Plats                   | Syfte                                                                     |
 | ------------ | ----------------------- | ------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ API-rutter följer ett konsekvent mönster: `Rutt → CORS preflight → Zod kro
 
 ## Motstånds Runtime-tillstånd
 
-OmniRoute har tre relaterade men distinkta mekanismer för tillfälliga fel. Håll deras
+RouteChi har tre relaterade men distinkta mekanismer för tillfälliga fel. Håll deras
 omfång separerat när du felsöker routingbeteende. Se
 [3-lagers motståndsdiagram](./docs/diagrams/exported/resilience-3layers.svg)
 (källa: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
@@ -412,4 +412,4 @@ git push -u origin feat/your-feature
 13. Stränginterpolera aldrig externa sökvägar eller körvärden i shell-skript som skickas till `exec()`/`spawn()` — passera istället via `env`-alternativet. Referens: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Avfärda aldrig en CodeQL / Secret-Scanning-varning utan (a) att först kontrollera mönster-dokumentationen ovan för att se om hjälpen gäller, och (b) dokumentera den tekniska motiveringen i avfärdningskommentaren. Precedens: `js/stack-trace-exposure` som väckts på anropställen som redan routar genom `sanitizeErrorMessage()` är en känd CodeQL-begränsning (anpassade saniterare erkänns inte) — avfärda som `false positive` med hänvisning till `docs/security/ERROR_SANITIZATION.md`.
 15. Exponera aldrig rutter som skapar barnprocesser (`/api/mcp/`, `/api/cli-tools/runtime/`) utan `isLocalOnlyPath()` klassificering i `src/server/authz/routeGuard.ts`. Loopback-tillämpning sker ovillkorligt före någon autentisering — läckta JWT via tunnel kan inte utlösa processskapande. Se `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Inkludera aldrig `Co-Authored-By`-trailers som krediterar en AI-assistent, LLM eller automatiseringskonto (t.ex. namn som innehåller "Claude", "GPT", "Copilot", "Bot"; e-postmeddelanden på `anthropic.com` / `openai.com` / bot-ägda `noreply.github.com`-adresser). Sådana trailers dirigerar commit-attribution till bot-kontot på GitHub, vilket döljer den verkliga författaren (`diegosouzapw`) i PR-historiken. Mänskliga medarbetare — inklusive upstream PR-författare och issue-rapporterare som portas till OmniRoute — KAN och BÖR krediteras med standard `Co-authored-by: Name <email>`-trailers; upstream-port arbetsflöden (`/port-upstream-features`, `/port-upstream-issues`) beror på detta.
+16. Inkludera aldrig `Co-Authored-By`-trailers som krediterar en AI-assistent, LLM eller automatiseringskonto (t.ex. namn som innehåller "Claude", "GPT", "Copilot", "Bot"; e-postmeddelanden på `anthropic.com` / `openai.com` / bot-ägda `noreply.github.com`-adresser). Sådana trailers dirigerar commit-attribution till bot-kontot på GitHub, vilket döljer den verkliga författaren (`diegosouzapw`) i PR-historiken. Mänskliga medarbetare — inklusive upstream PR-författare och issue-rapporterare som portas till RouteChi — KAN och BÖR krediteras med standard `Co-authored-by: Name <email>`-trailers; upstream-port arbetsflöden (`/port-upstream-features`, `/port-upstream-issues`) beror på detta.

@@ -361,7 +361,7 @@ function extractZaiError(j: ZaiSSEChunk): string {
 /**
  * Detect Z.AI capacity/peak-hour messages that are sent as regular content
  * rather than as error objects. These should trigger a 503 (retryable) so
- * OmniRoute's retry/fallback logic can kick in.
+ * RouteChi's retry/fallback logic can kick in.
  */
 function isZaiCapacityMessage(text: string): boolean {
   const lower = text.toLowerCase();
@@ -455,7 +455,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
   constructor() {
     super("zai-web-free", { id: "zai-web-free", baseUrl: "https://chat.z.ai" });
-    // Lazy-init the device-token pool from the OmniRoute data directory.
+    // Lazy-init the device-token pool from the RouteChi data directory.
     // The pool path is read from the OMNIROUTE_DATA_DIR env var (set by the
     // server bootstrap) ?�� falls back to ~/.omniroute/omniroute.db.
     if (!ZaiWebFreeExecutor.initialized) {

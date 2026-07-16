@@ -12,7 +12,7 @@ const BIN_CLI = join(__dirname, "..", "..", "bin", "cli");
 
 // ─── #3476: discoverability of `omniroute runtime repair` ──────────────────────
 //
-// When better-sqlite3's native binding mismatches the Node ABI, OmniRoute prints
+// When better-sqlite3's native binding mismatches the Node ABI, RouteChi prints
 // an error/startup hint. Historically those hints only suggested
 // `npm rebuild better-sqlite3`, which fails for global / no-toolchain installs.
 // A self-heal command already exists (`omniroute runtime repair`); these tests

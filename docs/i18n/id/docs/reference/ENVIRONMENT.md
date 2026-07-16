@@ -4,7 +4,7 @@
 
 ---
 
-> Referensi lengkap untuk setiap variabel lingkungan yang dikenali oleh OmniRoute.
+> Referensi lengkap untuk setiap variabel lingkungan yang dikenali oleh RouteChi.
 > Untuk template pengaturan cepat, lihat [`.env.example`](../.env.example).
 
 ---
@@ -65,7 +65,7 @@ echo "INITIAL_PASSWORD=$(openssl rand -base64 16)"
 
 ## 2. Penyimpanan & Database
 
-OmniRoute menggunakan **SQLite** (melalui `better-sqlite3`) untuk semua persistensi data. Variabel-variabel ini mengontrol lokasi data, enkripsi, dan siklus hidup data.
+RouteChi menggunakan **SQLite** (melalui `better-sqlite3`) untuk semua persistensi data. Variabel-variabel ini mengontrol lokasi data, enkripsi, dan siklus hidup data.
 
 | Variable                         | Default              | Source File                                     | Deskripsi                                                                                                                          |
 | -------------------------------- | -------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -154,7 +154,7 @@ MAX_BODY_SIZE_BYTES=5242880    # Batas 5 MB
 
 ## 5. Sanitasi Input & Perlindungan PII
 
-OmniRoute menyediakan pertahanan dua lapis: pemindaian injeksi di sisi permintaan dan penghapusan PII di sisi respons.
+RouteChi menyediakan pertahanan dua lapis: pemindaian injeksi di sisi permintaan dan penghapusan PII di sisi respons.
 
 ### Sisi Permintaan: Penjaga Injeksi Prompt
 
@@ -232,14 +232,14 @@ Arahkan panggilan provider LLM upstream melalui proxy HTTP atau SOCKS5 untuk kon
 
 ## 9. Integrasi Alat CLI
 
-Mengontrol bagaimana OmniRoute menemukan dan menjalankan sidecar CLI (Claude Code, Codex, dll.).
+Mengontrol bagaimana RouteChi menemukan dan menjalankan sidecar CLI (Claude Code, Codex, dll.).
 
 | Variable                  | Default    | Source File                         | Deskripsi                                                                                        |
 | ------------------------- | ---------- | ----------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `CLI_MODE`                | `auto`     | `src/shared/services/cliRuntime.ts` | `auto` = cari di PATH sistem; `manual` = gunakan hanya path eksplisit.                           |
 | `CLI_EXTRA_PATHS`         | _(unset)_  | `src/shared/services/cliRuntime.ts` | Entri PATH tambahan untuk penemuan biner CLI (dipisahkan titik dua).                             |
 | `CLI_CONFIG_HOME`         | _(unset)_  | `src/shared/services/cliRuntime.ts` | Override direktori home untuk membaca konfigurasi CLI (`~/.claude`, `~/.codex`).                 |
-| `CLI_ALLOW_CONFIG_WRITES` | `false`    | `src/shared/services/cliRuntime.ts` | Izinkan OmniRoute menulis file konfigurasi CLI (penyegaran token, data sesi).                    |
+| `CLI_ALLOW_CONFIG_WRITES` | `false`    | `src/shared/services/cliRuntime.ts` | Izinkan RouteChi menulis file konfigurasi CLI (penyegaran token, data sesi).                    |
 | `CLI_CLAUDE_BIN`          | `claude`   | `src/shared/services/cliRuntime.ts` | Path kustom ke biner CLI Claude.                                                                 |
 | `CLI_CODEX_BIN`           | `codex`    | `src/shared/services/cliRuntime.ts` | Path kustom ke biner CLI Codex.                                                                  |
 | `CLI_DROID_BIN`           | `droid`    | `src/shared/services/cliRuntime.ts` | Path kustom ke biner CLI Droid.                                                                  |
@@ -252,7 +252,7 @@ Mengontrol bagaimana OmniRoute menemukan dan menjalankan sidecar CLI (Claude Cod
 ### Contoh Docker
 
 ```bash
-# Mount biner host ke kontainer dan beri tahu OmniRoute lokasinya:
+# Mount biner host ke kontainer dan beri tahu RouteChi lokasinya:
 CLI_EXTRA_PATHS=/host-cli/bin
 CLI_CONFIG_HOME=/root
 CLI_ALLOW_CONFIG_WRITES=true
@@ -265,7 +265,7 @@ CLI_CLAUDE_BIN=/host-cli/bin/claude
 
 | Variable                                | Default          | Source File                                 | Deskripsi                                                                                                                              |
 | --------------------------------------- | ---------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `OMNIROUTE_BASE_URL`                    | deteksi otomatis | `open-sse/mcp-server/server.ts`             | URL eksplisit agar alat MCP/A2A dapat menjangkau OmniRoute. Menimpa deteksi otomatis localhost.                                        |
+| `OMNIROUTE_BASE_URL`                    | deteksi otomatis | `open-sse/mcp-server/server.ts`             | URL eksplisit agar alat MCP/A2A dapat menjangkau RouteChi. Menimpa deteksi otomatis localhost.                                        |
 | `OMNIROUTE_API_KEY`                     | _(unset)_        | MCP/A2A modules                             | Kunci API untuk panggilan alat MCP internal dan skill A2A.                                                                             |
 | `OMNIROUTE_API_KEY_ID`                  | _(unset)_        | `open-sse/mcp-server/audit.ts`              | ID kunci untuk atribusi log audit MCP.                                                                                                 |
 | `ROUTER_API_KEY`                        | _(unset)_        | Legacy                                      | Alias legacy untuk `OMNIROUTE_API_KEY`.                                                                                                |
@@ -281,7 +281,7 @@ CLI_CLAUDE_BIN=/host-cli/bin/claude
 
 | Variable            | Default          | Source File                     | Deskripsi                                        |
 | ------------------- | ---------------- | ------------------------------- | ------------------------------------------------ |
-| `OMNIROUTE_SERVER`  | deteksi otomatis | `src/lib/oauth/config/index.ts` | URL server untuk jembatan autentikasi CLI↔OmniRoute. |
+| `OMNIROUTE_SERVER`  | deteksi otomatis | `src/lib/oauth/config/index.ts` | URL server untuk jembatan autentikasi CLI↔RouteChi. |
 | `OMNIROUTE_TOKEN`   | _(unset)_        | `src/lib/oauth/config/index.ts` | Token autentikasi untuk jembatan CLI.             |
 | `OMNIROUTE_USER_ID` | `cli`            | `src/lib/oauth/config/index.ts` | ID pengguna untuk sesi jembatan CLI.              |
 | `SERVER_URL`        | _(unset)_        | `src/lib/oauth/config/index.ts` | Alias legacy untuk `OMNIROUTE_SERVER`.            |
@@ -353,7 +353,7 @@ process.env[`${PROVIDER_ID}_USER_AGENT`]
 
 ## 13. Kompatibilitas Fingerprint CLI
 
-Saat diaktifkan, OmniRoute mengatur ulang urutan header HTTP dan field body JSON agar cocok dengan tanda tangan persis dari alat CLI resmi. Hal ini mengurangi risiko pemblokiran akun sambil mempertahankan IP proxy Anda.
+Saat diaktifkan, RouteChi mengatur ulang urutan header HTTP dan field body JSON agar cocok dengan tanda tangan persis dari alat CLI resmi. Hal ini mengurangi risiko pemblokiran akun sambil mempertahankan IP proxy Anda.
 
 **Sumber:** `open-sse/config/cliFingerprints.ts`, `open-sse/executors/base.ts`
 

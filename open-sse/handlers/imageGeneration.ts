@@ -773,7 +773,7 @@ async function handleGeminiImageGeneration({ model, providerConfig, body, creden
       status: 400,
       startTime,
       error:
-        "Missing Google projectId for Antigravity account. Please reconnect OAuth in Providers so OmniRoute can fetch your Cloud Code project.",
+        "Missing Google projectId for Antigravity account. Please reconnect OAuth in Providers so RouteChi can fetch your Cloud Code project.",
       requestBody: logRequestBody,
     });
   }
@@ -1075,7 +1075,7 @@ export async function handleOpenAIImageEdit({
   // makes undici serialize it as the string "[object FormData]" (text/plain), dropping every
   // field (including `model`, which reaches the upstream empty). A Buffer body is accepted
   // verbatim by any fetch implementation. (#3273)
-  const boundary = `----OmniRouteImageEdit${randomUUID().replace(/-/g, "")}`;
+  const boundary = `----RouteChiImageEdit${randomUUID().replace(/-/g, "")}`;
   const CRLF = "\r\n";
   const partBuffers: Buffer[] = [];
   const appendField = (name: string, value: string) => {
@@ -1209,7 +1209,7 @@ export async function handleImageEdit({
       status: 400,
       startTime,
       error:
-        "chatgpt-web image edit only works for images recently generated through this OmniRoute instance " +
+        "chatgpt-web image edit only works for images recently generated through this RouteChi instance " +
         "(cache window: 30 minutes). Re-generate the image and try the edit immediately, or disable image-edit " +
         "in your client to use plain chat-completion edit prompts instead.",
       requestBody,

@@ -50,16 +50,16 @@ export function planFromHeader(
   return combo ? withSource({ mode: "stacked", stackedPipeline: combo }, "request-header") : null;
 }
 
-/** Renders the X-OmniRoute-Compression response header value. */
+/** Renders the X-RouteChi-Compression response header value. */
 export function formatCompressionMeta(plan: DerivedPlan): string {
   return `${plan.mode}; source=${plan.source ?? "off"}`;
 }
 
 /**
- * Builds the annotation suffix for X-OmniRoute-Compression from compression stats.
+ * Builds the annotation suffix for X-RouteChi-Compression from compression stats.
  * Returns "" when there are no rules to aggregate (caller skips the append).
  * Format: `tokens=<orig>-><comp>; rules: <name>x<count>, ...` sorted by count desc.
- * ASCII-only: this string is appended to the X-OmniRoute-Compression HTTP header,
+ * ASCII-only: this string is appended to the X-RouteChi-Compression HTTP header,
  * whose value is a latin-1 ByteString — a non-ASCII char (e.g. U+2192 →) throws at
  * Response/Headers construction (500). Keep the UI badge's arrow in the JSX, not here.
  */

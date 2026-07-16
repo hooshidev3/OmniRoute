@@ -1,12 +1,12 @@
 ---
-title: "Claude Code CLI — Configuration with OmniRoute"
+title: "Claude Code CLI — Configuration with RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# Claude Code CLI — Configuration with OmniRoute
+# Claude Code CLI — Configuration with RouteChi
 
-Point the **Claude Code** CLI (`claude`) at OmniRoute — local or a remote VPS —
+Point the **Claude Code** CLI (`claude`) at RouteChi — local or a remote VPS —
 with per-model profiles, mirroring the Codex setup.
 
 ---
@@ -14,15 +14,15 @@ with per-model profiles, mirroring the Codex setup.
 ## Quick start
 
 ```bash
-# Launch Claude Code against a local OmniRoute (auto-detects the active context)
+# Launch Claude Code against a local RouteChi (auto-detects the active context)
 routechi launch
 
-# Against a remote OmniRoute (after `routechi connect <host>`, this is automatic)
+# Against a remote RouteChi (after `routechi connect <host>`, this is automatic)
 routechi launch --remote http://192.168.0.15:20128 --api-key oma_live_xxx
 
 # Generate per-model profiles, then launch one
 routechi setup-claude            # writes ~/.claude/profiles/<name>/settings.json
-routechi launch --profile glm52  # Claude Code using glm/glm-5.2 via OmniRoute
+routechi launch --profile glm52  # Claude Code using glm/glm-5.2 via RouteChi
 ```
 
 ---
@@ -35,7 +35,7 @@ endpoint with environment variables (it has no `--base-url` flag):
 | Variable                                     | Purpose                                                                                |
 | -------------------------------------------- | -------------------------------------------------------------------------------------- |
 | `ANTHROPIC_BASE_URL`                         | Gateway root URL (Claude Code appends `/v1/messages`). **No `/v1` suffix.**            |
-| `ANTHROPIC_AUTH_TOKEN`                       | Sent as `Authorization: Bearer …` — use your OmniRoute access token / API key          |
+| `ANTHROPIC_AUTH_TOKEN`                       | Sent as `Authorization: Bearer …` — use your RouteChi access token / API key          |
 | `ANTHROPIC_API_KEY`                          | Alternative: sent as `x-api-key`. If both set, `ANTHROPIC_AUTH_TOKEN` wins             |
 | `ANTHROPIC_MODEL`                            | Force a specific model (overrides the `/model` picker default)                         |
 | `CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY` | `1` → the native `/model` picker lists `claude*`/`anthropic*` models from `/v1/models` |
@@ -80,7 +80,7 @@ profile per model at `~/.claude/profiles/<name>/settings.json`, reusing the
 > active context), or export `ANTHROPIC_AUTH_TOKEN` yourself and run
 > `CLAUDE_CONFIG_DIR=~/.claude/profiles/<name> claude`.
 
-**Auto-sync after model discovery (opt-in).** OmniRoute can regenerate these same
+**Auto-sync after model discovery (opt-in).** RouteChi can regenerate these same
 `~/.claude/profiles/<name>/settings.json` files automatically whenever a provider model
 sync changes the live catalog — so new/renamed models get profiles without re-running the
 command. It is **off by default**: toggle it from the **CLI Code dashboard** ("CLI profile
@@ -91,7 +91,7 @@ changes your active/default Claude config, auth, or the `~/.claude/settings.json
 ### Generating + using profiles
 
 ```bash
-# Local OmniRoute
+# Local RouteChi
 routechi setup-claude
 
 # Remote VPS (bakes the VPS URL into every profile)
@@ -111,7 +111,7 @@ routechi launch --profile kimi-k27
 
 ## Model tiers (optional)
 
-Claude Code routes to capability tiers. Map each to an OmniRoute model via env /
+Claude Code routes to capability tiers. Map each to an RouteChi model via env /
 settings if you want different providers per tier:
 
 ```bash

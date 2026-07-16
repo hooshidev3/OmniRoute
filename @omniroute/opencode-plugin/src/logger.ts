@@ -1,5 +1,5 @@
 /**
- * Structured logger for the OmniRoute plugin.
+ * Structured logger for the RouteChi plugin.
  *
  * Levels: error < warn < info < debug
  * Default: warn (matches current console.warn behavior)

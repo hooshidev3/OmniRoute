@@ -13,8 +13,8 @@ import { createChatPipelineHarness } from "../integration/_chatPipelineHarness.t
 //
 //  Issue 4) A request with `messages: []` (empty array) was forwarded upstream,
 //           which Anthropic rejects with a raw "[400]: messages: at least one
-//           message is required". OmniRoute now rejects it early with a clear
-//           OmniRoute-level 400 before any upstream call.
+//           message is required". RouteChi now rejects it early with a clear
+//           RouteChi-level 400 before any upstream call.
 
 // ── Issue 1: embed WS bind host honours LIVE_WS_HOST ──────────────────────────
 test("#5110-1: resolveEmbedWsHost prefers EMBED_WS_PROXY_HOST, then LIVE_WS_HOST, then loopback", async () => {

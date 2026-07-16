@@ -21,11 +21,11 @@ describe("config-generator", () => {
   });
 
   describe("assertSafeCatalogUrl (SSRF guard, CodeQL #326)", () => {
-    it("allows the loopback OmniRoute target (the legitimate default) and returns a URL", async () => {
+    it("allows the loopback RouteChi target (the legitimate default) and returns a URL", async () => {
       const { assertSafeCatalogUrl } = await import(
         "../../../src/lib/cli-helper/config-generator/opencode.ts"
       );
-      // The catalog source IS the user's own OmniRoute — localhost must stay allowed.
+      // The catalog source IS the user's own RouteChi — localhost must stay allowed.
       assert.doesNotThrow(() => assertSafeCatalogUrl("http://localhost:20128/v1/models"));
       assert.doesNotThrow(() => assertSafeCatalogUrl("http://127.0.0.1:20128/v1/models"));
       // Returns the validated, re-parsed URL (taint-severed value the caller fetches).
@@ -34,7 +34,7 @@ describe("config-generator", () => {
       assert.equal(safe.href, "http://localhost:20128/v1/models");
     });
 
-    it("allows a public OmniRoute Cloud target", async () => {
+    it("allows a public RouteChi Cloud target", async () => {
       const { assertSafeCatalogUrl } = await import(
         "../../../src/lib/cli-helper/config-generator/opencode.ts"
       );

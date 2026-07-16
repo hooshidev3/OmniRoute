@@ -39,7 +39,7 @@ Tam test matrisini görmek için `CONTRIBUTING.md` → "Testleri Çalıştırma"
 
 ## Projeye Genel Bakış
 
-**OmniRoute** — birleşik AI proxy/yönlendirici. Tek uç nokta, 160'tan fazla LLM sağlayıcısı, otomatik geri dönüş.
+**RouteChi** — birleşik AI proxy/yönlendirici. Tek uç nokta, 160'tan fazla LLM sağlayıcısı, otomatik geri dönüş.
 
 | Katman        | Konum                   | Amaç                                                           |
 | ------------- | ----------------------- | -------------------------------------------------------------- |
@@ -82,7 +82,7 @@ API yolları tutarlı bir desen izler: `Route → CORS ön uç → Zod gövde do
 
 ## Dayanıklılık Çalışma Durumu
 
-OmniRoute, üç ilgili ancak farklı geçici hata mekanizmasına sahiptir. Yönlendirme davranışını hata ayıklarken kapsamlarını ayrı tutun. Bir bakışta harita için [3 katmanlı dayanıklılık diyagramı](./docs/diagrams/exported/resilience-3layers.svg) (kaynak: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))'na bakın.
+RouteChi, üç ilgili ancak farklı geçici hata mekanizmasına sahiptir. Yönlendirme davranışını hata ayıklarken kapsamlarını ayrı tutun. Bir bakışta harita için [3 katmanlı dayanıklılık diyagramı](./docs/diagrams/exported/resilience-3layers.svg) (kaynak: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))'na bakın.
 
 ### Sağlayıcı Devre Kesici
 
@@ -385,4 +385,4 @@ git push -u origin feat/your-feature
 13. Asla dış yolları veya çalışma zamanı değerlerini `exec()`/`spawn()`'a geçirilen shell betiklerine string-interpolate etmeyin — bunun yerine `env` seçeneği aracılığıyla geçirin. Referans: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Asla bir CodeQL / Secret-Scanning uyarısını (a) yukarıdaki desen belgelerini kontrol etmeden ve (b) reddetme yorumunda teknik gerekçeyi kaydetmeden geçiştirmeyin. Örnek: `js/stack-trace-exposure` hatası, zaten `sanitizeErrorMessage()` üzerinden yönlendirilmiş çağrı noktalarında ortaya çıkmaktadır ve bu bilinen bir CodeQL sınırlamasıdır (özel temizleyiciler tanınmaz) — `docs/security/ERROR_SANITIZATION.md`'ye atıfta bulunarak `false positive` olarak reddedin.
 15. Asla çocuk süreçleri başlatan rotaları (`/api/mcp/`, `/api/cli-tools/runtime/`) `src/server/authz/routeGuard.ts` içinde `isLocalOnlyPath()` sınıflandırması olmadan dahil etmeyin. Döngü geri uygulaması, herhangi bir kimlik doğrulama kontrolünden önce koşulsuz olarak gerçekleşir — tünel aracılığıyla sızdırılan JWT, süreç başlatmayı tetikleyemez. `docs/security/ROUTE_GUARD_TIERS.md`'ye bakın.
-16. Asla AI asistanı, LLM veya otomasyon hesabını krediye alan `Co-Authored-By` ekleri içermeyin (örn. "Claude", "GPT", "Copilot", "Bot" içeren isimler; `anthropic.com` / `openai.com` / bot sahipli `noreply.github.com` adreslerindeki e-postalar). Bu tür ekler GitHub'da commit atfını bot hesabına yönlendirir ve PR geçmişinde gerçek yazarı (`diegosouzapw`) gizler. İnsan katkıda bulunanlar — upstream PR yazarları ve OmniRoute'a port edilen issue raporlayıcıları dahil — standart `Co-authored-by: Name <email>` ekleriyle krediye ALINABİLİR ve ALINMALIDIR; upstream-port iş akışları (`/port-upstream-features`, `/port-upstream-issues`) buna bağlıdır.
+16. Asla AI asistanı, LLM veya otomasyon hesabını krediye alan `Co-Authored-By` ekleri içermeyin (örn. "Claude", "GPT", "Copilot", "Bot" içeren isimler; `anthropic.com` / `openai.com` / bot sahipli `noreply.github.com` adreslerindeki e-postalar). Bu tür ekler GitHub'da commit atfını bot hesabına yönlendirir ve PR geçmişinde gerçek yazarı (`diegosouzapw`) gizler. İnsan katkıda bulunanlar — upstream PR yazarları ve RouteChi'a port edilen issue raporlayıcıları dahil — standart `Co-authored-by: Name <email>` ekleriyle krediye ALINABİLİR ve ALINMALIDIR; upstream-port iş akışları (`/port-upstream-features`, `/port-upstream-issues`) buna bağlıdır.

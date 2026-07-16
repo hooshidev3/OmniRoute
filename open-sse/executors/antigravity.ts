@@ -554,7 +554,7 @@ export class AntigravityExecutor extends BaseExecutor {
       Authorization: `Bearer ${credentials.accessToken}`,
       "User-Agent": antigravityUserAgent(),
       Accept: "text/event-stream",
-      "X-OmniRoute-Source": "omniroute",
+      "X-RouteChi-Source": "omniroute",
     };
     // Scrub proxy/fingerprint headers that reveal non-native traffic
     return scrubProxyAndFingerprintHeaders(raw);

@@ -1,4 +1,4 @@
-description: OmniRoute LLM red-team — injection guard coverage + quality rubric
+description: RouteChi LLM red-team — injection guard coverage + quality rubric
 providers:
   - id: https
     config:

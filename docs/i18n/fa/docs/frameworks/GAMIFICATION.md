@@ -9,7 +9,7 @@ lastUpdated: 2026-06-28
 > **منبع اصلی:** `src/lib/gamification/`, `src/lib/db/gamification.ts`, `src/app/api/gamification/`
 > **آخرین به‌روزرسانی:** 2026-06-28 — v3.8.40
 
-OmniRoute شامل یک لایه‌ی گیمیفیکیشن local-first است که کاربران را به‌خاطر مشارکت با
+RouteChi شامل یک لایه‌ی گیمیفیکیشن local-first است که کاربران را به‌خاطر مشارکت با
 پلتفرم پاداش می‌دهد — درخواست‌ دادن، تغییر provider، ایجاد comboها، اشتراک توکن،
 و کمک به جامعه. همه‌ی وضعیت‌ها در SQLite ذخیره می‌شوند؛ فدراسیون با سرورهای جامعه
 اختیاری و از نوع push-based است.
@@ -37,7 +37,7 @@ OmniRoute شامل یک لایه‌ی گیمیفیکیشن local-first است ک
 | تابلوهای امتیازات  | حوزه‌های جهانی، هفتگی، ماهانه، اشتراک توکن و مشارکت            |
 | اشتراک توکن       | انتقال اعتبار بین کاربران از طریق دفتر ثبت دوطرفه             |
 | دعوت و بازخرید     | کدهای ارجاع با ذخیره‌سازی هش‌شده‌ی SHA-256                     |
-| سرورهای جامعه     | فدراسیون با instanceهای خارجی OmniRoute                        |
+| سرورهای جامعه     | فدراسیون با instanceهای خارجی RouteChi                        |
 | ضدتقلب            | امتیازدهی سمت سرور، محدودسازی نرخ، تشخیص ناهنجاری z-score      |
 
 ### اصول طراحی
@@ -115,7 +115,7 @@ src/app/api/gamification/
 
 ### جداول پایگاه داده
 
-همه‌ی جداول در پایگاه داده‌ی اصلی SQLite مربوط به OmniRoute قرار دارند و توسط
+همه‌ی جداول در پایگاه داده‌ی اصلی SQLite مربوط به RouteChi قرار دارند و توسط
 migration `060_create_gamification.sql` ایجاد می‌شوند. WAL journaling از singleton
 `getDbInstance()` در `src/lib/db/core.ts` به ارث می‌رسد.
 
@@ -174,7 +174,7 @@ migration `060_create_gamification.sql` ایجاد می‌شوند. WAL journali
 
 ### ماژول دامنه: `src/lib/db/gamification.ts`
 
-از الگوی استاندارد OmniRoute پیروی می‌کند — `getDbInstance()` را از
+از الگوی استاندارد RouteChi پیروی می‌کند — `getDbInstance()` را از
 `core.ts` وارد کرده و توابع CRUD تایپ‌شده را صادر می‌کند. هیچ SQL خامی در
 route handlerها وجود ندارد.
 
@@ -587,7 +587,7 @@ export async function transferTokens(
 | `code`     | `A3K9X7M2` (یکتا، ایندکس‌شده) |
 | `token_hash`| SHA-256(raw_token)           |
 
-توکن خام دقیقاً یک بار در زمان ایجاد به کاربر بازگردانده می‌شود. OmniRoute
+توکن خام دقیقاً یک بار در زمان ایجاد به کاربر بازگردانده می‌شود. RouteChi
 هرگز دوباره آن را ذخیره یا نمایش نمی‌دهد — فقط هش باقی می‌ماند.
 
 ### جلوگیری از خودارجاعی
@@ -721,7 +721,7 @@ X-Federation-Version: 1
 
 ## مسیرهای API
 
-همه‌ی مسیرها از الگوی استاندارد OmniRoute پیروی می‌کنند:
+همه‌ی مسیرها از الگوی استاندارد RouteChi پیروی می‌کنند:
 
 ```
 Route → CORS preflight → Body validation (Zod) → Auth (extractApiKey)

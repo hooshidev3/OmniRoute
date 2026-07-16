@@ -15,7 +15,7 @@ Total providers: **250**. See category breakdown below.
 ## Categories
 
 - **Free** — free tier with API key (configured via dashboard)
-- **OAuth** — sign-in flow handled by OmniRoute, no API key needed
+- **OAuth** — sign-in flow handled by RouteChi, no API key needed
 - **Web cookie** — wraps the provider's web app via cookie auth
 - **API key** — paid provider configured via API key (free credits may apply)
 - **Local** — runs on the user's machine (Ollama, LM Studio, vLLM, etc.)
@@ -23,7 +23,7 @@ Total providers: **250**. See category breakdown below.
 - **Audio** — audio-only providers (TTS/STT)
 - **Upstream proxy** — providers that proxy to other providers
 - **Cloud agent** — long-running coding agents (Codex Cloud, Devin, Jules)
-- **System** — OmniRoute-internal providers (loopback, etc.)
+- **System** — RouteChi-internal providers (loopback, etc.)
 
 Additional tags: `image`, `video`, `aggregator`, `enterprise`, `embed/rerank`, `self-hosted`.
 
@@ -46,7 +46,7 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `cursor` | `cu` | Cursor IDE | OAuth | — | — |
 | `devin-cli` | `dv` | Devin CLI (Official) | OAuth | [link](https://cli.devin.ai) | Requires the Devin CLI binary. Run `devin auth login` to authenticate, or provide your WINDSURF_API_KEY. Install: https://cli.devin.ai |
 | `github` | `gh` | GitHub Copilot | OAuth | — | — |
-| `gitlab-duo` | `gitlab-duo` | GitLab Duo | OAuth | [link](https://docs.gitlab.com/user/duo_agent_platform/code_suggestions/) | OAuth application with ai_features + read_user scopes. Configure GITLAB_DUO_OAUTH_CLIENT_ID and optionally GITLAB_DUO_OAUTH_CLIENT_SECRET on this OmniRoute instance. |
+| `gitlab-duo` | `gitlab-duo` | GitLab Duo | OAuth | [link](https://docs.gitlab.com/user/duo_agent_platform/code_suggestions/) | OAuth application with ai_features + read_user scopes. Configure GITLAB_DUO_OAUTH_CLIENT_ID and optionally GITLAB_DUO_OAUTH_CLIENT_SECRET on this RouteChi instance. |
 | `grok-cli` | `gc` | Grok Build | OAuth | — | Paste your ~/.grok/auth.json (or the JWT access token) from the Grok Build CLI; refresh_token is rotated automatically. |
 | `kilocode` | `kc` | Kilo Code | OAuth | — | — |
 | `kimi-coding` | `kmc` | Kimi Coding | OAuth | — | — |
@@ -56,7 +56,7 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `trae` | `tr` | Trae | OAuth | [link](https://trae.ai) | Trae is an AI-native IDE by ByteDance (SOLO remote agent). Authorize via trae.ai in the popup, or sign in at solo.trae.ai and paste the Cloud-IDE-JWT (sent as 'Authorization: Cloud-IDE-JWT <token>', ~14-day lifetime) as the access token; web_id/biz_user_id/user_unique_id/scope/tenant/region propagate via providerSpecificData. No headless refresh for pasted tokens — re-paste on expiry. |
 | `windsurf` | `ws` | Windsurf (Devin CLI) | OAuth | [link](https://windsurf.com) | In the Windsurf / VS Code IDE, open the command palette and run `Windsurf: Provide Auth Token` (or click the Jupyter "Get Windsurf Authentication Token" button), then copy the shown token and paste it here. Note: opening windsurf.com/show-auth-token directly only renders a "Redirecting" page — the IDE must initiate the flow (it adds a `?state=...` param) for the token to appear. |
 | `zed` | `zd` | Zed IDE | OAuth | [link](https://zed.dev) | Zed stores LLM provider credentials (OpenAI, Anthropic, Google, Mistral, xAI) in the OS keychain. Use the Import button below to discover and import them automatically. |
-| `zed-hosted` | — | Zed Hosted Models | OAuth | [link](https://zed.dev) | Sign in with your Zed account (native-app sign-in). OmniRoute generates a one-time RSA keypair and opens zed.dev to authorize it — on a remote/headless install, copy the resulting 127.0.0.1 callback URL from your browser's address bar and paste it back here. Distinct from the 'Zed IDE' credential-import entry above: this proxies chat completions through Zed's own hosted model aggregator (cloud.zed.dev), fronting Anthropic/OpenAI/Google/xAI models under your Zed plan. |
+| `zed-hosted` | — | Zed Hosted Models | OAuth | [link](https://zed.dev) | Sign in with your Zed account (native-app sign-in). RouteChi generates a one-time RSA keypair and opens zed.dev to authorize it — on a remote/headless install, copy the resulting 127.0.0.1 callback URL from your browser's address bar and paste it back here. Distinct from the 'Zed IDE' credential-import entry above: this proxies chat completions through Zed's own hosted model aggregator (cloud.zed.dev), fronting Anthropic/OpenAI/Google/xAI models under your Zed plan. |
 
 ## Web Cookie Providers (25)
 
@@ -76,7 +76,7 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `huggingchat` | `huggingchat` | HuggingChat (Free) | Web cookie | [link](https://huggingface.co/chat) | Paste the full Cookie header from huggingface.co/chat (DevTools → Network → /chat/conversation → Request Headers → Cookie). It should include hf-chat and may also include token / aws-waf-token. |
 | `inner-ai` | `in-ai` | Inner.ai (Subscription) | Web cookie | [link](https://app.innerai.com) | Paste your token cookie and email separated by a space: open DevTools → Application → Cookies → .innerai.com, copy the token value, then append a space and your Inner.ai login email. Example: eyJhbG... user@example.com |
 | `kimi-web` | `kimi-web` | Kimi Web (Moonshot AI) | Web cookie | [link](https://www.kimi.com) | Paste your Cookie header from www.kimi.com (must contain kimi-auth=...). Find it via DevTools → Network → request → Cookie. |
-| `lmarena` | `lma` | Arena (Free) | Web cookie | [link](https://arena.ai) | Paste the full Cookie header from arena.ai (DevTools → Network → request → Cookie). Include arena-auth-prod-v1.0/.1… and cf_clearance/__cf_bm when present. OmniRoute uses Chrome TLS impersonation; if Arena still 403s, set providerSpecificData.recaptchaV3Token from a live browser session. |
+| `lmarena` | `lma` | Arena (Free) | Web cookie | [link](https://arena.ai) | Paste the full Cookie header from arena.ai (DevTools → Network → request → Cookie). Include arena-auth-prod-v1.0/.1… and cf_clearance/__cf_bm when present. RouteChi uses Chrome TLS impersonation; if Arena still 403s, set providerSpecificData.recaptchaV3Token from a live browser session. |
 | `muse-spark-web` | `ms-web` | Muse Spark Web (Meta AI) | Web cookie | [link](https://www.meta.ai) | Paste your ecto_1_sess value or full cookie header from meta.ai |
 | `perplexity-web` | `pplx-web` | Perplexity Web (Pro/Max) | Web cookie | [link](https://www.perplexity.ai) | Paste your __Secure-next-auth.session-token cookie value from perplexity.ai |
 | `poe-web` | `poe` | Poe Web (Subscription) | Web cookie | [link](https://poe.com) | Paste your p-b cookie value from poe.com (DevTools → Application → Cookies → p-b) |
@@ -109,7 +109,7 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `bailian-coding-plan` | `bcp` | Alibaba Coding Plan | API key | [link](https://www.alibabacloud.com/help/en/model-studio/coding-plan) | — |
 | `baseten` | `baseten` | Baseten | API key | [link](https://baseten.co) | $30 free trial credits for GPU inference |
 | `bazaarlink` | `bzl` | BazaarLink | API key | [link](https://bazaarlink.ai) | Use your BazaarLink API key (starts with sk-bl-) in Authorization: Bearer <key>. OpenAI SDK works with base URL https://bazaarlink.ai/api/v1. Models use provider/model-name format. |
-| `bedrock` | `bedrock` | Amazon Bedrock | API key, enterprise | [link](https://aws.amazon.com/bedrock) | Use your Amazon Bedrock API key and configure the AWS region where your models are enabled (for example eu-west-2). OmniRoute calls Bedrock's native Converse API directly. |
+| `bedrock` | `bedrock` | Amazon Bedrock | API key, enterprise | [link](https://aws.amazon.com/bedrock) | Use your Amazon Bedrock API key and configure the AWS region where your models are enabled (for example eu-west-2). RouteChi calls Bedrock's native Converse API directly. |
 | `black-forest-labs` | `bfl` | Black Forest Labs | API key, image | [link](https://blackforestlabs.ai) | — |
 | `blackbox` | `bb` | Blackbox AI | API key | [link](https://blackbox.ai) | Free tier: unlimited basic chat plus Minimax-M2.5, no credit card required |
 | `bluesminds` | `bm` | BluesMinds | API key | [link](https://www.bluesminds.com) | Free daily pi credits — supports 200+ models including GPT-4o, GPT-4.1, Claude Sonnet 4.5, Gemini 2.0 Flash, DeepSeek V4, Qwen, Kimi K2 |
@@ -118,7 +118,7 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `cerebras` | `cerebras` | Cerebras | API key | [link](https://inference.cerebras.ai) | Free Trial: 1M tokens/day, 30K TPM, 5 RPM — no credit card. |
 | `charm-hyper` | `charm-hyper` | Charm Hyper | API key | [link](https://hyper.charm.land) | 100 free monthly Hypercredits on signup |
 | `chutes` | `chutes` | Chutes.ai | API key, aggregator | [link](https://chutes.ai) | Bearer API key for the Chutes OpenAI-compatible gateway. |
-| `clarifai` | `clarifai` | Clarifai | API key, enterprise | [link](https://docs.clarifai.com) | Use your Clarifai PAT or app-specific API key. OmniRoute targets the OpenAI-compatible endpoint at https://api.clarifai.com/v2/ext/openai/v1 and authenticates with Authorization: Key <token>. |
+| `clarifai` | `clarifai` | Clarifai | API key, enterprise | [link](https://docs.clarifai.com) | Use your Clarifai PAT or app-specific API key. RouteChi targets the OpenAI-compatible endpoint at https://api.clarifai.com/v2/ext/openai/v1 and authenticates with Authorization: Key <token>. |
 | `cloudflare-ai` | `cf` | Cloudflare Workers AI | API key | [link](https://developers.cloudflare.com/workers-ai) | Requires API Token AND Account ID (found at dash.cloudflare.com) |
 | `codestral` | `codestral` | Codestral | API key | [link](https://mistral.ai) | — |
 | `cohere` | `cohere` | Cohere | API key | [link](https://cohere.com) | Free Trial: 1,000 API calls/month for testing, no credit card required |
@@ -191,9 +191,9 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `morph` | `morph` | Morph | API key | [link](https://morphllm.com) | Free tier: 250K credits/month, $0 |
 | `nanogpt` | `nanogpt` | NanoGPT | API key | [link](https://nano-gpt.com) | — |
 | `nebius` | `nebius` | Nebius AI | API key | [link](https://nebius.com) | ~$1 trial credits on signup for API testing |
-| `nlpcloud` | `nlpc` | NLP Cloud | API key | [link](https://docs.nlpcloud.com) | Use your NLP Cloud API key in Authorization: Token <key>. OmniRoute targets the chatbot endpoint on https://api.nlpcloud.io/v1/gpu/<model>/chatbot by default. |
+| `nlpcloud` | `nlpc` | NLP Cloud | API key | [link](https://docs.nlpcloud.com) | Use your NLP Cloud API key in Authorization: Token <key>. RouteChi targets the chatbot endpoint on https://api.nlpcloud.io/v1/gpu/<model>/chatbot by default. |
 | `nomic` | `nomic` | Nomic | API key | [link](https://nomic.ai) | Get API key at atlas.nomic.ai |
-| `nous-research` | `nous` | Nous Research | API key | [link](https://portal.nousresearch.com/help) | Use your Nous Portal API key. OmniRoute targets the official OpenAI-compatible inference endpoint at https://inference-api.nousresearch.com/v1. |
+| `nous-research` | `nous` | Nous Research | API key | [link](https://portal.nousresearch.com/help) | Use your Nous Portal API key. RouteChi targets the official OpenAI-compatible inference endpoint at https://inference-api.nousresearch.com/v1. |
 | `novita` | `novita` | Novita AI | API key, aggregator | [link](https://novita.ai) | $0.50 trial credits on signup (valid about 1 year) |
 | `nscale` | `nscale` | nScale | API key | [link](https://nscale.com) | $5 free credits on signup for inference testing |
 | `nube` | `nube` | Nube.sh | API key | [link](https://nube.sh) | — |
@@ -219,9 +219,9 @@ Use the dashboard at `/dashboard/providers` to enable, configure, and test each 
 | `qianfan` | `qianfan` | Baidu Qianfan | API key | [link](https://cloud.baidu.com/product/wenxinworkshop) | — |
 | `qiniu` | `qiniu` | Qiniu | API key | [link](https://www.qiniu.com) | — |
 | `recraft` | `recraft` | Recraft | API key, image | [link](https://recraft.ai) | — |
-| `reka` | `reka` | Reka | API key | [link](https://docs.reka.ai/chat/overview) | Use your Reka API key. OmniRoute supports the OpenAI-compatible base URL https://api.reka.ai/v1 and sends both Authorization and X-Api-Key headers for compatibility. |
+| `reka` | `reka` | Reka | API key | [link](https://docs.reka.ai/chat/overview) | Use your Reka API key. RouteChi supports the OpenAI-compatible base URL https://api.reka.ai/v1 and sends both Authorization and X-Api-Key headers for compatibility. |
 | `requesty` | `requesty` | Requesty | API key | [link](https://requesty.ai) | Free tier ~200 requests/day - multi-model routing gateway (300+ models) |
-| `runwayml` | `runway` | Runway | API key, video | [link](https://docs.dev.runwayml.com) | Use your Runway API key in Authorization: Bearer <key>. OmniRoute targets the current Runway API at https://api.dev.runwayml.com/v1 and sends the required X-Runway-Version header automatically. |
+| `runwayml` | `runway` | Runway | API key, video | [link](https://docs.dev.runwayml.com) | Use your Runway API key in Authorization: Bearer <key>. RouteChi targets the current Runway API at https://api.dev.runwayml.com/v1 and sends the required X-Runway-Version header automatically. |
 | `sambanova` | `samba` | SambaNova | API key | [link](https://sambanova.ai) | $5 free credits on signup (30-day validity), no credit card required |
 | `sap` | `sap` | SAP Generative AI Hub | API key, enterprise | [link](https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core) | Use your SAP AI Core bearer token. Base URL can be your AI_API_URL root or a deploymentUrl from Generative AI Hub. |
 | `scaleway` | `scw` | Scaleway AI | API key | [link](https://www.scaleway.com/en/docs/ai-data/generative-apis/) | 1M free tokens for new accounts — EU/GDPR compliant (Paris), Qwen3 235B & Llama 70B |

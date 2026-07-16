@@ -1,4 +1,4 @@
-# Dokumentasi Server MCP OmniRoute (Bahasa Indonesia)
+# Dokumentasi Server MCP RouteChi (Bahasa Indonesia)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/MCP-SERVER.md) · 🇸🇦 [ar](../../ar/docs/MCP-SERVER.md) · 🇧🇬 [bg](../../bg/docs/MCP-SERVER.md) · 🇧🇩 [bn](../../bn/docs/MCP-SERVER.md) · 🇨🇿 [cs](../../cs/docs/MCP-SERVER.md) · 🇩🇰 [da](../../da/docs/MCP-SERVER.md) · 🇩🇪 [de](../../de/docs/MCP-SERVER.md) · 🇪🇸 [es](../../es/docs/MCP-SERVER.md) · 🇮🇷 [fa](../../fa/docs/MCP-SERVER.md) · 🇫🇮 [fi](../../fi/docs/MCP-SERVER.md) · 🇫🇷 [fr](../../fr/docs/MCP-SERVER.md) · 🇮🇳 [gu](../../gu/docs/MCP-SERVER.md) · 🇮🇱 [he](../../he/docs/MCP-SERVER.md) · 🇮🇳 [hi](../../hi/docs/MCP-SERVER.md) · 🇭🇺 [hu](../../hu/docs/MCP-SERVER.md) · 🇮🇩 [id](../../id/docs/MCP-SERVER.md) · 🇮🇹 [it](../../it/docs/MCP-SERVER.md) · 🇯🇵 [ja](../../ja/docs/MCP-SERVER.md) · 🇰🇷 [ko](../../ko/docs/MCP-SERVER.md) · 🇮🇳 [mr](../../mr/docs/MCP-SERVER.md) · 🇲🇾 [ms](../../ms/docs/MCP-SERVER.md) · 🇳🇱 [nl](../../nl/docs/MCP-SERVER.md) · 🇳🇴 [no](../../no/docs/MCP-SERVER.md) · 🇵🇭 [phi](../../phi/docs/MCP-SERVER.md) · 🇵🇱 [pl](../../pl/docs/MCP-SERVER.md) · 🇵🇹 [pt](../../pt/docs/MCP-SERVER.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/MCP-SERVER.md) · 🇷🇴 [ro](../../ro/docs/MCP-SERVER.md) · 🇷🇺 [ru](../../ru/docs/MCP-SERVER.md) · 🇸🇰 [sk](../../sk/docs/MCP-SERVER.md) · 🇸🇪 [sv](../../sv/docs/MCP-SERVER.md) · 🇰🇪 [sw](../../sw/docs/MCP-SERVER.md) · 🇮🇳 [ta](../../ta/docs/MCP-SERVER.md) · 🇮🇳 [te](../../te/docs/MCP-SERVER.md) · 🇹🇭 [th](../../th/docs/MCP-SERVER.md) · 🇹🇷 [tr](../../tr/docs/MCP-SERVER.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/MCP-SERVER.md) · 🇵🇰 [ur](../../ur/docs/MCP-SERVER.md) · 🇻🇳 [vi](../../vi/docs/MCP-SERVER.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/MCP-SERVER.md)
 
@@ -8,7 +8,7 @@
 
 ## Instalasi
 
-OmniRoute MCP sudah tersedia secara bawaan. Jalankan dengan:
+RouteChi MCP sudah tersedia secara bawaan. Jalankan dengan:
 
 ```bash
 routechi --mcp
@@ -36,7 +36,7 @@ Lihat [Konfigurasi IDE](integrations/ide-configs.md) untuk pengaturan Antigravit
 | `omniroute_get_combo_metrics`   | Metrik performa untuk combo tertentu                              |
 | `omniroute_switch_combo`        | Ganti combo aktif berdasarkan ID/nama                             |
 | `omniroute_check_quota`         | Status kuota per penyedia atau semua penyedia                     |
-| `omniroute_route_request`       | Kirim penyelesaian chat melalui OmniRoute                         |
+| `omniroute_route_request`       | Kirim penyelesaian chat melalui RouteChi                         |
 | `omniroute_cost_report`         | Analitik biaya untuk periode waktu tertentu                       |
 | `omniroute_list_models_catalog` | Katalog model lengkap beserta kemampuannya                        |
 

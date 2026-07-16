@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * OmniRoute CLI entry point.
+ * RouteChi CLI entry point.
  *
  * Special bypasses (handled before Commander):
  *   --mcp                     Start MCP server over stdio

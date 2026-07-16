@@ -231,7 +231,7 @@ test("combo live test bypasses semantic cache and forces a fresh upstream reques
     const liveResponse = await chatRoute.POST(
       makeRequest({
         "X-Internal-Test": "combo-health-check",
-        "X-OmniRoute-No-Cache": "true",
+        "X-RouteChi-No-Cache": "true",
         "X-Request-Id": "combo-test-cache-bypass",
       })
     );
@@ -300,7 +300,7 @@ test("chat completions route returns JSON without early SSE framing when stream 
   const response = await chatRoute.POST(
     makeRequestWithoutStreamFlag({
       Accept: "application/json",
-      "X-OmniRoute-No-Cache": "true",
+      "X-RouteChi-No-Cache": "true",
       "X-Request-Id": "chat-route-omitted-stream-json",
     })
   );

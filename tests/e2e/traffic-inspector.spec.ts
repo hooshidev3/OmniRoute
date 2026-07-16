@@ -1,7 +1,7 @@
 /**
  * E2E — Traffic Inspector page smoke tests
  *
- * These tests require the OmniRoute server to be running at the configured base URL.
+ * These tests require the RouteChi server to be running at the configured base URL.
  * The WebSocket tests use a mock event source rather than a live MITM capture to
  * avoid needing port 443 privileges.
  *

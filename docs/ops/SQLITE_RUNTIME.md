@@ -4,7 +4,7 @@ title: "SQLite Runtime Resolution"
 
 # SQLite Runtime Resolution
 
-OmniRoute resolves its SQLite driver at startup through a 5-step fallback chain:
+RouteChi resolves its SQLite driver at startup through a 5-step fallback chain:
 
 1. **Bundled `better-sqlite3`** (via `dependencies` in `package.json`)
    — fastest, native binary, installed by `npm install` when build tools are present.
@@ -28,13 +28,13 @@ OmniRoute resolves its SQLite driver at startup through a 5-step fallback chain:
 - **No build tools**: Some environments (corporate Windows without VS Build
   Tools, minimal Docker images) cannot compile `better-sqlite3`. The runtime
   installer resolves a pre-built binary from the npm registry; the fallback
-  drivers ensure OmniRoute still boots even if that fails.
+  drivers ensure RouteChi still boots even if that fails.
 - **Air-gapped systems**: If the npm registry is unreachable, `node:sqlite`
   or `sql.js` guarantee baseline functionality.
 
 ## Magic-byte validation
 
-Before loading a runtime-installed `.node` file, OmniRoute reads the first 8
+Before loading a runtime-installed `.node` file, RouteChi reads the first 8
 bytes and matches against known platform magics:
 
 | Platform              | Bytes (hex)   | Label       |

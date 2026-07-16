@@ -39,7 +39,7 @@ Pro plnou testovací matici viz `CONTRIBUTING.md` → "Spouštění testů". Pro
 
 ## Projekt na první pohled
 
-**OmniRoute** — jednotný AI proxy/router. Jeden koncový bod, 160+ poskytovatelů LLM, automatické zálohování.
+**RouteChi** — jednotný AI proxy/router. Jeden koncový bod, 160+ poskytovatelů LLM, automatické zálohování.
 
 | Vrstva        | Umístění                | Účel                                                                            |
 | ------------- | ----------------------- | ------------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ API trasy následují konzistentní vzor: `Route → CORS preflight → Zod vali
 
 ## Stav běhu odolnosti
 
-OmniRoute má tři související, ale odlišné mechanismy dočasného selhání. Udržujte jejich rozsah oddělený při ladění chování routování. Viz
+RouteChi má tři související, ale odlišné mechanismy dočasného selhání. Udržujte jejich rozsah oddělený při ladění chování routování. Viz
 [diagram odolnosti ve 3 vrstvách](./docs/diagrams/exported/resilience-3layers.svg)
 (zdroj: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 pro rychlý přehled.
@@ -408,4 +408,4 @@ git push -u origin feat/your-feature
 13. Nikdy neprovádějte interpolaci řetězců externích cest nebo runtime hodnot do shell skriptů předávaných do `exec()`/`spawn()` — předávejte je místo toho přes možnost `env`. Odkaz: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Nikdy neignorujte upozornění CodeQL / Secret-Scanning bez (a) nejprve zkontrolování dokumentace vzoru výše, abyste zjistili, zda se pomocník vztahuje, a (b) zaznamenání technického odůvodnění do komentáře o zamítnutí. Precedent: `js/stack-trace-exposure` vznesený na místech volání, která již procházejí přes `sanitizeErrorMessage()`, je známé omezení CodeQL (vlastní sanitizátory nejsou rozpoznány) — zamítněte jako `false positive` s odkazem na `docs/security/ERROR_SANITIZATION.md`.
 15. Nikdy nezveřejňujte trasy, které spouštějí podřízené procesy (`/api/mcp/`, `/api/cli-tools/runtime/`) bez klasifikace `isLocalOnlyPath()` v `src/server/authz/routeGuard.ts`. Vynucení loopbacku probíhá bezpodmínečně před jakýmkoli ověřením — uniklý JWT přes tunel nemůže spustit proces. Viz `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Nikdy nezahrnujte `Co-Authored-By` přílohy, které připisují AI asistenta, LLM nebo automatizovaný účet (např. jména obsahující "Claude", "GPT", "Copilot", "Bot"; e-maily na `anthropic.com` / `openai.com` / adresách `noreply.github.com` vlastněných boty). Takové přílohy směrují přiřazení commitů na účet bota na GitHubu, čímž skrývají skutečného autora (`diegosouzapw`) v historii PR. Lidští spolupracovníci — včetně autorů upstream PR a hlasatelů issues přenášených do OmniRoute — MOHOU a MĚLI BY být uvedeni standardními přílohami `Co-authored-by: Name <email>`; upstream-port pracovní postupy (`/port-upstream-features`, `/port-upstream-issues`) na tom závisí.
+16. Nikdy nezahrnujte `Co-Authored-By` přílohy, které připisují AI asistenta, LLM nebo automatizovaný účet (např. jména obsahující "Claude", "GPT", "Copilot", "Bot"; e-maily na `anthropic.com` / `openai.com` / adresách `noreply.github.com` vlastněných boty). Takové přílohy směrují přiřazení commitů na účet bota na GitHubu, čímž skrývají skutečného autora (`diegosouzapw`) v historii PR. Lidští spolupracovníci — včetně autorů upstream PR a hlasatelů issues přenášených do RouteChi — MOHOU a MĚLI BY být uvedeni standardními přílohami `Co-authored-by: Name <email>`; upstream-port pracovní postupy (`/port-upstream-features`, `/port-upstream-issues`) na tom závisí.

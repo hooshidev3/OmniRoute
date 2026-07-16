@@ -11,7 +11,7 @@
  *   printf 'NewPass123\nNewPass123\n' | omniroute reset-password
  *   printf 'NewPass123' | omniroute reset-password --password-stdin
  *
- * Resets the admin password for OmniRoute.
+ * Resets the admin password for RouteChi.
  * Prompts for a new password (interactive TTY) or reads it from stdin
  * (non-TTY) and updates the database directly.
  *
@@ -83,14 +83,14 @@ async function collectPassword() {
   }
 }
 
-console.log("\n🔑 OmniRoute — Password Reset\n");
+console.log("\n🔑 RouteChi — Password Reset\n");
 
 async function main() {
   // Check if database exists
   const passwordState = await readManagementPasswordState(DB_PATH);
   if (!passwordState.exists) {
     console.error(`❌ Database not found at: ${DB_PATH}`);
-    console.error(`   Make sure OmniRoute has been started at least once.`);
+    console.error(`   Make sure RouteChi has been started at least once.`);
     console.error(`   Or set DATA_DIR env var to your data directory.\n`);
     process.exit(1);
   }
@@ -116,7 +116,7 @@ async function main() {
   await resetManagementPassword(password, DB_PATH);
 
   console.log("\n✅ Password reset successfully!");
-  console.log("   Restart OmniRoute for changes to take effect.\n");
+  console.log("   Restart RouteChi for changes to take effect.\n");
 }
 
 main()

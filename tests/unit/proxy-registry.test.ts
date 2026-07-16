@@ -496,7 +496,7 @@ test("provider connection proxy toggle fields round-trip as booleans", async () 
 
 test("createProxyRegistrySchema accepts type:vercel and source:vercel-relay (schema gap-06)", async () => {
   // Note: We validate the schema directly using the worktree's absolute path because
-  // tests run with CWD=/OmniRoute, so `@/` aliases resolve to the main branch's src/.
+  // tests run with CWD=/RouteChi, so `@/` aliases resolve to the main branch's src/.
   // The assertion below confirms the worktree's schema accepts the new enum values.
   const { createProxyRegistrySchema } = await import("../../src/shared/validation/schemas.ts");
 

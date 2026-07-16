@@ -6,7 +6,7 @@
 
 ## 报告漏洞
 
-若您在 OmniRoute 中发现安全漏洞，请负责任地报告：
+若您在 RouteChi 中发现安全漏洞，请负责任地报告：
 
 1. **切勿**在 GitHub 上创建公开 issue
 2. 使用 [GitHub Security Advisories](https://github.com/borhandarabi/routechi/security/advisories/new)
@@ -32,7 +32,7 @@
 
 ## 安全架构
 
-OmniRoute 实现了多层安全模型：
+RouteChi 实现了多层安全模型：
 
 ```
 Request → CORS → Authz pipeline (classify → policies → enforce)
@@ -69,7 +69,7 @@ STORAGE_ENCRYPTION_KEY=$(openssl rand -hex 32)
 
 ### 🛡️ 安全护栏框架
 
-OmniRoute 附带一个支持热重载的**安全护栏注册表**（`src/lib/guardrails/`），包含 3 个内置安全护栏，按优先级排序：
+RouteChi 附带一个支持热重载的**安全护栏注册表**（`src/lib/guardrails/`），包含 3 个内置安全护栏，按优先级排序：
 
 | 安全护栏           | 优先级 | 用途                                                                       |
 | ------------------ | ------ | -------------------------------------------------------------------------- |

@@ -3,10 +3,10 @@ title: "Design System & Visual Identity"
 lastUpdated: 2026-07-11
 ---
 
-# OmniRoute — Design System & Visual Identity
+# RouteChi — Design System & Visual Identity
 
 > **Status:** reference — the standardization described here is **implemented** (phases 1–6: grid wallpaper, primitives, status-color centralization, mono token, DataTable token migration, focus-ring → accent, Checkbox/Textarea primitives, `cn()` → tailwind-merge, grid on every standalone screen, fluid 4K content shell, opaque data-table surfaces). This document is the canonical description of the dashboard's design tokens, components, and conventions; the phase framing below is kept as the rationale for each decision.
-> **Scope:** the OmniRoute dashboard (`src/`) and the marketing site (`_mono_repo/omnirouteSite/`) share **one visual identity** — same graph-paper grid background (32px), same color tokens, standardized components.
+> **Scope:** the RouteChi dashboard (`src/`) and the marketing site (`_mono_repo/omnirouteSite/`) share **one visual identity** — same graph-paper grid background (32px), same color tokens, standardized components.
 >
 > Practical notes for maintainers:
 >
@@ -18,7 +18,7 @@ lastUpdated: 2026-07-11
 
 ## 1. Purpose
 
-The marketing site (`viral.omniroute.online`, `why.omniroute.online`, `omniroute.online`) and the product dashboard should look like **one product**. The site already borrowed its palette from the dashboard — its `css/tokens.css` even says _"Palette mirrors the OmniRoute dashboard (src/app/globals.css)"_. So the two are already ~80% aligned at the color level. What's missing on the dashboard:
+The marketing site (`viral.omniroute.online`, `why.omniroute.online`, `omniroute.online`) and the product dashboard should look like **one product**. The site already borrowed its palette from the dashboard — its `css/tokens.css` even says _"Palette mirrors the RouteChi dashboard (src/app/globals.css)"_. So the two are already ~80% aligned at the color level. What's missing on the dashboard:
 
 1. The **graph-paper grid wallpaper** the site uses on every page.
 2. A handful of **shared design tokens** the site has but the dashboard lacks (radius scale, brand gradient, `surface-2`, mono font).

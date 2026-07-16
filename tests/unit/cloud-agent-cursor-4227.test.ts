@@ -2,7 +2,7 @@
  * #4227 — Cursor Cloud Agent (REST adapter).
  *
  * Validates the adapter mapping between Cursor's Background/Cloud Agents REST API and
- * OmniRoute's CloudAgentBase contract (status mapping, request shape, result extraction)
+ * RouteChi's CloudAgentBase contract (status mapping, request shape, result extraction)
  * with a mocked fetch. NOTE: this proves the adapter's internal mapping, NOT the live
  * Cursor API shapes — those need a live validation run with a real Cursor API key before
  * merge (Rule #18, external-API integration; see the PR description).

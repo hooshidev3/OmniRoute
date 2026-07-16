@@ -21,7 +21,7 @@
  * Migration: legacy `ccBridgeTransforms` config (single-pipeline shape) is
  * accepted and normalized into `systemTransforms.providers["anthropic-compatible-cc-*"]`.
  *
- * Reference: OmniRoute issue #2260 + comment 4459544580 (Open WebUI bypass).
+ * Reference: RouteChi issue #2260 + comment 4459544580 (Open WebUI bypass).
  */
 
 import {
@@ -153,7 +153,7 @@ export const PROVIDER_CC_BRIDGE = "anthropic-compatible-cc";
  * obfuscates sensitive client words. Without these, the native OAuth path
  * leaks third-party-agent signals into `/v1/messages` and Anthropic returns
  * `[400] Third-party apps now draw from extra usage, not plan limits.` —
- * verified against opencode→OmniRoute→Anthropic with claude-opus-4-7 OAuth.
+ * verified against opencode→RouteChi→Anthropic with claude-opus-4-7 OAuth.
  */
 export const DEFAULT_CLAUDE_PIPELINE: TransformOp[] = [
   // Drop paragraphs containing 3rd-party-agent anchors (anomalyco/opencode,
@@ -225,7 +225,7 @@ export const DEFAULT_SYSTEM_TRANSFORMS_CONFIG: SystemTransformsConfig = {
       // Enabled by default — matches the module-level docstring ("claude:
       // obfuscate_words ON …") and closes the native-OAuth third-party-agent
       // leak that surfaces as `[400] Third-party apps now draw from extra
-      // usage` when opencode (or any non-claude-cli client) hits OmniRoute's
+      // usage` when opencode (or any non-claude-cli client) hits RouteChi's
       // `/v1/chat/completions` endpoint with a `claude/*` model slug. User
       // overrides via Settings UI (setSystemTransformsConfig) still win.
       enabled: true,
@@ -409,7 +409,7 @@ export function applyTransformPipeline(
  * Apply the configured per-provider pipeline to `body`. No-op when the
  * provider is unconfigured or disabled.
  *
- * `providerId` matches OmniRoute's provider key (`claude`,
+ * `providerId` matches RouteChi's provider key (`claude`,
  * `anthropic-compatible-cc-…`, `gemini`, etc.). For CC bridge providers,
  * the bridge-prefix match falls back to the `PROVIDER_CC_BRIDGE` key so
  * a single config entry covers every cc/* variant.

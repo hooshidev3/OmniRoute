@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-// #4683: Qoder PAT (`pt-*`) chat requests failed with a Cosy 500 because OmniRoute
+// #4683: Qoder PAT (`pt-*`) chat requests failed with a Cosy 500 because RouteChi
 // injected the raw `pt-*` PAT into the Cosy `security_oauth_token`. The official
 // qodercli uses a TWO-step flow: exchange the PAT for a short-lived `jt-*` job token
 // at openapi.qoder.sh/api/v1/jobToken/exchange, then carry the `jt-*` in the Cosy
@@ -168,7 +168,7 @@ test("#4683 resolveQoderJobToken falls back to the PAT when the exchange fails",
 
 // The jobToken exchange helpers above are retained (and independently unit-tested)
 // but are no longer on the PAT validation path: the Cosy HTTP protocol moved to a
-// WASM-signed envelope that OmniRoute cannot reproduce, so validation now delegates
+// WASM-signed envelope that RouteChi cannot reproduce, so validation now delegates
 // to the local qodercli binary. This test guards that new contract — validation
 // must NOT hit the (dead) jobToken/Cosy HTTP endpoints.
 test("validateQoderCliPat validates via qodercli and makes no Cosy/jobToken HTTP calls", async () => {

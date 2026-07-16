@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { getIdempotencyKey, checkIdempotency } from "@/lib/idempotencyLayer";
 import { calculateCost } from "@/lib/usage/costCalculator";
-import { attachOmniRouteMetaHeaders } from "@/domain/omnirouteResponseMeta";
+import { attachRouteChiMetaHeaders } from "@/domain/omnirouteResponseMeta";
 
 /**
  * NEXA fusion-idempotency fix: compose the effective idempotency key from the raw
@@ -86,9 +86,9 @@ export async function checkIdempotencyCache({
       : 0;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "X-OmniRoute-Idempotent": "true",
+      "X-RouteChi-Idempotent": "true",
     };
-    attachOmniRouteMetaHeaders(headers, {
+    attachRouteChiMetaHeaders(headers, {
       provider,
       model,
       cacheHit: false,

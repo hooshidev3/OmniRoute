@@ -147,7 +147,7 @@ Sanitization rules applied to `upstreamDetails`:
 4. Arrays are capped at 32 elements.
 
 Only the seven upstream-error `createErrorResult` call sites in `chatCore.ts` pass
-`upstreamErrorBody`. Internal OmniRoute errors (SSE parse failures, empty content,
+`upstreamErrorBody`. Internal RouteChi errors (SSE parse failures, empty content,
 guardrail blocks) do not include `upstream_details`.
 
 Do NOT pass raw `err.stack`, `err.message`, or any string from a runtime exception to

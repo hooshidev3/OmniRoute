@@ -18,7 +18,7 @@ const { POST } = await import("../../src/app/api/tools/agent-bridge/upstream-ca/
 // which did not exist (404). The new validate-only route checks the CA file exists and is a
 // parseable PEM certificate WITHOUT persisting/activating it.
 
-// A throwaway self-signed cert (CN=OmniRoute Test CA), valid to 2036.
+// A throwaway self-signed cert (CN=RouteChi Test CA), valid to 2036.
 const TEST_CA_PEM = `-----BEGIN CERTIFICATE-----
 MIIDGTCCAgGgAwIBAgIUISgNKO/v/z0FdUIPoCD4dwgKbacwDQYJKoZIhvcNAQEL
 BQAwHDEaMBgGA1UEAwwRT21uaVJvdXRlIFRlc3QgQ0EwHhcNMjYwNjEwMjExNDMx
@@ -64,7 +64,7 @@ test("#3488 valid PEM cert → 200 ok with subject", async () => {
   assert.equal(res.status, 200);
   const json = await res.json();
   assert.equal(json.ok, true);
-  assert.match(json.subject, /OmniRoute Test CA/);
+  assert.match(json.subject, /RouteChi Test CA/);
 });
 
 test("#3488 does NOT persist the CA path (validate-only)", async () => {

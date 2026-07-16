@@ -52,7 +52,7 @@ describe("upstream Caveman parity benchmark", () => {
     for (const input of parityCases) {
       const ours = omnirouteCompress(input);
       const theirs = upstream.compress(input).compressed;
-      assert.ok(ours.length <= input.length, `OmniRoute did not reduce: ${input}`);
+      assert.ok(ours.length <= input.length, `RouteChi did not reduce: ${input}`);
       assert.ok(theirs.length <= input.length, `Upstream did not reduce: ${input}`);
       for (const protectedToken of [
         "config.api.endpoint()",
@@ -75,7 +75,7 @@ describe("upstream Caveman parity benchmark", () => {
     const theirs = upstream.compress(input).compressed;
     assert.ok(
       ours.length <= Math.ceil(theirs.length * 1.2),
-      `Expected OmniRoute within 20% of upstream shrink length. ours=${ours.length}, upstream=${theirs.length}`
+      `Expected RouteChi within 20% of upstream shrink length. ours=${ours.length}, upstream=${theirs.length}`
     );
   });
 
@@ -130,10 +130,10 @@ describe("upstream Caveman parity benchmark", () => {
           `${fixture.name}: fallback must preserve original fixture verbatim`
         );
       } else {
-        assert.ok(ours.text.length < original.length, `${fixture.name}: OmniRoute did not reduce`);
+        assert.ok(ours.text.length < original.length, `${fixture.name}: RouteChi did not reduce`);
         assert.ok(
           ours.text.length <= Math.ceil(Math.max(expected.length, upstreamShrink.length) * 1.35),
-          `${fixture.name}: OmniRoute drifted too far from upstream fixture budget`
+          `${fixture.name}: RouteChi drifted too far from upstream fixture budget`
         );
       }
 

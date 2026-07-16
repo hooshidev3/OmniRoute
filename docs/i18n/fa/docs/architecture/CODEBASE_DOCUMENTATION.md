@@ -1,14 +1,14 @@
 ---
-title: "مستندات کدبیس OmniRoute"
+title: "مستندات کدبیس RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# مستندات کدبیس OmniRoute
+# مستندات کدبیس RouteChi
 
 > **نسخه:** v3.8.0
 > **آخرین به‌روزرسانی:** 2026-06-28
-> **مخاطب:** مهندسانی که به OmniRoute مشارکت می‌کنند یا ادغام‌هایی روی آن می‌سازند.
+> **مخاطب:** مهندسانی که به RouteChi مشارکت می‌کنند یا ادغام‌هایی روی آن می‌سازند.
 >
 > برای نمودارهای معماری سطح‌بالا و استدلال پشت هر زیرسیستم،
 > [ARCHITECTURE.md](./ARCHITECTURE.md) را بخوانید. برای بررسی عمیق زیرسیستم‌های فردی
@@ -50,7 +50,7 @@ alias‌های مسیر (`tsconfig.json`):
 ## ۲. چیدمان مخزن
 
 ```
-OmniRoute/
+RouteChi/
 ├── src/                  Next.js application (App Router, libs, domain, server, shared)
 ├── open-sse/             Streaming engine workspace (@omniroute/open-sse)
 ├── electron/             Desktop wrapper (Electron 41 main + preload)

@@ -15,10 +15,10 @@ import path from "node:path";
 import {
   defaultDiskSnapshotWriter,
   diskSnapshotPath,
-  type OmniRouteFetchCacheEntry,
+  type RouteChiFetchCacheEntry,
 } from "../src/index.js";
 
-function makeEntry(): Omit<OmniRouteFetchCacheEntry, "expiresAt"> {
+function makeEntry(): Omit<RouteChiFetchCacheEntry, "expiresAt"> {
   return {
     rawModels: [],
     rawCombos: [],

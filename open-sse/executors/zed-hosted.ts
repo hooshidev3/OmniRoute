@@ -15,12 +15,12 @@
  * bearer token (see open-sse/shared/zedAuth.ts). The provider-shaped
  * chunk is Claude/Gemini/OpenAI-Responses/xAI(OpenAI-shaped) depending on
  * which upstream Zed is fronting for the requested model — translated back
- * to OpenAI Chat Completions chunks by reusing OmniRoute's own translators
+ * to OpenAI Chat Completions chunks by reusing RouteChi's own translators
  * (the same ones used for the native claude/gemini/codex executors), never
  * a bespoke per-provider parser.
  *
  * Ported from decolua/9router PR #2328 (open-sse/executors/zed.js),
- * adapted to TypeScript + OmniRoute's BaseExecutor/translator conventions.
+ * adapted to TypeScript + RouteChi's BaseExecutor/translator conventions.
  * Like WindsurfExecutor, this overrides execute() entirely rather than
  * using BaseExecutor's default Claude-Code-oriented pipeline, because the
  * Zed wire request/response shape (thread envelope, LLM-token exchange,
@@ -298,7 +298,7 @@ export class ZedHostedExecutor extends BaseExecutor {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/x-ndjson, text/event-stream, */*",
-          "User-Agent": `OmniRoute/zed-hosted`,
+          "User-Agent": `RouteChi/zed-hosted`,
           "x-zed-version": (this.config as Record<string, unknown>)?.appVersion?.toString() || "0.200.0",
           [ZED_HEADERS.clientSupportsStatus]: "true",
           [ZED_HEADERS.clientSupportsStreamEnded]: "true",

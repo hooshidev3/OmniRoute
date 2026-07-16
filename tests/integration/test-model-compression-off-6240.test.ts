@@ -132,7 +132,7 @@ test("chatCore: x-omniroute-compression: off suppresses Output Styles injection 
   });
   const plainFirstMessage = withoutOptOut?.messages?.[0];
   assert.equal(plainFirstMessage?.role, "system");
-  assert.match(plainFirstMessage?.content ?? "", /OmniRoute Output Styles/);
+  assert.match(plainFirstMessage?.content ?? "", /RouteChi Output Styles/);
 
   // The "Test model" connection test sends x-omniroute-compression: off — must be clean.
   const testModelBody = await runChatCore({
@@ -147,7 +147,7 @@ test("chatCore: x-omniroute-compression: off suppresses Output Styles injection 
     "Test-model request (compression:off) must not receive an injected Output Styles system message"
   );
   const anyMessageHasMarker = (testModelBody?.messages ?? []).some((m) =>
-    (m?.content ?? "").includes("OmniRoute Output Styles")
+    (m?.content ?? "").includes("RouteChi Output Styles")
   );
   assert.equal(
     anyMessageHasMarker,

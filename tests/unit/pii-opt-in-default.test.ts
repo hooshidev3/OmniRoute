@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 
 // Regression guard for Hard Rule: PII redaction/sanitization is OPT-IN.
-// OmniRoute proxies for self-hosted / local LLMs where the operator owns the
+// RouteChi proxies for self-hosted / local LLMs where the operator owns the
 // data; mutating request/response payloads by default would silently corrupt
 // that traffic. The two data-mutating PII feature flags MUST default to "false"
 // so a vanilla chat request passes data through untouched. Flipping either

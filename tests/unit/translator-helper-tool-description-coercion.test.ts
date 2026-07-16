@@ -1,10 +1,10 @@
 // Regression: tool descriptions must always be strings for strict upstream
 // validation (e.g., NVIDIA NIM, Codex). Ports upstream PR decolua/9router#397
-// (Ibrahim Ryan), restricted to the gap that still exists in OmniRoute —
+// (Ibrahim Ryan), restricted to the gap that still exists in RouteChi —
 // the two non-string-tolerant paths in openaiHelper.filterToOpenAIFormat
 // (Claude-style and Gemini-style tool normalization). The other locations
 // upstream-patched (claude-to-openai.ts, openai-responses.ts) already coerce
-// via String/toString in OmniRoute.
+// via String/toString in RouteChi.
 import test from "node:test";
 import assert from "node:assert/strict";
 

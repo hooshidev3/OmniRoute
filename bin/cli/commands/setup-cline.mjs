@@ -1,9 +1,9 @@
 /**
- * omniroute setup-cline — configure the Cline AI coding agent to use OmniRoute.
+ * omniroute setup-cline — configure the Cline AI coding agent to use RouteChi.
  *
  * Cline's VS Code extension keeps its config in VS Code's opaque globalStorage
  * (not file-writable). Its CLI/standalone mode reads ~/.cline/data/. This command
- * writes the CLI-mode files (matching the OmniRoute dashboard) AND prints the
+ * writes the CLI-mode files (matching the RouteChi dashboard) AND prints the
  * Base URL / model to paste into the VS Code extension UI.
  *
  * Cline uses the OpenAI-compatible provider: openAiBaseUrl is the ROOT URL
@@ -47,7 +47,7 @@ export function resolveClineTarget(opts = {}) {
   return { baseUrl, apiKey };
 }
 
-/** Merge OmniRoute openai-compatible settings into Cline's globalState (Plan + Act). */
+/** Merge RouteChi openai-compatible settings into Cline's globalState (Plan + Act). */
 export function buildClineGlobalState(existing, { baseUrl, model }) {
   const gs = { ...(existing || {}) };
   gs.actModeApiProvider = "openai";
@@ -93,7 +93,7 @@ export async function runSetupClineCommand(opts = {}) {
   const dryRun = Boolean(opts.dryRun ?? opts["dry-run"]);
   const clineDir = opts.clineDir ?? opts["cline-dir"] ?? join(os.homedir(), ".cline", "data");
 
-  printHeading("OmniRoute → Cline (OpenAI-compatible)");
+  printHeading("RouteChi → Cline (OpenAI-compatible)");
   printInfo(`Server: ${baseUrl}`);
 
   // Resolve the model (Cline needs one explicit id — no auto-discovery).
@@ -144,11 +144,11 @@ export function registerSetupCline(program) {
   program
     .command("setup-cline")
     .description(
-      "Configure Cline for OmniRoute: write ~/.cline/data (CLI mode) + print VS Code extension settings"
+      "Configure Cline for RouteChi: write ~/.cline/data (CLI mode) + print VS Code extension settings"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--model <id>", "Model id for Cline (required unless picked interactively)")
     .option("--cline-dir <dir>", "Cline data dir (default: ~/.cline/data)")
     .option("--yes", "Non-interactive: do not prompt (requires --model)")

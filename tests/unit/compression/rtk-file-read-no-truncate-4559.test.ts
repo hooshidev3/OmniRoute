@@ -5,7 +5,7 @@
  * text/code file via a Read tool), RTK's default caps (maxLinesPerResult: 120,
  * maxCharsPerResult: 12000) drop the middle and most lines are silently
  * suppressed. Disabling compression OR the RTK "tool results" toggle fixes it;
- * OpenRouter (no OmniRoute) is unaffected.
+ * OpenRouter (no RouteChi) is unaffected.
  *
  * Root cause: the final `smartTruncate` hard-cap in processRtkText fires for ANY
  * tool result over 120 lines — including document/file reads — even though RTK's

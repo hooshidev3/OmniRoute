@@ -119,7 +119,7 @@ test("forge-settings POST: writes config.toml with valid body", async () => {
       const configPath = path.join(tmpHome, ".forge", "config.toml");
       if (fs.existsSync(configPath)) {
         const content = fs.readFileSync(configPath, "utf-8");
-        assert.ok(content.includes("managed by OmniRoute"), "Config should have OmniRoute marker");
+        assert.ok(content.includes("managed by RouteChi"), "Config should have RouteChi marker");
         assert.ok(content.includes("http://localhost:20128"), "Config should contain base URL");
         assert.ok(content.includes("[openai]"), "Config should have [openai] section");
       }
@@ -143,7 +143,7 @@ test("forge-settings DELETE: removes config file when it exists", async () => {
     fs.mkdirSync(forgeDir, { recursive: true });
     fs.writeFileSync(
       path.join(forgeDir, "config.toml"),
-      "# managed by OmniRoute (plan 14)\n[openai]\nbase_url = \"http://localhost:20128\"\n"
+      "# managed by RouteChi (plan 14)\n[openai]\nbase_url = \"http://localhost:20128\"\n"
     );
 
     const res = await DELETE(

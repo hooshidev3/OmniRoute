@@ -11,7 +11,7 @@
  * The executor handles:
  *   - <think>...</think> reasoning tag separation via shared thinkModeProcessor
  *   - (citation:N) marker stripping (with cross-chunk buffering)
- *   - Tool calling via OmniRoute native <tool>{json}</tool> protocol
+ *   - Tool calling via RouteChi native <tool>{json}</tool> protocol
  *   - Conversation lifecycle: /conversation/save -> /bot/chat -> genTitle
  *     -> optional /conversation/delete (only for one-shot, not reused)
  *   - Multi-turn continuity via providerSessionRegistry

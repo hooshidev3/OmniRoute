@@ -4,7 +4,7 @@
  *
  * Ported from decolua/9router PR #2272 (usage-reset concern only — the
  * connection bulk-delete half of that PR is intentionally not ported;
- * OmniRoute already has a native bulk-delete for connections).
+ * RouteChi already has a native bulk-delete for connections).
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";

@@ -37,7 +37,7 @@ routechi providers
 
 ### `providers available`
 
-Show available providers in the OmniRoute catalog
+Show available providers in the RouteChi catalog
 
 **Flags:**
 
@@ -189,14 +189,14 @@ routechi test-provider test [provider] [model]
 <!-- skill:custom-start -->
 <!-- Migrated from skills/omniroute-cli-providers/SKILL.md (preserved curated content) -->
 
-# OmniRoute — CLI Providers & Keys
+# RouteChi — CLI Providers & Keys
 
 Requires the `omniroute` CLI. See [CLI entry-point skill](https://raw.githubusercontent.com/borhandarabi/routechi/main/skills/omniroute-cli/SKILL.md) for install + global flags.
 
 ## Provider catalog (available providers)
 
 ```bash
-routechi providers available                        # Full OmniRoute provider catalog
+routechi providers available                        # Full RouteChi provider catalog
 routechi providers available --search openai        # Filter by id, name, alias
 routechi providers available --category api-key     # Filter by category
 routechi providers available --json                 # Machine-readable JSON
@@ -225,12 +225,12 @@ routechi providers validate                         # Local-only structural vali
 routechi providers test-all --json
 ```
 
-## API key management (OmniRoute keys)
+## API key management (RouteChi keys)
 
-These manage the OmniRoute API keys issued under **API Manager** — not provider credentials.
+These manage the RouteChi API keys issued under **API Manager** — not provider credentials.
 
 ```bash
-routechi keys list                                  # List all OmniRoute API keys
+routechi keys list                                  # List all RouteChi API keys
 routechi keys add <provider> [apiKey]               # Add an API key for a provider
 routechi keys remove <provider>                     # Remove an API key
 routechi keys regenerate <id>                       # Regenerate (rotate) a key
@@ -271,7 +271,7 @@ routechi oauth status <provider>                    # Show token state + expiry
 routechi oauth refresh <provider>                   # Force token refresh
 ```
 
-For OAuth providers (Gemini, Windsurf, Antigravity, etc.) the `login` command opens the OmniRoute dashboard OAuth flow in your browser.
+For OAuth providers (Gemini, Windsurf, Antigravity, etc.) the `login` command opens the RouteChi dashboard OAuth flow in your browser.
 
 ## Provider nodes (multi-account routing)
 
@@ -295,7 +295,7 @@ routechi combo create <name> \
   --targets anthropic/claude-opus-4-7,openai/gpt-4o  # Create combo
 routechi combo switch <name>                        # Activate a combo as default
 routechi combo delete <name>                        # Delete a combo
-routechi combo suggest --task "code review"         # Ask OmniRoute to recommend a combo
+routechi combo suggest --task "code review"         # Ask RouteChi to recommend a combo
 ```
 
 For the full REST API for combos see [omniroute-routing skill](https://raw.githubusercontent.com/borhandarabi/routechi/main/skills/omniroute-routing/SKILL.md).

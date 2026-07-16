@@ -3,7 +3,7 @@
  *
  * Strict HTTP clients (notably Codex CLI's `reqwest`, which has a ~5s idle-read
  * timeout) drop the connection if no bytes arrive shortly after the request.
- * OmniRoute, however, holds the streaming response until `ensureStreamReadiness`
+ * RouteChi, however, holds the streaming response until `ensureStreamReadiness`
  * observes the upstream's first useful byte — which can exceed 5s for reasoning
  * models that "think" before emitting any token (#2544). `curl` has no such
  * idle timeout, so it was never affected, which is why the bug looked

@@ -114,7 +114,7 @@ const out = [];
 out.push(`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="${CANVAS}" viewBox="0 0 900 ${CANVAS}" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">`);
 out.push(`<rect width="900" height="${CANVAS}" rx="16" fill="#0d1117"/>`);
 out.push(`<rect x="16" y="16" width="868" height="${H}" rx="13" fill="#161b22" stroke="#30363d"/>`);
-out.push(`<text x="868" y="${(H + 8).toFixed(0)}" fill="#484f58" font-size="10.5" text-anchor="end">OmniRoute · /dashboard/free-tiers · preview mockup</text>`);
+out.push(`<text x="868" y="${(H + 8).toFixed(0)}" fill="#484f58" font-size="10.5" text-anchor="end">RouteChi · /dashboard/free-tiers · preview mockup</text>`);
 out.push(...B);
 out.push(`</svg>`);
 fs.writeFileSync("docs/screenshots/free-tier-budget-card.svg", out.join("\n") + "\n");

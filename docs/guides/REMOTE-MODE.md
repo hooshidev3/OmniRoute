@@ -1,12 +1,12 @@
 ---
-title: "Remote Mode — Drive a remote OmniRoute from your laptop"
+title: "Remote Mode — Drive a remote RouteChi from your laptop"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
 # Remote Mode
 
-Run the `omniroute` CLI on your laptop while OmniRoute itself runs somewhere else
+Run the `omniroute` CLI on your laptop while RouteChi itself runs somewhere else
 (a VPS, a home server, another machine on your Tailnet). You log in once with
 `routechi connect`, and from then on **every** CLI command targets that remote
 server — same commands, same output, just executed against the remote.
@@ -26,7 +26,7 @@ routechi configure codex                # ← writes a local Codex profile from 
 ## How it works
 
 ```
-your laptop                              remote OmniRoute (VPS)
+your laptop                              remote RouteChi (VPS)
 ┌────────────────────┐                   ┌───────────────────────────────┐
 │ omniroute CLI      │  POST /api/cli/connect  (password → token)         │
 │  context: vps      │ ───────────────►  │ mints a scoped access token    │
@@ -109,9 +109,9 @@ approves the sign-in**. On a remote VPS install that loopback lives on the
 server, not on your machine, so the consent screen **hangs forever and never
 emits a code** — the normal "paste the callback URL" fallback has nothing to
 paste. (This is a Google-side constraint: the same hang happens in any proxy
-that uses the bundled Antigravity desktop client, not just OmniRoute.)
+that uses the bundled Antigravity desktop client, not just RouteChi.)
 
-There are two supported ways to connect Antigravity to a remote OmniRoute.
+There are two supported ways to connect Antigravity to a remote RouteChi.
 
 ### Option A — local login helper (recommended)
 
@@ -130,7 +130,7 @@ npx routechi login antigravity
 
 Then, in the **remote** dashboard: **Providers → Antigravity → Connect**, and
 paste the `omniroute-cred-v1.…` blob into the **Step 2** field (it accepts either
-a callback URL or a credential blob). OmniRoute decodes it, runs the Cloud Code
+a callback URL or a credential blob). RouteChi decodes it, runs the Cloud Code
 onboarding server-side, and persists the connection.
 
 > The blob contains a refresh token — treat it like a password. It is sent once
@@ -245,7 +245,7 @@ routechi contexts current         # the active server, auth status, scope
 
 ```text
   | Name    | Base URL                  | Auth  | Scope | Description
-● | vps     | http://100.67.86.91:20128 | token | admin | Remote OmniRoute (…)
+● | vps     | http://100.67.86.91:20128 | token | admin | Remote RouteChi (…)
   | default | http://localhost:20128    | ✗     |       |
 ```
 

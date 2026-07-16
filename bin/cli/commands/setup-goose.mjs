@@ -1,5 +1,5 @@
 /**
- * omniroute setup-goose — configure Goose (block/goose) for OmniRoute.
+ * omniroute setup-goose — configure Goose (block/goose) for RouteChi.
  *
  * Goose is a terminal AI agent with a file-based config at
  * ~/.config/goose/config.yaml and env-var overrides. For a custom OpenAI-
@@ -92,7 +92,7 @@ export async function runSetupGooseCommand(opts = {}) {
   const dryRun = Boolean(opts.dryRun ?? opts["dry-run"]);
   const configPath = opts.configPath ?? opts["config-path"] ?? join(os.homedir(), ".config", "goose", "config.yaml");
 
-  printHeading("OmniRoute → Goose (openai-compatible)");
+  printHeading("RouteChi → Goose (openai-compatible)");
   printInfo(`OPENAI_HOST: ${host}   (no /v1 — Goose appends it)`);
 
   let model = opts.model;
@@ -135,10 +135,10 @@ export async function runSetupGooseCommand(opts = {}) {
 export function registerSetupGoose(program) {
   program
     .command("setup-goose")
-    .description("Configure Goose for OmniRoute: write ~/.config/goose/config.yaml + print the env recipe")
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .description("Configure Goose for RouteChi: write ~/.config/goose/config.yaml + print the env recipe")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--model <id>", "Model id for Goose (required unless picked interactively)")
     .option("--config-path <path>", "config.yaml path (default: ~/.config/goose/config.yaml)")
     .option("--yes", "Non-interactive: do not prompt (requires --model)")

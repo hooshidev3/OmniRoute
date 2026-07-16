@@ -3,7 +3,7 @@
  *
  * Accesses ZenMux's free-tier LLM gateway via session cookies exported from
  * the browser. Uses ZenMux's Anthropic-compatible SSE endpoint, translating
- * the response to OpenAI-format chunks for OmniRoute consumers.
+ * the response to OpenAI-format chunks for RouteChi consumers.
  *
  * Endpoint: POST https://zenmux.ai/api/anthropic/v1/messages
  * Auth: Full cookie header string from zenmux.ai (must include ctoken)

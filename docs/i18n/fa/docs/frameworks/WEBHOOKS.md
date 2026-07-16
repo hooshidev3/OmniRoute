@@ -9,7 +9,7 @@ lastUpdated: 2026-06-28
 > **منبع اصلی:** `src/lib/webhookDispatcher.ts`, `src/lib/db/webhooks.ts`, `src/app/api/webhooks/`
 > **آخرین به‌روزرسانی:** 2026-06-28 — v3.8.40
 
-OmniRoute می‌تواند در رویدادهای پلتفرم، وب‌هوک‌های HTTP را ارسال کند. از آن‌ها برای یکپارچه‌سازی با
+RouteChi می‌تواند در رویدادهای پلتفرم، وب‌هوک‌های HTTP را ارسال کند. از آن‌ها برای یکپارچه‌سازی با
 Slack، PagerDuty، Datadog، سرویس‌های هشدار داخلی یا هر گیرنده‌ی HTTP استفاده کنید.
 
 مبدل ارسال، هر تحویل را با HMAC-SHA256 امضا می‌کند، در صورت شکست موقت دوباره تلاش می‌کند،
@@ -59,17 +59,17 @@ Caller (handler, service, monitor)
 
 ## امضای HMAC
 
-وقتی یک وب‌هوک دارای `secret` باشد، OmniRoute بدنه‌ی JSON را امضا کرده و می‌فرستد:
+وقتی یک وب‌هوک دارای `secret` باشد، RouteChi بدنه‌ی JSON را امضا کرده و می‌فرستد:
 
 ```
 Content-Type: application/json
-User-Agent: OmniRoute-Webhook/1.0
+User-Agent: RouteChi-Webhook/1.0
 X-Webhook-Event: <event>
 X-Webhook-Timestamp: <ISO-8601>
 X-Webhook-Signature: sha256=<hex HMAC-SHA256(secret, body)>
 ```
 
-> نام هدرها از پیشوند `X-Webhook-*` استفاده می‌کنند (نه `X-OmniRoute-*`). مقدار
+> نام هدرها از پیشوند `X-Webhook-*` استفاده می‌کنند (نه `X-RouteChi-*`). مقدار
 > امضا به‌صورت `sha256=<hex>` است — کل پیشوند را تأیید کنید.
 
 اگر `createWebhook` بدون secret فراخوانی شود، ماژول DB یکی تولید می‌کند
@@ -223,7 +223,7 @@ curl -X POST http://localhost:20128/api/webhooks/<id>/test \
   "event": "test.ping",
   "timestamp": "2026-05-13T20:32:00.000Z",
   "data": {
-    "message": "Test webhook delivery from OmniRoute",
+    "message": "Test webhook delivery from RouteChi",
     "webhookId": "<uuid>"
   }
 }

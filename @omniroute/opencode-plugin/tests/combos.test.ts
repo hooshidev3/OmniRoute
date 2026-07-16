@@ -2,12 +2,12 @@
  * T-05 combo-discovery contract tests.
  *
  * Covers:
- *   - `defaultOmniRouteCombosFetcher(baseURL, apiKey, timeoutMs?)`
+ *   - `defaultRouteChiCombosFetcher(baseURL, apiKey, timeoutMs?)`
  *     — envelope tolerance (`{combos: [...]}` and bare array), non-2xx errors.
  *   - `mapComboToModelV2(combo, members, providerId, baseURL)`
  *     — LCD policy across capabilities, limits, modalities; defensive
  *       posture on empty members; nice-name preference.
- *   - `createOmniRouteProviderHook(opts, deps)` extension
+ *   - `createRouteChiProviderHook(opts, deps)` extension
  *     — combos merged into the models map; collision resolution (combo
  *       wins, warn-once); soft-fail when the combos fetcher throws;
  *       combos cached + reused under the same TTL key as models.
@@ -19,20 +19,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  createOmniRouteProviderHook,
-  defaultOmniRouteCombosFetcher,
+  createRouteChiProviderHook,
+  defaultRouteChiCombosFetcher,
   mapComboToModelV2,
-  type OmniRouteCombosFetcher,
-  type OmniRouteModelsFetcher,
-  type OmniRouteRawCombo,
-  type OmniRouteRawModelEntry,
+  type RouteChiCombosFetcher,
+  type RouteChiModelsFetcher,
+  type RouteChiRawCombo,
+  type RouteChiRawModelEntry,
 } from "../src/index.js";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Fixtures
 // ────────────────────────────────────────────────────────────────────────────
 
-const MODEL_PRIMARY: OmniRouteRawModelEntry = {
+const MODEL_PRIMARY: RouteChiRawModelEntry = {
   id: "claude-primary",
   capabilities: {
     tool_calling: true,
@@ -48,7 +48,7 @@ const MODEL_PRIMARY: OmniRouteRawModelEntry = {
   output_modalities: ["text"],
 };
 
-const MODEL_SECONDARY: OmniRouteRawModelEntry = {
+const MODEL_SECONDARY: RouteChiRawModelEntry = {
   id: "claude-secondary",
   capabilities: {
     tool_calling: true,
@@ -64,7 +64,7 @@ const MODEL_SECONDARY: OmniRouteRawModelEntry = {
   output_modalities: ["text"],
 };
 
-const MODEL_NO_TOOLS: OmniRouteRawModelEntry = {
+const MODEL_NO_TOOLS: RouteChiRawModelEntry = {
   id: "gemini-3-flash",
   capabilities: { tool_calling: false, reasoning: false, vision: false, thinking: false },
   context_length: 1_000_000,
@@ -73,7 +73,7 @@ const MODEL_NO_TOOLS: OmniRouteRawModelEntry = {
   output_modalities: ["text"],
 };
 
-const COMBO_CLAUDE_TIER: OmniRouteRawCombo = {
+const COMBO_CLAUDE_TIER: RouteChiRawCombo = {
   id: "combo-claude-tier",
   name: "Claude Tier",
   strategy: "priority",
@@ -88,10 +88,10 @@ const COMBO_CLAUDE_TIER: OmniRouteRawCombo = {
 // ────────────────────────────────────────────────────────────────────────────
 
 function stubModelsFetcher(
-  payload: OmniRouteRawModelEntry[]
-): OmniRouteModelsFetcher & { callCount: () => number } {
+  payload: RouteChiRawModelEntry[]
+): RouteChiModelsFetcher & { callCount: () => number } {
   let n = 0;
-  const f: OmniRouteModelsFetcher = async () => {
+  const f: RouteChiModelsFetcher = async () => {
     n++;
     return payload;
   };
@@ -99,11 +99,11 @@ function stubModelsFetcher(
 }
 
 function stubCombosFetcher(
-  payload: OmniRouteRawCombo[]
-): OmniRouteCombosFetcher & { callCount: () => number; callsBy: () => Array<[string, string]> } {
+  payload: RouteChiRawCombo[]
+): RouteChiCombosFetcher & { callCount: () => number; callsBy: () => Array<[string, string]> } {
   let n = 0;
   const calls: Array<[string, string]> = [];
-  const f: OmniRouteCombosFetcher = async (baseURL, apiKey) => {
+  const f: RouteChiCombosFetcher = async (baseURL, apiKey) => {
     n++;
     calls.push([baseURL, apiKey]);
     return payload;
@@ -116,9 +116,9 @@ function stubCombosFetcher(
 
 function failingCombosFetcher(
   err = new Error("boom")
-): OmniRouteCombosFetcher & { callCount: () => number } {
+): RouteChiCombosFetcher & { callCount: () => number } {
   let n = 0;
-  const f: OmniRouteCombosFetcher = async () => {
+  const f: RouteChiCombosFetcher = async () => {
     n++;
     throw err;
   };
@@ -147,10 +147,10 @@ async function withWarnCapture<T>(
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// defaultOmniRouteCombosFetcher — envelope tolerance + error surfacing
+// defaultRouteChiCombosFetcher — envelope tolerance + error surfacing
 // ────────────────────────────────────────────────────────────────────────────
 
-test("defaultOmniRouteCombosFetcher: parses {combos:[…]} envelope", async () => {
+test("defaultRouteChiCombosFetcher: parses {combos:[…]} envelope", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = (async (input: unknown) => {
     const url = typeof input === "string" ? input : (input as { url: string }).url;
@@ -166,7 +166,7 @@ test("defaultOmniRouteCombosFetcher: parses {combos:[…]} envelope", async () =
     );
   }) as typeof fetch;
   try {
-    const combos = await defaultOmniRouteCombosFetcher("https://or.example.com", "sk-test");
+    const combos = await defaultRouteChiCombosFetcher("https://or.example.com", "sk-test");
     assert.equal(combos.length, 2);
     assert.equal(combos[0].id, "c1");
     assert.equal(combos[1].id, "c2");
@@ -175,7 +175,7 @@ test("defaultOmniRouteCombosFetcher: parses {combos:[…]} envelope", async () =
   }
 });
 
-test("defaultOmniRouteCombosFetcher: parses bare array envelope", async () => {
+test("defaultRouteChiCombosFetcher: parses bare array envelope", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = (async () => {
     return new Response(JSON.stringify([{ id: "c1" }, { id: "c2" }, { not_an_id: 42 }]), {
@@ -183,7 +183,7 @@ test("defaultOmniRouteCombosFetcher: parses bare array envelope", async () => {
     });
   }) as typeof fetch;
   try {
-    const combos = await defaultOmniRouteCombosFetcher("https://or.example.com/v1", "sk-test");
+    const combos = await defaultRouteChiCombosFetcher("https://or.example.com/v1", "sk-test");
     // Strip /v1 before /api/combos, AND filter out entries with no string id.
     assert.equal(combos.length, 2);
     assert.equal(combos[0].id, "c1");
@@ -193,7 +193,7 @@ test("defaultOmniRouteCombosFetcher: parses bare array envelope", async () => {
   }
 });
 
-test("defaultOmniRouteCombosFetcher: strips trailing /v1 before /api/combos", async () => {
+test("defaultRouteChiCombosFetcher: strips trailing /v1 before /api/combos", async () => {
   const originalFetch = globalThis.fetch;
   let observedUrl = "";
   globalThis.fetch = (async (input: unknown) => {
@@ -201,14 +201,14 @@ test("defaultOmniRouteCombosFetcher: strips trailing /v1 before /api/combos", as
     return new Response(JSON.stringify({ combos: [] }), { status: 200 });
   }) as typeof fetch;
   try {
-    await defaultOmniRouteCombosFetcher("https://or.example.com/v1/", "sk-test");
+    await defaultRouteChiCombosFetcher("https://or.example.com/v1/", "sk-test");
     assert.equal(observedUrl, "https://or.example.com/api/combos");
   } finally {
     globalThis.fetch = originalFetch;
   }
 });
 
-test("defaultOmniRouteCombosFetcher: throws on non-2xx with status code in message", async () => {
+test("defaultRouteChiCombosFetcher: throws on non-2xx with status code in message", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = (async () => {
     return new Response(JSON.stringify({ error: "Invalid token" }), {
@@ -219,7 +219,7 @@ test("defaultOmniRouteCombosFetcher: throws on non-2xx with status code in messa
   try {
     await assert.rejects(
       async () => {
-        await defaultOmniRouteCombosFetcher("https://or.example.com", "sk-bad");
+        await defaultRouteChiCombosFetcher("https://or.example.com", "sk-bad");
       },
       (err: unknown) => {
         const msg = err instanceof Error ? err.message : String(err);
@@ -233,16 +233,16 @@ test("defaultOmniRouteCombosFetcher: throws on non-2xx with status code in messa
   }
 });
 
-test("defaultOmniRouteCombosFetcher: throws when apiKey missing", async () => {
+test("defaultRouteChiCombosFetcher: throws when apiKey missing", async () => {
   await assert.rejects(
-    async () => defaultOmniRouteCombosFetcher("https://or.example.com", ""),
+    async () => defaultRouteChiCombosFetcher("https://or.example.com", ""),
     /apiKey required/
   );
 });
 
-test("defaultOmniRouteCombosFetcher: throws when baseURL missing", async () => {
+test("defaultRouteChiCombosFetcher: throws when baseURL missing", async () => {
   await assert.rejects(
-    async () => defaultOmniRouteCombosFetcher("", "sk-test"),
+    async () => defaultRouteChiCombosFetcher("", "sk-test"),
     /baseURL required/
   );
 });
@@ -415,7 +415,7 @@ test("mapComboToModelV2: api block matches providerId + baseURL", () => {
 });
 
 test("mapComboToModelV2: explicit member temperature=false drops combo temperature=false", () => {
-  const tempFalse: OmniRouteRawModelEntry = {
+  const tempFalse: RouteChiRawModelEntry = {
     id: "no-temp",
     capabilities: { tool_calling: true, temperature: false },
     context_length: 100_000,
@@ -433,13 +433,13 @@ test("mapComboToModelV2: explicit member temperature=false drops combo temperatu
 });
 
 // ────────────────────────────────────────────────────────────────────────────
-// createOmniRouteProviderHook — combos merge + collision + soft-fail + cache
+// createRouteChiProviderHook — combos merge + collision + soft-fail + cache
 // ────────────────────────────────────────────────────────────────────────────
 
 test("models() returns combo entries merged into the map", async () => {
   const modelsFetcher = stubModelsFetcher([MODEL_PRIMARY, MODEL_SECONDARY, MODEL_NO_TOOLS]);
   const combosFetcher = stubCombosFetcher([COMBO_CLAUDE_TIER]);
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );
@@ -473,7 +473,7 @@ test("models(): combo with unknown member ids degrades to all-false LCD posture"
       ],
     },
   ]);
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );
@@ -500,7 +500,7 @@ test("models(): hidden combos are excluded from the map", async () => {
       models: [{ id: "s1", kind: "model", model: "claude-primary", weight: 100 }],
     },
   ]);
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );
@@ -511,16 +511,16 @@ test("models(): hidden combos are excluded from the map", async () => {
 
 test("models(): combo name exactly matches raw model id → raw deleted, raw deleted, no warn", async () => {
   // Combo.name === raw model id triggers the dedup deletion. This mirrors
-  // the real OmniRoute payload where /v1/models pre-mirrors combos as
+  // the real RouteChi payload where /v1/models pre-mirrors combos as
   // no-slash raw entries whose ids match /api/combos friendly names.
-  const colliderCombo: OmniRouteRawCombo = {
+  const colliderCombo: RouteChiRawCombo = {
     id: "uuid-collider",
     name: "claude-primary", // EXACT match to MODEL_PRIMARY.id
     models: [{ id: "s1", kind: "model", model: "claude-secondary", weight: 100 }],
   };
   const modelsFetcher = stubModelsFetcher([MODEL_PRIMARY, MODEL_SECONDARY]);
   const combosFetcher = stubCombosFetcher([colliderCombo]);
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );
@@ -543,7 +543,7 @@ test("models(): combo name exactly matches raw model id → raw deleted, raw del
 
 test("models(): two combos with same slug → second gets disambiguator suffix", async () => {
   // Both combos slug to `claude` — second must get `claude-<id-prefix>`.
-  const combos: OmniRouteRawCombo[] = [
+  const combos: RouteChiRawCombo[] = [
     {
       id: "uuid-a",
       name: "Claude",
@@ -555,7 +555,7 @@ test("models(): two combos with same slug → second gets disambiguator suffix",
       models: [{ id: "s", kind: "model", model: "claude-secondary", weight: 1 }],
     },
   ];
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     {
       fetcher: stubModelsFetcher([MODEL_PRIMARY, MODEL_SECONDARY]),
@@ -572,7 +572,7 @@ test("models(): two combos with same slug → second gets disambiguator suffix",
 test("models(): combos fetch fails → falls back to models-only, warn emitted, no throw", async () => {
   const modelsFetcher = stubModelsFetcher([MODEL_PRIMARY, MODEL_SECONDARY]);
   const combosFetcher = failingCombosFetcher(new Error("ECONNRESET"));
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );
@@ -599,7 +599,7 @@ test("models(): combos cached + reused within TTL (one combo fetch per TTL windo
   const modelsFetcher = stubModelsFetcher([MODEL_PRIMARY, MODEL_SECONDARY]);
   const combosFetcher = stubCombosFetcher([COMBO_CLAUDE_TIER]);
   let nowMs = 1_000_000;
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1", modelCacheTtl: 60_000 },
     { fetcher: modelsFetcher, combosFetcher, now: () => nowMs }
   );
@@ -616,7 +616,7 @@ test("models(): combos refetched after TTL expiry (same key as models)", async (
   const modelsFetcher = stubModelsFetcher([MODEL_PRIMARY]);
   const combosFetcher = stubCombosFetcher([COMBO_CLAUDE_TIER]);
   let nowMs = 1_000_000;
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1", modelCacheTtl: 60_000 },
     { fetcher: modelsFetcher, combosFetcher, now: () => nowMs }
   );
@@ -631,7 +631,7 @@ test("models(): combos refetched after TTL expiry (same key as models)", async (
 test("models(): combos fetcher receives the resolved baseURL + apiKey", async () => {
   const modelsFetcher = stubModelsFetcher([MODEL_PRIMARY]);
   const combosFetcher = stubCombosFetcher([COMBO_CLAUDE_TIER]);
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );
@@ -696,7 +696,7 @@ test("models(): nested combo-ref context is the min of nested + raw members", as
       ],
     },
   ]);
-  const hook = createOmniRouteProviderHook(
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     { fetcher: modelsFetcher, combosFetcher }
   );

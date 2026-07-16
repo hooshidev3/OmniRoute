@@ -9,7 +9,7 @@ function readJson<T = Record<string, unknown>>(relPath: string): T {
   return JSON.parse(readFileSync(join(repoRoot, relPath), "utf8")) as T;
 }
 
-test("@huggingface/transformers is optional so onnxruntime CUDA install failures cannot abort OmniRoute install", () => {
+test("@huggingface/transformers is optional so onnxruntime CUDA install failures cannot abort RouteChi install", () => {
   const pkg = readJson<{
     dependencies?: Record<string, string>;
     optionalDependencies?: Record<string, string>;

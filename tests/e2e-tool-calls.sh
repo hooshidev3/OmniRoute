@@ -26,7 +26,7 @@ check_corruption() {
 require_tool curl
 require_tool jq
 
-echo "=== OmniRoute Tool Call Integrity E2E Test ==="
+echo "=== RouteChi Tool Call Integrity E2E Test ==="
 echo "URL: $OMNIROUTE_URL | Model: $MODEL"
 
 echo

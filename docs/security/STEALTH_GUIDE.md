@@ -10,11 +10,11 @@ lastUpdated: 2026-06-28
 > **Last updated:** 2026-06-28 — v3.8.40
 > **Audience:** Engineers maintaining provider-specific stealth integrations.
 
-OmniRoute integrates with providers whose edges actively fingerprint non-official clients (TLS JA3/JA4, header ordering, JSON body shape, integrity tokens). This page documents the stealth surfaces OmniRoute exposes and where they are implemented.
+RouteChi integrates with providers whose edges actively fingerprint non-official clients (TLS JA3/JA4, header ordering, JSON body shape, integrity tokens). This page documents the stealth surfaces RouteChi exposes and where they are implemented.
 
 ## Legal and Ethical Notice
 
-Stealth features exist so OmniRoute can act as a compatibility layer between user-owned official accounts (Claude Code CLI, ChatGPT Desktop/Web, Antigravity, Cursor, etc.) and OmniRoute's unified API. They are **not** for evading fraud detection, sharing credentials, or violating provider Terms of Service. The maintainers expect operators to comply with the upstream ToS they signed when creating accounts.
+Stealth features exist so RouteChi can act as a compatibility layer between user-owned official accounts (Claude Code CLI, ChatGPT Desktop/Web, Antigravity, Cursor, etc.) and RouteChi's unified API. They are **not** for evading fraud detection, sharing credentials, or violating provider Terms of Service. The maintainers expect operators to comply with the upstream ToS they signed when creating accounts.
 
 ---
 
@@ -45,7 +45,7 @@ Dedicated TLS impersonator for `chatgpt.com`. ChatGPT's Cloudflare config pins `
 
 ## Claude Code Stealth Bundle
 
-When `cliCompatMode` is on, OmniRoute reshapes outgoing Claude requests so they are indistinguishable from `claude-cli` traffic. Three modules collaborate:
+When `cliCompatMode` is on, RouteChi reshapes outgoing Claude requests so they are indistinguishable from `claude-cli` traffic. Three modules collaborate:
 
 ### `claudeCodeFingerprint.ts`
 
@@ -61,7 +61,7 @@ SHA256(SALT + msg[4] + msg[7] + msg[20] + version)[:3]
 
 ### `claudeCodeCCH.ts` (Client Content Hash)
 
-Server-side integrity check the official Claude Code CLI computes via Bun/Zig. OmniRoute reimplements with `xxhash-wasm`:
+Server-side integrity check the official Claude Code CLI computes via Bun/Zig. RouteChi reimplements with `xxhash-wasm`:
 
 1. Serialize body with `cch=00000;` placeholder
 2. `xxhash64(bytes, seed) & 0xFFFFF`
@@ -119,13 +119,13 @@ Strips Stainless SDK markers (`x-stainless-lang`, `x-stainless-package-version`,
 
 `ANTIGRAVITY_CREDITS=always` (consumed by `open-sse/executors/antigravity.ts`) routes **every** request through Antigravity AI Credit Overages (paid Google credits) instead of letting Google's free-tier quota gate things. This is documented as a feature, but it is **the single most common ToS-violation report we see** — multiple Google Ultra accounts have been banned with `403 / "service disabled for ToS violation" / insufficient_quota` after running for a few hours with `=always`.
 
-The upstream enforcement is on **Google's side**, not anything OmniRoute can prevent. The env var name and the existing docs make it sound like a safe knob to flip; it isn't.
+The upstream enforcement is on **Google's side**, not anything RouteChi can prevent. The env var name and the existing docs make it sound like a safe knob to flip; it isn't.
 
 **Why this draws abuse detection more aggressively than free-tier-only usage:**
 
 - Sustained automated spend on a single Google account flags differently than free-tier hits-quota-and-stops.
 - Credit overages have no rate ceiling, so a misconfigured client can burn through several hundred USD in minutes and look like API-key resale or bot traffic.
-- Multiple OmniRoute users hitting overage credits in parallel from the same external IP compounds the signal.
+- Multiple RouteChi users hitting overage credits in parallel from the same external IP compounds the signal.
 
 **Recommended posture:**
 
@@ -164,7 +164,7 @@ Toggle per provider via env (see below). When disabled, headers/body keys appear
 
 ## MITM Proxy (Antigravity, Linux/macOS/Windows)
 
-For CLIs whose binaries cannot be redirected via `OPENAI_BASE_URL`, OmniRoute runs a local TLS-terminating proxy. Endpoints live under `src/app/api/cli-tools/antigravity-mitm/`.
+For CLIs whose binaries cannot be redirected via `OPENAI_BASE_URL`, RouteChi runs a local TLS-terminating proxy. Endpoints live under `src/app/api/cli-tools/antigravity-mitm/`.
 
 | Method | Endpoint                                | Purpose                                          |
 | ------ | --------------------------------------- | ------------------------------------------------ |
@@ -197,7 +197,7 @@ Target intercepted host: **`daily-cloudcode-pa.googleapis.com`** (Antigravity's 
 
 Cert filename: `omniroute-mitm.crt`. Fingerprint match via `getCertFingerprint()` (SHA-1 of DER).
 
-Additionally, `updateNssDatabases()` installs into per-user NSS DBs when `certutil` is available: `~/.pki/nssdb`, `~/snap/chromium/.../nssdb`, all Firefox profiles (including snap), under the nickname **`OmniRoute MITM Root CA`**.
+Additionally, `updateNssDatabases()` installs into per-user NSS DBs when `certutil` is available: `~/.pki/nssdb`, `~/snap/chromium/.../nssdb`, all Firefox profiles (including snap), under the nickname **`RouteChi MITM Root CA`**.
 
 ### macOS / Windows
 
@@ -247,7 +247,7 @@ The provider IP is **always preserved** — the toggle only reshapes the request
 
 ## Inbound Header Sanitization
 
-OmniRoute scrubs inbound client headers before forwarding so a request that arrives from Cursor doesn't leak `User-Agent: Cursor/X.Y.Z` to a Claude upstream. See `src/shared/constants/upstreamHeaders.ts` for the denylist, kept in lockstep with the Zod schemas and unit tests.
+RouteChi scrubs inbound client headers before forwarding so a request that arrives from Cursor doesn't leak `User-Agent: Cursor/X.Y.Z` to a Claude upstream. See `src/shared/constants/upstreamHeaders.ts` for the denylist, kept in lockstep with the Zod schemas and unit tests.
 
 ---
 

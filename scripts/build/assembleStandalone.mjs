@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * assembleStandalone.mjs - Shared standalone bundle assembler for OmniRoute.
+ * assembleStandalone.mjs - Shared standalone bundle assembler for RouteChi.
  *
  * Task 0.1 Inventory: Copy/sync operations across the three build scripts
  * -----------------------------------------------------------------------

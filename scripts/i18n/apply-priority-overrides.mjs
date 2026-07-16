@@ -40,7 +40,7 @@ const MESSAGE_OVERRIDES = {
     "auth.unifiedAiApiProxy": "Proxy de API de IA unificado",
     "auth.runOnboardingWizard":
       "Ejecuta el asistente de onboarding para configurar tu contraseña y conectar tu primer proveedor de IA.",
-    "auth.stopServer": "Detén el servidor OmniRoute",
+    "auth.stopServer": "Detén el servidor RouteChi",
     "auth.copyUrlManual": "Copia la URL de la barra de direcciones y pégala en la aplicación.",
     "auth.methodManualDescription":
       "Elimina la contraseña de la base de datos y configura una nueva al iniciar:",
@@ -115,7 +115,7 @@ const MESSAGE_OVERRIDES = {
     "home.requestsShort": "{count} 件",
     "auth.runOnboardingWizard":
       "オンボーディングウィザードを実行して、パスワード設定と最初の AI プロバイダー接続を行います。",
-    "auth.stopServer": "OmniRoute サーバーを停止",
+    "auth.stopServer": "RouteChi サーバーを停止",
     "auth.copyUrlManual": "アドレスバーの URL をコピーしてアプリケーションに貼り付けてください。",
     "auth.methodManualDescription":
       "データベースからパスワードを削除し、起動時に新しいパスワードを設定します:",
@@ -215,7 +215,7 @@ function removeEnglishPortugueseAnchorLine(content) {
 }
 
 function removeBrazilianAppendixSection(content) {
-  const marker = "\n## 🇧🇷 OmniRoute";
+  const marker = "\n## 🇧🇷 RouteChi";
   const idx = content.indexOf(marker);
   if (idx === -1) {
     return content;

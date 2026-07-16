@@ -1,5 +1,5 @@
 // Regression guard — support-mesh escalation (2026-07-08, whatsbrasil):
-// an OmniRoute API key ("opencode-mac") showed "zero requisições" even though
+// an RouteChi API key ("opencode-mac") showed "zero requisições" even though
 // it received traffic. Root cause: requests rejected *before* handleChatCore
 // (pipeline-gate / provider circuit breaker OPEN, or a combo with every target
 // exhausted) short-circuit in src/sse/handlers/chat.ts and only wrote a

@@ -1,11 +1,11 @@
-# Panduan Pengaturan Alat CLI — OmniRoute (Bahasa Indonesia)
+# Panduan Pengaturan Alat CLI — RouteChi (Bahasa Indonesia)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/CLI-TOOLS.md) · 🇸🇦 [ar](../../ar/docs/CLI-TOOLS.md) · 🇧🇬 [bg](../../bg/docs/CLI-TOOLS.md) · 🇧🇩 [bn](../../bn/docs/CLI-TOOLS.md) · 🇨🇿 [cs](../../cs/docs/CLI-TOOLS.md) · 🇩🇰 [da](../../da/docs/CLI-TOOLS.md) · 🇩🇪 [de](../../de/docs/CLI-TOOLS.md) · 🇪🇸 [es](../../es/docs/CLI-TOOLS.md) · 🇮🇷 [fa](../../fa/docs/CLI-TOOLS.md) · 🇫🇮 [fi](../../fi/docs/CLI-TOOLS.md) · 🇫🇷 [fr](../../fr/docs/CLI-TOOLS.md) · 🇮🇳 [gu](../../gu/docs/CLI-TOOLS.md) · 🇮🇱 [he](../../he/docs/CLI-TOOLS.md) · 🇮🇳 [hi](../../hi/docs/CLI-TOOLS.md) · 🇭🇺 [hu](../../hu/docs/CLI-TOOLS.md) · 🇮🇩 [id](../../id/docs/CLI-TOOLS.md) · 🇮🇹 [it](../../it/docs/CLI-TOOLS.md) · 🇯🇵 [ja](../../ja/docs/CLI-TOOLS.md) · 🇰🇷 [ko](../../ko/docs/CLI-TOOLS.md) · 🇮🇳 [mr](../../mr/docs/CLI-TOOLS.md) · 🇲🇾 [ms](../../ms/docs/CLI-TOOLS.md) · 🇳🇱 [nl](../../nl/docs/CLI-TOOLS.md) · 🇳🇴 [no](../../no/docs/CLI-TOOLS.md) · 🇵🇭 [phi](../../phi/docs/CLI-TOOLS.md) · 🇵🇱 [pl](../../pl/docs/CLI-TOOLS.md) · 🇵🇹 [pt](../../pt/docs/CLI-TOOLS.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/CLI-TOOLS.md) · 🇷🇴 [ro](../../ro/docs/CLI-TOOLS.md) · 🇷🇺 [ru](../../ru/docs/CLI-TOOLS.md) · 🇸🇰 [sk](../../sk/docs/CLI-TOOLS.md) · 🇸🇪 [sv](../../sv/docs/CLI-TOOLS.md) · 🇰🇪 [sw](../../sw/docs/CLI-TOOLS.md) · 🇮🇳 [ta](../../ta/docs/CLI-TOOLS.md) · 🇮🇳 [te](../../te/docs/CLI-TOOLS.md) · 🇹🇭 [th](../../th/docs/CLI-TOOLS.md) · 🇹🇷 [tr](../../tr/docs/CLI-TOOLS.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/CLI-TOOLS.md) · 🇵🇰 [ur](../../ur/docs/CLI-TOOLS.md) · 🇻🇳 [vi](../../vi/docs/CLI-TOOLS.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/CLI-TOOLS.md)
 
 ---
 
 Panduan ini menjelaskan cara menginstal dan mengonfigurasi semua alat CLI coding AI yang didukung
-untuk menggunakan **OmniRoute** sebagai backend terpadu, memberikan manajemen kunci terpusat,
+untuk menggunakan **RouteChi** sebagai backend terpadu, memberikan manajemen kunci terpusat,
 pelacakan biaya, pergantian model, dan pencatatan permintaan di semua alat.
 
 ---
@@ -15,10 +15,10 @@ pelacakan biaya, pergantian model, dan pencatatan permintaan di semua alat.
 ```
 Claude / Codex / OpenCode / Cline / KiloCode / Continue / Kiro / Cursor / Copilot
            │
-           ▼  (semua mengarah ke OmniRoute)
+           ▼  (semua mengarah ke RouteChi)
     http://YOUR_SERVER:20128/v1
            │
-           ▼  (OmniRoute meneruskan ke penyedia yang tepat)
+           ▼  (RouteChi meneruskan ke penyedia yang tepat)
     Anthropic / OpenAI / Gemini / DeepSeek / Groq / Mistral / ...
 ```
 
@@ -46,7 +46,7 @@ Daftar saat ini (v3.0.0-rc.16):
 | **Cline**          | `cline`       | `cline`    | custom          | npm              |
 | **Kilo Code**      | `kilo`        | `kilocode` | custom          | npm              |
 | **Continue**       | `continue`    | extension  | guide           | VS Code          |
-| **Antigravity**    | `antigravity` | internal   | mitm            | OmniRoute        |
+| **Antigravity**    | `antigravity` | internal   | mitm            | RouteChi        |
 | **GitHub Copilot** | `copilot`     | extension  | custom          | VS Code          |
 | **OpenCode**       | `opencode`    | `opencode` | guide           | npm              |
 | **Kiro AI**        | `kiro`        | app/cli    | mitm            | desktop/CLI      |
@@ -67,9 +67,9 @@ ID lama yang masih diterima untuk kompatibilitas: `copilot`, `kimi-coding`, `qwe
 
 ---
 
-## Langkah 1 — Dapatkan API Key OmniRoute
+## Langkah 1 — Dapatkan API Key RouteChi
 
-1. Buka dashboard OmniRoute → **API Manager** (`/dashboard/api-manager`)
+1. Buka dashboard RouteChi → **API Manager** (`/dashboard/api-manager`)
 2. Klik **Create API Key**
 3. Beri nama (misalnya `cli-tools`) dan pilih semua izin
 4. Salin kunci tersebut — Anda akan membutuhkannya untuk setiap CLI di bawah
@@ -122,7 +122,7 @@ kiro-cli --version   # 1.x.x
 Tambahkan ke `~/.bashrc` (atau `~/.zshrc`), lalu jalankan `source ~/.bashrc`:
 
 ```bash
-# OmniRoute Universal Endpoint
+# RouteChi Universal Endpoint
 export OPENAI_BASE_URL="http://localhost:20128/v1"
 export OPENAI_API_KEY="sk-your-omniroute-key"
 export ANTHROPIC_BASE_URL="http://localhost:20128/v1"
@@ -202,7 +202,7 @@ EOF
 **Mode VS Code:**
 Pengaturan ekstensi Cline → API Provider: `OpenAI Compatible` → Base URL: `http://localhost:20128/v1`
 
-Atau gunakan dashboard OmniRoute → **CLI Tools → Cline → Apply Config**.
+Atau gunakan dashboard RouteChi → **CLI Tools → Cline → Apply Config**.
 
 ---
 
@@ -223,7 +223,7 @@ kilocode --api-base http://localhost:20128/v1 --api-key sk-your-omniroute-key
 }
 ```
 
-Atau gunakan dashboard OmniRoute → **CLI Tools → KiloCode → Apply Config**.
+Atau gunakan dashboard RouteChi → **CLI Tools → KiloCode → Apply Config**.
 
 ---
 
@@ -233,7 +233,7 @@ Edit `~/.continue/config.yaml`:
 
 ```yaml
 models:
-  - name: OmniRoute
+  - name: RouteChi
     provider: openai
     model: auto
     apiBase: http://localhost:20128/v1
@@ -251,8 +251,8 @@ Mulai ulang VS Code setelah mengedit.
 # Login ke akun AWS/Kiro Anda:
 kiro-cli login
 
-# CLI ini menggunakan autentikasinya sendiri — OmniRoute tidak diperlukan sebagai backend untuk Kiro CLI itu sendiri.
-# Gunakan kiro-cli bersama OmniRoute untuk alat lainnya.
+# CLI ini menggunakan autentikasinya sendiri — RouteChi tidak diperlukan sebagai backend untuk Kiro CLI itu sendiri.
+# Gunakan kiro-cli bersama RouteChi untuk alat lainnya.
 kiro-cli status
 ```
 
@@ -285,7 +285,7 @@ EOF
     "openai": [
       {
         "id": "omniroute-default",
-        "name": "OmniRoute (Auto)",
+        "name": "RouteChi (Auto)",
         "envKey": "OPENAI_API_KEY",
         "baseUrl": "http://localhost:20128/v1"
       }
@@ -309,19 +309,19 @@ qwen
 
 ### Cursor (Aplikasi Desktop)
 
-> **Catatan:** Cursor merutekan permintaan melalui cloudnya sendiri. Untuk integrasi OmniRoute,
-> aktifkan **Cloud Endpoint** di Pengaturan OmniRoute dan gunakan URL domain publik Anda.
+> **Catatan:** Cursor merutekan permintaan melalui cloudnya sendiri. Untuk integrasi RouteChi,
+> aktifkan **Cloud Endpoint** di Pengaturan RouteChi dan gunakan URL domain publik Anda.
 
 Melalui GUI: **Settings → Models → OpenAI API Key**
 
 - Base URL: `https://your-domain.com/v1`
-- API Key: kunci OmniRoute Anda
+- API Key: kunci RouteChi Anda
 
 ---
 
 ## Konfigurasi Otomatis Dashboard
 
-Dashboard OmniRoute mengotomatiskan konfigurasi untuk sebagian besar alat:
+Dashboard RouteChi mengotomatiskan konfigurasi untuk sebagian besar alat:
 
 1. Buka `http://localhost:20128/dashboard/cli-tools`
 2. Perluas kartu alat mana pun
@@ -333,8 +333,8 @@ Dashboard OmniRoute mengotomatiskan konfigurasi untuk sebagian besar alat:
 
 ## Agen Bawaan: Droid & OpenClaw
 
-**Droid** dan **OpenClaw** adalah agen AI yang dibangun langsung ke dalam OmniRoute — tidak perlu instalasi.
-Keduanya berjalan sebagai rute internal dan menggunakan perutean model OmniRoute secara otomatis.
+**Droid** dan **OpenClaw** adalah agen AI yang dibangun langsung ke dalam RouteChi — tidak perlu instalasi.
+Keduanya berjalan sebagai rute internal dan menggunakan perutean model RouteChi secara otomatis.
 
 - Akses: `http://localhost:20128/dashboard/agents`
 - Konfigurasi: combo dan penyedia yang sama seperti semua alat lainnya
@@ -360,7 +360,7 @@ Keduanya berjalan sebagai rute internal dan menggunakan perutean model OmniRoute
 
 | Error                     | Penyebab                          | Solusi                                     |
 | ------------------------- | --------------------------------- | ------------------------------------------ |
-| `Connection refused`      | OmniRoute tidak berjalan          | `pm2 start omniroute`                      |
+| `Connection refused`      | RouteChi tidak berjalan          | `pm2 start omniroute`                      |
 | `401 Unauthorized`        | API key salah                     | Periksa di `/dashboard/api-manager`        |
 | `No combo configured`     | Tidak ada combo perutean aktif    | Atur di `/dashboard/combos`                |
 | `invalid model`           | Model tidak ada dalam katalog     | Gunakan `auto` atau periksa `/dashboard/providers` |
@@ -372,7 +372,7 @@ Keduanya berjalan sebagai rute internal dan menggunakan perutean model OmniRoute
 ## Skrip Pengaturan Cepat (Satu Perintah)
 
 ```bash
-# Instal semua CLI dan konfigurasi untuk OmniRoute (ganti dengan kunci dan URL server Anda)
+# Instal semua CLI dan konfigurasi untuk RouteChi (ganti dengan kunci dan URL server Anda)
 OMNIROUTE_URL="http://localhost:20128/v1"
 OMNIROUTE_KEY="sk-your-omniroute-key"
 
@@ -394,5 +394,5 @@ export ANTHROPIC_API_KEY="$OMNIROUTE_KEY"
 EOF
 
 source ~/.bashrc
-echo "✅ All CLIs installed and configured for OmniRoute"
+echo "✅ All CLIs installed and configured for RouteChi"
 ```

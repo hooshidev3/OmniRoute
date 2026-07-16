@@ -4,7 +4,7 @@
  * Port of decolua/9router 8efacc114 (thanks @nguyenha935): the official Go API
  * advertises `glm-5.2` and routes Kimi chat traffic through `kimi-k2.7-code`
  * (the live API rejects the plain `kimi-k2.7` alias for `/chat/completions`
- * even though the public docs example uses it). OmniRoute previously shipped
+ * even though the public docs example uses it). RouteChi previously shipped
  * the older registry without these IDs.
  */
 
@@ -42,7 +42,7 @@ test("opencode-go does not advertise deprecated MiMo V2 models", () => {
 });
 
 test("opencode-go preserves the pre-existing minimax-m3 and qwen routing via targetFormat=claude", () => {
-  // Routing through the /messages endpoint is OmniRoute's declarative
+  // Routing through the /messages endpoint is RouteChi's declarative
   // equivalent of upstream's MESSAGES_FORMAT_MODELS set; the alignment
   // change must not regress this.
   const byId = new Map(

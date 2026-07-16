@@ -1,7 +1,7 @@
 /**
  * Regression test for MITM cert install in Docker `USER node` (non-root, no sudo).
  *
- * OmniRoute's runtime Docker image (`Dockerfile`) runs as `USER node` (UID 1000)
+ * RouteChi's runtime Docker image (`Dockerfile`) runs as `USER node` (UID 1000)
  * and the slim base (`node:24-trixie-slim`) does NOT ship `sudo`. The previous
  * `execFileWithPassword("sudo", ["-S", ...])` would spawn `sudo` unconditionally
  * when not root, producing `spawn sudo ENOENT` and breaking `installCert` /
@@ -16,8 +16,8 @@
  *    system trust store) can pre-check with `isSudoAvailable()` and skip with
  *    a clear log instead of throwing.
  *
- * This mirrors upstream behavior (decolua/9router) extended to OmniRoute's TS
- * fork and OmniRoute's existing root-detection (`isRoot()`).
+ * This mirrors upstream behavior (decolua/9router) extended to RouteChi's TS
+ * fork and RouteChi's existing root-detection (`isRoot()`).
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";

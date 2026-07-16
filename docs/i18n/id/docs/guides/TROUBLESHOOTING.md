@@ -4,7 +4,7 @@
 
 ---
 
-Masalah umum dan solusinya untuk OmniRoute.
+Masalah umum dan solusinya untuk RouteChi.
 
 ---
 
@@ -29,7 +29,7 @@ Masalah umum dan solusinya untuk OmniRoute.
 
 ### Halaman login crash atau menampilkan error "Module self-registration"
 
-**Penyebab:** Anda menjalankan versi Node.js di luar batas runtime aman yang disetujui OmniRoute. Kasus paling umum adalah menjalankan Node 20, 22, atau 24 versi patch lama yang berada di bawah batas keamanan yang diperlukan OmniRoute.
+**Penyebab:** Anda menjalankan versi Node.js di luar batas runtime aman yang disetujui RouteChi. Kasus paling umum adalah menjalankan Node 20, 22, atau 24 versi patch lama yang berada di bawah batas keamanan yang diperlukan RouteChi.
 
 **Gejala:**
 
@@ -45,7 +45,7 @@ Masalah umum dan solusinya untuk OmniRoute.
    nvm use 24
    ```
 2. Verifikasi versi Anda: `node --version` seharusnya menampilkan `v24.0.0` atau lebih baru pada lini LTS 24.x
-3. Instal ulang OmniRoute: `npm install -g routechi`
+3. Instal ulang RouteChi: `npm install -g routechi`
 4. Mulai ulang: `omniroute`
 
 > **Versi aman yang didukung:** `>=20.20.2 <21`, `>=22.22.2 <23`, atau `>=24.0.0 <25`. Node.js 24.x LTS (Krypton) sepenuhnya didukung.
@@ -98,7 +98,7 @@ omniroute
 
 **Penyebab:** Pada Node.js 22, dispatcher undici@8 tidak kompatibel dengan implementasi `fetch()` bawaan Node.
 
-**Solusi (v3.5.5+):** OmniRoute sekarang menggunakan fungsi `fetch()` milik undici sendiri ketika dispatcher proxy aktif, memastikan perilaku yang konsisten. Perbarui ke v3.5.5+.
+**Solusi (v3.5.5+):** RouteChi sekarang menggunakan fungsi `fetch()` milik undici sendiri ketika dispatcher proxy aktif, memastikan perilaku yang konsisten. Perbarui ke v3.5.5+.
 
 ---
 
@@ -125,7 +125,7 @@ omniroute
 
 ### Token OAuth Kedaluwarsa
 
-OmniRoute memperbarui token secara otomatis. Jika masalah berlanjut:
+RouteChi memperbarui token secara otomatis. Jika masalah berlanjut:
 
 1. Dashboard → Penyedia → Sambungkan Ulang
 2. Hapus dan tambahkan ulang koneksi penyedia
@@ -292,13 +292,13 @@ Profil penyedia mendukung pengaturan berikut:
 
 ### Anti-thundering herd
 
-Ketika banyak permintaan bersamaan mengenai penyedia yang dibatasi lajunya, OmniRoute menggunakan mutex + auto rate-limiting untuk membuat serialisasi permintaan dan mencegah kegagalan berantai. Ini berjalan otomatis untuk penyedia dengan API key.
+Ketika banyak permintaan bersamaan mengenai penyedia yang dibatasi lajunya, RouteChi menggunakan mutex + auto rate-limiting untuk membuat serialisasi permintaan dan mencegah kegagalan berantai. Ini berjalan otomatis untuk penyedia dengan API key.
 
 ---
 
 ## Taksonomi Kegagalan RAG / LLM Opsional (16 masalah)
 
-Beberapa pengguna OmniRoute menempatkan gateway di depan tumpukan RAG atau agen. Dalam pengaturan tersebut, umum terjadi pola yang aneh: OmniRoute terlihat sehat (penyedia aktif, profil routing baik, tidak ada peringatan batas laju) tetapi jawaban akhir masih salah.
+Beberapa pengguna RouteChi menempatkan gateway di depan tumpukan RAG atau agen. Dalam pengaturan tersebut, umum terjadi pola yang aneh: RouteChi terlihat sehat (penyedia aktif, profil routing baik, tidak ada peringatan batas laju) tetapi jawaban akhir masih salah.
 
 Dalam praktiknya, insiden ini biasanya berasal dari pipeline RAG downstream, bukan dari gateway itu sendiri.
 
@@ -317,17 +317,17 @@ Idenya sederhana:
 
 1. Saat Anda menyelidiki respons yang buruk, kumpulkan:
    - tugas pengguna dan permintaan
-   - route atau combo penyedia di OmniRoute
+   - route atau combo penyedia di RouteChi
    - konteks RAG apa pun yang digunakan di downstream (dokumen yang diambil, tool call, dll.)
 2. Petakan insiden ke satu atau dua nomor WFGY ProblemMap (`No.1` … `No.16`).
-3. Simpan nomornya di dashboard, runbook, atau pelacak insiden Anda sendiri di samping log OmniRoute.
+3. Simpan nomornya di dashboard, runbook, atau pelacak insiden Anda sendiri di samping log RouteChi.
 4. Gunakan halaman WFGY yang sesuai untuk memutuskan apakah Anda perlu mengubah tumpukan RAG, retriever, atau strategi routing Anda.
 
 Teks lengkap dan resep konkret tersedia di sini (lisensi MIT, hanya teks):
 
 [WFGY ProblemMap README](https://github.com/onestardao/WFGY/blob/main/ProblemMap/README.md)
 
-Anda dapat mengabaikan bagian ini jika Anda tidak menjalankan pipeline RAG atau agen di belakang OmniRoute.
+Anda dapat mengabaikan bagian ini jika Anda tidak menjalankan pipeline RAG atau agen di belakang RouteChi.
 
 ---
 

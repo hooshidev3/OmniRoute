@@ -1,10 +1,10 @@
 ---
-title: "SDK پلاگین OmniRoute"
+title: "SDK پلاگین RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# SDK پلاگین OmniRoute
+# SDK پلاگین RouteChi
 
 ## شروع سریع
 

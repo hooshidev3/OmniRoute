@@ -1,6 +1,6 @@
 // scripts/dev/tls-options.mjs
 //
-// Pure, dependency-light helpers for OmniRoute's opt-in native HTTPS/TLS serving
+// Pure, dependency-light helpers for RouteChi's opt-in native HTTPS/TLS serving
 // (#5242, Bug 1C). Kept side-effect-free and free of heavy imports so it can be
 // imported both by the CLI (bin/cli/commands/serve.mjs) and by the standalone
 // server wrapper (standalone-server-ws.mjs), and unit-tested in isolation.

@@ -4,7 +4,7 @@
  * Claude Code has no native profile files (unlike Codex). The idiomatic way to
  * keep multiple named configs is `CLAUDE_CONFIG_DIR` — a separate config dir per
  * profile (its own settings.json, credentials, history, cache). This command
- * fetches the live /v1/models catalog from a (possibly remote) OmniRoute and
+ * fetches the live /v1/models catalog from a (possibly remote) RouteChi and
  * writes `~/.claude/profiles/<name>/settings.json` for each supported model,
  * reusing the SAME profile names as `setup-codex` (glm52, kimi-k27, …).
  *
@@ -144,7 +144,7 @@ export async function runSetupClaudeCommand(opts = {}) {
   const profilesRoot = join(claudeHome, "profiles");
   const dryRun = Boolean(opts.dryRun ?? opts["dry-run"]);
 
-  printHeading("OmniRoute → Claude Code profile generator");
+  printHeading("RouteChi → Claude Code profile generator");
   printInfo(`Connecting to ${baseUrl} …`);
 
   // ── Fetch model catalog ───────────────────────────────────────────────────
@@ -162,8 +162,8 @@ export async function runSetupClaudeCommand(opts = {}) {
   } catch (err) {
     printError(`Failed to fetch models: ${err.message}`);
     printInfo(
-      "Make sure OmniRoute is running and the --remote URL is correct.\n" +
-        "You may also need --api-key if OmniRoute requires authentication."
+      "Make sure RouteChi is running and the --remote URL is correct.\n" +
+        "You may also need --api-key if RouteChi requires authentication."
     );
     return 1;
   }
@@ -200,12 +200,12 @@ export function registerSetupClaude(program) {
   program
     .command("setup-claude")
     .description(
-      "Fetch the live model catalog from OmniRoute (local or remote VPS) and generate " +
+      "Fetch the live model catalog from RouteChi (local or remote VPS) and generate " +
         "~/.claude/profiles/<name>/ Claude Code profiles (CLAUDE_CONFIG_DIR) for each model"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--claude-home <dir>", "Claude home dir (default: ~/.claude)")
     .option(
       "--only <patterns>",

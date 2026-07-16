@@ -712,7 +712,7 @@ test("OpenAI -> Antigravity preserves multiple signature-less historical tool re
     "gemini-3.5-flash-low",
     {
       messages: [
-        { role: "user", content: "Inspect OmniRoute config" },
+        { role: "user", content: "Inspect RouteChi config" },
         {
           role: "assistant",
           tool_calls: [

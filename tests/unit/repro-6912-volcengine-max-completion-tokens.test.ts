@@ -1,5 +1,5 @@
 // @ts-nocheck
-// Regression test for #6912: OmniRoute never renamed a client-sent
+// Regression test for #6912: RouteChi never renamed a client-sent
 // `max_completion_tokens` back to `max_tokens` for providers/models whose
 // registry entry only documents the legacy field (Volcengine Ark / DeepSeek).
 // chatCore.ts already renamed the OTHER direction (max_tokens ->

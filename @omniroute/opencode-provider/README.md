@@ -2,9 +2,9 @@
 
 > ## ⚠️ Deprecated — use [`@omniroute/opencode-plugin`](https://www.npmjs.com/package/@omniroute/opencode-plugin) instead
 >
-> This package writes a **static** `provider.omniroute` block to `opencode.json` from a hardcoded default model list, so it **drifts behind your live OmniRoute catalog** — adding a model in OmniRoute won't show up in OpenCode until you re-run the generator, and OpenCode Desktop/Web only surfaces a subset of the static models.
+> This package writes a **static** `provider.omniroute` block to `opencode.json` from a hardcoded default model list, so it **drifts behind your live RouteChi catalog** — adding a model in RouteChi won't show up in OpenCode until you re-run the generator, and OpenCode Desktop/Web only surfaces a subset of the static models.
 >
-> **`@omniroute/opencode-plugin`** solves this by fetching `GET /v1/models` from your OmniRoute instance at OpenCode startup, so the model list is always live (see [#3419](https://github.com/borhandarabi/routechi/issues/3419)). It is now the recommended path.
+> **`@omniroute/opencode-plugin`** solves this by fetching `GET /v1/models` from your RouteChi instance at OpenCode startup, so the model list is always live (see [#3419](https://github.com/borhandarabi/routechi/issues/3419)). It is now the recommended path.
 >
 > **One-line migration** — replace the static `provider.omniroute` block in `opencode.json` with a single plugin entry:
 >
@@ -18,11 +18,11 @@
 >
 > This package is **not removed** and still works for static/offline config generation, but it is no longer actively recommended and won't track new models automatically.
 
-Helper for connecting [OpenCode](https://opencode.ai) to a running [OmniRoute](https://github.com/borhandarabi/routechi) AI gateway.
+Helper for connecting [OpenCode](https://opencode.ai) to a running [RouteChi](https://github.com/borhandarabi/routechi) AI gateway.
 
-The package emits a **schema-valid entry** for `opencode.json` (`https://opencode.ai/config.json`) that delegates the actual runtime to [`@ai-sdk/openai-compatible`](https://www.npmjs.com/package/@ai-sdk/openai-compatible). It does not ship any new HTTP client — OmniRoute already exposes an OpenAI-compatible surface, and OpenCode already speaks it through the AI SDK.
+The package emits a **schema-valid entry** for `opencode.json` (`https://opencode.ai/config.json`) that delegates the actual runtime to [`@ai-sdk/openai-compatible`](https://www.npmjs.com/package/@ai-sdk/openai-compatible). It does not ship any new HTTP client — RouteChi already exposes an OpenAI-compatible surface, and OpenCode already speaks it through the AI SDK.
 
-> Pre-1.0. The API may still change. See `CHANGELOG` in the OmniRoute repo for breaking notes.
+> Pre-1.0. The API may still change. See `CHANGELOG` in the RouteChi repo for breaking notes.
 
 ## Installation
 
@@ -40,10 +40,10 @@ You also need OpenCode's own runtime dep, but that's a transitive concern — Op
 
 ```ts
 import { writeFileSync } from "node:fs";
-import { buildOmniRouteOpenCodeConfig } from "@omniroute/opencode-provider";
+import { buildRouteChiOpenCodeConfig } from "@omniroute/opencode-provider";
 
-const config = buildOmniRouteOpenCodeConfig({
-  baseURL: "http://localhost:20128", // or your OmniRoute deployment URL
+const config = buildRouteChiOpenCodeConfig({
+  baseURL: "http://localhost:20128", // or your RouteChi deployment URL
   apiKey: process.env.OMNIROUTE_API_KEY ?? "sk_omniroute",
 });
 
@@ -58,7 +58,7 @@ The resulting `opencode.json`:
   "provider": {
     "omniroute": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "OmniRoute",
+      "name": "RouteChi",
       "options": {
         "baseURL": "http://localhost:20128/v1",
         "apiKey": "sk_omniroute",
@@ -77,9 +77,9 @@ The resulting `opencode.json`:
 ### 2. Merge into an existing `opencode.json`
 
 ```ts
-import { createOmniRouteProvider } from "@omniroute/opencode-provider";
+import { createRouteChiProvider } from "@omniroute/opencode-provider";
 
-const provider = createOmniRouteProvider({
+const provider = createRouteChiProvider({
   baseURL: "http://localhost:20128",
   apiKey: process.env.OMNIROUTE_API_KEY!,
 });
@@ -87,25 +87,25 @@ const provider = createOmniRouteProvider({
 // Place `provider` under provider.omniroute in your opencode.json
 ```
 
-If you already have an `opencode.json` on disk and want a non-destructive merge from the OmniRoute side, use `omniroute config opencode` from the CLI (ships with the main OmniRoute install) — it preserves comments and unrelated keys.
+If you already have an `opencode.json` on disk and want a non-destructive merge from the RouteChi side, use `omniroute config opencode` from the CLI (ships with the main RouteChi install) — it preserves comments and unrelated keys.
 
 ## API
 
-### `createOmniRouteProvider(options): OpenCodeProviderEntry`
+### `createRouteChiProvider(options): OpenCodeProviderEntry`
 
 Returns the value to place under `provider.omniroute` inside `opencode.json`.
 
 | Option        | Type                    | Required | Description                                                                                                  |
 | ------------- | ----------------------- | -------- | ------------------------------------------------------------------------------------------------------------ |
-| `baseURL`     | `string`                | Yes      | OmniRoute base URL. Accepts `http://host:port` **or** `http://host:port/v1`. Trailing slashes are tolerated. |
-| `apiKey`      | `string`                | Yes      | OmniRoute API key. Use `sk_omniroute` for local installs that have `REQUIRE_API_KEY=false`.                  |
-| `displayName` | `string`                | No       | Custom name shown in the OpenCode UI. Default: `"OmniRoute"`.                                                |
+| `baseURL`     | `string`                | Yes      | RouteChi base URL. Accepts `http://host:port` **or** `http://host:port/v1`. Trailing slashes are tolerated. |
+| `apiKey`      | `string`                | Yes      | RouteChi API key. Use `sk_omniroute` for local installs that have `REQUIRE_API_KEY=false`.                  |
+| `displayName` | `string`                | No       | Custom name shown in the OpenCode UI. Default: `"RouteChi"`.                                                |
 | `models`      | `string[]`              | No       | Override the surfaced model catalog. Default: 4 curated models — see `OMNIROUTE_DEFAULT_OPENCODE_MODELS`.    |
 | `modelLabels` | `Record<string,string>` | No       | Human-readable labels keyed by model id.                                                                     |
 
 Throws on empty/invalid input — `baseURL` must be a real URL, `apiKey` must be a non-empty string.
 
-### `buildOmniRouteOpenCodeConfig(options): OpenCodeConfigDocument`
+### `buildRouteChiOpenCodeConfig(options): OpenCodeConfigDocument`
 
 Same options as above, but returns a full document with `$schema` and the `provider.omniroute` wrapper, ready to write to `opencode.json`.
 
@@ -123,9 +123,9 @@ Exported for completeness. Strips trailing `/`, deduplicates a trailing `/v1`, a
 ## Custom model catalog
 
 ```ts
-import { createOmniRouteProvider } from "@omniroute/opencode-provider";
+import { createRouteChiProvider } from "@omniroute/opencode-provider";
 
-createOmniRouteProvider({
+createRouteChiProvider({
   baseURL: "http://localhost:20128",
   apiKey: "sk_omniroute",
   models: ["auto", "claude-opus-4-8", "gpt-5.5"],
@@ -142,12 +142,12 @@ Duplicates and empty strings are dropped automatically, and order is preserved.
 ## Troubleshooting
 
 - **Requests 404 with `/v1/v1/...`** — you're on an old version (≤1.0.0). Update to `≥0.1.0` of this re-released package. The new build normalises `baseURL` automatically.
-- **`401 Invalid API key`** — your OmniRoute instance has `REQUIRE_API_KEY=true` but the key you supplied doesn't exist there. Create one via the dashboard or set `REQUIRE_API_KEY=false` and use `sk_omniroute`.
+- **`401 Invalid API key`** — your RouteChi instance has `REQUIRE_API_KEY=true` but the key you supplied doesn't exist there. Create one via the dashboard or set `REQUIRE_API_KEY=false` and use `sk_omniroute`.
 - **OpenCode complains the provider has no models** — supply an explicit `models` list; the default 4 may be hidden by your provider visibility settings.
 
 ## Related
 
-- [OmniRoute](https://github.com/borhandarabi/routechi) — the AI gateway this plugin targets.
+- [RouteChi](https://github.com/borhandarabi/routechi) — the AI gateway this plugin targets.
 - [OpenCode](https://opencode.ai) — the agentic CLI consumer.
 - [`@ai-sdk/openai-compatible`](https://www.npmjs.com/package/@ai-sdk/openai-compatible) — the runtime delegate that actually speaks HTTP.
 

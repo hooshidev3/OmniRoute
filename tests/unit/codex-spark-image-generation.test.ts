@@ -1,6 +1,6 @@
 /**
  * #6651 — Codex Desktop injects the `image_generation` hosted tool into every
- * Responses API request. OmniRoute only dropped it for free-plan Codex
+ * Responses API request. RouteChi only dropped it for free-plan Codex
  * accounts (isCodexFreePlan). It did NOT drop it for gpt-5.3-codex-spark (and
  * other Spark-scope models), which reject `image_generation` upstream even on
  * paid-plan accounts, producing:

@@ -45,12 +45,12 @@ export default function DroidToolCard({
   const [restoringBackup, setRestoringBackup] = useState(null);
   const cliReady = !!(droidStatus?.installed && droidStatus?.runnable);
 
-  // (#618) Match any custom:OmniRoute-<i> entry (multi-model).
-  const isOmniRouteEntry = (m) => typeof m?.id === "string" && m.id.startsWith("custom:OmniRoute");
+  // (#618) Match any custom:RouteChi-<i> entry (multi-model).
+  const isRouteChiEntry = (m) => typeof m?.id === "string" && m.id.startsWith("custom:RouteChi");
 
   const getConfigStatus = () => {
     if (!cliReady) return null;
-    const currentConfig = droidStatus.settings?.customModels?.find(isOmniRouteEntry);
+    const currentConfig = droidStatus.settings?.customModels?.find(isRouteChiEntry);
     if (!currentConfig) return "not_configured";
     const localMatch =
       currentConfig.baseUrl?.includes("localhost") || currentConfig.baseUrl?.includes("127.0.0.1");
@@ -93,10 +93,10 @@ export default function DroidToolCard({
   useEffect(() => {
     if (droidStatus?.installed && !hasInitializedModel.current) {
       hasInitializedModel.current = true;
-      // (#618) Pre-fill the multi-model list from every custom:OmniRoute-<i>
+      // (#618) Pre-fill the multi-model list from every custom:RouteChi-<i>
       // entry, preserving the original index order.
       const existing = (droidStatus.settings?.customModels || [])
-        .filter(isOmniRouteEntry)
+        .filter(isRouteChiEntry)
         .slice()
         .sort((a, b) => (a.index || 0) - (b.index || 0));
       if (existing.length > 0) {
@@ -277,7 +277,7 @@ export default function DroidToolCard({
     const settingsContent = {
       customModels: modelsForPreview.map((m, i) => ({
         model: m,
-        id: `custom:OmniRoute-${i}`,
+        id: `custom:RouteChi-${i}`,
         index: i,
         baseUrl: getEffectiveBaseUrl(),
         apiKey: keyToDisplay,
@@ -362,8 +362,8 @@ export default function DroidToolCard({
           {!checkingDroid && cliReady && (
             <>
               <div className="flex flex-col gap-2">
-                {/* Current Base URL — first OmniRoute entry, any index (#618) */}
-                {droidStatus?.settings?.customModels?.find(isOmniRouteEntry)?.baseUrl && (
+                {/* Current Base URL — first RouteChi entry, any index (#618) */}
+                {droidStatus?.settings?.customModels?.find(isRouteChiEntry)?.baseUrl && (
                   <div className="flex items-center gap-2">
                     <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right">
                       {t("current")}
@@ -372,7 +372,7 @@ export default function DroidToolCard({
                       arrow_forward
                     </span>
                     <span className="flex-1 px-2 py-1.5 text-xs text-text-muted truncate">
-                      {droidStatus.settings.customModels.find(isOmniRouteEntry).baseUrl}
+                      {droidStatus.settings.customModels.find(isRouteChiEntry).baseUrl}
                     </span>
                   </div>
                 )}
@@ -521,7 +521,7 @@ export default function DroidToolCard({
                   variant="outline"
                   size="sm"
                   onClick={handleResetSettings}
-                  disabled={!droidStatus?.hasOmniRoute}
+                  disabled={!droidStatus?.hasRouteChi}
                   loading={restoring}
                 >
                   <span className="material-symbols-outlined text-[14px] mr-1">restore</span>

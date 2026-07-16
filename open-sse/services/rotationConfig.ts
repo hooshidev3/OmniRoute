@@ -1,7 +1,7 @@
 /**
  * Runtime rotation configuration.
  *
- * OmniRoute's account-fallback engine (accountFallback.ts) historically rotated accounts using
+ * RouteChi's account-fallback engine (accountFallback.ts) historically rotated accounts using
  * only hardcoded constants (COOLDOWN_MS / BACKOFF_CONFIG / ERROR_RULES): every retryable error
  * cooled the account down immediately, on a fixed exponential backoff, with no operator control.
  *

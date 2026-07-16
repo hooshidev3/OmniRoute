@@ -1,20 +1,20 @@
 ---
-title: "CLI Tools — OmniRoute"
+title: "CLI Tools — RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# CLI Tools — OmniRoute
+# CLI Tools — RouteChi
 
 Last updated: 2026-06-28
 
-OmniRoute integrates with three categories of CLI tools spread across three dedicated dashboard pages:
+RouteChi integrates with three categories of CLI tools spread across three dedicated dashboard pages:
 
 | Page           | Route                   | Concept                                                                   | Count        |
 | -------------- | ----------------------- | ------------------------------------------------------------------------- | ------------ |
-| **CLI Code's** | `/dashboard/cli-code`   | Coding tools you point at OmniRoute (Client → CLI → OmniRoute → Provider) | 20           |
-| **CLI Agents** | `/dashboard/cli-agents` | Autonomous agents you point at OmniRoute (same flow, broader scope)       | 6            |
-| **ACP Agents** | `/dashboard/acp-agents` | CLIs that OmniRoute spawns as backend via stdio/ACP (reverse flow)        | see registry |
+| **CLI Code's** | `/dashboard/cli-code`   | Coding tools you point at RouteChi (Client → CLI → RouteChi → Provider) | 20           |
+| **CLI Agents** | `/dashboard/cli-agents` | Autonomous agents you point at RouteChi (same flow, broader scope)       | 6            |
+| **ACP Agents** | `/dashboard/acp-agents` | CLIs that RouteChi spawns as backend via stdio/ACP (reverse flow)        | see registry |
 
 Legacy routes redirect via 308: `/dashboard/cli-tools` → `/dashboard/cli-code`, `/dashboard/agents` → `/dashboard/acp-agents`.
 
@@ -26,14 +26,14 @@ Legacy routes redirect via 308: `/dashboard/cli-tools` → `/dashboard/cli-code`
 CLI Code's / CLI Agents (consumption flow):
 Claude / Codex / OpenCode / Cline / KiloCode / Continue / Hermes Agent / Goose / ...
            │
-           ▼  (all point to OmniRoute)
+           ▼  (all point to RouteChi)
     http://YOUR_SERVER:20128/v1
            │
-           ▼  (OmniRoute routes to the right provider)
+           ▼  (RouteChi routes to the right provider)
     Anthropic / OpenAI / Gemini / DeepSeek / Groq / Mistral / ...
 
 ACP Agents (reverse spawn flow):
-    Client request → OmniRoute → spawns CLI via stdio/ACP → response
+    Client request → RouteChi → spawns CLI via stdio/ACP → response
 ```
 
 **Benefits:**
@@ -47,9 +47,9 @@ ACP Agents (reverse spawn flow):
 
 ## Auto-configure with `setup-*`
 
-You do not have to write each tool's config by hand. OmniRoute ships a `setup-*`
+You do not have to write each tool's config by hand. RouteChi ships a `setup-*`
 command per supported CLI that reads the **live** model catalog from a running
-OmniRoute (local or remote) and writes the tool's own config on your machine:
+RouteChi (local or remote) and writes the tool's own config on your machine:
 
 ```bash
 routechi setup-codex        routechi setup-claude       routechi setup-opencode
@@ -59,7 +59,7 @@ routechi setup-goose        routechi setup-qwen         routechi setup-aider
 ```
 
 Each accepts `--remote <url> --api-key <key>` (configure a local tool against a
-remote OmniRoute), `--dry-run` (preview without writing), and `--port`. Tools
+remote RouteChi), `--dry-run` (preview without writing), and `--port`. Tools
 without model auto-discovery (Cline, Kilo, Roo, Goose, Qwen, Aider, Gemini) take
 `--model <id>` (and `--yes` for non-interactive runs). The launchers
 `routechi launch` (Claude Code) and `routechi launch-codex` (Codex) spawn the CLI
@@ -137,7 +137,7 @@ Autonomous agents that appear in `/dashboard/cli-agents`:
 
 ## 3. ACP Agents (/dashboard/acp-agents)
 
-This page (renamed from `/dashboard/agents`) shows CLIs that OmniRoute can **spawn** as backend execution engines via stdio/ACP protocol. The catalog is maintained separately in `src/lib/acp/registry.ts` and is **not** the same as `CLI_TOOLS`.
+This page (renamed from `/dashboard/agents`) shows CLIs that RouteChi can **spawn** as backend execution engines via stdio/ACP protocol. The catalog is maintained separately in `src/lib/acp/registry.ts` and is **not** the same as `CLI_TOOLS`.
 
 
 ---
@@ -263,7 +263,7 @@ Full PT-BR and EN translations are provided. 39 other locales fall back to EN au
 
 ## 9. Quick Start
 
-### Step 1 — Get an OmniRoute API Key
+### Step 1 — Get an RouteChi API Key
 
 1. Open `/dashboard/api-manager` → **Create API Key**
 2. Give it a name (e.g. `cli-tools`) and select all permissions
@@ -324,7 +324,7 @@ cargo install smelt  # Rust-based
 ### Step 4 — Set Global Environment Variables
 
 ```bash
-# OmniRoute Universal Endpoint
+# RouteChi Universal Endpoint
 export OPENAI_BASE_URL="http://localhost:20128/v1"
 export OPENAI_API_KEY="sk-your-omniroute-key"
 export ANTHROPIC_BASE_URL="http://localhost:20128"
@@ -383,7 +383,7 @@ mkdir -p ~/.config/opencode && cat > ~/.config/opencode/opencode.json << EOF
   "provider": {
     "omniroute": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "OmniRoute",
+      "name": "RouteChi",
       "options": {
         "baseURL": "http://localhost:20128/v1",
         "apiKey": "sk-your-omniroute-key"
@@ -423,7 +423,7 @@ EOF
 **VS Code mode:**
 Cline extension settings → API Provider: `OpenAI Compatible` → Base URL: `http://localhost:20128/v1`
 
-Or use the OmniRoute dashboard → **CLI Tools → Cline → Apply Config**.
+Or use the RouteChi dashboard → **CLI Tools → Cline → Apply Config**.
 
 ---
 
@@ -444,7 +444,7 @@ kilocode --api-base http://localhost:20128/v1 --api-key sk-your-omniroute-key
 }
 ```
 
-Or use the OmniRoute dashboard → **CLI Tools → KiloCode → Apply Config**.
+Or use the RouteChi dashboard → **CLI Tools → KiloCode → Apply Config**.
 
 ---
 
@@ -454,7 +454,7 @@ Edit `~/.continue/config.yaml`:
 
 ```yaml
 models:
-  - name: OmniRoute
+  - name: RouteChi
     provider: openai
     model: auto
     apiBase: http://localhost:20128/v1
@@ -468,21 +468,21 @@ Restart VS Code after editing.
 
 #### VS Code Insiders (`chatLanguageModels.json`)
 
-Use this when VS Code Insiders is configured for custom endpoint models and you want OmniRoute to work without a custom header field.
+Use this when VS Code Insiders is configured for custom endpoint models and you want RouteChi to work without a custom header field.
 
 **Recommended location:**
 
 - Linux: `~/.config/Code - Insiders/User/chatLanguageModels.json`
 - Windows: `%APPDATA%/Code - Insiders/User/chatLanguageModels.json`
 
-**Example using the tokenized OmniRoute alias:**
+**Example using the tokenized RouteChi alias:**
 
 ```json
 [
   {
     "vendor": "customendpoint",
     "id": "auto",
-    "name": "OmniRoute Auto",
+    "name": "RouteChi Auto",
     "family": "gpt-4",
     "version": "1.0.0",
     "url": "http://localhost:20128/api/v1/vscode/sk-your-omniroute-key/chat/completions",
@@ -499,7 +499,7 @@ Use this when VS Code Insiders is configured for custom endpoint models and you 
 
 **Notes:**
 
-- Replace `sk-your-omniroute-key` with an API key created in OmniRoute.
+- Replace `sk-your-omniroute-key` with an API key created in RouteChi.
 - The `url` field should point to `/api/v1/vscode/{token}/chat/completions`.
 - The `modelsUrl` field should point to `/api/v1/vscode/{token}/models`.
 - Prefer the normal `/v1` + Bearer header flow when the client supports custom headers.
@@ -513,12 +513,12 @@ Use this when VS Code Insiders is configured for custom endpoint models and you 
 # Login to your AWS/Kiro account:
 kiro-cli login
 
-# The CLI uses its own auth — OmniRoute is not needed as backend for Kiro CLI itself.
-# Use kiro-cli alongside OmniRoute for other tools.
+# The CLI uses its own auth — RouteChi is not needed as backend for Kiro CLI itself.
+# Use kiro-cli alongside RouteChi for other tools.
 kiro-cli status
 ```
 
-For the **Kiro IDE** desktop app, use the MITM endpoint exposed by OmniRoute
+For the **Kiro IDE** desktop app, use the MITM endpoint exposed by RouteChi
 under `/dashboard/cli-tools → Kiro`.
 
 ---
@@ -527,7 +527,7 @@ under `/dashboard/cli-tools → Kiro`.
 
 Qwen Code supports OpenAI-compatible API endpoints via environment variables or `settings.json`.
 
-> Qwen OAuth free tier was discontinued on 2026-04-15. Use OmniRoute with
+> Qwen OAuth free tier was discontinued on 2026-04-15. Use RouteChi with
 > `bailian-coding-plan` / `alibaba` / `alibaba-cn` / `openrouter` / `anthropic` /
 > `gemini` providers instead.
 
@@ -572,7 +572,7 @@ qwen
 
 ---
 
-## 10. Internal OmniRoute CLI
+## 10. Internal RouteChi CLI
 
 The `omniroute` binary provides commands for server lifecycle, setup, diagnostics, and provider management. Entry point: `bin/omniroute.mjs`.
 
@@ -606,7 +606,7 @@ Recognized environment variables for non-interactive setup:
 | Var                 | Purpose                                                        |
 | ------------------- | -------------------------------------------------------------- |
 | `OMNIROUTE_API_KEY` | Provider API key (bound to `--api-key` via Commander `.env()`) |
-| `DATA_DIR`          | Override the OmniRoute data directory                          |
+| `DATA_DIR`          | Override the RouteChi data directory                          |
 
 All other non-interactive inputs are passed as flags, not environment variables:
 `--password`, `--provider`, `--provider-name`, `--provider-base-url`, `--default-model`
@@ -629,7 +629,7 @@ The doctor runs these checks: `Config`, `Database`, `Storage/encryption`,
 ### Provider Management
 
 ```bash
-routechi providers available                       # OmniRoute provider catalog
+routechi providers available                       # RouteChi provider catalog
 routechi providers available --search openai       # Filter catalog by id/name/alias/category
 routechi providers available --category api-key    # Filter by category (api-key, oauth, free, ...)
 routechi providers available --json                # Machine-readable JSON
@@ -642,7 +642,7 @@ routechi providers test-all                        # Test every active connectio
 routechi providers validate                        # Local-only structural validation
 ```
 
-> `providers available` reads the OmniRoute catalog; `providers list/test/test-all/validate`
+> `providers available` reads the RouteChi catalog; `providers list/test/test-all/validate`
 > read the local SQLite database directly and do not require the server to be running.
 
 ### Recovery & Reset
@@ -655,7 +655,7 @@ routechi reset-encrypted-columns --force  # Actually null out encrypted credenti
 
 ### Other subcommands
 
-These assume a running OmniRoute server, unless noted otherwise:
+These assume a running RouteChi server, unless noted otherwise:
 
 ```bash
 routechi status                       # Comprehensive runtime status
@@ -663,7 +663,7 @@ routechi logs                         # Stream request logs (--json, --search, -
 routechi config show                  # Display current configuration
 
 routechi provider list                # List available providers (alias of providers list)
-routechi provider add                 # Register OmniRoute as a provider on a tool
+routechi provider add                 # Register RouteChi as a provider on a tool
 routechi keys add | list | remove     # Manage API keys
 routechi models [provider]            # List models (--json, --search)
 routechi combo list | switch | create | delete
@@ -713,7 +713,7 @@ routechi completion                   # Generate shell completion
 | `/v1/audio/speech`         | Text-to-speech                | ElevenLabs, OpenAI TTS      |
 | `/v1/audio/transcriptions` | Speech-to-text                | Deepgram, AssemblyAI        |
 
-Ready-to-paste examples with a tokenized OmniRoute URL:
+Ready-to-paste examples with a tokenized RouteChi URL:
 
 ```txt
 Token example: sk-a3ab3c080beaee3a-69f4a4-070d71af
@@ -732,7 +732,7 @@ Ollama chat: http://localhost:20128/api/v1/vscode/sk-a3ab3c080beaee3a-69f4a4-070
 
 | Error                                        | Cause                   | Fix                                              |
 | -------------------------------------------- | ----------------------- | ------------------------------------------------ |
-| `Connection refused`                         | OmniRoute not running   | `routechi serve`                                |
+| `Connection refused`                         | RouteChi not running   | `routechi serve`                                |
 | `401 Unauthorized`                           | Wrong API key           | Check in `/dashboard/api-manager`                |
 | `No combo configured`                        | No active routing combo | Set up in `/dashboard/combos`                    |
 | CLI shows "not installed"                    | Binary not in PATH      | Check `which <command>`                          |

@@ -1,10 +1,10 @@
 {
   "name": "omniroute-desktop",
   "version": "3.8.48",
-  "description": "OmniRoute Desktop Application",
+  "description": "RouteChi Desktop Application",
   "main": "main.js",
   "author": {
-    "name": "OmniRoute Team",
+    "name": "RouteChi Team",
     "email": "support@omniroute.online"
   },
   "license": "MIT",
@@ -41,7 +41,7 @@
   "build": {
     "appId": "online.omniroute.desktop",
     "productName": "RouteChi",
-    "copyright": "Copyright © 2025 OmniRoute",
+    "copyright": "Copyright © 2025 RouteChi",
     "buildDependenciesFromSource": true,
     "directories": {
       "output": "dist-electron",
@@ -49,8 +49,8 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "diegosouzapw",
-      "repo": "OmniRoute"
+      "owner": "borhandarabi",
+      "repo": "routechi"
     },
     "files": [
       "main.js",

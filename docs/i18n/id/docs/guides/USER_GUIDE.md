@@ -4,7 +4,7 @@
 
 ---
 
-Panduan lengkap untuk mengonfigurasi penyedia, membuat combo, mengintegrasikan alat CLI, dan menerapkan OmniRoute.
+Panduan lengkap untuk mengonfigurasi penyedia, membuat combo, mengintegrasikan alat CLI, dan menerapkan RouteChi.
 
 ---
 
@@ -125,7 +125,7 @@ Models:
   cc/claude-haiku-4-5-20251001
 ```
 
-**Tips Pro:** Gunakan Opus untuk tugas kompleks, Sonnet untuk kecepatan. OmniRoute melacak kuota per model!
+**Tips Pro:** Gunakan Opus untuk tugas kompleks, Sonnet untuk kecepatan. RouteChi melacak kuota per model!
 
 #### OpenAI Codex (Plus/Pro)
 
@@ -327,20 +327,20 @@ CLI secara otomatis memuat `.env` dari `~/.omniroute/.env` atau `./.env`.
 
 ### Menghapus Instalasi
 
-Saat Anda tidak lagi memerlukan OmniRoute, kami menyediakan dua skrip cepat untuk penghapusan bersih:
+Saat Anda tidak lagi memerlukan RouteChi, kami menyediakan dua skrip cepat untuk penghapusan bersih:
 
 | Perintah                 | Tindakan                                                                                           |
 | ------------------------ | -------------------------------------------------------------------------------------------------- |
 | `npm run uninstall`      | Menghapus aplikasi dari sistem tetapi **menyimpan DB dan konfigurasi** di `~/.omniroute`.          |
 | `npm run uninstall:full` | Menghapus aplikasi DAN secara permanen **menghapus semua konfigurasi, kunci, dan basis data**. |
 
-> Catatan: Untuk menjalankan perintah ini, navigasikan ke folder proyek OmniRoute (jika Anda telah meng-clone-nya) dan jalankan. Atau, jika diinstal secara global, Anda cukup menjalankan `npm uninstall -g omniroute`.
+> Catatan: Untuk menjalankan perintah ini, navigasikan ke folder proyek RouteChi (jika Anda telah meng-clone-nya) dan jalankan. Atau, jika diinstal secara global, Anda cukup menjalankan `npm uninstall -g omniroute`.
 
 ### Penerapan VPS
 
 ```bash
 git clone https://github.com/borhandarabi/routechi.git
-cd OmniRoute && npm install && npm run build
+cd RouteChi && npm install && npm run build
 
 export JWT_SECRET="your-secure-secret-change-this"
 export INITIAL_PASSWORD="your-password"
@@ -406,7 +406,7 @@ Untuk mode integrasi host dengan binari CLI, lihat bagian Docker di dokumentasi 
 
 ### Void Linux (xbps-src)
 
-Pengguna Void Linux dapat mengemas dan menginstal OmniRoute secara native menggunakan framework kompilasi silang `xbps-src`. Ini mengotomasi build standalone Node.js beserta binding native `better-sqlite3` yang diperlukan.
+Pengguna Void Linux dapat mengemas dan menginstal RouteChi secara native menggunakan framework kompilasi silang `xbps-src`. Ini mengotomasi build standalone Node.js beserta binding native `better-sqlite3` yang diperlukan.
 
 <details>
 <summary><b>Lihat template xbps-src</b></summary>
@@ -651,7 +651,7 @@ Mengembalikan model yang dikelompokkan berdasarkan penyedia dengan tipe (`chat`,
 - Tersedia di **Dashboard → Endpoints** untuk penerapan Docker dan self-hosted lainnya
 - Membuat URL `https://*.trycloudflare.com` sementara yang diteruskan ke endpoint `/v1` Anda yang kompatibel dengan OpenAI
 - Aktifkan pertama kali untuk menginstal `cloudflared` hanya saat diperlukan; restart berikutnya menggunakan kembali binari terkelola yang sama
-- Quick Tunnel tidak dipulihkan otomatis setelah OmniRoute atau container di-restart; aktifkan kembali dari dasbor bila diperlukan
+- Quick Tunnel tidak dipulihkan otomatis setelah RouteChi atau container di-restart; aktifkan kembali dari dasbor bila diperlukan
 - URL tunnel bersifat sementara dan berubah setiap kali Anda menghentikan/memulai tunnel
 - Managed Quick Tunnel secara default menggunakan transport HTTP/2 untuk menghindari peringatan buffer UDP QUIC yang mengganggu di container terbatas
 - Atur `CLOUDFLARED_PROTOCOL=quic` atau `auto` jika ingin mengubah pilihan transport terkelola
@@ -659,15 +659,15 @@ Mengembalikan model yang dikelompokkan berdasarkan penyedia dengan tipe (`chat`,
 
 ### Kecerdasan LLM Gateway (Fase 9)
 
-- **Cache Semantik** — Otomatis menyimpan respons non-streaming, temperature=0 (lewati dengan `X-OmniRoute-No-Cache: true`)
+- **Cache Semantik** — Otomatis menyimpan respons non-streaming, temperature=0 (lewati dengan `X-RouteChi-No-Cache: true`)
 - **Idempotensitas Permintaan** — Mendeduplikasi permintaan dalam 5 detik melalui header `Idempotency-Key` atau `X-Request-Id`
-- **Pelacakan Progres** — Event SSE `event: progress` yang bisa diaktifkan melalui header `X-OmniRoute-Progress: true`
+- **Pelacakan Progres** — Event SSE `event: progress` yang bisa diaktifkan melalui header `X-RouteChi-Progress: true`
 
 ---
 
 ### Translator Playground
 
-Akses melalui **Dashboard → Translator**. Debug dan visualisasikan bagaimana OmniRoute menerjemahkan permintaan API antar penyedia.
+Akses melalui **Dashboard → Translator**. Debug dan visualisasikan bagaimana RouteChi menerjemahkan permintaan API antar penyedia.
 
 | Mode             | Tujuan                                                                                           |
 | ---------------- | ------------------------------------------------------------------------------------------------ |
@@ -705,7 +705,7 @@ Untuk afinitas sesi eksternal (misalnya, agen Claude Code/Codex di belakang prox
 X-Session-Id: your-session-key
 ```
 
-OmniRoute juga menerima `x_session_id` dan mengembalikan kunci sesi efektif di `X-OmniRoute-Session-Id`.
+RouteChi juga menerima `x_session_id` dan mengembalikan kunci sesi efektif di `X-RouteChi-Session-Id`.
 
 Jika Anda menggunakan Nginx dan mengirim header berbentuk garis bawah, aktifkan:
 
@@ -741,7 +741,7 @@ Chain: production-fallback
 
 Konfigurasikan melalui **Dasbor → Pengaturan → Ketahanan**.
 
-OmniRoute mengimplementasikan ketahanan tingkat penyedia dengan lima komponen:
+RouteChi mengimplementasikan ketahanan tingkat penyedia dengan lima komponen:
 
 1. **Antrian & Kecepatan Permintaan** — Pembentukan permintaan tingkat sistem:
    - **Permintaan Per Menit (RPM)** — Permintaan maksimum per menit per akun
@@ -764,7 +764,7 @@ OmniRoute mengimplementasikan ketahanan tingkat penyedia dengan lima komponen:
 
    Status waktu proses pemutus penyedia hanya ditampilkan di **Dasbor → Kesehatan**.
 
-4. **Tunggu Cooldown** — Jika setiap kandidat koneksi sudah cooldown, OmniRoute dapat menunggu cooldown paling awal dan mencoba kembali permintaan klien yang sama secara otomatis.
+4. **Tunggu Cooldown** — Jika setiap kandidat koneksi sudah cooldown, RouteChi dapat menunggu cooldown paling awal dan mencoba kembali permintaan klien yang sama secara otomatis.
 
 5. **Deteksi Otomatis Batas Kecepatan** — Saat penyedia upstream mengembalikan jendela tunggu eksplisit, petunjuk tersebut akan menggantikan jeda pakai koneksi lokal saat pengaturan diaktifkan.
 
@@ -798,7 +798,7 @@ curl -X POST http://localhost:20128/api/db-backups/import \
 
 **Use Cases:**
 
-- Migrasi OmniRoute antar mesin
+- Migrasi RouteChi antar mesin
 - Buat cadangan eksternal untuk pemulihan bencana
 - Bagikan konfigurasi antar anggota tim (ekspor semua → bagikan arsip)
 
@@ -844,7 +844,7 @@ curl http://localhost:20128/api/usage/budget
 
 ### Transkripsi Audio
 
-OmniRoute mendukung transkripsi audio melalui titik akhir yang kompatibel dengan OpenAI:
+RouteChi mendukung transkripsi audio melalui titik akhir yang kompatibel dengan OpenAI:
 
 ```bash
 POST /v1/audio/transcriptions
@@ -900,7 +900,7 @@ Akses melalui **Dasbor → Kesehatan**. Ikhtisar kesehatan sistem real-time deng
 
 ## 🖥️ Aplikasi Desktop (Elektron)
 
-OmniRoute tersedia sebagai aplikasi desktop asli untuk Windows, macOS, dan Linux.
+RouteChi tersedia sebagai aplikasi desktop asli untuk Windows, macOS, dan Linux.
 
 ### Instal
 

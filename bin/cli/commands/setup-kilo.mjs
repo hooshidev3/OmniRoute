@@ -1,10 +1,10 @@
 /**
- * omniroute setup-kilo — configure Kilo Code to use OmniRoute.
+ * omniroute setup-kilo — configure Kilo Code to use RouteChi.
  *
  * Kilo Code (kilocode.kilo-code, a Cline/Roo descendant) has two surfaces:
  *   - CLI/standalone mode reads ~/.local/share/kilo/auth.json.
  *   - The VS Code extension reads `kilocode.*` keys from VS Code settings.json.
- * This writes BOTH (matching the OmniRoute dashboard) and prints the UI settings.
+ * This writes BOTH (matching the RouteChi dashboard) and prints the UI settings.
  *
  * Unlike Cline, Kilo's openAi baseURL INCLUDES /v1 (it appends /chat/completions).
  */
@@ -46,7 +46,7 @@ export function resolveKiloTarget(opts = {}) {
   return { baseUrl: ensureV1(root), apiKey };
 }
 
-/** Merge the OmniRoute openai-compatible provider into Kilo's CLI auth.json. */
+/** Merge the RouteChi openai-compatible provider into Kilo's CLI auth.json. */
 export function buildKiloAuth(existing, { apiKey, baseUrl, model }) {
   const auth = { ...(existing || {}) };
   auth["openai-compatible"] = {
@@ -61,7 +61,7 @@ export function buildKiloAuth(existing, { apiKey, baseUrl, model }) {
 /** Merge the kilocode.* keys into VS Code settings.json (extension surface). */
 export function buildKiloVscodeSettings(existing, { apiKey, baseUrl, model }) {
   const s = { ...(existing || {}) };
-  s["kilocode.customProvider"] = { name: "OmniRoute", baseURL: baseUrl, apiKey: apiKey || "sk_omniroute" };
+  s["kilocode.customProvider"] = { name: "RouteChi", baseURL: baseUrl, apiKey: apiKey || "sk_omniroute" };
   s["kilocode.defaultModel"] = model;
   return s;
 }
@@ -99,7 +99,7 @@ export async function runSetupKiloCommand(opts = {}) {
   const vscodePath =
     opts.vscodeSettings ?? opts["vscode-settings"] ?? join(os.homedir(), ".config", "Code", "User", "settings.json");
 
-  printHeading("OmniRoute → Kilo Code (OpenAI-compatible)");
+  printHeading("RouteChi → Kilo Code (OpenAI-compatible)");
   printInfo(`Server: ${baseUrl}`);
 
   let model = opts.model;
@@ -161,11 +161,11 @@ export function registerSetupKilo(program) {
   program
     .command("setup-kilo")
     .description(
-      "Configure Kilo Code for OmniRoute: write ~/.local/share/kilo/auth.json (CLI) + VS Code kilocode.* settings"
+      "Configure Kilo Code for RouteChi: write ~/.local/share/kilo/auth.json (CLI) + VS Code kilocode.* settings"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--model <id>", "Model id for Kilo (required unless picked interactively)")
     .option("--auth-path <path>", "Kilo CLI auth.json path (default: ~/.local/share/kilo/auth.json)")
     .option("--vscode-settings <path>", "VS Code settings.json (default: ~/.config/Code/User/settings.json)")

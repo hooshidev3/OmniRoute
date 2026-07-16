@@ -34,8 +34,8 @@ test.after(() => {
 });
 
 // Shared assertions: every successful media Response must carry the
-// X-OmniRoute-* cost telemetry headers (parity with chat/embeddings).
-// Cost may legitimately be 0 (free / unpriced modality) — formatOmniRouteCost
+// X-RouteChi-* cost telemetry headers (parity with chat/embeddings).
+// Cost may legitimately be 0 (free / unpriced modality) — formatRouteChiCost
 // still emits a fixed-10-decimal string ("0.0000000000"), so the format check
 // holds regardless.
 function assertCostTelemetryHeaders(response: Response) {

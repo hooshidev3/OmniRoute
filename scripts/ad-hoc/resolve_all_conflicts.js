@@ -96,7 +96,7 @@ async function main() {
     // Resolve comment / modelStr conflict
     content = content.replace(
       /<<<<<<< HEAD\r?\n=======\r?\n\s+\/\/ `let` because the middleware-hook pipeline \(line ~319\) may reassign this\r?\n\s+\/\/ when a hook rewrites the target model\. Previously declared `const`, which\r?\n\s+\/\/ broke turbopack\/strict-mode builds \(PR #2670 regression\)\.\r?\n>>>>>>> release\/v3\.8\.4\r?\n\s+let modelStr = body\.model;/g,
-      "  // `let` because the middleware-hook pipeline (line ~319) may reassign this\n  // when a hook rewrites the target model. Previously declared `const`, which\n  // broke turbopack/strict-mode builds (PR [PR #2670](file:///home/diegosouzapw/dev/proxys/OmniRoute/package.json#L2670) regression).\n  let modelStr = body.model;"
+      "  // `let` because the middleware-hook pipeline (line ~319) may reassign this\n  // when a hook rewrites the target model. Previously declared `const`, which\n  // broke turbopack/strict-mode builds (PR [PR #2670](file:///home/diegosouzapw/dev/proxys/RouteChi/package.json#L2670) regression).\n  let modelStr = body.model;"
     );
 
     // Resolve trafficType / modelAbortSignal conflict (1st occurrence)
@@ -185,7 +185,7 @@ async function main() {
       /<<<<<<< HEAD\r?\nRUN --mount=type=cache,target=\/root\/\.npm \\\r?\n\s+if \[ -f package-lock\.json \]; then \\\r?\n\s+npm ci --no-audit --no-fund --legacy-peer-deps; \\\r?\n\s+else \\\r?\n\s+npm install --no-audit --no-fund --legacy-peer-deps; \\\r?\n\s+fi\r?\n=======\r?\n# `--ignore-scripts` blocks the install\/postinstall hooks of dependencies,[\s\S]*?RUN npm ci --no-audit --no-fund --legacy-peer-deps --ignore-scripts\r?\n>>>>>>> release\/v3\.8\.4/g,
       `# --ignore-scripts blocks the install/postinstall hooks of dependencies,
 # closing the supply-chain attack surface where a transitive dep can run
-# arbitrary code at install time. OmniRoute's own postinstall (
+# arbitrary code at install time. RouteChi's own postinstall (
 # better-sqlite3 binary touchups, @swc/helpers copy) is only needed when
 # a packaged app/node_modules is unpacked — inside the Docker builder we
 # are doing a fresh native-platform install, so dropping the scripts is safe.

@@ -1,16 +1,16 @@
 ---
-title: "CLI Integrations — point any coding CLI at OmniRoute"
+title: "CLI Integrations — point any coding CLI at RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
 # CLI Integrations
 
-OmniRoute ships a family of `setup-*` commands that configure a coding
-CLI (Codex, Claude Code, OpenCode, Cline, …) to use OmniRoute as its backend — so
-the tool talks to **one** endpoint and OmniRoute routes to the right provider with
+RouteChi ships a family of `setup-*` commands that configure a coding
+CLI (Codex, Claude Code, OpenCode, Cline, …) to use RouteChi as its backend — so
+the tool talks to **one** endpoint and RouteChi routes to the right provider with
 auto-fallback. Each command reads the **live** model catalog from a running
-OmniRoute (local or remote) and writes the tool's own config file on **your**
+RouteChi (local or remote) and writes the tool's own config file on **your**
 machine. The API key is referenced by env var wherever the tool supports it, so the
 secret is never written to disk (the exceptions are noted below).
 
@@ -23,7 +23,7 @@ per-tool deep dives:
 
 - [Claude Code configuration](./CLAUDE-CODE-CONFIGURATION.md)
 - [Codex CLI configuration](./CODEX-CLI-CONFIGURATION.md)
-- [Remote Mode](./REMOTE-MODE.md) — drive a remote OmniRoute (VPS / Tailnet) from your laptop
+- [Remote Mode](./REMOTE-MODE.md) — drive a remote RouteChi (VPS / Tailnet) from your laptop
 
 ---
 
@@ -54,7 +54,7 @@ server and writes the config locally.
 
 Notes on flags (verified in the command source):
 
-- `--remote <url>` — fetch the catalog from a remote OmniRoute (overrides `--port`
+- `--remote <url>` — fetch the catalog from a remote RouteChi (overrides `--port`
   and the active context). `--api-key <key>` supplies the credential for that
   server (defaults to the `OMNIROUTE_API_KEY` env var, or the active context's token).
 - `--only <patterns>` — comma-separated substrings; keep only model IDs that match
@@ -67,7 +67,7 @@ Notes on flags (verified in the command source):
   model auto-discovery: Cline, Kilo, Roo, Goose, Qwen, Aider. Those tools
   also accept `--yes` for non-interactive runs (which then requires `--model`).
   `setup-opencode` takes `--model` to set the default top-level model.
-- `--port <port>` — local OmniRoute port (default `20128`, ignored when `--remote`
+- `--port <port>` — local RouteChi port (default `20128`, ignored when `--remote`
   is set). Present on all `setup-*` and both launchers.
 - The two launchers (`launch`, `launch-codex`) accept `--profile <name>` to select
   a profile written by `setup-claude` / `setup-codex`, plus pass-through args for
@@ -82,7 +82,7 @@ Notes on flags (verified in the command source):
 
 ## Local usage
 
-With OmniRoute running on `localhost:20128`, just run the setup command for your
+With RouteChi running on `localhost:20128`, just run the setup command for your
 tool. The catalog is fetched from the local server.
 
 ```bash
@@ -110,8 +110,8 @@ routechi setup-continue --dry-run
 Launch without writing any config at all (env-injection only):
 
 ```bash
-routechi launch                 # Claude Code → local OmniRoute
-routechi launch-codex           # Codex CLI → local OmniRoute
+routechi launch                 # Claude Code → local RouteChi
+routechi launch-codex           # Codex CLI → local RouteChi
 routechi launch-codex --profile glm52
 ```
 
@@ -119,7 +119,7 @@ routechi launch-codex --profile glm52
 
 ## Remote usage
 
-Point any setup command at a remote OmniRoute with `--remote` + `--api-key`. The
+Point any setup command at a remote RouteChi with `--remote` + `--api-key`. The
 catalog is fetched from the remote; the config is written on your local machine.
 
 ```bash
@@ -152,7 +152,7 @@ See [Remote Mode](./REMOTE-MODE.md) for contexts, scopes, and token management.
 
 ## Base URL conventions (which tools want `/v1`)
 
-OmniRoute exposes the OpenAI surface at `/v1`, the Anthropic surface at the root,
+RouteChi exposes the OpenAI surface at `/v1`, the Anthropic surface at the root,
 and a native Gemini surface at `/v1beta`. Each integration is wired to the form its
 tool expects (verified in the command source):
 
@@ -170,7 +170,7 @@ tool expects (verified in the command source):
 ## Keeping native deps on update: `--include=optional`
 
 When you update with `routechi update` (after confirming, or with `--apply`),
-OmniRoute runs the install with `--include=optional` baked in:
+RouteChi runs the install with `--include=optional` baked in:
 
 ```bash
 npm install -g routechi@latest --include=optional

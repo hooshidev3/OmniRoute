@@ -1,10 +1,10 @@
-# Quick Start: Get OmniRoute Running in 3 Minutes
+# Quick Start: Get RouteChi Running in 3 Minutes
 
-> **TL;DR**: Install → Connect a free provider → Point your IDE to OmniRoute. Done.
+> **TL;DR**: Install → Connect a free provider → Point your IDE to RouteChi. Done.
 
 ---
 
-## Step 1: Install OmniRoute
+## Step 1: Install RouteChi
 
 Choose your preferred method:
 
@@ -24,26 +24,26 @@ docker run -d --name omniroute -p 20128:20128 borhandarabi/routechi:latest
 
 ```bash
 git clone https://github.com/borhandarabi/routechi.git
-cd OmniRoute
+cd RouteChi
 npm install
 npm run dev
 ```
 
 ---
 
-## Step 2: Start OmniRoute
+## Step 2: Start RouteChi
 
 ```bash
 omniroute
 ```
 
-OmniRoute starts at `http://localhost:20128`. The dashboard opens automatically.
+RouteChi starts at `http://localhost:20128`. The dashboard opens automatically.
 
 ---
 
 ## Step 3: Connect a Free Provider
 
-You can use OmniRoute **without paying anything** by connecting a free provider.
+You can use RouteChi **without paying anything** by connecting a free provider.
 
 ### Option A: Kiro (Free Claude — No Credit Card)
 
@@ -71,7 +71,7 @@ You can use OmniRoute **without paying anything** by connecting a free provider.
 
 ---
 
-## Step 4: Point Your IDE to OmniRoute
+## Step 4: Point Your IDE to RouteChi
 
 In your IDE or CLI tool, set:
 
@@ -81,7 +81,7 @@ API Key:  [copy from Dashboard → Endpoints]
 Model:    auto
 ```
 
-That's it! Your IDE now uses OmniRoute with automatic provider selection.
+That's it! Your IDE now uses RouteChi with automatic provider selection.
 
 ---
 
@@ -97,7 +97,7 @@ You should see your connected models listed.
 
 ## What's Next?
 
-- **[Auto-Combo Guide](./AUTO-COMBO-GUIDE.md)** — Let OmniRoute pick the best AI for you
+- **[Auto-Combo Guide](./AUTO-COMBO-GUIDE.md)** — Let RouteChi pick the best AI for you
 - **[Providers Guide](./PROVIDERS-GUIDE.md)** — Connect more providers (free and paid)
 - **[Free Tiers Guide](./FREE-TIERS-GUIDE.md)** — Get free AI with no credit card
 - **[Troubleshooting](./TROUBLESHOOTING.md)** — Fix common issues
@@ -112,19 +112,19 @@ You should see your connected models listed.
 
 ### "What is `auto`?"
 
-`auto` tells OmniRoute to automatically pick the best provider for each request. It considers speed, cost, quality, and availability. See the [Auto-Combo Guide](./AUTO-COMBO-GUIDE.md) for details.
+`auto` tells RouteChi to automatically pick the best provider for each request. It considers speed, cost, quality, and availability. See the [Auto-Combo Guide](./AUTO-COMBO-GUIDE.md) for details.
 
 ### "How much does it cost?"
 
-OmniRoute itself is **free and open-source**. You only pay for the providers you use. Many providers have free tiers — see the [Free Tiers Guide](./FREE-TIERS-GUIDE.md).
+RouteChi itself is **free and open-source**. You only pay for the providers you use. Many providers have free tiers — see the [Free Tiers Guide](./FREE-TIERS-GUIDE.md).
 
 ### "Can I use it with Claude Code / Cursor / Copilot?"
 
-**Yes!** OmniRoute works with any tool that supports OpenAI format. Just set the base URL to `http://localhost:20128/v1`. See the [CLI Tools Guide](../reference/CLI-TOOLS.md) for specific setup instructions.
+**Yes!** RouteChi works with any tool that supports OpenAI format. Just set the base URL to `http://localhost:20128/v1`. See the [CLI Tools Guide](../reference/CLI-TOOLS.md) for specific setup instructions.
 
 ### "What if a provider goes down?"
 
-OmniRoute automatically skips failed providers and tries the next one. You don't need to do anything. See the [Auto-Combo Guide](./AUTO-COMBO-GUIDE.md) for details.
+RouteChi automatically skips failed providers and tries the next one. You don't need to do anything. See the [Auto-Combo Guide](./AUTO-COMBO-GUIDE.md) for details.
 
 ---
 

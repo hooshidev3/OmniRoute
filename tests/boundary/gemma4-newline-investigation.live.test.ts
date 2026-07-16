@@ -5,7 +5,7 @@
  * characterize when Gemma4 emits literal \\n (backslash-n) vs actual
  * newlines (0x0A) in tool call JSON arguments.
  *
- * Tests hit the LIVE OmniRoute API at the configured OMNIROUTE_TEST_BASE instance.
+ * Tests hit the LIVE RouteChi API at the configured OMNIROUTE_TEST_BASE instance.
  */
 import test from "node:test";
 import assert from "node:assert/strict";

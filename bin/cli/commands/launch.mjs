@@ -12,7 +12,7 @@ function stripTrailingSlash(value) {
 }
 
 /**
- * Build a clean child env for Claude Code pointed at OmniRoute.
+ * Build a clean child env for Claude Code pointed at RouteChi.
  *
  * Strips inherited ANTHROPIC_* (avoids a stale shell token leaking through), then
  * injects the base URL, gateway model discovery, and auto-compact window.
@@ -40,7 +40,7 @@ export function buildClaudeEnv(baseEnv, baseUrlOrPort, authToken, opts = {}) {
 
   env.ANTHROPIC_BASE_URL = baseUrl;
   // Always set a token: when none is resolved, a sentinel keeps newer Claude Code
-  // from stopping at its local login gate before it ever contacts OmniRoute (an
+  // from stopping at its local login gate before it ever contacts RouteChi (an
   // open backend ignores the value). Mirrors free-claude-code. ANTHROPIC_API_KEY
   // stays stripped (above) so it can't shadow the Bearer token.
   env.ANTHROPIC_AUTH_TOKEN = (authToken && String(authToken).trim()) || "omniroute-no-auth";
@@ -54,7 +54,7 @@ export function buildClaudeEnv(baseEnv, baseUrlOrPort, authToken, opts = {}) {
 }
 
 /**
- * Resolve the OmniRoute base URL + auth for launch, honouring (in order):
+ * Resolve the RouteChi base URL + auth for launch, honouring (in order):
  * explicit flags → the active context (remote mode) → localhost:<port>.
  * @param {{port?:string, remote?:string, baseUrl?:string, token?:string, apiKey?:string, context?:string}} opts
  * @returns {{ baseUrl:string, authToken:string|undefined }}
@@ -106,7 +106,7 @@ export async function runLaunchCommand(opts = {}, claudeArgs = []) {
     if (!res.ok) throw new Error(`status ${res.status}`);
   } catch {
     console.error(
-      (t("launch.notRunning") || "OmniRoute is not reachable at {port}. Start it with 'omniroute serve'.").replace(
+      (t("launch.notRunning") || "RouteChi is not reachable at {port}. Start it with 'omniroute serve'.").replace(
         "{port}",
         baseUrl
       )
@@ -138,13 +138,13 @@ export function registerLaunch(program) {
   program
     .command("launch")
     .description(
-      t("launch.description") || "Launch Claude Code pointed at OmniRoute (local or remote)"
+      t("launch.description") || "Launch Claude Code pointed at RouteChi (local or remote)"
     )
     .option("--port <port>", t("serve.port") || "Proxy port", "20128")
-    .option("--remote <url>", "Remote OmniRoute base URL (overrides --port and the active context)")
+    .option("--remote <url>", "Remote RouteChi base URL (overrides --port and the active context)")
     .option("--profile <name>", "Claude Code profile to use (CLAUDE_CONFIG_DIR ~/.claude/profiles/<name>)")
     .option("--token <token>", t("launch.token") || "Token Claude sends (ANTHROPIC_AUTH_TOKEN)")
-    .option("--api-key <key>", "Alias for --token (OmniRoute access token / API key)")
+    .option("--api-key <key>", "Alias for --token (RouteChi access token / API key)")
     .allowUnknownOption(true)
     .allowExcessArguments(true)
     .argument("[claudeArgs...]", "arguments passed through to the claude binary")

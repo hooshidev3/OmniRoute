@@ -5,7 +5,7 @@
  * URLs) into decoded bytes ready to inline into a cursor SelectedImage
  * (see ../utils/cursorAgentProtobuf.ts::encodeSelectedImageBody).
  *
- * Security (OmniRoute hard rules):
+ * Security (RouteChi hard rules):
  *  - SSRF: remote fetches go through the repo's canonical outbound guard
  *    (`parseAndValidatePublicUrl`), which rejects non-http(s) schemes,
  *    embedded credentials, localhost, link-local, private/CGNAT ranges, and

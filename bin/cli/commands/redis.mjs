@@ -93,7 +93,7 @@ export function registerRedis(program) {
     .command("redis")
     .description(
       t("redis.description") ||
-        "Launch a 1-click local Redis container (Podman or Docker) for OmniRoute caching and quota tracking"
+        "Launch a 1-click local Redis container (Podman or Docker) for RouteChi caching and quota tracking"
     );
 
   redis
@@ -220,7 +220,7 @@ export async function runRedisUpCommand(opts = {}) {
   try {
     await execFile(runtime, args);
     success(`Container '${name}' is now running on redis://127.0.0.1:${port}`);
-    info(`Set OMNIROUTE_REDIS_URL=redis://127.0.0.1:${port} in your .env to wire OmniRoute to it.`);
+    info(`Set OMNIROUTE_REDIS_URL=redis://127.0.0.1:${port} in your .env to wire RouteChi to it.`);
     return 0;
   } catch (err) {
     fail(`Failed to launch container: ${err.message}`);

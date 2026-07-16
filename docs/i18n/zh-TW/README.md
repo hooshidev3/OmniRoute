@@ -1,4 +1,4 @@
-# 🚀 OmniRoute — 免費 AI 閘道器
+# 🚀 RouteChi — 免費 AI 閘道器
 
 🌐 **語言:** 🇺🇸 [English](../../../README.md) · 🇸🇦 [ar](../ar/README.md) · 🇧🇬 [bg](../bg/README.md) · 🇧🇩 [bn](../bn/README.md) · 🇨🇿 [cs](../cs/README.md) · 🇩🇰 [da](../da/README.md) · 🇩🇪 [de](../de/README.md) · 🇪🇸 [es](../es/README.md) · 🇮🇷 [fa](../fa/README.md) · 🇫🇮 [fi](../fi/README.md) · 🇫🇷 [fr](../fr/README.md) · 🇮🇳 [gu](../gu/README.md) · 🇮🇱 [he](../he/README.md) · 🇮🇳 [hi](../hi/README.md) · 🇭🇺 [hu](../hu/README.md) · 🇮🇩 [id](../id/README.md) · 🇮🇹 [it](../it/README.md) · 🇯🇵 [ja](../ja/README.md) · 🇰🇷 [ko](../ko/README.md) · 🇮🇳 [mr](../mr/README.md) · 🇲🇾 [ms](../ms/README.md) · 🇳🇱 [nl](../nl/README.md) · 🇳🇴 [no](../no/README.md) · 🇵🇭 [phi](../phi/README.md) · 🇵🇱 [pl](../pl/README.md) · 🇵🇹 [pt](../pt/README.md) · 🇧🇷 [pt-BR](../pt-BR/README.md) · 🇷🇴 [ro](../ro/README.md) · 🇷🇺 [ru](../ru/README.md) · 🇸🇰 [sk](../sk/README.md) · 🇸🇪 [sv](../sv/README.md) · 🇰🇪 [sw](../sw/README.md) · 🇮🇳 [ta](../ta/README.md) · 🇮🇳 [te](../te/README.md) · 🇹🇭 [th](../th/README.md) · 🇹🇷 [tr](../tr/README.md) · 🇺🇦 [uk-UA](../uk-UA/README.md) · 🇵🇰 [ur](../ur/README.md) · 🇻🇳 [vi](../vi/README.md) · 🇨🇳 [zh-CN](../zh-CN/README.md) · 🇹🇼 [zh-TW](../zh-TW/README.md)
 
@@ -6,11 +6,11 @@
 
 <div align="center">
 
-<img src="../../screenshots/MainOmniRoute.png" alt="OmniRoute 儀表板" width="820"/>
+<img src="../../screenshots/MainRouteChi.png" alt="RouteChi 儀表板" width="820"/>
 
 <br/>
 
-# 🚀 OmniRoute — 免費 AI 閘道器
+# 🚀 RouteChi — 免費 AI 閘道器
 
 ### 永遠不要停止開發。透過一個端點，將每個 AI 工具連接到 **231 個供應商** — **50+ 免費**。
 
@@ -46,7 +46,7 @@
 
 <br/>
 
-<a href="https://trendshift.io/repositories/23589" target="_blank"><img src="https://trendshift.io/api/badge/repositories/23589" alt="diegosouzapw%2FOmniRoute | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/23589" target="_blank"><img src="https://trendshift.io/api/badge/repositories/23589" alt="diegosouzapw%2FRouteChi | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 [![npm](https://img.shields.io/npm/v/omniroute?logo=npm&style=flat-square)](https://www.npmjs.com/package/omniroute)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](../../LICENSE)
@@ -125,7 +125,7 @@
 
 </div>
 
-> 手動堆疊免費層很痛苦 — 數十個 SDK、數十個速率限制，而且你不清楚自己到底有多少配額。OmniRoute 將 **40+ 供應商池 / 500+ 模型**的**有記錄**免費層聚合為一個真實數字，並在儀表板上即時展示 (`/dashboard/free-tiers`)。
+> 手動堆疊免費層很痛苦 — 數十個 SDK、數十個速率限制，而且你不清楚自己到底有多少配額。RouteChi 將 **40+ 供應商池 / 500+ 模型**的**有記錄**免費層聚合為一個真實數字，並在儀表板上即時展示 (`/dashboard/free-tiers`)。
 
 - **~1.6B 免費 Token/月**（穩定） — 首月透過註冊獎勵最高可達 **~2.1B**。
 - **池去重，誠實** — 每個共享免費池只計算**一次**，因此標題不會被速率限制上限所誇大。（如果全天候計算每個速率限制，數字會接近 ~10B；我們不發布那個數字。）
@@ -144,7 +144,7 @@
 
 </div>
 
-> 一個端點。**231 個供應商。** 永遠不要停止建構 — 讓 OmniRoute 選擇最便宜且有效的方案。
+> 一個端點。**231 個供應商。** 永遠不要停止建構 — 讓 RouteChi 選擇最便宜且有效的方案。
 
 <table>
   <tr>
@@ -164,13 +164,13 @@
 
 <div align="center">
 
-# 🤔 為什麼選擇 OmniRoute？
+# 🤔 為什麼選擇 RouteChi？
 
 </div>
 
 > 告別管理 10 個儀表板、失效的 API 金鑰和意外帳單的煩惱。
 
-| ❌ 日常痛點 | ✅ OmniRoute 的解決方案 |
+| ❌ 日常痛點 | ✅ RouteChi 的解決方案 |
 |---|---|
 | 📉 訂閱配額每月用不完就浪費 | **最大化訂閱** — 追蹤配額，在重置前用盡每個 Token |
 | 🛑 速率限制中斷編碼 | **4 層自動備援** — 訂閱 → API → 廉價 → 免費，毫秒級切換 |
@@ -188,7 +188,7 @@
                           │ http://localhost:20128/v1
                           ▼
 ┌──────────────────────────────────────────────────────────┐
-│                  OmniRoute — Smart Router                  │
+│                  RouteChi — Smart Router                  │
 │  RTK + Caveman compression · 17 routing strategies         │
 │  Circuit breakers · TLS stealth · MCP · A2A · Guardrails   │
 └─────────────────────────┬──────────────────────────────────┘
@@ -209,11 +209,11 @@
 
 </div>
 
-> **Combo** 是 OmniRoute **自動**路由的模型鏈。配額用盡、供應商失敗或成本飆升 — Combo 自動滑動到下一個模型。**這就是 OmniRoute 不可中斷的原因。** 🛡️
+> **Combo** 是 RouteChi **自動**路由的模型鏈。配額用盡、供應商失敗或成本飆升 — Combo 自動滑動到下一個模型。**這就是 RouteChi 不可中斷的原因。** 🛡️
 
 ### ⚡ 零設定 — 只需使用 `auto`
 
-無需建立 Combo。將模型設定為 `auto`（或變體），OmniRoute 會根據您連接的供應商即時評分建構虛擬 Combo：
+無需建立 Combo。將模型設定為 `auto`（或變體），RouteChi 會根據您連接的供應商即時評分建構虛擬 Combo：
 
 | 模型 ID | 最佳化目標 |
 |---|---|
@@ -262,11 +262,11 @@ Result: 4 layers of fallback = zero downtime
 
 <div align="center">
 
-# 🏆 OmniRoute 的獨特優勢
+# 🏆 RouteChi 的獨特優勢
 
 </div>
 
-| 功能 | OmniRoute | 其他路由器 |
+| 功能 | RouteChi | 其他路由器 |
 |---|---|---|
 | 🌐 供應商數量 | **231** | 20–100 |
 | 🆓 免費供應商 | **50+（11 個永久免費）** | 1–5 |
@@ -294,11 +294,11 @@ Result: 4 layers of fallback = zero downtime
 > **v3.8.20 → v3.8.38** 的重點更新。完整記錄在 [`CHANGELOG.md`](../../CHANGELOG.md)。
 
 - **⚖️ Quota-Share 路由** — 一種專用 Combo 策略，根據可用配額跨帳戶分配負載：赤字輪詢排程、每個連線的 `max_concurrent` 搭配冷卻等待佇列、多時窗使用量桶（5 小時 / 7 天 / 按模型）、每（金鑰，模型）上限、為提示快取完整性而設的會話黏著性，以及來自上游 Token 使用量標頭的主動飽和偵測。→ [Resilience Guide](../../architecture/RESILIENCE_GUIDE.md)
-- **🛰️ 遠端模式** — 透過範圍存取令牌從任何機器驅動遠端 OmniRoute（`routechi connect` / `routechi contexts` / `routechi tokens`）。→ [Remote Mode](../../guides/REMOTE-MODE.md)
+- **🛰️ 遠端模式** — 透過範圍存取令牌從任何機器驅動遠端 RouteChi（`routechi connect` / `routechi contexts` / `routechi tokens`）。→ [Remote Mode](../../guides/REMOTE-MODE.md)
 - **🧭 更智慧的 Auto-Routing** — OpenRouter 風格的 `auto/<category>:<tier>` Combo（例如 `auto/coding:fast`、`auto/reasoning:pro`）、**Fusion** 策略（第 16 種 — 並行分發到多個模型，然後透過裁判合成）、**任務感知路由**（按任務類型選擇最佳連線）、每請求 `X-Route-Model` 覆寫、即時 Arena-ELO + models.dev 模型智慧、每步驟帳戶允許清單、供應商萬用字元 Combo 步驟、巢狀 Combo 引用執行、黏性加權選擇和 `web_search` 感知路由。→ [Auto-Combo](../../routing/AUTO-COMBO.md)
 - **🗜️ 可插拔壓縮** — **9 個可組合引擎**的非同步管線，含 Compression Studios、LLMLingua-2 ONNX 引擎和啟發式/SLM 雙層 **Ultra**、RTK、委託 Anthropic Context Editing、**Output Styles**（輸出軸控制：terse-prose / less-code / terse-CJK）、**自適應上下文預算撥盤**（僅升級到足以符合上下文視窗）、每請求 `x-omniroute-compression` 控制、可選的離線評估工具、一鍵從儀表板管理 **Headroom** 代理生命週期、合成**壓縮遊樂場**（Play 賽道 + A/B 比較）、可選的**每步驟保真度閘門**，以及統一面板搭配命名設定檔 + 活動設定檔選擇器。→ [Compression](../../compression/COMPRESSION_ENGINES.md)
 - **🕵️ 透明 MITM 解密（TPROXY）** — 捕獲並轉換忽略代理環境變數的 CLI 流量，配備每個 SNI 的憑證授權機構和信任儲存安裝程式。→ [MITM/TPROXY](../../security/MITM-TPROXY-DECRYPT.md)
-- **💸 全方位成本遙測** — 每個端點（包括媒體）上的 `X-OmniRoute-*` 成本/使用量標頭、非 Token 成本引擎、快取命中 `X-OmniRoute-Cost-Saved` 標頭，以及每金鑰 USD 支出配額。→ [API Reference](../../reference/API_REFERENCE.md)
+- **💸 全方位成本遙測** — 每個端點（包括媒體）上的 `X-RouteChi-*` 成本/使用量標頭、非 Token 成本引擎、快取命中 `X-RouteChi-Cost-Saved` 標頭，以及每金鑰 USD 支出配額。→ [API Reference](../../reference/API_REFERENCE.md)
 - **🧠 可控記憶** — 可選的 int8 向量量化（Qdrant + sqlite-vec），記憶預設關閉，以及每請求 `x-omniroute-no-memory` 標頭。→ [Memory](../../frameworks/MEMORY.md)
 - **🛡️ 安全** — 所有 LLM 路由的提示注入防護（由紅隊測試套件支援），加上免費的 DuckDuckGo 最後手段網路搜尋。→ [Guardrails](../../security/GUARDRAILS.md)
 - **🤝 更多供應商和代理** — Cursor Cloud Agent（第 4 個雲端代理）、CodeBuddy CN（`copilot.tencent.com`）、Google Flow 影片生成供應商、新閘道 **DGrid** 和 **Pioneer AI**（Fastino Labs）、入站 **xAI Grok** 轉換器加上 **Grok Build (xAI)** 附 OAuth 匯入令牌流程、GitHub Copilot 供應商上的 GPT-4 / GPT-4o-mini、多模型 **Factory Droid**、**ZenMux Free**（session-cookie 免費層）、**Alibaba DashScope** 文字轉影片（`wan2.7-t2v`）、更新後的 231 供應商目錄、Vertex AI 媒體生成（語音 / 轉錄 / 音樂 / 影片），以及從 CLIProxyAPI 一鍵匯入帳戶。→ [Providers](../../reference/PROVIDER_REFERENCE.md)
@@ -375,7 +375,7 @@ Result: 4 layers of fallback = zero downtime
 
 <div align="center">
 
-# 🖥️ OmniRoute 的執行平台 — 無所不在
+# 🖥️ RouteChi 的執行平台 — 無所不在
 
 </div>
 
@@ -402,9 +402,9 @@ Result: 4 layers of fallback = zero downtime
 
 </div>
 
-> 您的金鑰、您的機器、您的資料。OmniRoute 是**本地代理** — 絕不向外回報。
+> 您的金鑰、您的機器、您的資料。RouteChi 是**本地代理** — 絕不向外回報。
 
-- 🏠 **100% 在您的硬體上執行** — npm、Docker、桌面或手機。OmniRoute 雲端絕不介入請求路徑。
+- 🏠 **100% 在您的硬體上執行** — npm、Docker、桌面或手機。RouteChi 雲端絕不介入請求路徑。
 - 🔐 **憑證靜態加密** — API 金鑰和 OAuth 令牌使用 **AES-256-GCM** 加密。
 - 🚫 **預設零遙測** — 您的提示僅傳送給您選擇的供應商，絕無其他去處。
 - 🛡️ **強化閘道** — API 金鑰範圍限制、IP 過濾、速率限制、提示注入防護、僅回送處理程序路由。
@@ -420,7 +420,7 @@ Result: 4 layers of fallback = zero downtime
 
 </div>
 
-> OmniRoute 不僅僅是伺服器 — 它擁有 **60+ 命令**的**完整命令列控制台**，以及開放的代理協定，讓 AI 代理可以**自行**驅動 OmniRoute。
+> RouteChi 不僅僅是伺服器 — 它擁有 **60+ 命令**的**完整命令列控制台**，以及開放的代理協定，讓 AI 代理可以**自行**驅動 RouteChi。
 
 ### ⌨️ 真正的 CLI（不僅僅是 `start`）
 
@@ -431,9 +431,9 @@ routechi setup         # 引導式首次執行精靈
 routechi doctor        # 診斷供應商、埠口、原生依賴
 ```
 
-### 🛰️ 遠端模式 — 在此執行 CLI，OmniRoute 在 VPS 上
+### 🛰️ 遠端模式 — 在此執行 CLI，RouteChi 在 VPS 上
 
-OmniRoute 在伺服器上？從筆記型電腦使用**相同 CLI** 驅動。登入一次
+RouteChi 在伺服器上？從筆記型電腦使用**相同 CLI** 驅動。登入一次
 使用範圍存取令牌；之後每個命令都指向遠端。
 
 ```bash
@@ -453,9 +453,9 @@ routechi contexts use default            # ← 切換回本地伺服器
 
 </div>
 
-### 🤝 連接代理 — 代理自行控制 OmniRoute
+### 🤝 連接代理 — 代理自行控制 RouteChi
 
-透過 **MCP** 或 **A2A** 公開 OmniRoute，任何有能力的代理即可取得整個閘道的金鑰 — 路由、供應商、Combo、快取、壓縮、記憶 — 自主運作。
+透過 **MCP** 或 **A2A** 公開 RouteChi，任何有能力的代理即可取得整個閘道的金鑰 — 路由、供應商、Combo、快取、壓縮、記憶 — 自主運作。
 
 | 協定 | 端點 | 用途 |
 |---|---|---|
@@ -465,7 +465,7 @@ routechi contexts use default            # ← 切換回本地伺服器
 | 🤝 **A2A** | `http://localhost:20128/.well-known/agent.json` | 代理間通訊，**JSON-RPC 2.0** + SSE，6 技能 |
 
 ```bash
-# 將完整 OmniRoute 工具集透過 MCP 提供給 Claude Code：
+# 將完整 RouteChi 工具集透過 MCP 提供給 Claude Code：
 claude mcp add-server omniroute --type http --url http://localhost:20128/api/mcp/stream
 ```
 
@@ -479,7 +479,7 @@ claude mcp add-server omniroute --type http --url http://localhost:20128/api/mcp
 
 </div>
 
-> **為什麼用很多 Token 而不用少量 Token？** 每個請求**透明地**通過 OmniRoute 的壓縮管線 — 無需變更客戶端。它現在是**9 個可組合引擎的堆疊**，按順序執行，並可依路由 Combo 混合搭配 — 建立在 [RTK](https://github.com/rtk-ai/rtk)、[Caveman](https://github.com/JuliusBrussee/caveman) (⭐ 51K+)、[LLMLingua-2](https://github.com/microsoft/LLMLingua) 和 [Troglodita](https://github.com/leninejunior/troglodita) (PT-BR) 的基礎上。
+> **為什麼用很多 Token 而不用少量 Token？** 每個請求**透明地**通過 RouteChi 的壓縮管線 — 無需變更客戶端。它現在是**9 個可組合引擎的堆疊**，按順序執行，並可依路由 Combo 混合搭配 — 建立在 [RTK](https://github.com/rtk-ai/rtk)、[Caveman](https://github.com/JuliusBrussee/caveman) (⭐ 51K+)、[LLMLingua-2](https://github.com/microsoft/LLMLingua) 和 [Troglodita](https://github.com/leninejunior/troglodita) (PT-BR) 的基礎上。
 
 ### 🧱 9 引擎堆疊
 
@@ -527,7 +527,7 @@ claude mcp add-server omniroute --type http --url http://localhost:20128/api/mcp
 ### 📖 運作方式 — 管線、架構與節省數學
 
 ```
-Client (10,000 tok) ──▶ OmniRoute Compression (9 engines) ──▶ Provider (~1,080 tok, up to 95% saved)
+Client (10,000 tok) ──▶ RouteChi Compression (9 engines) ──▶ Provider (~1,080 tok, up to 95% saved)
 ```
 
 預設堆疊 Combo 執行 `RTK → Caveman`。當兩者作用於相同工具/上下文 payload 時，節省效果疊加：
@@ -549,7 +549,7 @@ range    = 78.4 – 94.6%
   - **Less code** — "懶惰資深開發者" YAGNI：最小可行變更，不要求不搭建。
   - **Terse CJK（文言）** — 古典中文極簡風格（僅限 `zh` 語言環境）。
 - **🎯 自適應上下文預算**（_撥盤_）— 不是一個開/關 Token 閾值，而是僅升級最便宜、最無損的引擎，直到**符合模型的上下文視窗**。策略：`reserve-output`（預設，模型感知）· `percentage` · `absolute`。模式：`floor`（保證符合）· `replace-autotrigger`（您的明確選擇優先）· `off`（傳統閾值）。
-- **🎛️ 壓縮決策位置**（_優先級，高 → 低_）— 每請求 `x-omniroute-compression` 標頭 › 路由 Combo 覆寫 › 活動命名設定檔 › 自適應/自動觸發 › 面板預設 › 關閉。應用的計畫在 `X-OmniRoute-Compression: <mode>; source=<source>` 回應標頭中回顯。
+- **🎛️ 壓縮決策位置**（_優先級，高 → 低_）— 每請求 `x-omniroute-compression` 標頭 › 路由 Combo 覆寫 › 活動命名設定檔 › 自適應/自動觸發 › 面板預設 › 關閉。應用的計畫在 `X-RouteChi-Compression: <mode>; source=<source>` 回應標頭中回顯。
 
 按 Token 閾值自動觸發、切換自適應撥盤、固定命名設定檔、設定一次性每請求、或為每個路由 Combo 指派管線 — 任選適合工作負載的方式。可選的離線**評估工具**（`npm run eval:compression`）在固定語料庫上評分保真度與節省比例。
 
@@ -590,9 +590,9 @@ Model:    auto            （零設定智慧路由 — 或任何供應商/模型
 curl http://localhost:20128/v1/models -H "Authorization: Bearer ***"
 ```
 
-您應該會看到已連接的模型列表。🎉 就是這樣 — 開始編碼，OmniRoute 會自動路由和備援。
+您應該會看到已連接的模型列表。🎉 就是這樣 — 開始編碼，RouteChi 會自動路由和備援。
 
-如果您的客戶端無法傳送自訂標頭，OmniRoute 也提供令牌化的相容別名：
+如果您的客戶端無法傳送自訂標頭，RouteChi 也提供令牌化的相容別名：
 
 ```txt
 OpenAI catalog:   http://localhost:20128/vscode/YOUR_KEY/
@@ -668,7 +668,7 @@ podman compose --profile base up -d
 
 <div align="center">
 
-# 🎬 OmniRoute 實際展示
+# 🎬 RouteChi 實際展示
 
 </div>
 
@@ -693,7 +693,7 @@ podman compose --profile base up -d
 
 <div align="center">
 
-> 🎬 **製作了關於 OmniRoute 的影片？** 透過連結開啟 [issue](https://github.com/borhandarabi/routechi/issues/new) 或 [discussion](https://github.com/borhandarabi/routechi/discussions) — 我們會在此展示。
+> 🎬 **製作了關於 RouteChi 的影片？** 透過連結開啟 [issue](https://github.com/borhandarabi/routechi/issues/new) 或 [discussion](https://github.com/borhandarabi/routechi/discussions) — 我們會在此展示。
 
 <br/>
 </div>
@@ -729,7 +729,7 @@ podman compose --profile base up -d
 | **NVIDIA NIM** | `nvidia/` | 129 模型 | ~40 RPM |
 | **Cerebras** | `cerebras/` | Qwen3 235B、GPT-OSS 120B | 100 萬 Token/天 |
 
-> 💡 儀表板上的"成本"是**節省追蹤器**，不是帳單 — OmniRoute 從不向您收費。使用免費模型顯示的"$290 總成本"意味著**節省了 $290**。
+> 💡 儀表板上的"成本"是**節省追蹤器**，不是帳單 — RouteChi 從不向您收費。使用免費模型顯示的"$290 總成本"意味著**節省了 $290**。
 
 📖 完整免費目錄 → [`docs/reference/FREE_TIERS.md`](../../reference/FREE_TIERS.md) — 25+ 供應商、配額、基本 URL。
 
@@ -761,7 +761,7 @@ podman compose --profile base up -d
 
 <br/>
 
-🇷🇺 🇨🇳 🇮🇷 🇨🇺 🇹🇷 在被封鎖的地區？OmniRoute 的 **3 層代理**（全域 / 每供應商 / 每連線）代理 API 請求、OAuth 流程、連線測試、Token 重新整理和模型同步。
+🇷🇺 🇨🇳 🇮🇷 🇨🇺 🇹🇷 在被封鎖的地區？RouteChi 的 **3 層代理**（全域 / 每供應商 / 每連線）代理 API 請求、OAuth 流程、連線測試、Token 重新整理和模型同步。
 
 - **協定：** HTTP/HTTPS、SOCKS5、認證代理
 - **🆓 1proxy 市場** — 數百個免費驗證代理、品質評分、自動輪換
@@ -799,7 +799,7 @@ podman compose --profile base up -d
 | `REQUIRE_API_KEY` | `false` | 要求所有請求使用 API 金鑰 |
 | `DATA_DIR` | `~/.omniroute` | 資料庫和設定儲存位置 |
 
-**OmniRoute 會向我收費嗎？** 不會 — 它是免費的開源軟體，在您的機器上執行。您只直接向付費供應商付費。OmniRoute 沒有帳單系統。
+**RouteChi 會向我收費嗎？** 不會 — 它是免費的開源軟體，在您的機器上執行。您只直接向付費供應商付費。RouteChi 沒有帳單系統。
 **免費供應商真的無限嗎？** 基本上是的 — Qoder、Pollinations、LongCat 和 Cloudflare 是免費的，沒有每帳戶額度上限。Kiro 也是免費的，但每帳戶每月約 50 額度上限。在 Combo 中堆疊多個免費供應商，自動備援讓您以 $0 持續使用。
 **壓縮會損害品質嗎？** 不會 — 它只壓縮**輸入**；程式碼、URL、JSON 始終受保護。
 **在被封鎖 AI 的地區能用嗎？** 可以 — 3 層代理 + 1proxy 市場可達所有 231 個供應商。
@@ -895,8 +895,8 @@ podman compose --profile base up -d
 | [User Guide](../../guides/USER_GUIDE.md) | 供應商、Combo、CLI 整合、部署 |
 | [Setup Guide](../../guides/SETUP_GUIDE.md) | 完整安裝方法、CLI 工具設定、協定設定、逾時調整 |
 | [CLI Tools Guide](../../reference/CLI-TOOLS.md) | Claude Code、Codex、Cursor、Cline、OpenClaw、Kilo、Copilot 的個別工具設定 |
-| [Remote Mode](../../guides/REMOTE-MODE.md) | 從筆記型電腦 CLI 透過範圍存取令牌驅動遠端 OmniRoute（VPS） |
-| [Claude Code Config](../../guides/CLAUDE-CODE-CONFIGURATION.md) | 將 Claude Code 指向 OmniRoute（本地/遠端），附 `launch` + 每模型設定檔 |
+| [Remote Mode](../../guides/REMOTE-MODE.md) | 從筆記型電腦 CLI 透過範圍存取令牌驅動遠端 RouteChi（VPS） |
+| [Claude Code Config](../../guides/CLAUDE-CODE-CONFIGURATION.md) | 將 Claude Code 指向 RouteChi（本地/遠端），附 `launch` + 每模型設定檔 |
 | [Quick Start](../../README.md#-quick-start) | 3 步驟安裝 → 連接 → 設定 |
 
 ### 🔧 維運與部署
@@ -907,7 +907,7 @@ podman compose --profile base up -d
 | [Podman Guide](../../contrib/podman/README.md) | Quadlet systemd 整合、podman-compose、SELinux |
 | [VM Deployment](../../ops/VM_DEPLOYMENT_GUIDE.md) | 完整指南：VM + nginx + Cloudflare 設定 |
 | [Fly.io Deployment](../../ops/FLY_IO_DEPLOYMENT_GUIDE.md) | 部署到 Fly.io，附持久儲存 |
-| [Termux Guide](../../guides/TERMUX_GUIDE.md) | 在 Android 上透過 Termux 執行 OmniRoute |
+| [Termux Guide](../../guides/TERMUX_GUIDE.md) | 在 Android 上透過 Termux 執行 RouteChi |
 | [PWA Guide](../../guides/PWA_GUIDE.md) | Progressive Web App 安裝、快取、架構 |
 | [Uninstall Guide](../../guides/UNINSTALL.md) | 所有安裝方法的完整移除 |
 | [Environment Config](../../reference/ENVIRONMENT.md) | 完整 `.env` 變數和參考 |
@@ -955,7 +955,7 @@ podman compose --profile base up -d
 
 # ⭐ 頂級貢獻者
 
-> OmniRoute 由充滿熱情的開源社群塑造。這些個人做出了卓越貢獻，直接影響了專案的品質、穩定性和影響力。**謝謝你們。**
+> RouteChi 由充滿熱情的開源社群塑造。這些個人做出了卓越貢獻，直接影響了專案的品質、穩定性和影響力。**謝謝你們。**
 
 <table>
   <tr>
@@ -1002,7 +1002,7 @@ podman compose --profile base up -d
   </tr>
 </table>
 
-> 🙏 這些貢獻者的功能、錯誤修復和基礎設施改進是 OmniRoute 可靠且功能豐富的**核心部分**。每一個 Pull Request、每一個測試案例、每一個 i18n 翻譯檔案都很重要。開源是由像他們這樣的人建構的。
+> 🙏 這些貢獻者的功能、錯誤修復和基礎設施改進是 RouteChi 可靠且功能豐富的**核心部分**。每一個 Pull Request、每一個測試案例、每一個 i18n 翻譯檔案都很重要。開源是由像他們這樣的人建構的。
 
 </div>
 
@@ -1073,13 +1073,13 @@ gh release create v3.8.2 --title "v3.8.2" --generate-notes
 
 </div>
 
-OmniRoute 站在巨人的肩膀上。它始於 **[9router](https://github.com/decolua/9router)** 的分支和 Go 專案 **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** 的 TypeScript 移植 — 從那裡開始，下面的每個子系統都受到先行開源專案的啟發。每一個都塑造了 OmniRoute 的具體部分。這是我們對它們所有人的感謝。🙏
+RouteChi 站在巨人的肩膀上。它始於 **[9router](https://github.com/decolua/9router)** 的分支和 Go 專案 **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** 的 TypeScript 移植 — 從那裡開始，下面的每個子系統都受到先行開源專案的啟發。每一個都塑造了 RouteChi 的具體部分。這是我們對它們所有人的感謝。🙏
 
 > ⭐ 星星數截至 2026 年 6 月 — 去給這些專案一顆星。
 
 ### 🧬 淵源與閘道
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[9router](https://github.com/decolua/9router)** · decolua | 17.9k | 此分叉所基於的原始專案 — 此處以多模態 API 和完整的 TypeScript 重寫進行擴展。 |
 | **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** · router-for-me | 37.8k | 啟發此 JavaScript/TypeScript 移植的 Go 實作。 |
@@ -1087,7 +1087,7 @@ OmniRoute 站在巨人的肩膀上。它始於 **[9router](https://github.com/de
 
 ### 🗜️ 上下文與 Token 壓縮 — 引擎
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[Caveman](https://github.com/JuliusBrussee/caveman)** · JuliusBrussee | 74.5k | 病毒式"為什麼用很多 Token 而不用少量 Token"專案 — 其原始人語哲學為我們的標準壓縮模式和 30+ 填充詞/濃縮規則提供動力。 |
 | **[RTK – Rust Token Killer](https://github.com/rtk-ai/rtk)** · rtk-ai | 63.6k | 高效能命令輸出壓縮 — 啟發了我們的 RTK 引擎、JSON 過濾器 DSL、原始輸出恢復和堆疊 RTK → Caveman 管線。 |
@@ -1099,7 +1099,7 @@ OmniRoute 站在巨人的肩膀上。它始於 **[9router](https://github.com/de
 
 ### 🧩 緊湊格式、Token 研究和程式碼感知工具
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[TOON](https://github.com/toon-format/toon)** · toon-format | 24.6k | Token 導向物件表示法 — 其欄式、標頭+行模型塑造了我們的表格壓縮階段。 |
 | **[GCF](https://github.com/blackwell-systems/gcf)** · Blackwell Systems | 11 | 架構感知的"LLM 用 JSON"表示法 — 共同啟發了我們使用 `[N rows]` 標記的無損同構陣列壓縮。 |
@@ -1109,7 +1109,7 @@ OmniRoute 站在巨人的肩膀上。它始於 **[9router](https://github.com/de
 
 ### 🧠 記憶與 RAG
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[Mem0](https://github.com/mem0ai/mem0)** · mem0ai | 58.9k | 通用記憶層 — 其代理作為寫入/讀取邊界模型塑造了我們的記憶架構。 |
 | **[Letta (MemGPT)](https://github.com/letta-ai/letta)** · letta-ai | 23.4k | 具有分層記憶的狀態化代理 — 啟發了我們的 Context Control & Recovery（CCR）分層模型。 |
@@ -1117,14 +1117,14 @@ OmniRoute 站在巨人的肩膀上。它始於 **[9router](https://github.com/de
 
 ### 🛰️ 流量檢查、MITM 和透明代理
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[llm-interceptor](https://github.com/chouzz/llm-interceptor)** · chouzz | 46 | 編碼助手 ↔ LLM 流量的 MITM 攔截/分析 — 我們的 Traffic Inspector 移植其 SSE 合併、對話正規化、主機傳遞和秘密遮罩。 |
 | **[ProxyBridge](https://github.com/InterceptSuite/ProxyBridge)** · InterceptSuite | 5.1k | 透明每程序代理路由 — 啟發了我們的崩潰安全 MITM 拆卸、socket 空閒逾時、`/proc` 程序歸屬和 TPROXY 捕獲。 |
 
 ### 📚 模型資料、可觀測性與 UI
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[models.dev](https://github.com/anomalyco/models.dev)** · SST / OpenCode | 5.1k | AI 模型規格、定價和能力的開放資料庫 — 原生同步到我們的模型目錄。 |
 | **[React Flow / xyflow](https://github.com/xyflow/xyflow)** · xyflow | 37.1k | 驅動我們即時 Compression Studio 和 Combo/Routing Studio 的基於節點的圖形函式庫。 |
@@ -1135,13 +1135,13 @@ OmniRoute 站在巨人的肩膀上。它始於 **[9router](https://github.com/de
 
 ### 🛡️ 安全
 
-| 專案 | ⭐ | 啟發 OmniRoute 的方式 |
+| 專案 | ⭐ | 啟發 RouteChi 的方式 |
 |---|---|---|
 | **[awesome-secure-defaults](https://github.com/tldrsec/awesome-secure-defaults)** · tldrsec | 708 | 一個精選的安全預設函式庫列表，引導我們的安全選擇（Helmet.js、DOMPurify、ssrf-req-filter、safe-regex、Google Tink）。 |
 
 ## ❤️ 支援
 
-OmniRoute 是免費且開源的，在公開環境中建構和維護。如果它為您節省了時間或金錢，請考慮支援其開發：
+RouteChi 是免費且開源的，在公開環境中建構和維護。如果它為您節省了時間或金錢，請考慮支援其開發：
 
 - ⭐ **為倉庫加星** — 這確實有助於提高能見度
 - 💖 **[GitHub Sponsors](https://github.com/sponsors/diegosouzapw)** — 資助持續維護和新供應商
@@ -1157,6 +1157,6 @@ MIT 授權 — 詳情請參見 [LICENSE](../../LICENSE)。
 
 **[⬆ 回到頂部](#-omniroute)** · 為開源 AI 社群用心建構。
 
-<sub>OmniRoute v3.8.24 · Node ≥22.0.0 · MIT License · <a href="https://omniroute.online">omniroute.online</a></sub>
+<sub>RouteChi v3.8.24 · Node ≥22.0.0 · MIT License · <a href="https://omniroute.online">omniroute.online</a></sub>
 
 </div>

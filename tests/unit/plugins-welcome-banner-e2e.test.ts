@@ -301,7 +301,7 @@ test("welcome banner PoC plugin lifecycle", async (t) => {
       ],
     };
     const result = await mod.plugin.onResponse({}, response);
-    assert.ok(result.choices[0].message.content.includes("[Welcome to OmniRoute"));
+    assert.ok(result.choices[0].message.content.includes("[Welcome to RouteChi"));
     assert.ok(result.choices[0].message.content.includes("Hello!"));
   });
 
@@ -313,7 +313,7 @@ test("welcome banner PoC plugin lifecycle", async (t) => {
       ],
     };
     const result = await mod.plugin.onResponse({}, response);
-    assert.ok(result.choices[0].delta.content.includes("[Welcome to OmniRoute"));
+    assert.ok(result.choices[0].delta.content.includes("[Welcome to RouteChi"));
   });
 
   await t.test("onResponse handles null response gracefully", async () => {

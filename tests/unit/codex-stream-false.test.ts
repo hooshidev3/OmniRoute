@@ -370,7 +370,7 @@ test("handleComboChat validates non-stream quality using the original client str
 
 test("non-stream chat success carries cost-telemetry meta headers (cost/version/tokens)", async () => {
   // Regression guard: the single non-stream success return in chatCore.ts routes
-  // through attachOmniRouteMetaHeaders, which must always emit the cost-telemetry
+  // through attachRouteChiMetaHeaders, which must always emit the cost-telemetry
   // headers. A usage-bearing JSON upstream body proves real usage flowed through.
   const { result } = await invokeChatCore({
     body: {

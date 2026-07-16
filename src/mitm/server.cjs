@@ -140,7 +140,7 @@ const forwardShim = require("./_internal/forwardTarget.cjs");
 // Inspector capture (D4 fallback). The standalone proxy intercepts AgentBridge
 // traffic inline (no MitmHandlerBase / agentBridgeHook), so it posts captured
 // entries to the local-only ingest endpoint to make them visible in the Traffic
-// Inspector. The token is injected by manager.ts (same value the OmniRoute
+// Inspector. The token is injected by manager.ts (same value the RouteChi
 // process uses); absent token → capture is silently skipped.
 const INGEST_TOKEN = process.env.INSPECTOR_INTERNAL_INGEST_TOKEN || "";
 // Cap captured bodies to keep proxy memory bounded (the buffer truncates again).
@@ -453,7 +453,7 @@ function captureToInspector(o) {
 
 async function intercept(req, res, bodyBuffer, mappedModel, sourceModel) {
   // C2 — Inject AgentBridge correlation headers per master plan §3.5.
-  // The OmniRoute router uses these to distinguish AgentBridge traffic from
+  // The RouteChi router uses these to distinguish AgentBridge traffic from
   // other inbound clients and to record the originating IDE agent id.
   // Resolve agent id from the Host header against the target map; defensive
   // fallback to "unknown" when the host is somehow not in the map.
@@ -499,7 +499,7 @@ async function intercept(req, res, bodyBuffer, mappedModel, sourceModel) {
       const errText = await response.text().catch(() => "");
       respBody = errText.slice(0, INGEST_MAX_BODY);
       respSize = Buffer.byteLength(errText);
-      throw new Error(`OmniRoute ${response.status}: ${errText}`);
+      throw new Error(`RouteChi ${response.status}: ${errText}`);
     }
 
     res.writeHead(200, {
@@ -571,7 +571,7 @@ const server = https.createServer(sslOptions, async (req, res) => {
   if (bodyBuffer.length > 0) saveRequestLog(req.url, bodyBuffer);
 
   if (req.headers["x-omniroute-source"] === "omniroute") {
-    vlog(1, `[MITM] → PASSTHROUGH (OmniRoute source loop)`);
+    vlog(1, `[MITM] → PASSTHROUGH (RouteChi source loop)`);
     return passthrough(req, res, bodyBuffer);
   }
 

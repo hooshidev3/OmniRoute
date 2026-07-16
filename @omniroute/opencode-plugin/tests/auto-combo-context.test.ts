@@ -7,7 +7,7 @@
  *   if (input.model.limit.context === 0) return false  // never overflow
  *
  * so a zero context silently DISABLES opencode's smart auto-compaction for
- * auto combos. The session then grows unbounded until OmniRoute's
+ * auto combos. The session then grows unbounded until RouteChi's
  * server-side purifyHistory() destructively drops old messages — the
  * "coding agent keeps forgetting things" bug.
  *
@@ -20,7 +20,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { mapAutoComboToStaticEntry } from "../src/index.ts";
-import type { OmniRouteRawAutoCombo } from "../src/index.ts";
+import type { RouteChiRawAutoCombo } from "../src/index.ts";
 
 test("uses server-provided context_length and max_output_tokens", () => {
   const raw = {
@@ -30,7 +30,7 @@ test("uses server-provided context_length and max_output_tokens", () => {
     candidateCount: 5,
     context_length: 1048576,
     max_output_tokens: 65536,
-  } as OmniRouteRawAutoCombo;
+  } as RouteChiRawAutoCombo;
 
   const entry = mapAutoComboToStaticEntry(raw);
   assert.equal(entry.limit?.context, 1048576);
@@ -42,7 +42,7 @@ test("falls back to a safe positive default when the server omits limits (old se
     id: "auto",
     name: "Auto",
     candidateCount: 3,
-  } as OmniRouteRawAutoCombo;
+  } as RouteChiRawAutoCombo;
 
   const entry = mapAutoComboToStaticEntry(raw);
   assert.ok(
@@ -63,7 +63,7 @@ test("ignores non-positive server values and keeps the safe fallback", () => {
     candidateCount: 2,
     context_length: 0,
     max_output_tokens: -1,
-  } as OmniRouteRawAutoCombo;
+  } as RouteChiRawAutoCombo;
 
   const entry = mapAutoComboToStaticEntry(raw);
   assert.ok(

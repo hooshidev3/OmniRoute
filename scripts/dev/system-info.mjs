@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * system-info.mjs — OmniRoute System Information Reporter (#280)
+ * system-info.mjs — RouteChi System Information Reporter (#280)
  *
  * Collects system/environment info for bug reports.
  * Usage: node scripts/dev/system-info.mjs [--output system-info.txt]
  *
  * Output includes:
  *   - Node.js version
- *   - OmniRoute version
+ *   - RouteChi version
  *   - OS info
  *   - Relevant system packages (if apt available)
  *   - Agent CLI tools (qoder, gemini, claude, codex, antigravity, droid, etc.)
@@ -52,7 +52,7 @@ function section(title) {
 
 const lines = [];
 
-lines.push("OmniRoute System Information Report");
+lines.push("RouteChi System Information Report");
 lines.push(`Generated: ${new Date().toISOString()}`);
 
 // ── Node.js & Runtime ────────────────────────────────────────────────────
@@ -67,9 +67,9 @@ lines.push(`CPUs:       ${os.cpus().length}x ${os.cpus()[0]?.model || "unknown"}
 lines.push(`Total RAM:  ${Math.round(os.totalmem() / 1024 / 1024)} MB`);
 lines.push(`Free RAM:   ${Math.round(os.freemem() / 1024 / 1024)} MB`);
 
-// ── OmniRoute Version ────────────────────────────────────────────────────
+// ── RouteChi Version ────────────────────────────────────────────────────
 
-lines.push(section("OmniRoute"));
+lines.push(section("RouteChi"));
 try {
   const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf-8"));
   lines.push(`Version:    ${pkg.version}`);

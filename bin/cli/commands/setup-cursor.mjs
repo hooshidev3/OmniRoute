@@ -1,5 +1,5 @@
 /**
- * omniroute setup-cursor — guide Cursor to use OmniRoute.
+ * omniroute setup-cursor — guide Cursor to use RouteChi.
  *
  * Cursor stores its OpenAI key + "Override OpenAI Base URL" in an opaque SQLite
  * DB (state.vscdb) with no documented stable schema — NOT safe to file-write.
@@ -49,7 +49,7 @@ export function buildCursorInstructions({ apiBase, models }) {
     "  1. Cursor → Settings (Cmd/Ctrl + ,) → Models",
     "  2. Enable “Override OpenAI Base URL” and set it to:",
     `       ${apiBase}        (the /v1 suffix is required)`,
-    "  3. Set the OpenAI API Key to your OmniRoute key (OMNIROUTE_API_KEY)",
+    "  3. Set the OpenAI API Key to your RouteChi key (OMNIROUTE_API_KEY)",
     "  4. Add the model name(s) you want under “Models” (Cursor has no auto-discovery):",
   ];
   const sample = (models && models.length ? models : ["glm/glm-5.2", "kmc/kimi-k2.7"]).slice(0, 8);
@@ -80,7 +80,7 @@ async function fetchModelIds(apiBase, apiKey) {
 
 export async function runSetupCursorCommand(opts = {}) {
   const { apiBase, apiKey } = resolveCursorTarget(opts);
-  printHeading("OmniRoute → Cursor");
+  printHeading("RouteChi → Cursor");
   printInfo(`Server: ${apiBase}`);
 
   let models = [];
@@ -96,10 +96,10 @@ export async function runSetupCursorCommand(opts = {}) {
 export function registerSetupCursor(program) {
   program
     .command("setup-cursor")
-    .description("Print the steps to point Cursor at OmniRoute (chat panel; Cursor config is not file-writable)")
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .description("Print the steps to point Cursor at RouteChi (chat panel; Cursor config is not file-writable)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--only <patterns>", "Comma-separated substrings — suggest only matching model IDs")
     .action(async (opts) => {
       const code = await runSetupCursorCommand(opts);

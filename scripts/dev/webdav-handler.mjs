@@ -1,5 +1,5 @@
 /**
- * WebDAV file server handler for OmniRoute.
+ * WebDAV file server handler for RouteChi.
  *
  * Serves the Obsidian vault directory at /api/v1/webdav, enabling
  * Obsidian mobile (Remotely-Save plugin) to sync over Tailscale.
@@ -79,7 +79,7 @@ function getStaticKey() {
 }
 
 /**
- * Decrypt a value that may be encrypted with the OmniRoute enc:v1: format.
+ * Decrypt a value that may be encrypted with the RouteChi enc:v1: format.
  * If the value does not have the enc:v1: prefix, treat as plaintext (backward compat).
  * Returns null if decryption fails.
  *
@@ -464,7 +464,7 @@ function sendError(res, status, safeMessage, extraHeaders = {}) {
  */
 function sendUnauthorized(res) {
   sendError(res, 401, "Unauthorized", {
-    "WWW-Authenticate": 'Basic realm="OmniRoute WebDAV"',
+    "WWW-Authenticate": 'Basic realm="RouteChi WebDAV"',
   });
 }
 

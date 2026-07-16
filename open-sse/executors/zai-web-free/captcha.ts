@@ -32,7 +32,7 @@ import { Buffer } from "node:buffer";
 
 // ?��?�� Aliyun captcha credentials ?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��
 // The AccessKey and SecretKey are read from the settings store at runtime
-// (stored in the OmniRoute DB, editable via the dashboard). If not configured,
+// (stored in the RouteChi DB, editable via the dashboard). If not configured,
 // they default to the values from the GLM-Free-API Go source.
 //
 // Per .assets/reports/aliyun-captcha-report.md ?�B, these keys are embedded

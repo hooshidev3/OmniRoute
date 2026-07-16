@@ -6,7 +6,7 @@ import { normalizeClaudeHaikuConstraints } from "@omniroute/open-sse/services/cl
 // Claude Haiku 4.5 (and other haiku-tier models) reject:
 //   1. `thinking.type:"adaptive"` (only Sonnet/Opus support adaptive thinking)
 //   2. `output_config.effort` (also Sonnet/Opus only)
-// Several OmniRoute paths can still emit these on Haiku targets:
+// Several RouteChi paths can still emit these on Haiku targets:
 //   - Native Claude passthrough from newer Claude Code / Cowork clients
 //   - OpenAI→Claude translator buckets when reasoning_effort is "max"/"xhigh"
 //   - Per-model thinking defaults from the request flow

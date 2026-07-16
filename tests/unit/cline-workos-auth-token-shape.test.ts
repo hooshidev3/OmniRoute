@@ -38,8 +38,8 @@ test("buildClineHeaders emits the full cline client header set", () => {
   assert.equal(headers["X-Title"], "Cline");
   assert.equal(headers["X-CLIENT-TYPE"], "omniroute");
   assert.equal(headers["X-IS-MULTIROOT"], "false");
-  // Branding must be OmniRoute, never 9Router.
-  assert.ok(/^OmniRoute\//.test(headers["User-Agent"]));
+  // Branding must be RouteChi, never 9Router.
+  assert.ok(/^RouteChi\//.test(headers["User-Agent"]));
   assert.ok(!/9router/i.test(JSON.stringify(headers)));
 });
 

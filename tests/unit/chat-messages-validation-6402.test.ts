@@ -9,7 +9,7 @@ import { createChatPipelineHarness } from "../integration/_chatPipelineHarness.t
 // chatHelpers.ts (`No active credentials for provider: <p>`).
 //
 // The guard at src/sse/handlers/chat.ts now rejects three additional cases with
-// a clear OmniRoute-level 400 before any routing or upstream call:
+// a clear RouteChi-level 400 before any routing or upstream call:
 //   - present-but-null messages
 //   - present-but-non-array messages (number, string, object)
 //   - missing messages when the Responses-API `input` discriminator is also

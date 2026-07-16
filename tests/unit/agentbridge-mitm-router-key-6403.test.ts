@@ -1,18 +1,18 @@
 /**
  * Regression test for #6403 — AgentBridge MITM startup failure:
  *   "MITM server failed to start: no API key was provided
- *   (ROUTER_API_KEY is required). Set a router API key in OmniRoute and retry."
+ *   (ROUTER_API_KEY is required). Set a router API key in RouteChi and retry."
  *
  * Root cause: `resolveRouterApiKey()` (src/app/api/tools/agent-bridge/server/route.ts)
  * only checked an explicit `apiKey` request field — never sent by the AgentBridge
  * UI, since `AgentBridgeServerActionSchema` has no `apiKey` field — and the
  * `ROUTER_API_KEY` process env var, which is unset unless an operator manually
- * exports it before launching OmniRoute. On a normal built-from-source install
+ * exports it before launching RouteChi. On a normal built-from-source install
  * neither is ever set, so `startMitm()` always received `""` even though
- * OmniRoute already had a usable API key sitting in its own DB. The fix falls
+ * RouteChi already had a usable API key sitting in its own DB. The fix falls
  * back to `pickApiKeyForInternalUse()` — the same DB-backed selector already
  * used by the combo-health-check / cloud-sync-verify internal probes — so
- * AgentBridge reuses an existing OmniRoute key instead of hard-failing.
+ * AgentBridge reuses an existing RouteChi key instead of hard-failing.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -65,13 +65,13 @@ test("resolveRouterApiKey: ROUTER_API_KEY env wins over DB when set", async () =
 });
 
 // This is the #6403 reproduction: no explicit apiKey, no env var — but
-// OmniRoute already has a usable key in its own DB. Before the fix this
+// RouteChi already has a usable key in its own DB. Before the fix this
 // returned "" (empty string), which made startMitm() spawn server.cjs
 // without ROUTER_API_KEY, causing the "no API key was provided" failure.
-test("resolveRouterApiKey: falls back to an existing OmniRoute API key (#6403)", async () => {
+test("resolveRouterApiKey: falls back to an existing RouteChi API key (#6403)", async () => {
   const created = await createApiKey("AgentBridge Default", "machine-1");
   const resolved = await resolveRouterApiKey("");
-  assert.equal(resolved, created.key, "must reuse the existing OmniRoute API key, not fail empty");
+  assert.equal(resolved, created.key, "must reuse the existing RouteChi API key, not fail empty");
   assert.notEqual(resolved, "", "must never silently resolve to an empty ROUTER_API_KEY");
 });
 

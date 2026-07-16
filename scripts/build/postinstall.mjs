@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * OmniRoute — Postinstall Native Module Fix
+ * RouteChi — Postinstall Native Module Fix
  *
  * The npm package ships with a Next.js standalone build that includes
  * native modules compiled for the build platform (Linux x64) inside

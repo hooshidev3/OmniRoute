@@ -13,7 +13,7 @@ const REAL_VERSION = JSON.parse(
 ).version;
 
 // #3295 issue 1: getCurrentVersion() must resolve package.json relative to the
-// script, not process.cwd(). When OmniRoute is installed globally, the user's
+// script, not process.cwd(). When RouteChi is installed globally, the user's
 // cwd is not the package root, so a cwd-relative lookup returns null →
 // "Could not determine current version".
 test("getCurrentVersion resolves the real version from a foreign cwd (#3295)", async () => {

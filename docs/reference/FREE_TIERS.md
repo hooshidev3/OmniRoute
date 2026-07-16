@@ -11,7 +11,7 @@ lastUpdated: 2026-06-28
 > **Last researched:** 2026-06-17 — per-provider web research (official docs + last-7-days news, 50-agent pass with adversarial verification) refreshing every free-tier quota + ToS.
 > **Source of truth (catalog):** `open-sse/config/freeModelCatalog.ts` (per-MODEL budgets, pool-deduped). The token-budget numbers below come from live web research and are an **approximation** — see [Methodology & caveats](#methodology--caveats).
 
-## TL;DR — how much free inference does OmniRoute actually aggregate?
+## TL;DR — how much free inference does RouteChi actually aggregate?
 
 | Metric                                      | Tokens / month    | Meaning                                                                                                                                                                                                                                                |
 | ------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -21,7 +21,7 @@ lastUpdated: 2026-06-28
 | **+ deposit-unlock boost**                  | **+~24M**         | A one-time **$10** OpenRouter top-up raises its free pool from 50 → 1000 req/day. Reported separately so it never inflates the steady number.                                                                                                          |
 | Theoretical ceiling (all rate limits, 24/7) | ~10B              | Sum of every provider rate limit extrapolated to non-stop use. **Not a guarantee** — do not headline this.                                                                                                                                             |
 
-**Honest headline:** _OmniRoute aggregates **~1.6B documented free tokens per month** (up to ~2.1B in your first month with signup credits) across 40+ free-tier pools — plus a long tail of permanently-free, no-cap providers — and RTK + Caveman compression (15–95% token savings) stretches that further._
+**Honest headline:** _RouteChi aggregates **~1.6B documented free tokens per month** (up to ~2.1B in your first month with signup credits) across 40+ free-tier pools — plus a long tail of permanently-free, no-cap providers — and RTK + Caveman compression (15–95% token savings) stretches that further._
 
 > **Why this dropped from the previous ~1.94B.** The 2026-06-17 refresh is an honesty correction, not a loss: `gemini` is now pool-deduped (was inflated by counting each Flash variant separately, 462M → 60M), `cloudflare-ai` corrected to its real 10k-Neurons/day (122M → 30M), `doubao` reclassified as a one-time signup credit (not recurring), and shut-down tiers removed (`github-models` closed to new signups, `chutes`/`phind`/`kluster` discontinued). Partly offset by `llm7` (correct 5M/day → 150M) and new free providers (Kilo, OpenCode Zen, Z.AI GLM-Flash).
 
@@ -62,7 +62,7 @@ A 50-agent web-research pass (official docs + last-7-days news, adversarially ve
 
 ### ⚠️ Caution — personal-use / proxy clauses worth checking (19)
 
-> Their free access is real and OmniRoute can route to them; the clauses below are just worth knowing. The OAuth/keyless ones aren't token-quantifiable, so they're not in the headline number (not because they're unusable).
+> Their free access is real and RouteChi can route to them; the clauses below are just worth knowing. The OAuth/keyless ones aren't token-quantifiable, so they're not in the headline number (not because they're unusable).
 
 | Provider         | Note                                                                                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -76,7 +76,7 @@ A 50-agent web-research pass (official docs + last-7-days news, adversarially ve
 | `fireworks`      | ToS explicitly prohibits proxy/intermediary use, API key transfers, and sublicensing (Sections 2.1 and 2.2(i)(j)); self-hosted personal proxies are n… |
 | `friendliai`     | ToS Section 8(e) and 8(f) explicitly prohibit using FriendliAI as a proxy or allowing third-party access on a standalone basis, and forbid reselling/… |
 | `iflytek`        | Section 2.4(3) of the iFlytek Spark LLM Service Agreement explicitly prohibits "using any automated or programmatic methods to extract data or output… |
-| `kiro`           | Kiro FAQ explicitly prohibits use with "OpenClaw and similar tools that leverage third-party harnesses" — a self-hosted AI proxy (like OmniRoute) rou… |
+| `kiro`           | Kiro FAQ explicitly prohibits use with "OpenClaw and similar tools that leverage third-party harnesses" — a self-hosted AI proxy (like RouteChi) rou… |
 | `modal`          | ToS Section 1.3 explicitly prohibits "rent, resell or otherwise allow any third party direct access to or use of the Service" — building a self-hoste… |
 | `muse-spark-web` | Meta ToS explicitly prohibits automated access without prior permission, reverse engineering without written permission, and circumventing technologi… |
 | `nlpcloud`       | ToS explicitly prohibits "setting up a proxy or other device that allows others to access the Service through it" and grants only a non-transferable,… |
@@ -249,7 +249,7 @@ A 50-agent web-research pass (official docs + last-7-days news, adversarially ve
 
 - **`360ai`** — The shipped freeNote "Free 360 AI Brain models" appears outdated. Current access is application-gated and paid. The 2023 launch-era promotional tokens (100M–250M one-time) may have been the basis for…
 - **`agentrouter`** — Our shipped freeNote says "$200 free credits on signup." Current reality shows standard (non-referral) signups receive only $100; referral signups may get $200 but a community comment from April 2026…
-- **`agy`** — Our shipped freeNote says "(none)" implying no free tier, but Antigravity does have a free OAuth-gated tier. However, the ToS explicitly prohibits using this free tier through a proxy like OmniRoute …
+- **`agy`** — Our shipped freeNote says "(none)" implying no free tier, but Antigravity does have a free OAuth-gated tier. However, the ToS explicitly prohibits using this free tier through a proxy like RouteChi …
 - **`ai21`** — Tightened: trial window shrunk from "3 months" to 7 days. The $10 credit amount remains the same, but validity dropped sharply from ~90 days to 7 days.
 - **`aimlapi`** — Changed significantly. Shipped freeNote advertised "$0.025/day free credits — 200+ models" but the free tier is now paused/discontinued. The $0.025/day credit allocation (50,000 credits/day, 10 req/d…
 - **`amazon-q`** — Our shipped freeNote says "(none)" — the reality is worse: the product is now discontinued for new signups (May 15, 2026). Previously the free tier offered 50 agentic requests/month + unlimited inlin…

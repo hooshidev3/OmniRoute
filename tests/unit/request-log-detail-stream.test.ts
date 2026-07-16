@@ -91,7 +91,7 @@ test("event stream hidden when debugEnabled is false", () => {
   );
 });
 
-test("status discrepancy shows both OmniRoute and provider statuses", () => {
+test("status discrepancy shows both RouteChi and provider statuses", () => {
   const html = renderToStaticMarkup(
     React.createElement(RequestLoggerDetail, {
       log: {
@@ -119,9 +119,9 @@ test("status discrepancy shows both OmniRoute and provider statuses", () => {
 
   assert.notEqual(html.indexOf("Upstream: 200"), -1, "Should display upstream/provider status");
   assert.notEqual(
-    html.indexOf("OmniRoute returned 504"),
+    html.indexOf("RouteChi returned 504"),
     -1,
-    "Should indicate OmniRoute returned its own status"
+    "Should indicate RouteChi returned its own status"
   );
 });
 

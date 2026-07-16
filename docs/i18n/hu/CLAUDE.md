@@ -39,7 +39,7 @@ A teljes tesztmátrixért lásd a `CONTRIBUTING.md` → "Tesztek futtatása" ré
 
 ## Projekt áttekintése
 
-**OmniRoute** — egységes AI proxy/router. Egy végpont, 160+ LLM szolgáltató, automatikus visszaesés.
+**RouteChi** — egységes AI proxy/router. Egy végpont, 160+ LLM szolgáltató, automatikus visszaesés.
 
 | Réteg          | Helyszín                | Cél                                                                   |
 | -------------- | ----------------------- | --------------------------------------------------------------------- |
@@ -80,7 +80,7 @@ Az API útvonalak következetes mintát követnek: `Útvonal → CORS előzetes 
 
 ## Ellenállás Futási Állapot
 
-Az OmniRoute három kapcsolódó, de különálló ideiglenes hiba mechanizmust tartalmaz. Tartsd a hatókörüket külön, amikor a routing viselkedést hibakeresed. Lásd a
+Az RouteChi három kapcsolódó, de különálló ideiglenes hiba mechanizmust tartalmaz. Tartsd a hatókörüket külön, amikor a routing viselkedést hibakeresed. Lásd a
 [3-rétegű ellenállás diagramot](./docs/diagrams/exported/resilience-3layers.svg)
 (forrás: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 egy pillantásra való térképhez.
@@ -406,4 +406,4 @@ git push -u origin feat/your-feature
 13. Soha ne interpolálj külső útvonalakat vagy futási értékeket shell szkriptekbe, amelyeket az `exec()`/`spawn()`-nak adsz át — inkább az `env` opcióval add át. Hivatkozás: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Soha ne utasíts el egy CodeQL / Secret-Scanning riasztást anélkül, hogy (a) először ellenőriznéd a fenti mintázat dokumentációját, hogy lássad, alkalmazható-e a segédprogram, és (b) rögzítenéd a technikai indoklást az elutasító megjegyzésben. Precedens: `js/stack-trace-exposure` emelt a hívási helyeken, amelyek már a `sanitizeErrorMessage()`-en keresztül haladnak, egy ismert CodeQL korlátozás (egyedi szűrők nem ismertek) — utasítsd el `false positive`-ként, hivatkozva a `docs/security/ERROR_SANITIZATION.md`-ra.
 15. Soha ne tedd közzé azokat az útvonalakat, amelyek gyermek folyamatokat indítanak (`/api/mcp/`, `/api/cli-tools/runtime/`) anélkül, hogy a `isLocalOnlyPath()` osztályozás szerepelne a `src/server/authz/routeGuard.ts`-ben. A hurok visszahatása feltétel nélkül megtörténik bármilyen hitelesítési ellenőrzés előtt — a csatornán keresztül kiszivárgott JWT nem indíthat folyamatot. Lásd: `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Soha ne tartalmazz `Co-Authored-By` trailer-eket, amelyek AI-asszisztenst, LLM-et vagy automatizálási fiókot ismernek el (pl. "Claude", "GPT", "Copilot", "Bot" tartalmú nevek; `anthropic.com` / `openai.com` / bot tulajdonú `noreply.github.com` címeken lévő e-mailek). Az ilyen trailer-ek a commit-attribúciót a bot fiókhoz irányítják a GitHubon, elrejtve a valódi szerzőt (`diegosouzapw`) a PR-történetben. Az emberi közreműködők — beleértve az upstream PR-szerzőket és az OmniRoute-ba portolt issue-bejelentőket — szabványos `Co-authored-by: Name <email>` trailer-ekkel jóváírhatók és JÓVÁ KELL ÍRNI; az upstream-port munkafolyamatok (`/port-upstream-features`, `/port-upstream-issues`) ettől függenek.
+16. Soha ne tartalmazz `Co-Authored-By` trailer-eket, amelyek AI-asszisztenst, LLM-et vagy automatizálási fiókot ismernek el (pl. "Claude", "GPT", "Copilot", "Bot" tartalmú nevek; `anthropic.com` / `openai.com` / bot tulajdonú `noreply.github.com` címeken lévő e-mailek). Az ilyen trailer-ek a commit-attribúciót a bot fiókhoz irányítják a GitHubon, elrejtve a valódi szerzőt (`diegosouzapw`) a PR-történetben. Az emberi közreműködők — beleértve az upstream PR-szerzőket és az RouteChi-ba portolt issue-bejelentőket — szabványos `Co-authored-by: Name <email>` trailer-ekkel jóváírhatók és JÓVÁ KELL ÍRNI; az upstream-port munkafolyamatok (`/port-upstream-features`, `/port-upstream-issues`) ettől függenek.

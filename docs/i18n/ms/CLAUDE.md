@@ -39,7 +39,7 @@ Untuk matriks ujian penuh, lihat `CONTRIBUTING.md` → "Menjalankan Ujian". Untu
 
 ## Projek Secara Ringkas
 
-**OmniRoute** — proksi/router AI yang bersatu. Satu titik akhir, 160+ penyedia LLM, auto-fallback.
+**RouteChi** — proksi/router AI yang bersatu. Satu titik akhir, 160+ penyedia LLM, auto-fallback.
 
 | Lapisan       | Lokasi                  | Tujuan                                                               |
 | ------------- | ----------------------- | -------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ Laluan API mengikuti pola yang konsisten: `Laluan → CORS preflight → pengesa
 
 ## Keadaan Runtime Ketahanan
 
-OmniRoute mempunyai tiga mekanisme kegagalan sementara yang berkaitan tetapi berbeza. Pastikan skop mereka terpisah semasa menyahpepijat tingkah laku penghalaan. Lihat
+RouteChi mempunyai tiga mekanisme kegagalan sementara yang berkaitan tetapi berbeza. Pastikan skop mereka terpisah semasa menyahpepijat tingkah laku penghalaan. Lihat
 [rajah ketahanan 3-lapisan](./docs/diagrams/exported/resilience-3layers.svg)
 (sumber: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 untuk peta ringkas.
@@ -407,4 +407,4 @@ git push -u origin feat/your-feature
 13. Jangan pernah interpolasi rentetan laluan luaran atau nilai runtime ke dalam skrip shell yang dihantar kepada `exec()`/`spawn()` — hantarkan melalui pilihan `env` sebaliknya. Rujukan: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Jangan pernah menolak amaran CodeQL / Pengimbasan Rahsia tanpa (a) terlebih dahulu memeriksa dokumen pola di atas untuk melihat jika pembantu terpakai, dan (b) merekodkan justifikasi teknikal dalam komen penolakan. Preseden: `js/stack-trace-exposure` yang dibangkitkan pada callsites yang sudah lalui `sanitizeErrorMessage()` adalah batasan CodeQL yang diketahui (pembersih khusus tidak dikenali) — tolak sebagai `false positive` merujuk kepada `docs/security/ERROR_SANITIZATION.md`.
 15. Jangan pernah mendedahkan laluan yang memulakan proses anak (`/api/mcp/`, `/api/cli-tools/runtime/`) tanpa klasifikasi `isLocalOnlyPath()` dalam `src/server/authz/routeGuard.ts`. Penguatkuasaan loopback berlaku tanpa syarat sebelum sebarang semakan pengesahan — JWT yang bocor melalui terowong tidak boleh mencetuskan pemulaan proses. Lihat `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Jangan sekali-kali sertakan trailer `Co-Authored-By` yang mengkreditkan pembantu AI, LLM, atau akaun automasi (cth. nama yang mengandungi "Claude", "GPT", "Copilot", "Bot"; emel di `anthropic.com` / `openai.com` / alamat `noreply.github.com` milik bot). Trailer sebegitu mengarahkan atribusi commit kepada akaun bot di GitHub, menyembunyikan penulis sebenar (`diegosouzapw`) dalam sejarah PR. Penyumbang manusia — termasuk penulis PR upstream dan pelapor issue yang diport ke OmniRoute — BOLEH dan SEPATUTNYA dikreditkan dengan trailer standard `Co-authored-by: Name <email>`; aliran kerja upstream-port (`/port-upstream-features`, `/port-upstream-issues`) bergantung pada ini.
+16. Jangan sekali-kali sertakan trailer `Co-Authored-By` yang mengkreditkan pembantu AI, LLM, atau akaun automasi (cth. nama yang mengandungi "Claude", "GPT", "Copilot", "Bot"; emel di `anthropic.com` / `openai.com` / alamat `noreply.github.com` milik bot). Trailer sebegitu mengarahkan atribusi commit kepada akaun bot di GitHub, menyembunyikan penulis sebenar (`diegosouzapw`) dalam sejarah PR. Penyumbang manusia — termasuk penulis PR upstream dan pelapor issue yang diport ke RouteChi — BOLEH dan SEPATUTNYA dikreditkan dengan trailer standard `Co-authored-by: Name <email>`; aliran kerja upstream-port (`/port-upstream-features`, `/port-upstream-issues`) bergantung pada ini.

@@ -374,7 +374,7 @@ describe("useBatchActions — sanitization invariant", () => {
     global.fetch = vi
       .fn()
       .mockRejectedValue(
-        new Error("Network failed at /home/diegosouzapw/dev/proxys/OmniRoute/src/route.ts:88"),
+        new Error("Network failed at /home/diegosouzapw/dev/proxys/RouteChi/src/route.ts:88"),
       );
 
     const hook = renderHook({}, containers);

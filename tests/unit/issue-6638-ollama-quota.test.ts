@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { checkFallbackError } from "../../open-sse/services/accountFallback.ts";
 
-// Repro for GitHub issue #6638: "OmniRoute doesn't respect exhausted quotas"
+// Repro for GitHub issue #6638: "RouteChi doesn't respect exhausted quotas"
 test("#6638: Ollama Cloud weekly-quota-exhausted 429 must NOT get a short generic rate-limit cooldown", () => {
   const errorText = JSON.stringify({
     error: "You have exceeded your weekly usage quota. Your quota will reset in 3 days.",

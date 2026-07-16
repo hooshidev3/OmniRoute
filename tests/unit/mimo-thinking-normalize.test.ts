@@ -3,7 +3,7 @@
  *
  * MiMo controls reasoning ONLY via `thinking:{type:"enabled"|"disabled"}` and rejects
  * extra/unknown request params with a strict "400 Param Incorrect". These tests pin the
- * normalization that maps OmniRoute's internal reasoning signals onto MiMo's native shape:
+ * normalization that maps RouteChi's internal reasoning signals onto MiMo's native shape:
  * reduce any thinking object to `{type}`, and drop `reasoning_effort` / `reasoning`.
  */
 import test from "node:test";

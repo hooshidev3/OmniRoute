@@ -39,7 +39,7 @@ npm run test:all
 
 ## نظرة عامة على المشروع
 
-**OmniRoute** — وكيل/موجه AI موحد. نقطة نهاية واحدة، أكثر من 160 مزود LLM، تراجع تلقائي.
+**RouteChi** — وكيل/موجه AI موحد. نقطة نهاية واحدة، أكثر من 160 مزود LLM، تراجع تلقائي.
 
 | الطبقة         | الموقع                  | الغرض                                                            |
 | -------------- | ----------------------- | ---------------------------------------------------------------- |
@@ -82,7 +82,7 @@ Monorepo: `src/` (تطبيق Next.js 16)، `open-sse/` (مساحة عمل محر
 
 ## حالة وقت التشغيل للمرونة
 
-يمتلك OmniRoute ثلاث آليات فشل مؤقتة مرتبطة ولكن متميزة. حافظ على نطاقها منفصلًا عند تصحيح سلوك التوجيه. راجع
+يمتلك RouteChi ثلاث آليات فشل مؤقتة مرتبطة ولكن متميزة. حافظ على نطاقها منفصلًا عند تصحيح سلوك التوجيه. راجع
 [مخطط المرونة ذو 3 طبقات](./docs/diagrams/exported/resilience-3layers.svg)
 (المصدر: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 لخريطة سريعة.
@@ -392,4 +392,4 @@ git push -u origin feat/your-feature
 13. لا تقم بإدراج مسارات خارجية أو قيم وقت التشغيل في سكربتات الشل المرسلة إلى `exec()`/`spawn()` — مرر عبر خيار `env` بدلاً من ذلك. المرجع: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. لا تتجاهل تنبيه CodeQL / Secret-Scanning بدون (أ) التحقق أولاً من وثائق النمط أعلاه لمعرفة ما إذا كان المساعد ينطبق، و (ب) تسجيل التبرير الفني في تعليق الإلغاء. سابقة: `js/stack-trace-exposure` التي تم رفعها على مواقع الاتصال التي تمر بالفعل عبر `sanitizeErrorMessage()` هي قيود معروفة لـ CodeQL (المعقمات المخصصة غير معترف بها) — تجاهل كـ `false positive` مع الإشارة إلى `docs/security/ERROR_SANITIZATION.md`.
 15. لا تعرض المسارات التي تولد عمليات فرعية (`/api/mcp/`، `/api/cli-tools/runtime/`) بدون تصنيف `isLocalOnlyPath()` في `src/server/authz/routeGuard.ts`. يتم تنفيذ التحقق من الحلقة بشكل غير مشروط قبل أي تحقق من المصادقة — لا يمكن أن يؤدي تسرب JWT عبر النفق إلى تشغيل العملية. انظر `docs/security/ROUTE_GUARD_TIERS.md`.
-16. لا تضمن أبدًا ملحقات `Co-Authored-By` التي تنسب لمساعد ذكاء اصطناعي أو LLM أو حساب آلي (مثل الأسماء التي تحتوي على "Claude" أو "GPT" أو "Copilot" أو "Bot"؛ والبريد الإلكتروني على `anthropic.com` / `openai.com` / عناوين `noreply.github.com` المملوكة للبوتات). تلك الملحقات توجه نسبة الالتزامات إلى حساب البوت على GitHub، مما يخفي المؤلف الحقيقي (`diegosouzapw`) في تاريخ PR. المساهمون البشريون — بما في ذلك مؤلفو PRs upstream ومُبلغو الـ issues الذين يتم نقلهم إلى OmniRoute — يجوز ويجب أن يُنسبوا باستخدام ملحقات `Co-authored-by: Name <email>` القياسية؛ تعتمد سير عمل النقل (`/port-upstream-features` و `/port-upstream-issues`) على ذلك.
+16. لا تضمن أبدًا ملحقات `Co-Authored-By` التي تنسب لمساعد ذكاء اصطناعي أو LLM أو حساب آلي (مثل الأسماء التي تحتوي على "Claude" أو "GPT" أو "Copilot" أو "Bot"؛ والبريد الإلكتروني على `anthropic.com` / `openai.com` / عناوين `noreply.github.com` المملوكة للبوتات). تلك الملحقات توجه نسبة الالتزامات إلى حساب البوت على GitHub، مما يخفي المؤلف الحقيقي (`diegosouzapw`) في تاريخ PR. المساهمون البشريون — بما في ذلك مؤلفو PRs upstream ومُبلغو الـ issues الذين يتم نقلهم إلى RouteChi — يجوز ويجب أن يُنسبوا باستخدام ملحقات `Co-authored-by: Name <email>` القياسية؛ تعتمد سير عمل النقل (`/port-upstream-features` و `/port-upstream-issues`) على ذلك.

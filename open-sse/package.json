@@ -1,7 +1,7 @@
 {
   "name": "@omniroute/open-sse",
   "version": "3.8.48",
-  "description": "Express SSE sidecar for OmniRoute — handles streaming, protocol translation, and provider orchestration",
+  "description": "Express SSE sidecar for RouteChi — handles streaming, protocol translation, and provider orchestration",
   "type": "module",
   "main": "index.js",
   "types": "types.d.ts",

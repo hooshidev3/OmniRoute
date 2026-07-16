@@ -1,7 +1,7 @@
 /**
  * T-02 auth-hook contract tests.
  *
- * Covers the `createOmniRouteAuthHook(opts)` factory and its loader behaviour
+ * Covers the `createRouteChiAuthHook(opts)` factory and its loader behaviour
  * against every Auth flavor (`api`, `oauth`, null, empty key). Validates the
  * multi-instance fix: provider id flows from plugin options, not a module
  * constant.
@@ -9,35 +9,35 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createOmniRouteAuthHook } from "../src/index.js";
+import { createRouteChiAuthHook } from "../src/index.js";
 
-test("createOmniRouteAuthHook: default providerId is 'omniroute'", () => {
-  const hook = createOmniRouteAuthHook();
+test("createRouteChiAuthHook: default providerId is 'omniroute'", () => {
+  const hook = createRouteChiAuthHook();
   assert.equal(hook.provider, "opencode-omniroute");
 });
 
-test("createOmniRouteAuthHook: custom providerId binds to hook.provider (multi-instance)", () => {
-  const hook = createOmniRouteAuthHook({ providerId: "omniroute-preprod" });
+test("createRouteChiAuthHook: custom providerId binds to hook.provider (multi-instance)", () => {
+  const hook = createRouteChiAuthHook({ providerId: "omniroute-preprod" });
   assert.equal(hook.provider, "opencode-omniroute-preprod");
 });
 
-test("createOmniRouteAuthHook: methods[0] is type 'api' with label including displayName", () => {
-  const hook = createOmniRouteAuthHook();
+test("createRouteChiAuthHook: methods[0] is type 'api' with label including displayName", () => {
+  const hook = createRouteChiAuthHook();
   assert.equal(Array.isArray(hook.methods), true);
   assert.equal(hook.methods.length, 1);
   const m = hook.methods[0];
   assert.equal(m.type, "api");
-  assert.equal(m.label, "OmniRoute API Key");
+  assert.equal(m.label, "RouteChi API Key");
 
-  const custom = createOmniRouteAuthHook({ providerId: "omniroute-preprod" });
-  assert.equal(custom.methods[0].label, "OmniRoute (opencode-omniroute-preprod) API Key");
+  const custom = createRouteChiAuthHook({ providerId: "omniroute-preprod" });
+  assert.equal(custom.methods[0].label, "RouteChi (opencode-omniroute-preprod) API Key");
 });
 
-test("createOmniRouteAuthHook: prompts[0] uses key='apiKey' per @opencode-ai/plugin contract", () => {
+test("createRouteChiAuthHook: prompts[0] uses key='apiKey' per @opencode-ai/plugin contract", () => {
   // NOTE: spec referenced `name: "apiKey"`; the official
   // @opencode-ai/plugin@1.15.6 prompt shape uses `key` + `message` (no
   // `name`/`label`/`mask` fields). Asserting against the real type contract.
-  const hook = createOmniRouteAuthHook();
+  const hook = createRouteChiAuthHook();
   const m = hook.methods[0];
   assert.equal(m.type, "api");
   // narrow: api method may carry prompts
@@ -58,7 +58,7 @@ test("loader: valid api auth → {apiKey} when no baseURL option (T-04: fetch om
   // interceptor cannot gate-keep requests, so the loader falls back to
   // apiKey-only and the AI-SDK uses its default fetch. See fetch-interceptor
   // tests for the wired-fetch branches.
-  const hook = createOmniRouteAuthHook();
+  const hook = createRouteChiAuthHook();
   assert.ok(hook.loader, "loader must be defined");
   const result = await hook.loader!(
     async () => ({ type: "api", key: "sk-test" }) as never,
@@ -68,7 +68,7 @@ test("loader: valid api auth → {apiKey} when no baseURL option (T-04: fetch om
 });
 
 test("loader: valid api auth → {apiKey, baseURL, fetch} when baseURL option set (T-04)", async () => {
-  const hook = createOmniRouteAuthHook({ baseURL: "https://or.example.com/v1" });
+  const hook = createRouteChiAuthHook({ baseURL: "https://or.example.com/v1" });
   const result = await hook.loader!(
     async () => ({ type: "api", key: "sk-x" }) as never,
     {} as never
@@ -85,7 +85,7 @@ test("loader: valid api auth → {apiKey, baseURL, fetch} when baseURL option se
 test("loader: features.fetchInterceptor=false AND geminiSanitization=false → no custom fetch (flags honored)", async () => {
   // Regression: both fetch-layer flags were documented + schema-validated but
   // silently ignored. Disabling both must fall back to the SDK default fetch.
-  const hook = createOmniRouteAuthHook({
+  const hook = createRouteChiAuthHook({
     baseURL: "https://or.example.com/v1",
     features: { fetchInterceptor: false, geminiSanitization: false },
   });
@@ -102,7 +102,7 @@ test("loader: features.fetchInterceptor=false AND geminiSanitization=false → n
 });
 
 test("loader: features.fetchInterceptor=false but geminiSanitization=true → fetch still wired (sanitizer only)", async () => {
-  const hook = createOmniRouteAuthHook({
+  const hook = createRouteChiAuthHook({
     baseURL: "https://or.example.com/v1",
     features: { fetchInterceptor: false, geminiSanitization: true },
   });
@@ -118,7 +118,7 @@ test("loader: features.fetchInterceptor=false but geminiSanitization=true → fe
 });
 
 test("loader: null/undefined auth → {} (no creds yet, OC surfaces /connect)", async () => {
-  const hook = createOmniRouteAuthHook();
+  const hook = createRouteChiAuthHook();
   const r1 = await hook.loader!(async () => null as never, {} as never);
   assert.deepEqual(r1, {});
   const r2 = await hook.loader!(async () => undefined as never, {} as never);
@@ -126,7 +126,7 @@ test("loader: null/undefined auth → {} (no creds yet, OC surfaces /connect)", 
 });
 
 test("loader: oauth-flavored auth → {} (wrong method type, ignored)", async () => {
-  const hook = createOmniRouteAuthHook();
+  const hook = createRouteChiAuthHook();
   const result = await hook.loader!(
     async () =>
       ({
@@ -141,7 +141,7 @@ test("loader: oauth-flavored auth → {} (wrong method type, ignored)", async ()
 });
 
 test("loader: api auth with empty key → {} (empty creds rejected)", async () => {
-  const hook = createOmniRouteAuthHook();
+  const hook = createRouteChiAuthHook();
   const result = await hook.loader!(async () => ({ type: "api", key: "" }) as never, {} as never);
   assert.deepEqual(result, {});
 });

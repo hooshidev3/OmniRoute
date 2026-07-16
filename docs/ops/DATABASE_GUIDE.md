@@ -6,7 +6,7 @@ lastUpdated: 2026-06-28
 
 # Database Schema & Operations Guide
 
-> **TL;DR**: OmniRoute uses **SQLite with WAL journaling** as its primary store, with **AES-256-GCM** encryption at rest for sensitive fields. This guide covers the schema, migrations, backup/recovery, and operational runbooks.
+> **TL;DR**: RouteChi uses **SQLite with WAL journaling** as its primary store, with **AES-256-GCM** encryption at rest for sensitive fields. This guide covers the schema, migrations, backup/recovery, and operational runbooks.
 
 **Sources:**
 
@@ -21,7 +21,7 @@ lastUpdated: 2026-06-28
 
 ## Why SQLite?
 
-OmniRoute chose SQLite over PostgreSQL/MySQL for several reasons:
+RouteChi chose SQLite over PostgreSQL/MySQL for several reasons:
 
 | Factor          | SQLite                            | PostgreSQL                        |
 | --------------- | --------------------------------- | --------------------------------- |
@@ -32,7 +32,7 @@ OmniRoute chose SQLite over PostgreSQL/MySQL for several reasons:
 | **Backup**      | Single-file copy                  | `pg_dump` or filesystem snapshot  |
 | **Use case**    | Per-user install, embedded        | Multi-tenant SaaS                 |
 
-For **single-user, single-instance** deployments (the primary OmniRoute use case), SQLite is simpler and faster.
+For **single-user, single-instance** deployments (the primary RouteChi use case), SQLite is simpler and faster.
 
 ### WAL Journaling
 
@@ -78,7 +78,7 @@ DATA_DIR=/custom/path omniroute
 
 ## Domain Module Architecture
 
-OmniRoute's database has **94 domain modules** in `src/lib/db/`. Each module:
+RouteChi's database has **94 domain modules** in `src/lib/db/`. Each module:
 
 - Owns one or more specific tables
 - Exports typed CRUD functions
@@ -87,7 +87,7 @@ OmniRoute's database has **94 domain modules** in `src/lib/db/`. Each module:
 
 ### The 94 DB Modules
 
-OmniRoute has **94 module files** in `src/lib/db/`. Below is a sampling of core modules; see the directory listing for the complete list:
+RouteChi has **94 module files** in `src/lib/db/`. Below is a sampling of core modules; see the directory listing for the complete list:
 
 | Module                  | Tables                                                         | Responsibility                                                            |
 | ----------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -183,7 +183,7 @@ The full list of ~30+ tables is in `src/lib/db/migrations/`.
 
 ## Migrations
 
-OmniRoute uses **versioned, idempotent migrations** in `src/lib/db/migrations/`. Each migration is a single SQL file named `NNN_description.sql`.
+RouteChi uses **versioned, idempotent migrations** in `src/lib/db/migrations/`. Each migration is a single SQL file named `NNN_description.sql`.
 
 ### Migration Naming
 
@@ -253,7 +253,7 @@ UPDATE combos SET priority = 100 WHERE priority IS NULL;
 CREATE INDEX IF NOT EXISTS idx_combos_priority ON combos(priority);
 ```
 
-> **Backwards-incompatible changes** (e.g., dropping columns) are tricky. OmniRoute does NOT support downgrade — once a migration is applied, the schema change is permanent. Plan accordingly.
+> **Backwards-incompatible changes** (e.g., dropping columns) are tricky. RouteChi does NOT support downgrade — once a migration is applied, the schema change is permanent. Plan accordingly.
 
 ---
 
@@ -307,7 +307,7 @@ For performance reasons, the following are stored in plaintext:
 
 ## Encryption Caveats (v3.8.16+)
 
-OmniRoute uses **`migrateLegacyEncryptedString()`** to handle two encryption schemes transparently:
+RouteChi uses **`migrateLegacyEncryptedString()`** to handle two encryption schemes transparently:
 
 - **Legacy** (pre-v3.5.0): XOR-based "encryption" (not real crypto)
 - **Current**: AES-256-GCM with proper IV and auth tag
@@ -389,7 +389,7 @@ For zero-downtime backup of a live DB:
 sqlite3 ~/.omniroute/storage.sqlite ".backup /backups/omniroute-hot.db"
 ```
 
-This uses SQLite's online backup API — safe to run while OmniRoute is running.
+This uses SQLite's online backup API — safe to run while RouteChi is running.
 
 ---
 
@@ -432,7 +432,7 @@ PRAGMA mmap_size = 268435456;  -- 256MB
 
 ### Compaction
 
-Long-running OmniRoute instances benefit from occasional `VACUUM`:
+Long-running RouteChi instances benefit from occasional `VACUUM`:
 
 ```bash
 sqlite3 ~/.omniroute/storage.sqlite "VACUUM;"
@@ -541,7 +541,7 @@ EOF
 ### Reset (Wipe) All Data
 
 ```bash
-# Stop OmniRoute first
+# Stop RouteChi first
 routechi stop
 
 # Delete the DB file
@@ -579,7 +579,7 @@ Another process is holding a write lock. Either:
 
 - Wait for the other process to finish (check `lsof | grep storage.sqlite`)
 - Kill the other process
-- If persistent, restart OmniRoute
+- If persistent, restart RouteChi
 
 ### "Foreign key constraint failed"
 
@@ -609,10 +609,10 @@ PRAGMA mmap_size = 0;
 
 The migration ran in a transaction, so it should have rolled back. If not:
 
-1. **Stop OmniRoute** (prevent further attempts)
+1. **Stop RouteChi** (prevent further attempts)
 2. **Check the DB state** with `sqlite3`
 3. **Manually fix** the partial migration
-4. **Re-run** OmniRoute (the migration will be retried)
+4. **Re-run** RouteChi (the migration will be retried)
 
 To prevent this, always test migrations on a copy first.
 

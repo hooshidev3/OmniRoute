@@ -39,7 +39,7 @@ test("collapse fires on interleaved tree AND no [ref=eXX] anchor is lost", () =>
   // BUG B: collapse must actually fire despite interleaved noise lines.
   assert.ok(out.length < input.length, "output shorter (compressed)");
   assert.ok(
-    out.includes('items omitted by OmniRoute MCP filter'),
+    out.includes('items omitted by RouteChi MCP filter'),
     "collapse notice present (collapse fired)"
   );
 

@@ -1,6 +1,6 @@
 # Podman Deployment
 
-Run OmniRoute with Podman via **Quadlet** (systemd integration) or **podman compose**.
+Run RouteChi with Podman via **Quadlet** (systemd integration) or **podman compose**.
 
 ---
 
@@ -33,7 +33,7 @@ uncomment/replace the `EnvironmentFile` line with the absolute path to
 your project `.env`:
 
 ```
-EnvironmentFile=/home/USER/code/docker/OmniRoute/.env
+EnvironmentFile=/home/USER/code/docker/RouteChi/.env
 ```
 
 Make sure `CONTAINER_HOST=podman` is set in that `.env`.

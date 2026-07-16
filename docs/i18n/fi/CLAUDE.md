@@ -39,7 +39,7 @@ Koko testimatriisin näkemiseksi katso `CONTRIBUTING.md` → "Testien suorittami
 
 ## Projekti lyhyesti
 
-**OmniRoute** — yhtenäinen AI-proxy/reititin. Yksi päätepiste, yli 160 LLM-toimittajaa, automaattinen varajärjestelmä.
+**RouteChi** — yhtenäinen AI-proxy/reititin. Yksi päätepiste, yli 160 LLM-toimittajaa, automaattinen varajärjestelmä.
 
 | Kerros          | Sijainti                | Tarkoitus                                                                 |
 | --------------- | ----------------------- | ------------------------------------------------------------------------- |
@@ -80,7 +80,7 @@ API-reitit noudattavat johdonmukaista kaavaa: `Reitti → CORS-esivalmistelu →
 
 ## Resilienssin Suorituskykytila
 
-OmniRoute:lla on kolme liittyvää mutta erilaista tilapäisen epäonnistumisen mekanismia. Pidä niiden
+RouteChi:lla on kolme liittyvää mutta erilaista tilapäisen epäonnistumisen mekanismia. Pidä niiden
 alueet erillään reitityskäyttäytymisen vianetsinnässä. Katso
 [3-kerroksinen resilienssikaavio](./docs/diagrams/exported/resilience-3layers.svg)
 (lähde: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
@@ -410,4 +410,4 @@ git push -u origin feat/your-feature
 13. Älä koskaan merkkijonointerpoloi ulkoisia polkuja tai suoritusaikaisia arvoja shell-skripteihin, jotka annetaan `exec()`/`spawn()` — siirrä sen sijaan `env`-vaihtoehdon kautta. Viite: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Älä koskaan hylkää CodeQL / Secret-Scanning -ilmoitusta ilman (a) ensin tarkistamalla yllä olevat kaaviodokumentit nähdäksesi, soveltuuko apuri, ja (b) kirjaamalla tekninen perustelu hylkäyskommenttiin. Ennakkotapaus: `js/stack-trace-exposure`, joka nostettiin kutsupaikoissa, jotka jo ohjaavat `sanitizeErrorMessage()` kautta, on tunnettu CodeQL-rajoitus (räätälöityjä puhdistimia ei tunnisteta) — hylkää `false positive` viitaten `docs/security/ERROR_SANITIZATION.md`.
 15. Älä koskaan paljasta reittejä, jotka käynnistävät lapsiprosesseja (`/api/mcp/`, `/api/cli-tools/runtime/`) ilman `isLocalOnlyPath()` luokittelua `src/server/authz/routeGuard.ts`. Loopback-valvonta tapahtuu ehdottomasti ennen mitään todennustarkistusta — vuotanut JWT tunnelin kautta ei voi laukaista prosessin käynnistämistä. Katso `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Älä koskaan sisällytä `Co-Authored-By`-liitteitä, jotka antavat kunnian tekoälyavustajalle, LLM:lle tai automaatiotilille (esim. nimet, joissa esiintyy "Claude", "GPT", "Copilot", "Bot"; sähköpostit osoitteissa `anthropic.com` / `openai.com` / bottien omistamissa `noreply.github.com`-osoitteissa). Tällaiset liitteet ohjaavat commit-attribuution bottitilille GitHubissa, piilottaen oikean kirjoittajan (`diegosouzapw`) PR-historiassa. Inhimilliset avustajat — mukaan lukien upstream-PR:n kirjoittajat ja issue-raportoijat, joita portataan OmniRouteen — VOIVAT ja PITÄISI saada kunnian vakiomuotoisilla `Co-authored-by: Name <email>`-liitteillä; upstream-port-työnkulut (`/port-upstream-features`, `/port-upstream-issues`) riippuvat tästä.
+16. Älä koskaan sisällytä `Co-Authored-By`-liitteitä, jotka antavat kunnian tekoälyavustajalle, LLM:lle tai automaatiotilille (esim. nimet, joissa esiintyy "Claude", "GPT", "Copilot", "Bot"; sähköpostit osoitteissa `anthropic.com` / `openai.com` / bottien omistamissa `noreply.github.com`-osoitteissa). Tällaiset liitteet ohjaavat commit-attribuution bottitilille GitHubissa, piilottaen oikean kirjoittajan (`diegosouzapw`) PR-historiassa. Inhimilliset avustajat — mukaan lukien upstream-PR:n kirjoittajat ja issue-raportoijat, joita portataan RouteChien — VOIVAT ja PITÄISI saada kunnian vakiomuotoisilla `Co-authored-by: Name <email>`-liitteillä; upstream-port-työnkulut (`/port-upstream-features`, `/port-upstream-issues`) riippuvat tästä.

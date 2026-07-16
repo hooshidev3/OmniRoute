@@ -3,13 +3,13 @@
  * decomposition, #3501).
  *
  * Extracted from handleChatCore's non-streaming success path: build the response header map for a
- * cache-MISS JSON response — the static Content-Type + cache marker, the OmniRoute meta headers
+ * cache-MISS JSON response — the static Content-Type + cache marker, the RouteChi meta headers
  * (provider/model/latency/usage/cost/request-id), and the optional compression header. Pure builder
  * (returns a fresh map; only mutates the map it owns). Behaviour is byte-identical to the previous
  * inline block, including `latencyMs: now - startTime`.
  */
 import { OMNIROUTE_RESPONSE_HEADERS } from "@/shared/constants/headers";
-import { attachOmniRouteMetaHeaders as defaultAttachMeta } from "@/domain/omnirouteResponseMeta";
+import { attachRouteChiMetaHeaders as defaultAttachMeta } from "@/domain/omnirouteResponseMeta";
 
 export function buildNonStreamingResponseHeaders(
   args: {
@@ -21,8 +21,8 @@ export function buildNonStreamingResponseHeaders(
     requestId: unknown;
     compressionResponseMeta?: string | null | undefined;
   },
-  deps: { attachOmniRouteMetaHeaders: typeof defaultAttachMeta; now: () => number } = {
-    attachOmniRouteMetaHeaders: defaultAttachMeta,
+  deps: { attachRouteChiMetaHeaders: typeof defaultAttachMeta; now: () => number } = {
+    attachRouteChiMetaHeaders: defaultAttachMeta,
     now: Date.now,
   }
 ): Record<string, string> {
@@ -30,7 +30,7 @@ export function buildNonStreamingResponseHeaders(
     "Content-Type": "application/json",
     [OMNIROUTE_RESPONSE_HEADERS.cache]: "MISS",
   };
-  deps.attachOmniRouteMetaHeaders(responseHeaders, {
+  deps.attachRouteChiMetaHeaders(responseHeaders, {
     provider: args.provider,
     model: args.model,
     cacheHit: false,

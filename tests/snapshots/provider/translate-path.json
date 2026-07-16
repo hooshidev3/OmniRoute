@@ -800,7 +800,7 @@
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://cline.bot",
-        "User-Agent": "OmniRoute/<APP>",
+        "User-Agent": "RouteChi/<APP>",
         "X-CLIENT-TYPE": "omniroute",
         "X-CLIENT-VERSION": "<APP>",
         "X-CORE-VERSION": "<APP>",
@@ -813,7 +813,7 @@
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://cline.bot",
-        "User-Agent": "OmniRoute/<APP>",
+        "User-Agent": "RouteChi/<APP>",
         "X-CLIENT-TYPE": "omniroute",
         "X-CLIENT-VERSION": "<APP>",
         "X-CORE-VERSION": "<APP>",
@@ -827,7 +827,7 @@
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://cline.bot",
-        "User-Agent": "OmniRoute/<APP>",
+        "User-Agent": "RouteChi/<APP>",
         "X-CLIENT-TYPE": "omniroute",
         "X-CLIENT-VERSION": "<APP>",
         "X-CORE-VERSION": "<APP>",
@@ -2301,18 +2301,18 @@
         "Accept": "text/event-stream",
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
-        "X-KILOCODE-EDITORNAME": "OmniRoute"
+        "X-KILOCODE-EDITORNAME": "RouteChi"
       },
       "nonStream": {
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
-        "X-KILOCODE-EDITORNAME": "OmniRoute"
+        "X-KILOCODE-EDITORNAME": "RouteChi"
       },
       "oauth": {
         "Accept": "text/event-stream",
         "Authorization": "Bearer <TOK>",
         "Content-Type": "application/json",
-        "X-KILOCODE-EDITORNAME": "OmniRoute"
+        "X-KILOCODE-EDITORNAME": "RouteChi"
       }
     },
     "url": {

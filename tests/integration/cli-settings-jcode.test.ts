@@ -122,9 +122,9 @@ test("jcode-settings POST: writes config.json with valid body", async () => {
   }
 });
 
-// ── Test 5: DELETE → removes OmniRoute fields ────────────────────────────────
+// ── Test 5: DELETE → removes RouteChi fields ────────────────────────────────
 
-test("jcode-settings DELETE: removes OmniRoute fields from existing config", async () => {
+test("jcode-settings DELETE: removes RouteChi fields from existing config", async () => {
   const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), "jcode-home-del-"));
   const origHome = process.env.HOME;
   process.env.HOME = tmpHome;

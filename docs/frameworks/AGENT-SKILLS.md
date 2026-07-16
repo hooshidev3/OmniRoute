@@ -1,15 +1,15 @@
 ---
-title: "OmniRoute Agent Skills Catalog"
+title: "RouteChi Agent Skills Catalog"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute Agent Skills Catalog
+# RouteChi Agent Skills Catalog
 
 > **Source of truth:** `src/lib/agentSkills/` (catalog, generator, parsers) + `skills/` directory (SKILL.md files)
 > **Last updated:** 2026-06-28 — v3.8.40
 
-Agent Skills are structured SKILL.md files that teach external agents, MCP clients, and A2A orchestrators how to use OmniRoute's REST API and CLI. Unlike [Omni Skills](./SKILLS.md) (which are LLM tool definitions executed inside OmniRoute), Agent Skills are a _documentation catalog_ — static markdown that can be fed directly into agent context.
+Agent Skills are structured SKILL.md files that teach external agents, MCP clients, and A2A orchestrators how to use RouteChi's REST API and CLI. Unlike [Omni Skills](./SKILLS.md) (which are LLM tool definitions executed inside RouteChi), Agent Skills are a _documentation catalog_ — static markdown that can be fed directly into agent context.
 
 ---
 

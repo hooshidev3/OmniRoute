@@ -2,7 +2,7 @@
 /**
  * Strict environment variable contract checker.
  *
- * Enforces that every env var referenced in OmniRoute source code appears in
+ * Enforces that every env var referenced in RouteChi source code appears in
  * both `.env.example` and `docs/reference/ENVIRONMENT.md`, and that the two files agree
  * on the documented var set. Falls back to a small allowlist for variables
  * that are intentionally documented but not literally referenced (legacy
@@ -63,7 +63,7 @@ const IGNORE_FROM_CODE = new Set([
   "XDG_CONFIG_HOME",
   "USERPROFILE",
   "PREFIX",
-  // X11 display server — set by the OS/session manager, not OmniRoute config.
+  // X11 display server — set by the OS/session manager, not RouteChi config.
   "DISPLAY",
   // POSIX session vars surfaced by cloudflaredTunnel.ts (env passthrough).
   "LOGNAME",
@@ -73,32 +73,32 @@ const IGNORE_FROM_CODE = new Set([
   "NEXT_PHASE",
   "NEXT_RUNTIME",
   // Set/read by Next.js's own dev server (next-dev-server.js) when the turbopack
-  // bundler is active — framework-internal. The OmniRoute-facing knob is
+  // bundler is active — framework-internal. The RouteChi-facing knob is
   // OMNIROUTE_USE_TURBOPACK (scripts/dev/run-next.mjs), which IS documented.
   "TURBOPACK",
   "NODE_TEST_CONTEXT",
   "VITEST",
-  // Instruction snippet shown to users (Traffic Inspector HttpProxySnippetCard) — not OmniRoute config.
+  // Instruction snippet shown to users (Traffic Inspector HttpProxySnippetCard) — not RouteChi config.
   "NODE_TLS_REJECT_UNAUTHORIZED",
   // Claude Code's own auth env var — read from the CLI environment to detect
   // existing auth and written into the generated Claude Code settings (so the CLI
-  // points at OmniRoute). A downstream client-tool var, not an OmniRoute server
+  // points at RouteChi). A downstream client-tool var, not an RouteChi server
   // input (src/shared/services/claudeCliConfig.ts, api/cli-tools/claude-settings).
   "ANTHROPIC_AUTH_TOKEN",
   // CI providers (set by the runner).
   "GITHUB_BASE_REF",
   "GITHUB_BASE_SHA",
   // CI passes BASE_REF=${{ github.base_ref }} to the OpenAPI breaking-change gate
-  // (scripts/check/check-openapi-breaking.mjs) — a build/check signal, not OmniRoute runtime config.
+  // (scripts/check/check-openapi-breaking.mjs) — a build/check signal, not RouteChi runtime config.
   "BASE_REF",
   // PR body injected by GitHub Actions into the pr-evidence gate (github.event.pull_request.body);
-  // a CI-only signal, never an OmniRoute runtime config (Phase 7.10).
+  // a CI-only signal, never an RouteChi runtime config (Phase 7.10).
   "PR_BODY",
   // CLI machine-id token opt-out (server-side flag; not user-configurable via .env).
   "OMNIROUTE_DISABLE_CLI_TOKEN",
   // Gated combo live-smoke harness (scripts/test/_vpsClient.mjs) — override the VPS HTTP
   // smoke target host/key. Test/CI-only signals with safe defaults
-  // ("http://192.168.0.15:20128" / null), never OmniRoute runtime config (#5151).
+  // ("http://192.168.0.15:20128" / null), never RouteChi runtime config (#5151).
   "COMBO_LIVE_BASE_URL",
   "COMBO_LIVE_API_KEY",
   // update-notifier opt-out for the CLI binary.
@@ -106,7 +106,7 @@ const IGNORE_FROM_CODE = new Set([
   // Headless CLI execution flag for Electron.
   "OMNIROUTE_HEADLESS",
   // Platform / OS detection vars read by CLI environment helper (bin/cli/utils/environment.mjs).
-  // These are external signals set by the host OS or cloud provider — not OmniRoute config.
+  // These are external signals set by the host OS or cloud provider — not RouteChi config.
   "CODESPACES",
   "GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN",
   "GITPOD_WORKSPACE_ID",
@@ -142,7 +142,7 @@ const IGNORE_FROM_CODE = new Set([
   "OMNIROUTE_CLI_SKIP_REPO_ENV",
   // Eval-harness only: operator-supplied provider credentials JSON read by the
   // opt-in `npm run eval:compression` CLI (scripts/compression-eval/index.ts).
-  // A dev/ops measurement tool, never OmniRoute runtime config.
+  // A dev/ops measurement tool, never RouteChi runtime config.
   "OMNIROUTE_EVAL_CREDENTIALS",
   // Build-time only: set by `build:release` (git short SHA) and read by
   // write-build-sha.mjs to stamp dist/BUILD_SHA — injected by the build, never
@@ -155,13 +155,13 @@ const IGNORE_FROM_CODE = new Set([
   "OMNIROUT",
   // Static config alias path (the canonical var is OMNIROUTE_PAYLOAD_RULES_PATH).
   "PAYLOAD_RULES_PATH",
-  // Node.js module resolution path — OS/Node internal, not an OmniRoute config var.
+  // Node.js module resolution path — OS/Node internal, not an RouteChi config var.
   // Referenced in resolveSpawnArgs (ninerouter) to pass bundled native modules to subprocess.
   "NODE_PATH",
   // NVIDIA diagnostic/test helpers used only by ad-hoc scripts.
   "NVIDIA_BASE_URL",
   "NVIDIA_MODEL",
-  // XDG standard data directory — set by OS/desktop session, not OmniRoute config.
+  // XDG standard data directory — set by OS/desktop session, not RouteChi config.
   // Read by setup-open-code.mjs to locate platform-specific OpenCode data dir.
   "XDG_DATA_HOME",
   // Test-only override: points setup-open-code.mjs at a fixture plugin dir without

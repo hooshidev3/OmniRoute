@@ -2,7 +2,7 @@
  * tests/unit/xiaomi-mimo-selftrack-usage.test.ts
  *
  * Xiaomi MiMo exposes plan usage only behind a console session cookie (the API
- * key cannot reach the upstream usage endpoint), so OmniRoute SELF-TRACKS it:
+ * key cannot reach the upstream usage endpoint), so RouteChi SELF-TRACKS it:
  * it sums the tokens it routed to the connection in the current UTC month
  * (usage_history) and compares them to the known Token Plan monthly limit
  * (4.1B). These tests cover the aggregation helper + the fetcher shape, with a

@@ -407,7 +407,7 @@ function transformSSE(deepseekStream: ReadableStream, model: string, thinkMode: 
           });
         };
 
-        // Terminal usage chunk (OmniRoute standard: empty choices + usage before [DONE])
+        // Terminal usage chunk (RouteChi standard: empty choices + usage before [DONE])
         const emitUsageChunk = () => {
           if (tokenUsage <= 0) return;
           emit({
@@ -1071,7 +1071,7 @@ function buildToolAwareResult(opts: {
         )
       );
     };
-    // Terminal usage chunk (OmniRoute standard: empty choices + usage before [DONE])
+    // Terminal usage chunk (RouteChi standard: empty choices + usage before [DONE])
     const emitUsage = (controller: ReadableStreamDefaultController) => {
       if (!usage) return;
       controller.enqueue(

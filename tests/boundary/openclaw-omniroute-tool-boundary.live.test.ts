@@ -1,14 +1,14 @@
 /**
- * Boundary test: OpenClaw ↔ OmniRoute tool calling pipeline.
+ * Boundary test: OpenClaw ↔ RouteChi tool calling pipeline.
  *
  * Tests the critical boundary where OpenClaw sends Responses API requests
- * through OmniRoute and receives tool call responses. Focuses on verifying
+ * through RouteChi and receives tool call responses. Focuses on verifying
  * that tool call arguments (especially multiline content like file writes)
  * survive the round-trip without corruption.
  *
- * These tests call the LIVE OmniRoute API at the configured OMNIROUTE_TEST_BASE instance.
+ * These tests call the LIVE RouteChi API at the configured OMNIROUTE_TEST_BASE instance.
  * Prerequisites: valid auth token (from INITIAL_PASSWORD) and access to the
- * remote OmniRoute instance.
+ * remote RouteChi instance.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -22,7 +22,7 @@ const AUTH = process.env.OMNIROUTE_TEST_BEARER
 const COOKIE =
   process.env.OMNIROUTE_TEST_COOKIE || "";
 
-// Only the tests that call the live remote OmniRoute API need this gate — the
+// Only the tests that call the live remote RouteChi API need this gate — the
 // pure parsing/stopReason-simulation tests at the bottom of the file run locally.
 const skip =
   process.env.RUN_BOUNDARY_LIVE === "1"
@@ -120,7 +120,7 @@ async function sendResponsesApiJson(
   return (await response.json()) as Record<string, unknown>;
 }
 
-test("OmniRoute boundary: tool call arguments with newlines survive Responses API (non-streaming)", { skip }, async () => {
+test("RouteChi boundary: tool call arguments with newlines survive Responses API (non-streaming)", { skip }, async () => {
   const body = {
     model: "gemini/gemma-4-26b-a4b-it",
     input: [
@@ -184,7 +184,7 @@ test("OmniRoute boundary: tool call arguments with newlines survive Responses AP
   }
 });
 
-test("OmniRoute boundary: tool call arguments with newlines survive Responses API (streaming)", { skip }, async () => {
+test("RouteChi boundary: tool call arguments with newlines survive Responses API (streaming)", { skip }, async () => {
   const body = {
     model: "gemini/gemma-4-26b-a4b-it",
     input: [
@@ -246,7 +246,7 @@ test("OmniRoute boundary: tool call arguments with newlines survive Responses AP
   assert.equal(completedArgs.content, args.content, "completed arguments should match done event");
 });
 
-test("OmniRoute boundary: exec tool call arguments survive Responses API", { skip }, async () => {
+test("RouteChi boundary: exec tool call arguments survive Responses API", { skip }, async () => {
   const body = {
     model: "gemini/gemma-4-26b-a4b-it",
     input: [
@@ -300,7 +300,7 @@ test("OmniRoute boundary: exec tool call arguments survive Responses API", { ski
   assert.ok(completed, "should have response.completed");
 });
 
-test("OmniRoute boundary: parallel tool calls survive Responses API", { skip }, async () => {
+test("RouteChi boundary: parallel tool calls survive Responses API", { skip }, async () => {
   const body = {
     model: "gemini/gemma-4-26b-a4b-it",
     input: [
@@ -359,7 +359,7 @@ test("OmniRoute boundary: parallel tool calls survive Responses API", { skip }, 
   assert.equal(outputFcs.length, doneEvents.length, "completed output should match count");
 });
 
-test("OmniRoute boundary: tool call through default combo (fill-first)", { skip }, async () => {
+test("RouteChi boundary: tool call through default combo (fill-first)", { skip }, async () => {
   const body = {
     model: "default",
     input: [
@@ -405,7 +405,7 @@ test("OmniRoute boundary: tool call through default combo (fill-first)", { skip 
   assert.ok(args.command.length > 0);
 });
 
-test("OmniRoute boundary: multi-line Python code survives tool call arguments", { skip }, async () => {
+test("RouteChi boundary: multi-line Python code survives tool call arguments", { skip }, async () => {
   const pythonCode = [
     "import json",
     "import random",
@@ -512,7 +512,7 @@ ${pythonCode}`,
   assert.ok(anyDone, "should have at least one function_call");
 });
 
-test("OmniRoute boundary: model responds with proper JSON args when given clear tool defs", { skip }, async () => {
+test("RouteChi boundary: model responds with proper JSON args when given clear tool defs", { skip }, async () => {
   // Test that the model can correctly produce tool calls with simple args
   const body = {
     model: "gemini/gemma-4-26b-a4b-it",

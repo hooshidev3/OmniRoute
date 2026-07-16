@@ -1,4 +1,4 @@
-# Arsitektur OmniRoute (Bahasa Indonesia)
+# Arsitektur RouteChi (Bahasa Indonesia)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/ARCHITECTURE.md) · 🇸🇦 [ar](../../ar/docs/ARCHITECTURE.md) · 🇧🇬 [bg](../../bg/docs/ARCHITECTURE.md) · 🇧🇩 [bn](../../bn/docs/ARCHITECTURE.md) · 🇨🇿 [cs](../../cs/docs/ARCHITECTURE.md) · 🇩🇰 [da](../../da/docs/ARCHITECTURE.md) · 🇩🇪 [de](../../de/docs/ARCHITECTURE.md) · 🇪🇸 [es](../../es/docs/ARCHITECTURE.md) · 🇮🇷 [fa](../../fa/docs/ARCHITECTURE.md) · 🇫🇮 [fi](../../fi/docs/ARCHITECTURE.md) · 🇫🇷 [fr](../../fr/docs/ARCHITECTURE.md) · 🇮🇳 [gu](../../gu/docs/ARCHITECTURE.md) · 🇮🇱 [he](../../he/docs/ARCHITECTURE.md) · 🇮🇳 [hi](../../hi/docs/ARCHITECTURE.md) · 🇭🇺 [hu](../../hu/docs/ARCHITECTURE.md) · 🇮🇩 [id](../../id/docs/ARCHITECTURE.md) · 🇮🇹 [it](../../it/docs/ARCHITECTURE.md) · 🇯🇵 [ja](../../ja/docs/ARCHITECTURE.md) · 🇰🇷 [ko](../../ko/docs/ARCHITECTURE.md) · 🇮🇳 [mr](../../mr/docs/ARCHITECTURE.md) · 🇲🇾 [ms](../../ms/docs/ARCHITECTURE.md) · 🇳🇱 [nl](../../nl/docs/ARCHITECTURE.md) · 🇳🇴 [no](../../no/docs/ARCHITECTURE.md) · 🇵🇭 [phi](../../phi/docs/ARCHITECTURE.md) · 🇵🇱 [pl](../../pl/docs/ARCHITECTURE.md) · 🇵🇹 [pt](../../pt/docs/ARCHITECTURE.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/ARCHITECTURE.md) · 🇷🇴 [ro](../../ro/docs/ARCHITECTURE.md) · 🇷🇺 [ru](../../ru/docs/ARCHITECTURE.md) · 🇸🇰 [sk](../../sk/docs/ARCHITECTURE.md) · 🇸🇪 [sv](../../sv/docs/ARCHITECTURE.md) · 🇰🇪 [sw](../../sw/docs/ARCHITECTURE.md) · 🇮🇳 [ta](../../ta/docs/ARCHITECTURE.md) · 🇮🇳 [te](../../te/docs/ARCHITECTURE.md) · 🇹🇭 [th](../../th/docs/ARCHITECTURE.md) · 🇹🇷 [tr](../../tr/docs/ARCHITECTURE.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/ARCHITECTURE.md) · 🇵🇰 [ur](../../ur/docs/ARCHITECTURE.md) · 🇻🇳 [vi](../../vi/docs/ARCHITECTURE.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/ARCHITECTURE.md)
 
@@ -8,7 +8,7 @@ _Last updated: 2026-04-15_
 
 ## Ringkasan Eksekutif
 
-OmniRoute adalah gateway routing AI lokal dan dasbor yang dibangun di atas Next.js.
+RouteChi adalah gateway routing AI lokal dan dasbor yang dibangun di atas Next.js.
 Sistem ini menyediakan satu endpoint yang kompatibel dengan OpenAI (`/v1/*`) dan merutekan lalu lintas ke berbagai penyedia upstream dengan kemampuan translasi, fallback, pembaruan token, dan pelacakan penggunaan.
 
 Kemampuan inti:
@@ -128,7 +128,7 @@ flowchart LR
         BROWSER[Browser Dashboard]
     end
 
-    subgraph Router[OmniRoute Local Process]
+    subgraph Router[RouteChi Local Process]
         API[V1 Compatibility API\n/v1/*]
         DASH[Dashboard + Management API\n/api/*]
         CORE[SSE + Translation Core\nopen-sse + src/sse]
@@ -587,7 +587,7 @@ flowchart LR
         Browser[Dashboard Browser]
     end
 
-    subgraph ContainerOrProcess[OmniRoute Runtime]
+    subgraph ContainerOrProcess[RouteChi Runtime]
         Next[Next.js Server\nPORT=20128]
         Core[SSE Core + Executors]
         MainDB[(storage.sqlite)]
@@ -840,7 +840,7 @@ Detailed request payload capture stores up to four JSON payload stages per route
 - permintaan mentah diterima dari klien
 - permintaan yang diterjemahkan sebenarnya dikirim ke hulu
 - respons penyedia direkonstruksi sebagai JSON; tanggapan yang dialirkan dipadatkan ke ringkasan akhir ditambah metadata aliran
-- respons klien akhir yang dikembalikan oleh OmniRoute; tanggapan yang dialirkan disimpan dalam bentuk ringkasan ringkas yang sama
+- respons klien akhir yang dikembalikan oleh RouteChi; tanggapan yang dialirkan disimpan dalam bentuk ringkasan ringkas yang sama
 
 ## Batasan yang Sensitif terhadap Keamanan
 

@@ -1,5 +1,5 @@
 // #6267 regression guard — a config-driven provider whose /models endpoint 307s
-// must degrade to the local catalog OmniRoute ships, not surface a raw 503.
+// must degrade to the local catalog RouteChi ships, not surface a raw 503.
 //
 // Root cause: safeOutboundFetch throws REDIRECT_BLOCKED on the 307 →
 // getSafeOutboundFetchErrorStatus maps it to 503 → buildDiscoveryErrorFallbackResponse

@@ -7,7 +7,7 @@ import {
 
 // #5305: the Vercel AI SDK / OpenAI SDK non-stream path (doGenerate/generateText)
 // OMITS `stream` in the body and sends `Accept: application/json, text/event-stream`,
-// then parses the response as JSON. OmniRoute was coercing such requests into SSE
+// then parses the response as JSON. RouteChi was coercing such requests into SSE
 // (route-level Accept override in src/sse/handlers/chat.ts + resolveStreamFlag),
 // so the caller got `data: {...}` and failed with "Invalid JSON response".
 //

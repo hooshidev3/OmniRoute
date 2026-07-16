@@ -197,7 +197,7 @@ test("guide-settings POST preserves existing OpenCode config fields while only u
     },
     "omniroute": {
       "npm": "old-package",
-      "name": "Old OmniRoute",
+      "name": "Old RouteChi",
       "options": {
         "baseURL": "http://old-host/v1",
         "apiKey": "old-key"

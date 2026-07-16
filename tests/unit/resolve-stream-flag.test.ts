@@ -1,5 +1,5 @@
 // Port of upstream #2081 — forceStream (stream-only) providers must keep streaming even
-// when the client asks for a non-streaming/JSON response. OmniRoute then accumulates the
+// when the client asks for a non-streaming/JSON response. RouteChi then accumulates the
 // provider stream and returns a normal JSON body to the client (handleForcedSSEToJson).
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";

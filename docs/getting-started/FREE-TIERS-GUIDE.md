@@ -1,6 +1,6 @@
 # Free Tiers Guide: Get Free AI Without a Credit Card
 
-> **TL;DR**: OmniRoute aggregates free tiers from 50+ providers. Connect multiple free providers for unlimited free AI with automatic fallback.
+> **TL;DR**: RouteChi aggregates free tiers from 50+ providers. Connect multiple free providers for unlimited free AI with automatic fallback.
 
 ---
 
@@ -8,7 +8,7 @@
 
 Many AI providers offer **free usage** — no credit card required. Think of it like free samples at a grocery store. You can try the product without paying.
 
-OmniRoute **aggregates** these free tiers into one endpoint. Instead of signing up for 10 different services, you connect them all to OmniRoute and use `model: "auto"` to automatically pick the best free option for each request.
+RouteChi **aggregates** these free tiers into one endpoint. Instead of signing up for 10 different services, you connect them all to RouteChi and use `model: "auto"` to automatically pick the best free option for each request.
 
 ---
 
@@ -57,7 +57,7 @@ These providers have **free tiers** with specific limits:
 
 ## How to Stack Free Tiers
 
-The magic of OmniRoute is **stacking free tiers**. Instead of relying on one provider, you connect multiple free providers and let OmniRoute automatically pick the best one for each request.
+The magic of RouteChi is **stacking free tiers**. Instead of relying on one provider, you connect multiple free providers and let RouteChi automatically pick the best one for each request.
 
 ### Example: Unlimited Free AI
 
@@ -68,7 +68,7 @@ Connect these 4 providers for **unlimited free AI**:
 3. **Pollinations** — No key needed (multiple models)
 4. **LongCat** — 10M tokens one-time (backup, requires KYC)
 
-Then use `model: "auto"` and OmniRoute will:
+Then use `model: "auto"` and RouteChi will:
 - Try Kiro first (best quality)
 - If Kiro is busy → try OpenCode Free
 - If OpenCode Free is slow → try Pollinations
@@ -178,26 +178,26 @@ Connect 3-4 free providers for the best experience.
 
 ---
 
-## How OmniRoute Makes Free Tiers Better
+## How RouteChi Makes Free Tiers Better
 
 ### 1. Automatic Fallback
 
-If one free provider is busy or down, OmniRoute automatically tries the next one. You don't need to do anything.
+If one free provider is busy or down, RouteChi automatically tries the next one. You don't need to do anything.
 
 ### 2. Smart Routing
 
-OmniRoute picks the **best free provider** for each request based on:
+RouteChi picks the **best free provider** for each request based on:
 - Speed — Which provider is fastest right now?
 - Quality — Which provider is best for this task?
 - Capacity — Which provider has quota remaining?
 
 ### 3. Token Savings
 
-OmniRoute's **compression** feature saves 15-95% of tokens. This means your free quota lasts **5-20x longer**.
+RouteChi's **compression** feature saves 15-95% of tokens. This means your free quota lasts **5-20x longer**.
 
 ### 4. Multi-Account Support
 
-If you have multiple accounts for the same provider, OmniRoute treats each as a separate candidate. This doubles or triples your free quota.
+If you have multiple accounts for the same provider, RouteChi treats each as a separate candidate. This doubles or triples your free quota.
 
 ---
 
@@ -235,7 +235,7 @@ Let's calculate how much free AI you can get:
 
 ### "Is this really free?"
 
-**Yes!** These are official free tiers from the providers. OmniRoute just makes it easier to use them all at once.
+**Yes!** These are official free tiers from the providers. RouteChi just makes it easier to use them all at once.
 
 ### "Will the free tier run out?"
 
@@ -247,7 +247,7 @@ Some providers have limits (like Kiro's 50 credits/month), but others are unlimi
 
 ### "What's the catch?"
 
-No catch! Providers offer free tiers to attract users. OmniRoute just makes it easier to use them all at once.
+No catch! Providers offer free tiers to attract users. RouteChi just makes it easier to use them all at once.
 
 ### "How do I get more free quota?"
 
@@ -264,7 +264,7 @@ No catch! Providers offer free tiers to attract users. OmniRoute just makes it e
 
 ## What's Next?
 
-- **[Auto-Combo Guide](./AUTO-COMBO-GUIDE.md)** — Let OmniRoute pick the best AI for you
+- **[Auto-Combo Guide](./AUTO-COMBO-GUIDE.md)** — Let RouteChi pick the best AI for you
 - **[Providers Guide](./PROVIDERS-GUIDE.md)** — Connect more providers
 - **[Troubleshooting](./TROUBLESHOOTING.md)** — Fix common issues
 - **[Free Tiers Reference](../reference/FREE_TIERS.md)** — Full list of free tiers

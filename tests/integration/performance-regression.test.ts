@@ -1,5 +1,5 @@
 /**
- * Performance regression tests for OmniRoute
+ * Performance regression tests for RouteChi
  *
  * Tests bulk data operations against acceptable time thresholds.
  * Thresholds are 2x the expected target to account for slow CI machines.

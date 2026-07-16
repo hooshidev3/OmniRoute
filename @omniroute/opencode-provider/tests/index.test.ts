@@ -7,12 +7,12 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import {
-  buildOmniRouteOpenCodeConfig,
-  createOmniRouteAgentBlock,
-  createOmniRouteComboConfig,
-  createOmniRouteMCPEntry,
-  createOmniRouteModesBlock,
-  createOmniRouteProvider,
+  buildRouteChiOpenCodeConfig,
+  createRouteChiAgentBlock,
+  createRouteChiComboConfig,
+  createRouteChiMCPEntry,
+  createRouteChiModesBlock,
+  createRouteChiProvider,
   fetchLiveModels,
   listCombos,
   mergeIntoExistingConfig,
@@ -46,32 +46,32 @@ test("normalizeBaseURL rejects malformed URLs", () => {
   assert.throws(() => normalizeBaseURL("not a url"), /not a valid URL/);
 });
 
-test("createOmniRouteProvider validates required fields", () => {
+test("createRouteChiProvider validates required fields", () => {
   assert.throws(
-    () => createOmniRouteProvider({ baseURL: "", apiKey: "x" } as never),
+    () => createRouteChiProvider({ baseURL: "", apiKey: "x" } as never),
     /baseURL is required/
   );
   assert.throws(
-    () => createOmniRouteProvider({ baseURL: "http://x", apiKey: "" } as never),
+    () => createRouteChiProvider({ baseURL: "http://x", apiKey: "" } as never),
     /apiKey is required/
   );
 });
 
-test("createOmniRouteProvider produces the OpenCode-compatible shape", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider produces the OpenCode-compatible shape", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
 
   assert.equal(provider.npm, OMNIROUTE_PROVIDER_NPM);
-  assert.equal(provider.name, "OmniRoute");
+  assert.equal(provider.name, "RouteChi");
   assert.equal(provider.options.baseURL, "http://localhost:20128/v1");
   assert.equal(provider.options.apiKey, "sk_omniroute");
   assert.equal(typeof provider.models, "object");
 });
 
-test("createOmniRouteProvider seeds the default model catalog", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider seeds the default model catalog", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
@@ -85,8 +85,8 @@ test("createOmniRouteProvider seeds the default model catalog", () => {
   }
 });
 
-test("createOmniRouteProvider honours a custom models list and labels", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider honours a custom models list and labels", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: ["auto", "claude-opus-4-7"],
@@ -98,8 +98,8 @@ test("createOmniRouteProvider honours a custom models list and labels", () => {
   assert.equal(provider.models["claude-opus-4-7"].name, "Opus 4.7");
 });
 
-test("createOmniRouteProvider deduplicates and trims model ids", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider deduplicates and trims model ids", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: ["  auto  ", "auto", "", "claude-opus-4-7"],
@@ -107,17 +107,17 @@ test("createOmniRouteProvider deduplicates and trims model ids", () => {
   assert.deepEqual(Object.keys(provider.models), ["auto", "claude-opus-4-7"]);
 });
 
-test("createOmniRouteProvider honours displayName override", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider honours displayName override", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
-    displayName: "Local OmniRoute",
+    displayName: "Local RouteChi",
   });
-  assert.equal(provider.name, "Local OmniRoute");
+  assert.equal(provider.name, "Local RouteChi");
 });
 
-test("buildOmniRouteOpenCodeConfig wraps the provider with the OpenCode schema", () => {
-  const doc = buildOmniRouteOpenCodeConfig({
+test("buildRouteChiOpenCodeConfig wraps the provider with the OpenCode schema", () => {
+  const doc = buildRouteChiOpenCodeConfig({
     baseURL: "http://localhost:20128/v1",
     apiKey: "sk_omniroute",
   });
@@ -128,7 +128,7 @@ test("buildOmniRouteOpenCodeConfig wraps the provider with the OpenCode schema",
 });
 
 test("config document is JSON-serialisable", () => {
-  const doc = buildOmniRouteOpenCodeConfig({
+  const doc = buildRouteChiOpenCodeConfig({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
@@ -136,8 +136,8 @@ test("config document is JSON-serialisable", () => {
   assert.deepEqual(round, doc);
 });
 
-test("buildOmniRouteOpenCodeConfig emits model and small_model prefixed with provider key", () => {
-  const doc = buildOmniRouteOpenCodeConfig({
+test("buildRouteChiOpenCodeConfig emits model and small_model prefixed with provider key", () => {
+  const doc = buildRouteChiOpenCodeConfig({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     model: "claude-sonnet-4-5-thinking",
@@ -147,8 +147,8 @@ test("buildOmniRouteOpenCodeConfig emits model and small_model prefixed with pro
   assert.equal(doc.small_model, "omniroute/gemini-3-flash");
 });
 
-test("buildOmniRouteOpenCodeConfig omits model and small_model when not supplied", () => {
-  const doc = buildOmniRouteOpenCodeConfig({
+test("buildRouteChiOpenCodeConfig omits model and small_model when not supplied", () => {
+  const doc = buildRouteChiOpenCodeConfig({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
@@ -158,8 +158,8 @@ test("buildOmniRouteOpenCodeConfig omits model and small_model when not supplied
   assert.ok(!("small_model" in doc));
 });
 
-test("buildOmniRouteOpenCodeConfig ignores blank model strings", () => {
-  const doc = buildOmniRouteOpenCodeConfig({
+test("buildRouteChiOpenCodeConfig ignores blank model strings", () => {
+  const doc = buildRouteChiOpenCodeConfig({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     model: "   ",
@@ -234,8 +234,8 @@ test("OMNIROUTE_MCP_DEFAULT_SCOPES contains 7 read-only scopes", () => {
   assert.ok(OMNIROUTE_MCP_DEFAULT_SCOPES.every((s) => s.startsWith("read:")));
 });
 
-test("createOmniRouteMCPEntry defaults to tsx runtime", () => {
-  const entry = createOmniRouteMCPEntry({
+test("createRouteChiMCPEntry defaults to tsx runtime", () => {
+  const entry = createRouteChiMCPEntry({
     serverPath: "/path/to/server.ts",
     apiKey: "sk_omniroute",
   });
@@ -246,8 +246,8 @@ test("createOmniRouteMCPEntry defaults to tsx runtime", () => {
   assert.ok(!("OMNIROUTE_MANAGEMENT_API_KEY" in entry.env));
 });
 
-test("createOmniRouteMCPEntry uses node runtime when specified", () => {
-  const entry = createOmniRouteMCPEntry({
+test("createRouteChiMCPEntry uses node runtime when specified", () => {
+  const entry = createRouteChiMCPEntry({
     serverPath: "/path/to/server.js",
     apiKey: "sk_omniroute",
     runtime: "node",
@@ -256,8 +256,8 @@ test("createOmniRouteMCPEntry uses node runtime when specified", () => {
   assert.deepEqual(entry.args, ["/path/to/server.js"]);
 });
 
-test("createOmniRouteMCPEntry sets management key and scopes when supplied", () => {
-  const entry = createOmniRouteMCPEntry({
+test("createRouteChiMCPEntry sets management key and scopes when supplied", () => {
+  const entry = createRouteChiMCPEntry({
     serverPath: "/path/to/server.ts",
     apiKey: "sk_omniroute",
     managementApiKey: "sk_manage",
@@ -268,13 +268,13 @@ test("createOmniRouteMCPEntry sets management key and scopes when supplied", () 
   assert.equal(entry.env.OMNIROUTE_MCP_SCOPES, "read:health,read:combos,execute:completions");
 });
 
-test("createOmniRouteMCPEntry rejects missing required fields", () => {
+test("createRouteChiMCPEntry rejects missing required fields", () => {
   assert.throws(
-    () => createOmniRouteMCPEntry({ serverPath: "", apiKey: "x" }),
+    () => createRouteChiMCPEntry({ serverPath: "", apiKey: "x" }),
     /serverPath is required/
   );
   assert.throws(
-    () => createOmniRouteMCPEntry({ serverPath: "/p", apiKey: "" }),
+    () => createRouteChiMCPEntry({ serverPath: "/p", apiKey: "" }),
     /apiKey is required/
   );
 });
@@ -367,8 +367,8 @@ test("listCombos normalises compressionOverride", async () => {
   }
 });
 
-test("createOmniRouteComboConfig builds minimal payload", () => {
-  const payload = createOmniRouteComboConfig({ name: "my-combo", strategy: "priority" });
+test("createRouteChiComboConfig builds minimal payload", () => {
+  const payload = createRouteChiComboConfig({ name: "my-combo", strategy: "priority" });
   assert.equal(payload.name, "my-combo");
   assert.equal(payload.strategy, "priority");
   assert.equal(payload.active, true);
@@ -376,8 +376,8 @@ test("createOmniRouteComboConfig builds minimal payload", () => {
   assert.ok(!("providers" in payload));
 });
 
-test("createOmniRouteComboConfig includes optional fields when supplied", () => {
-  const payload = createOmniRouteComboConfig({
+test("createRouteChiComboConfig includes optional fields when supplied", () => {
+  const payload = createRouteChiComboConfig({
     name: "full",
     strategy: "weighted",
     compressionOverride: "aggressive",
@@ -412,8 +412,8 @@ test("OMNIROUTE_DEFAULT_MODEL_CONTEXT_LENGTHS covers every default model id", ()
   }
 });
 
-test("createOmniRouteProvider emits limit.context on default model entries", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider emits limit.context on default model entries", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
@@ -423,8 +423,8 @@ test("createOmniRouteProvider emits limit.context on default model entries", () 
   assert.equal(provider.models["cc/claude-opus-4-7"].limit!.context, 1_000_000);
 });
 
-test("createOmniRouteProvider omits limit.context for unknown model ids", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider omits limit.context for unknown model ids", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: ["completely-unknown-model"],
@@ -433,13 +433,13 @@ test("createOmniRouteProvider omits limit.context for unknown model ids", () => 
   assert.equal(entry.limit, undefined);
 });
 
-test("createOmniRouteProvider reads contextLength from a live model entry for ids absent from the static map", () => {
+test("createRouteChiProvider reads contextLength from a live model entry for ids absent from the static map", () => {
   // #3298 regression guard: the static OMNIROUTE_DEFAULT_MODEL_CONTEXT_LENGTHS
   // map only covers the legacy 8 Claude/Gemini ids. Before this change, any
   // other model got `undefined` context (see the test above, string form) and
   // OpenCode silently fell back to its 128K internal default. A live model
   // entry carrying `contextLength` must now surface as `limit.context`.
-  const provider = createOmniRouteProvider({
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: [{ id: "completely-unknown-model", contextLength: 262_144 }],
@@ -449,11 +449,11 @@ test("createOmniRouteProvider reads contextLength from a live model entry for id
   assert.equal(entry.limit!.context, 262_144);
 });
 
-test("createOmniRouteProvider: a live model contextLength wins over the static default map", () => {
+test("createRouteChiProvider: a live model contextLength wins over the static default map", () => {
   // `cc/claude-opus-4-8` has a static default (1_000_000). A live entry carrying
   // a different contextLength must take precedence (live > modelContextLengths >
   // static defaults).
-  const provider = createOmniRouteProvider({
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: [{ id: "cc/claude-opus-4-8", contextLength: 524_288 }],
@@ -461,8 +461,8 @@ test("createOmniRouteProvider: a live model contextLength wins over the static d
   assert.equal(provider.models["cc/claude-opus-4-8"].limit!.context, 524_288);
 });
 
-test("createOmniRouteProvider serialises limit.context to JSON", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider serialises limit.context to JSON", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
@@ -508,8 +508,8 @@ test("OMNIROUTE_DEFAULT_MODEL_CAPABILITIES covers every default model id", () =>
   }
 });
 
-test("createOmniRouteProvider emits default capability flags inline with the model entry", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider emits default capability flags inline with the model entry", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
   });
@@ -521,8 +521,8 @@ test("createOmniRouteProvider emits default capability flags inline with the mod
   assert.equal(entry.tool_call, true);
 });
 
-test("createOmniRouteProvider modelCapabilities overrides defaults and merges per id", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider modelCapabilities overrides defaults and merges per id", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     modelCapabilities: {
@@ -536,8 +536,8 @@ test("createOmniRouteProvider modelCapabilities overrides defaults and merges pe
   assert.equal(entry.tool_call, true);
 });
 
-test("createOmniRouteProvider applies capability overrides to non-default model ids", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider applies capability overrides to non-default model ids", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: ["custom-model"],
@@ -553,8 +553,8 @@ test("createOmniRouteProvider applies capability overrides to non-default model 
   assert.equal(entry.temperature, undefined);
 });
 
-test("createOmniRouteProvider modelLabels still works when modelCapabilities omits label", () => {
-  const provider = createOmniRouteProvider({
+test("createRouteChiProvider modelLabels still works when modelCapabilities omits label", () => {
+  const provider = createRouteChiProvider({
     baseURL: "http://localhost:20128",
     apiKey: "sk_omniroute",
     models: ["claude-opus-4-5-thinking"],
@@ -563,8 +563,8 @@ test("createOmniRouteProvider modelLabels still works when modelCapabilities omi
   assert.equal(provider.models["claude-opus-4-5-thinking"].name, "Opus 4.5 (legacy label)");
 });
 
-test("createOmniRouteAgentBlock builds provider-prefixed entries per role", () => {
-  const block = createOmniRouteAgentBlock({
+test("createRouteChiAgentBlock builds provider-prefixed entries per role", () => {
+  const block = createRouteChiAgentBlock({
     roles: {
       build: { modelId: "claude-sonnet-4-5-thinking", temperature: 0.2 },
       plan: { modelId: "claude-opus-4-5-thinking", top_p: 0.95 },
@@ -579,8 +579,8 @@ test("createOmniRouteAgentBlock builds provider-prefixed entries per role", () =
   assert.equal(block.review.temperature, 0.0);
 });
 
-test("createOmniRouteAgentBlock omits optional fields when not supplied", () => {
-  const block = createOmniRouteAgentBlock({
+test("createRouteChiAgentBlock omits optional fields when not supplied", () => {
+  const block = createRouteChiAgentBlock({
     roles: { build: { modelId: "claude-sonnet-4-5-thinking" } },
   });
   assert.equal(block.build.model, "omniroute/claude-sonnet-4-5-thinking");
@@ -590,8 +590,8 @@ test("createOmniRouteAgentBlock omits optional fields when not supplied", () => 
   assert.ok(!("prompt" in block.build));
 });
 
-test("createOmniRouteAgentBlock skips roles with empty modelId", () => {
-  const block = createOmniRouteAgentBlock({
+test("createRouteChiAgentBlock skips roles with empty modelId", () => {
+  const block = createRouteChiAgentBlock({
     roles: {
       build: { modelId: "claude-sonnet-4-5-thinking" },
       plan: { modelId: "   " },
@@ -601,8 +601,8 @@ test("createOmniRouteAgentBlock skips roles with empty modelId", () => {
   assert.deepEqual(Object.keys(block), ["build"]);
 });
 
-test("createOmniRouteAgentBlock emits tools as Record<string, boolean> per OC schema", () => {
-  const block = createOmniRouteAgentBlock({
+test("createRouteChiAgentBlock emits tools as Record<string, boolean> per OC schema", () => {
+  const block = createRouteChiAgentBlock({
     roles: {
       build: {
         modelId: "claude-sonnet-4-5-thinking",
@@ -615,8 +615,8 @@ test("createOmniRouteAgentBlock emits tools as Record<string, boolean> per OC sc
   assert.equal(block.build.prompt, "Edit files carefully.");
 });
 
-test("createOmniRouteAgentBlock filters invalid tool entries and omits empty maps", () => {
-  const block = createOmniRouteAgentBlock({
+test("createRouteChiAgentBlock filters invalid tool entries and omits empty maps", () => {
+  const block = createRouteChiAgentBlock({
     roles: {
       build: {
         modelId: "claude-sonnet-4-5-thinking",
@@ -633,8 +633,8 @@ test("createOmniRouteAgentBlock filters invalid tool entries and omits empty map
   assert.ok(!("tools" in block.plan));
 });
 
-test("createOmniRouteModesBlock builds provider-prefixed mode entries", () => {
-  const block = createOmniRouteModesBlock({
+test("createRouteChiModesBlock builds provider-prefixed mode entries", () => {
+  const block = createRouteChiModesBlock({
     modes: {
       build: { modelId: "claude-sonnet-4-5-thinking", tools: { edit: true, bash: true } },
       plan: { modelId: "claude-opus-4-5-thinking", prompt: "Plan first, code later." },
@@ -647,8 +647,8 @@ test("createOmniRouteModesBlock builds provider-prefixed mode entries", () => {
   assert.equal(block.review.model, "omniroute/gemini-3-flash");
 });
 
-test("createOmniRouteModesBlock skips modes with empty modelId", () => {
-  const block = createOmniRouteModesBlock({
+test("createRouteChiModesBlock skips modes with empty modelId", () => {
+  const block = createRouteChiModesBlock({
     modes: {
       build: { modelId: "claude-sonnet-4-5-thinking" },
       plan: { modelId: "" },
@@ -657,8 +657,8 @@ test("createOmniRouteModesBlock skips modes with empty modelId", () => {
   assert.deepEqual(Object.keys(block), ["build"]);
 });
 
-test("createOmniRouteModesBlock honours numeric overrides limited to OC schema", () => {
-  const block = createOmniRouteModesBlock({
+test("createRouteChiModesBlock honours numeric overrides limited to OC schema", () => {
+  const block = createRouteChiModesBlock({
     modes: {
       build: {
         modelId: "claude-sonnet-4-5-thinking",

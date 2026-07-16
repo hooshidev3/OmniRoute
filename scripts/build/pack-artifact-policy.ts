@@ -1,5 +1,5 @@
 /**
- * Shared policy for OmniRoute npm publish artifact hygiene.
+ * Shared policy for RouteChi npm publish artifact hygiene.
  *
  * The package publishes the standalone runtime under dist/ (Layer 1: renamed from app/).
  * This policy keeps local backups, QA scratch files, and development-only

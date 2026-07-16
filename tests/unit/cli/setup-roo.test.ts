@@ -10,14 +10,14 @@ test("resolveRooTarget: explicit --api-key wins", () => {
 });
 test("buildRooImport produces an openai-compatible provider profile (baseUrl /v1, model)", () => {
   const d = buildRooImport({ baseUrl: "http://vps:20128/v1", apiKey: "k", model: "glm/glm-5.2" });
-  const cfg = d.providerProfiles.apiConfigs.OmniRoute;
+  const cfg = d.providerProfiles.apiConfigs.RouteChi;
   assert.equal(cfg.apiProvider, "openai");
   assert.equal(cfg.openAiBaseUrl, "http://vps:20128/v1");
   assert.equal(cfg.openAiModelId, "glm/glm-5.2");
-  assert.equal(d.providerProfiles.currentApiConfigName, "OmniRoute");
+  assert.equal(d.providerProfiles.currentApiConfigName, "RouteChi");
 });
 test("buildRooImport falls back to a placeholder key", () => {
-  assert.equal(buildRooImport({ baseUrl: "http://x/v1", apiKey: "", model: "m" }).providerProfiles.apiConfigs.OmniRoute.openAiApiKey, "sk_omniroute");
+  assert.equal(buildRooImport({ baseUrl: "http://x/v1", apiKey: "", model: "m" }).providerProfiles.apiConfigs.RouteChi.openAiApiKey, "sk_omniroute");
 });
 test("buildRooVscodeAutoImport sets the pointer, preserving other settings", () => {
   const s = buildRooVscodeAutoImport({ "editor.tabSize": 2 }, "/home/u/.omniroute/roo-settings.json");

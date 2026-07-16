@@ -159,7 +159,7 @@ function createFakeEmbeddingRelay() {
   };
 }
 
-/* ---------- OmniRoute server process ---------- */
+/* ---------- RouteChi server process ---------- */
 function createServerProcess() {
   const stdoutLines: string[] = [];
   const stderrLines: string[] = [];

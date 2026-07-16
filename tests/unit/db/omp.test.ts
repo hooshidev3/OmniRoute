@@ -2,7 +2,7 @@
  * Unit tests for src/lib/db/omp.ts — OMP (Oh My Pi) credential CRUD.
  *
  * omp.ts opens the third-party OMP CLI's OWN local sqlite database
- * (~/.omp/agent/agent.db) directly, per request — NOT OmniRoute's own DB.
+ * (~/.omp/agent/agent.db) directly, per request — NOT RouteChi's own DB.
  * These tests cover both the happy path (round trip against a fixture DB
  * with the omp CLI's real `auth_credentials` schema) and the missing-DB-file
  * path (omp CLI never run yet), which each exported function must handle
@@ -61,19 +61,19 @@ afterEach(() => {
 });
 
 describe("db/omp.ts — getOmpCredentials", () => {
-  it("returns hasOmniRoute:false without throwing when the omp DB file does not exist", () => {
+  it("returns hasRouteChi:false without throwing when the omp DB file does not exist", () => {
     assert.ok(!fs.existsSync(getOmpDbPath()), "precondition: no DB file yet");
     const creds = getOmpCredentials(PROVIDER_ID);
-    assert.deepEqual(creds, { hasOmniRoute: false, baseUrl: null, apiKey: null });
+    assert.deepEqual(creds, { hasRouteChi: false, baseUrl: null, apiKey: null });
   });
 
-  it("returns hasOmniRoute:false when the DB exists but has no matching row", () => {
+  it("returns hasRouteChi:false when the DB exists but has no matching row", () => {
     seedOmpDb();
     const creds = getOmpCredentials(PROVIDER_ID);
-    assert.deepEqual(creds, { hasOmniRoute: false, baseUrl: null, apiKey: null });
+    assert.deepEqual(creds, { hasRouteChi: false, baseUrl: null, apiKey: null });
   });
 
-  it("returns hasOmniRoute:false gracefully when the schema itself is missing (corrupt/foreign DB)", () => {
+  it("returns hasRouteChi:false gracefully when the schema itself is missing (corrupt/foreign DB)", () => {
     const dbPath = getOmpDbPath();
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
     // Valid sqlite file, but no auth_credentials table at all.
@@ -82,7 +82,7 @@ describe("db/omp.ts — getOmpCredentials", () => {
     db.close();
 
     const creds = getOmpCredentials(PROVIDER_ID);
-    assert.deepEqual(creds, { hasOmniRoute: false, baseUrl: null, apiKey: null });
+    assert.deepEqual(creds, { hasRouteChi: false, baseUrl: null, apiKey: null });
   });
 });
 
@@ -93,7 +93,7 @@ describe("db/omp.ts — saveOmpCredentials + getOmpCredentials round trip", () =
     saveOmpCredentials(PROVIDER_ID, "sk-test-omp-key", "http://localhost:20128/v1");
 
     const creds = getOmpCredentials(PROVIDER_ID);
-    assert.equal(creds.hasOmniRoute, true);
+    assert.equal(creds.hasRouteChi, true);
     assert.equal(creds.apiKey, "sk-test-omp-key");
     assert.equal(creds.baseUrl, "http://localhost:20128/v1");
   });
@@ -119,15 +119,15 @@ describe("db/omp.ts — saveOmpCredentials + getOmpCredentials round trip", () =
 });
 
 describe("db/omp.ts — deleteOmpCredentials", () => {
-  it("removes the row so a subsequent get reports hasOmniRoute:false", () => {
+  it("removes the row so a subsequent get reports hasRouteChi:false", () => {
     seedOmpDb();
     saveOmpCredentials(PROVIDER_ID, "sk-test-omp-key", "http://localhost:20128/v1");
-    assert.equal(getOmpCredentials(PROVIDER_ID).hasOmniRoute, true);
+    assert.equal(getOmpCredentials(PROVIDER_ID).hasRouteChi, true);
 
     deleteOmpCredentials(PROVIDER_ID);
 
     assert.deepEqual(getOmpCredentials(PROVIDER_ID), {
-      hasOmniRoute: false,
+      hasRouteChi: false,
       baseUrl: null,
       apiKey: null,
     });

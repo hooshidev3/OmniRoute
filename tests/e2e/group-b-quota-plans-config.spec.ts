@@ -146,7 +146,7 @@ test.describe("Group B — Quota Plans Config", () => {
     // Note: page.content() includes the full HTML source, which contains Next.js
     // chunk filenames — those hashes can legitimately contain the string "500".
     // Checking for "500" in raw HTML is unreliable; instead check for the actual
-    // error boundary text that OmniRoute renders on unrecoverable errors
+    // error boundary text that RouteChi renders on unrecoverable errors
     // (src/app/error.tsx heading: "Internal Server Error").
     const pageContent = await page.content();
     expect(pageContent).not.toContain("Internal Server Error");

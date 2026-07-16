@@ -46,7 +46,7 @@ export function filterPaidComboSteps<T extends { models?: unknown }>(combos: T[]
 
 /**
  * GET /api/settings/export-json
- * Exports a legacy OmniRoute-compatible JSON backup.
+ * Exports a legacy RouteChi-compatible JSON backup.
  */
 export async function GET(request: Request) {
   if (await isAuthRequired(request)) {

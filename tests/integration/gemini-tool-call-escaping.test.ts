@@ -3,10 +3,10 @@
  *
  * Live integration tests verifying tool call argument escaping through
  * the Chat Completions endpoint, the Responses API endpoint, and the
- * OmniRoute combo routing engine — both streaming and non-streaming.
+ * RouteChi combo routing engine — both streaming and non-streaming.
  *
  * Gemma4 models emit literal 0x0A bytes in functionCall.args string values.
- * OmniRoute's translator must escape these into valid JSON \n sequences.
+ * RouteChi's translator must escape these into valid JSON \n sequences.
  *
  * Environment:
  *   OMNIROUTE_API_KEY  — required (else tests skip)
@@ -92,7 +92,7 @@ test("gemini direct: streaming responses tool call produces valid JSON", { skip 
   console.log(`  [OK] gemini direct streaming responses: ${toolCalls.length} tool calls`);
 });
 
-// ── OmniRoute Combo — Chat Completions ────────────────────────────────────
+// ── RouteChi Combo — Chat Completions ────────────────────────────────────
 
 test("omniroute combo: tool call arguments are valid JSON", { skip }, async () => {
   const data = await sendToolCallChatRequest(MODEL, TOOL_CALL_PROMPT);
@@ -114,7 +114,7 @@ test("omniroute combo: streaming tool call produces valid JSON", { skip }, async
   );
 });
 
-// ── OmniRoute Combo — Responses API ───────────────────────────────────────
+// ── RouteChi Combo — Responses API ───────────────────────────────────────
 
 test("omniroute combo: responses tool call arguments are valid JSON", { skip }, async () => {
   const data = await sendToolCallResponsesRequest(MODEL, TOOL_CALL_PROMPT);

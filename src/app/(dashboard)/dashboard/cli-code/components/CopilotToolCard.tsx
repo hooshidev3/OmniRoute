@@ -142,14 +142,14 @@ export default function CopilotToolCard({
     }));
 
     const config = {
-      name: "OmniRoute",
+      name: "RouteChi",
       vendor: "azure",
       apiKey: `\${input:chat.lm.secret.omniroute}`,
       models,
     };
 
     const responsesConfig = {
-      name: "OmniRoute-responses",
+      name: "RouteChi-responses",
       vendor: "azure",
       apiKey: `\${input:chat.lm.secret.omniroute}`,
       models: responseModels,

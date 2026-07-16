@@ -1,4 +1,4 @@
-# bin/cli — OmniRoute CLI internals
+# bin/cli — RouteChi CLI internals
 
 This directory contains the CLI runtime, helpers, and commands for the `omniroute` binary.
 
@@ -15,7 +15,7 @@ bin/cli/
 ├── output.mjs              ← emit() — table/json/jsonl/csv + printSuccess/printError
 ├── io.mjs                  ← ask() / askSecret() — interactive prompts
 ├── data-dir.mjs            ← resolveDataDir() / resolveStoragePath()
-├── sqlite.mjs              ← openOmniRouteDb() — DB bootstrap
+├── sqlite.mjs              ← openRouteChiDb() — DB bootstrap
 ├── encryption.mjs          ← encrypt/decrypt credentials
 ├── provider-catalog.mjs    ← static provider catalog
 ├── provider-store.mjs      ← DB CRUD for provider_connections
@@ -41,7 +41,7 @@ bin/cli/
 
 ### `apiFetch(path, opts)` — `api.mjs`
 
-All HTTP calls to the OmniRoute server must go through this wrapper.
+All HTTP calls to the RouteChi server must go through this wrapper.
 
 ```js
 import { apiFetch } from "./api.mjs";

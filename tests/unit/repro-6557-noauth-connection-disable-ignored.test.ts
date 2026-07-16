@@ -1,7 +1,7 @@
 /**
  * Repro for #6557 — "disabled provider still used by router (opencode/big-pickle)"
  *
- * Root-cause hypothesis: OmniRoute exposes TWO different "disable this no-auth
+ * Root-cause hypothesis: RouteChi exposes TWO different "disable this no-auth
  * provider" affordances that write to two DISCONNECTED places:
  *
  *  1. Main Providers grid page toggle (ProviderCard inside NoAuthProvidersSection)

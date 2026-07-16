@@ -106,7 +106,7 @@ test("omp-settings GET: treats an existing agent.db as installed", async () => {
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.installed, true);
-  assert.equal(body.hasOmniRoute, false);
+  assert.equal(body.hasRouteChi, false);
 });
 
 // ── Test 4: POST with invalid body → 400 ─────────────────────────────────────
@@ -147,12 +147,12 @@ test("omp-settings POST: writes models.yml and persists credentials for a seeded
 
   const getRes = await GET(req());
   const getBody = await getRes.json();
-  assert.equal(getBody.hasOmniRoute, true);
+  assert.equal(getBody.hasRouteChi, true);
 });
 
-// ── Test 6: DELETE → removes OmniRoute provider entry ────────────────────────
+// ── Test 6: DELETE → removes RouteChi provider entry ────────────────────────
 
-test("omp-settings DELETE: removes the OmniRoute provider from models.yml and credentials", async () => {
+test("omp-settings DELETE: removes the RouteChi provider from models.yml and credentials", async () => {
   seedOmpDb();
   await POST(
     req({
@@ -169,7 +169,7 @@ test("omp-settings DELETE: removes the OmniRoute provider from models.yml and cr
 
   const getRes = await GET(req());
   const getBody = await getRes.json();
-  assert.equal(getBody.hasOmniRoute, false);
+  assert.equal(getBody.hasRouteChi, false);
 });
 
 // ── Test 7: Error sanitization (Hard Rule #12) ───────────────────────────────

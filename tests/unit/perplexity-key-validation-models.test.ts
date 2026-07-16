@@ -5,7 +5,7 @@
 // perplexity registry entry via `addModelsSuffix` — would always fail to
 // confirm a valid key, falling through to the chat-completions probe and
 // often misclassifying live keys as "Invalid". Inspired by upstream
-// 9router fix (see commit message); we port it OmniRoute-style by
+// 9router fix (see commit message); we port it RouteChi-style by
 // declaring an explicit `modelsUrl` on the perplexity registry entry.
 
 import { describe, it } from "node:test";

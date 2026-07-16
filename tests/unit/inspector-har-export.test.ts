@@ -27,7 +27,7 @@ function makeReq(overrides: Partial<InterceptedRequest> = {}): InterceptedReques
 test("produces HAR v1.2 with creator + entries", () => {
   const har = toHar([makeReq()]);
   assert.equal(har.log.version, "1.2");
-  assert.ok(har.log.creator.name.includes("OmniRoute"));
+  assert.ok(har.log.creator.name.includes("RouteChi"));
   assert.equal(har.log.entries.length, 1);
 });
 

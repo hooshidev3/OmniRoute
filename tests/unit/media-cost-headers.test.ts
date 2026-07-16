@@ -40,7 +40,7 @@ test.after(() => {
 });
 
 // Shared assertions: every successful media Response must carry the
-// X-OmniRoute-* cost telemetry headers (parity with chat/embeddings).
+// X-RouteChi-* cost telemetry headers (parity with chat/embeddings).
 function assertCostTelemetryHeaders(response: Response) {
   assert.equal(response.status, 200);
 

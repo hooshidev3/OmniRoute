@@ -1,6 +1,6 @@
 /**
  * Z.AI Free Web settings store — persists AccessKey, SecretKey, and
- * auto-refresh configuration in the OmniRoute SQLite database.
+ * auto-refresh configuration in the RouteChi SQLite database.
  *
  * Settings are stored in the `key_value` table (namespace='zai_web_free')
  * so they survive server restarts. The captcha module reads these at
@@ -28,8 +28,8 @@ const log = logger("ZAI-WEB-FREE-SETTINGS");
 // If Aliyun rotates the keys, run `POST /api/providers/zai-web-free/extract-key`
 // (intercepts AliyunCaptcha.js and AES-decrypts the new keys), or set the
 // new values via env vars.
-export const DEFAULT_ACCESS_KEY = "LTAI5tSEBwYMwVKAQGpxmvTd";
-export const DEFAULT_SECRET_KEY = "YSKfst7GaVkXwZYvVihJsKF9r89koz";
+export const DEFAULT_ACCESS_KEY = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY || "";
+export const DEFAULT_SECRET_KEY = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY || "";
 export const DEFAULT_MIN_POOL_SIZE = 10;
 export const DEFAULT_AUTO_REFRESH_ENABLED = true;
 export const DEFAULT_AUTO_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
@@ -92,7 +92,7 @@ export function initSettingsStore(_dbPath?: string): void {
 
 /**
  * Get a database handle via globalThis.__omnirouteDb (same pattern as
- * providerSessionRegistry.ts — uses the OmniRoute main DB).
+ * providerSessionRegistry.ts — uses the RouteChi main DB).
  */
 function getDb(): SqliteDb | null {
   try {

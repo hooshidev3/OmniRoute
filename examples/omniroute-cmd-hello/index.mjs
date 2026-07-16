@@ -1,4 +1,4 @@
-// Minimal OmniRoute CLI plugin example.
+// Minimal RouteChi CLI plugin example.
 // Usage:
 //   1. Copy this folder to ~/.omniroute/plugins/omniroute-cmd-hello/
 //   2. Run `omniroute hello`
@@ -7,7 +7,7 @@
 export const meta = {
   name: "omniroute-cmd-hello",
   version: "0.1.0",
-  description: "Hello-world OmniRoute CLI plugin example.",
+  description: "Hello-world RouteChi CLI plugin example.",
   omnirouteApi: ">=3.0.0",
 };
 

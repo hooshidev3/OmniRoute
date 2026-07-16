@@ -34,7 +34,7 @@ test.after(() => {
 
 // Regression guard for #3502 / #3388: PR #3422 ("allow OpenAI usage-only empty
 // choices chunks") re-introduced the assistant-content injection
-// "[OmniRoute] Upstream returned an empty response. Please retry." for empty
+// "[RouteChi] Upstream returned an empty response. Please retry." for empty
 // `choices: []` chunks that carry NO valid usage. That injected text is fed back
 // by clients (Goose/opencode) as a turn, producing the retry loop #3400 fixed.
 // An empty-no-usage chunk must be DROPPED, never injected as content.

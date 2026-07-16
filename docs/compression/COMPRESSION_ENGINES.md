@@ -6,7 +6,7 @@ lastUpdated: 2026-06-28
 
 # Compression Engines
 
-OmniRoute compression is built around engine contracts. A mode can run one engine directly
+RouteChi compression is built around engine contracts. A mode can run one engine directly
 (`caveman` or `rtk`) or a deterministic stacked pipeline that executes multiple engines in order.
 
 ## Modes
@@ -69,7 +69,7 @@ Caveman mode focuses on semantic condensation of normal prose:
 The dashboard surface is `Dashboard -> Context & Cache -> Caveman`.
 
 Caveman upstream reports `~75%` fewer output tokens, `65%` average output savings in benchmarks
-with a `22-87%` range, and a `~46%` input-compression tool. OmniRoute uses the Caveman input-side
+with a `22-87%` range, and a `~46%` input-compression tool. RouteChi uses the Caveman input-side
 number when documenting stacked prompt/context savings; Caveman output mode remains a separate
 response-behavior feature.
 
@@ -141,7 +141,7 @@ The prunable LLMLingua runtime peer stack is **optional**. Three packages are de
 `@huggingface/transformers` is pinned at `3.5.2` as an **optional** dependency (shared with
 the local embeddings path and also traced into the standalone bundle). Keeping it optional prevents
 `onnxruntime-node` CUDA provider postinstall failures on CUDA 11 hosts from aborting the whole
-OmniRoute install; when the optional stack is absent, LLMLingua still fail-opens. Only the three
+RouteChi install; when the optional stack is absent, LLMLingua still fail-opens. Only the three
 packages above are prunable SLM peers. A standard `npm install` (dev) installs the optional stack
 automatically unless optional dependencies are omitted.
 

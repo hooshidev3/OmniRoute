@@ -4,7 +4,7 @@
 
 ---
 
-Referensi lengkap untuk semua titik akhir API OmniRoute.
+Referensi lengkap untuk semua titik akhir API RouteChi.
 
 ---
 
@@ -42,16 +42,16 @@ Content-Type: application/json
 
 | Header                   | Arah      | Deskripsi                                                    |
 | ------------------------ | --------- | ------------------------------------------------------------ |
-| `X-OmniRoute-No-Cache`   | Permintaan | Atur ke `true` untuk melewati cache                          |
-| `X-OmniRoute-Progress`   | Permintaan | Atur ke `true` untuk event progres                           |
+| `X-RouteChi-No-Cache`   | Permintaan | Atur ke `true` untuk melewati cache                          |
+| `X-RouteChi-Progress`   | Permintaan | Atur ke `true` untuk event progres                           |
 | `X-Session-Id`           | Permintaan | Kunci sesi tetap untuk afinitas sesi eksternal               |
 | `x_session_id`           | Permintaan | Varian garis bawah juga diterima (HTTP langsung)             |
 | `Idempotency-Key`        | Permintaan | Kunci deduplikasi (jendela 5 detik)                          |
 | `X-Request-Id`           | Permintaan | Kunci deduplikasi alternatif                                 |
-| `X-OmniRoute-Cache`      | Respons   | `HIT` atau `MISS` (non-streaming)                            |
-| `X-OmniRoute-Idempotent` | Respons   | `true` jika dideduplikasi                                    |
-| `X-OmniRoute-Progress`   | Respons   | `enabled` jika pelacakan progres aktif                       |
-| `X-OmniRoute-Session-Id` | Respons   | ID sesi efektif yang digunakan OmniRoute                     |
+| `X-RouteChi-Cache`      | Respons   | `HIT` atau `MISS` (non-streaming)                            |
+| `X-RouteChi-Idempotent` | Respons   | `true` jika dideduplikasi                                    |
+| `X-RouteChi-Progress`   | Respons   | `enabled` jika pelacakan progres aktif                       |
+| `X-RouteChi-Session-Id` | Respons   | ID sesi efektif yang digunakan RouteChi                     |
 
 > Catatan Nginx: jika Anda mengandalkan header bergaris bawah (misalnya `x_session_id`), aktifkan `underscores_in_headers on;`.
 

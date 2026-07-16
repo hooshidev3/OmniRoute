@@ -246,7 +246,7 @@ async function waitForServer(
     if (logs.exitInfo) {
       throw new Error(
         [
-          `OmniRoute exited before it became ready (code=${logs.exitInfo.code}, signal=${logs.exitInfo.signal})`,
+          `RouteChi exited before it became ready (code=${logs.exitInfo.code}, signal=${logs.exitInfo.signal})`,
           "--- stdout ---",
           ...logs.stdoutLines.slice(-40),
           "--- stderr ---",
@@ -269,7 +269,7 @@ async function waitForServer(
 
   throw new Error(
     [
-      `Timed out waiting for OmniRoute to start: ${lastError}`,
+      `Timed out waiting for RouteChi to start: ${lastError}`,
       "--- stdout ---",
       ...logs.stdoutLines.slice(-40),
       "--- stderr ---",

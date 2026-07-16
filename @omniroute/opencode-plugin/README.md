@@ -1,16 +1,16 @@
 # @omniroute/opencode-plugin
 
-> **Recommended way to use OmniRoute with OpenCode.** Pulls a live model catalog from `/v1/models` (including `-low`/`-medium`/`-high`/`-thinking` variants as first-class IDs), aggregates combos via `/api/combos` using a least-common-denominator capability/limit join, sanitizes Gemini tool schemas in flight, and supports multiple side-by-side OmniRoute instances out of the box.
+> **Recommended way to use RouteChi with OpenCode.** Pulls a live model catalog from `/v1/models` (including `-low`/`-medium`/`-high`/`-thinking` variants as first-class IDs), aggregates combos via `/api/combos` using a least-common-denominator capability/limit join, sanitizes Gemini tool schemas in flight, and supports multiple side-by-side RouteChi instances out of the box.
 
 ## Why this and not `@omniroute/opencode-provider`?
 
-`@omniroute/opencode-provider` is the legacy config-generator package — it writes a frozen `provider.omniroute` block into `opencode.json` with a **hardcoded list of 8 models** ([`OMNIROUTE_DEFAULT_OPENCODE_MODELS`](https://github.com/borhandarabi/routechi/blob/main/%40omniroute/opencode-provider/src/index.ts#L48-L56)). It works on the CLI but in the **OpenCode Desktop / Web** builds (Tauri / Electron) the runtime re-runs the model picker and the static block surfaces only a few of those — and they drift behind the live OmniRoute catalog.
+`@omniroute/opencode-provider` is the legacy config-generator package — it writes a frozen `provider.omniroute` block into `opencode.json` with a **hardcoded list of 8 models** ([`OMNIROUTE_DEFAULT_OPENCODE_MODELS`](https://github.com/borhandarabi/routechi/blob/main/%40omniroute/opencode-provider/src/index.ts#L48-L56)). It works on the CLI but in the **OpenCode Desktop / Web** builds (Tauri / Electron) the runtime re-runs the model picker and the static block surfaces only a few of those — and they drift behind the live RouteChi catalog.
 
 This plugin solves that by:
 
 - Fetching `/v1/models` and `/api/combos` **at OpenCode startup, in Node.js** — no CORS, no WebView restrictions
 - Emitting the provider block **dynamically** in the plugin's `config`/`provider` hook — so `opencode.json` only needs the plugin entry, not a static `provider.omniroute`
-- Re-fetching on a configurable TTL (default 5 min), so new models / combo changes in the OmniRoute UI appear without restarting OpenCode
+- Re-fetching on a configurable TTL (default 5 min), so new models / combo changes in the RouteChi UI appear without restarting OpenCode
 - Computing `limit.context` for combos as `min(member.context_length)` from the live catalog (no more `null` values that cause 4K-token truncation)
 - **Auto-pickup of `interleaved` capability** for thinking models (merged via PR #3138)
 
@@ -19,18 +19,18 @@ This plugin solves that by:
 ## Install
 
 The plugin ships **pre-built inside the `omniroute` npm package** since v3.8.23.
-If you have OmniRoute installed, the plugin is already on disk:
+If you have RouteChi installed, the plugin is already on disk:
 
 ```sh
 # 1. One command — copy the plugin into OpenCode and update opencode.json
 omniroute setup opencode --auth
 
-# 2. Follow the interactive prompt to enter your OmniRoute API key
+# 2. Follow the interactive prompt to enter your RouteChi API key
 # 3. Restart OpenCode — /models lists the full live catalog
 ```
 
 The `--auth` flag runs `opencode auth login --provider omniroute` automatically.
-Use `--base-url` to point at a non-default OmniRoute address:
+Use `--base-url` to point at a non-default RouteChi address:
 
 ```sh
 omniroute setup opencode --base-url https://or.example.com --auth
@@ -81,12 +81,12 @@ Peer dep: `@opencode-ai/plugin` (managed by your OpenCode install).
 
 ```sh
 opencode auth login --provider omniroute
-# prompts for the OmniRoute API key, writes to ~/.local/share/opencode/auth.json
+# prompts for the RouteChi API key, writes to ~/.local/share/opencode/auth.json
 ```
 
 > ⚠ Use the `--provider` flag explicitly. `opencode auth login omniroute` is parsed as a positional `url` argument by current OC releases (≤1.15.5) and fails with `fetch() URL is invalid`. Tracked upstream.
 
-Restart OpenCode. `/models` lists the full live catalog. Variants (`-low`, `-medium`, `-high`, `-thinking`) and combos appear as first-class IDs — OmniRoute is the source of truth, no client-side synthesis.
+Restart OpenCode. `/models` lists the full live catalog. Variants (`-low`, `-medium`, `-high`, `-thinking`) and combos appear as first-class IDs — RouteChi is the source of truth, no client-side synthesis.
 
 ## Multi-instance (prod + preprod side-by-side)
 
@@ -98,12 +98,12 @@ Pack the plugin once, extract it twice into named directories, then point each `
 
 ```sh
 # 1. Build + pack the plugin (run from the plugin worktree)
-cd /path/to/OmniRoute/@omniroute/opencode-plugin
+cd /path/to/RouteChi/@omniroute/opencode-plugin
 npm run build
 npm pack
 # produces omniroute-opencode-plugin-0.1.0.tgz
 
-# 2. Extract one copy per OmniRoute endpoint
+# 2. Extract one copy per RouteChi endpoint
 mkdir -p ~/.config/opencode/plugins/omniroute-opencode-plugin-prod
 mkdir -p ~/.config/opencode/plugins/omniroute-opencode-plugin-preprod
 tar -xzf omniroute-opencode-plugin-0.1.0.tgz -C ~/.config/opencode/plugins/omniroute-opencode-plugin-prod    --strip-components=1
@@ -120,7 +120,7 @@ Then in `~/.config/opencode/opencode.json` reference each directory by absolute 
       "./plugins/omniroute-opencode-plugin-prod/dist/index.js",
       {
         "providerId": "omniroute",
-        "displayName": "OmniRoute",
+        "displayName": "RouteChi",
         "baseURL": "https://or.example.com",
       },
     ],
@@ -128,7 +128,7 @@ Then in `~/.config/opencode/opencode.json` reference each directory by absolute 
       "./plugins/omniroute-opencode-plugin-preprod/dist/index.js",
       {
         "providerId": "omniroute-preprod",
-        "displayName": "OmniRoute Preprod",
+        "displayName": "RouteChi Preprod",
         "baseURL": "https://or-preprod.example.com",
       },
     ],
@@ -163,7 +163,7 @@ npm install --prefix ~/.config/opencode/plugins/omniroute-opencode-plugin-prepro
 | Feature                                     | What it does                                                                                                                                                                                                                                                                                                                                                                                                | Hook                         |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
 | Dynamic `/v1/models`                        | Pulls live catalog (455+ entries on prod) on each refresh, TTL-cached                                                                                                                                                                                                                                                                                                                                       | `provider.models`            |
-| Variants pass-through                       | `-low`/`-medium`/`-high`/`-thinking` ship as first-class IDs from OmniRoute (no client synthesis)                                                                                                                                                                                                                                                                                                           | `provider.models`            |
+| Variants pass-through                       | `-low`/`-medium`/`-high`/`-thinking` ship as first-class IDs from RouteChi (no client synthesis)                                                                                                                                                                                                                                                                                                           | `provider.models`            |
 | Combo LCD aggregation                       | Combos appear with intersected capabilities + min context/output across members                                                                                                                                                                                                                                                                                                                             | `provider.models` + `config` |
 | `combo/<slug>` namespace + `Combo: ` prefix | Combos surface under `combo/claude-primary` (not the upstream UUID) and the picker shows `Combo: claude-primary` so they stand apart from raw provider/model pairs                                                                                                                                                                                                                                          | both hooks                   |
 | Nice names + cost                           | `/api/pricing/models` display names AND `/api/pricing` per-million-token cost overlaid onto the live catalog                                                                                                                                                                                                                                                                                                | both hooks                   |
@@ -182,9 +182,9 @@ npm install --prefix ~/.config/opencode/plugins/omniroute-opencode-plugin-prepro
 | Option          | Type     | Default                                    | Description                                                |
 | --------------- | -------- | ------------------------------------------ | ---------------------------------------------------------- |
 | `providerId`    | `string` | `"omniroute"`                              | OpenCode provider id; must be unique across plugin entries |
-| `displayName`   | `string` | `"OmniRoute"` or `OmniRoute (<id>)`        | Label in the OC UI                                         |
+| `displayName`   | `string` | `"RouteChi"` or `RouteChi (<id>)`        | Label in the OC UI                                         |
 | `modelCacheTtl` | `number` | `300000` (5 min)                           | `/v1/models` TTL in ms                                     |
-| `baseURL`       | `string` | resolved from `auth.json` after `/connect` | Override OmniRoute base URL                                |
+| `baseURL`       | `string` | resolved from `auth.json` after `/connect` | Override RouteChi base URL                                |
 | `features`      | `object` | see below                                  | Feature toggles (all opt-in/out, defaults preserve v0.1.0) |
 
 ### `features` block
@@ -264,9 +264,9 @@ If you want a narrower-scoped Bearer for MCP (different from the chat/inference 
 }
 ```
 
-- `usableOnly: true` drops models whose canonical provider has no healthy connection in your OmniRoute instance — your `/models` picker stays focused on what you can actually call.
+- `usableOnly: true` drops models whose canonical provider has no healthy connection in your RouteChi instance — your `/models` picker stays focused on what you can actually call.
 - `diskCache: true` (default) writes a snapshot to `${OPENCODE_DATA_DIR}/plugins/omniroute-<providerId>.json` on every healthy refresh. On a cold start where `/v1/models` is unreachable (laptop offline, IP whitelist drop), the snapshot hydrates the static block so OC still shows the catalog instead of a stub.
-- `compressionMetadata: true` annotates combo display names with their pipeline using traffic-light emoji for intensity (e.g. `Combo: claude-primary [rtk🟡 → caveman🟠]`) so the picker advertises which compression each combo applies and how heavy it is at a glance. Palette: 🟢 lite/minimal · 🟡 standard · 🟠 aggressive/full · 🔴 ultra. Unknown intensities fall through to raw text (`[rtk:custom-thing]`) so the plugin never hides a value OmniRoute knows but the plugin doesn't.
+- `compressionMetadata: true` annotates combo display names with their pipeline using traffic-light emoji for intensity (e.g. `Combo: claude-primary [rtk🟡 → caveman🟠]`) so the picker advertises which compression each combo applies and how heavy it is at a glance. Palette: 🟢 lite/minimal · 🟡 standard · 🟠 aggressive/full · 🔴 ultra. Unknown intensities fall through to raw text (`[rtk:custom-thing]`) so the plugin never hides a value RouteChi knows but the plugin doesn't.
 - `providerTag: true` (default) prepends a short upstream-provider label so the picker shows `Claude - Claude Opus 4.7` for `cc/claude-opus-4-7`, `Kiro - Claude Opus 4.7` for `kr/claude-opus-4-7`, and `GHM - GPT 5` for `ghm/gpt-5` (slot.name `GitHub Models` > 8 chars → abbreviated). Critical when the same model id is sold through multiple upstream connections with different cost/auth/rate-limit profiles. Set to `false` to keep the pre-v3.8.3 unsuffixed format.
 
 ## Comparison vs `@omniroute/opencode-provider`

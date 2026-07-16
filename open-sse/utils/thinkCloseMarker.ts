@@ -1,7 +1,7 @@
 /**
  * `</think>` close-marker client policy.
  *
- * When OmniRoute translates a Claude-native streamed response to OpenAI Chat
+ * When RouteChi translates a Claude-native streamed response to OpenAI Chat
  * Completions shape (`claude-to-openai.ts`), it emits a single `</think>`
  * close marker as `delta.content` so clients that scan content for the marker
  * (Claude Code, Cursor) can split reasoning from the final answer — see #4633.

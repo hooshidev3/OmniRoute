@@ -1,6 +1,6 @@
 // Port of decolua/9router PR #769 — provider dropdown filter for the quota
 // dashboard. The upstream PR added the dropdown plus an "Expiring first" sort
-// toggle; OmniRoute already always sorts by soonest reset within each status
+// toggle; RouteChi already always sorts by soonest reset within each status
 // group (see ProviderLimits/index.tsx `visibleConnections`), so only the
 // dropdown is genuinely new here. These tests guard the pure helpers that
 // back the dropdown so regressions in the inline `useMemo` predicates fail

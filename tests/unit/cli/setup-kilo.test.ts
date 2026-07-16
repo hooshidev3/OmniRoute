@@ -30,7 +30,7 @@ test("buildKiloVscodeSettings sets kilocode.customProvider + defaultModel, prese
     { apiKey: "k", baseUrl: "http://vps:20128/v1", model: "glm/glm-5.2" }
   );
   assert.equal(s["editor.fontSize"], 14);
-  assert.equal(s["kilocode.customProvider"].name, "OmniRoute");
+  assert.equal(s["kilocode.customProvider"].name, "RouteChi");
   assert.equal(s["kilocode.customProvider"].baseURL, "http://vps:20128/v1");
   assert.equal(s["kilocode.defaultModel"], "glm/glm-5.2");
 });

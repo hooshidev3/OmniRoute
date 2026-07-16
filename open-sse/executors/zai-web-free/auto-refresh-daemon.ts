@@ -93,7 +93,7 @@ async function checkAndRefresh(): Promise<void> {
  * Start the auto-refresh daemon.
  * Called once at server startup.
  *
- * @param dbPath  Path to the OmniRoute SQLite database.
+ * @param dbPath  Path to the RouteChi SQLite database.
  */
 export function startAutoRefreshDaemon(dbPath: string): void {
   // Initialize settings store and device token pool

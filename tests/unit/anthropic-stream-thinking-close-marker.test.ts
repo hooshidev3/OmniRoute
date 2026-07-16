@@ -1,6 +1,6 @@
 // Regression test for the Anthropic-compatible stream "thinking block never closes" bug.
 //
-// When clients consume the OpenAI-compatible stream that OmniRoute synthesises from
+// When clients consume the OpenAI-compatible stream that RouteChi synthesises from
 // Claude-native SSE, they need an explicit signal that the thinking/reasoning section
 // has ended; otherwise the UI stays stuck on the "thinking" indicator even after the
 // upstream stream has cleanly completed.

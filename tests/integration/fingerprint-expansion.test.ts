@@ -117,7 +117,7 @@ async function waitForServer(
     if (logs.exitInfo) {
       throw new Error(
         [
-          `OmniRoute exited before it became ready (code=${logs.exitInfo.code}, signal=${logs.exitInfo.signal})`,
+          `RouteChi exited before it became ready (code=${logs.exitInfo.code}, signal=${logs.exitInfo.signal})`,
           "--- stdout ---",
           ...logs.stdoutLines.slice(-40),
           "--- stderr ---",
@@ -138,7 +138,7 @@ async function waitForServer(
   }
   throw new Error(
     [
-      `Timed out waiting for OmniRoute to start: ${lastError}`,
+      `Timed out waiting for RouteChi to start: ${lastError}`,
       "--- stdout ---",
       ...logs.stdoutLines.slice(-40),
       "--- stderr ---",
@@ -299,7 +299,7 @@ test("round-robin combo with 3 fingerprints: all requests succeed", async () => 
     assert.equal(result.json.choices[0].message.content, "fingerprint ok");
     // #6426 (v3.8.46): chatCore now unconditionally aligns the non-streaming
     // response body.model with the resolved backend model advertised in the
-    // X-OmniRoute-Model header (echoRequestedModelName/#1311 is opt-in and off
+    // X-RouteChi-Model header (echoRequestedModelName/#1311 is opt-in and off
     // here), so the response echoes the bare backend model id ("mimo-auto"),
     // not the "fp-mimocode/"-prefixed provider-node routing target — even
     // though the mock upstream in this test is configured to self-report the

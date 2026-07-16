@@ -164,7 +164,7 @@ export interface RefreshOptions {
    * Optional proxy URL for the Playwright browser. Supports HTTP, HTTPS, and
    * SOCKS5 proxies. Format: `http://user:pass@host:port` or `socks5://host:port`.
    * When set, the browser routes all traffic (chat.z.ai page load + token
-   * extraction) through this proxy. This is separate from OmniRoute's
+   * extraction) through this proxy. This is separate from RouteChi's
    * per-connection proxy (which covers the executor's fetch calls) ?�� Playwright
    * has its own network stack and needs an explicit `--proxy-server` flag.
    */

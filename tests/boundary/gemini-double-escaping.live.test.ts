@@ -1,7 +1,7 @@
 /**
  * Direct Gemini tests: verify no double-escaping in tool call arguments.
  *
- * Calls Gemini through OmniRoute via both Chat Completions and Responses API,
+ * Calls Gemini through RouteChi via both Chat Completions and Responses API,
  * comparing streaming vs non-streaming paths. The goal is to verify that
  * tool call arguments are valid JSON throughout the pipeline.
  */

@@ -135,28 +135,28 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
     if (platform === "darwin") {
       return {
         label: "Download DMG (macOS)",
-        url: `https://github.com/borhandarabi/routechi/releases/download/v${cleanLatest}/OmniRoute-${cleanLatest}.dmg`,
-        desc: `A new version of the OmniRoute desktop app is available. Please download and install the macOS DMG installer to update (current: v${versionInfo?.current || ""}).`,
+        url: `https://github.com/borhandarabi/routechi/releases/download/v${cleanLatest}/RouteChi-${cleanLatest}.dmg`,
+        desc: `A new version of the RouteChi desktop app is available. Please download and install the macOS DMG installer to update (current: v${versionInfo?.current || ""}).`,
       };
     }
     if (platform === "win32") {
       return {
         label: "Download EXE (Windows)",
-        url: `https://github.com/borhandarabi/routechi/releases/download/v${cleanLatest}/OmniRoute.Setup.${cleanLatest}.exe`,
-        desc: `A new version of the OmniRoute desktop app is available. Please download and install the Windows EXE installer to update (current: v${versionInfo?.current || ""}).`,
+        url: `https://github.com/borhandarabi/routechi/releases/download/v${cleanLatest}/RouteChi.Setup.${cleanLatest}.exe`,
+        desc: `A new version of the RouteChi desktop app is available. Please download and install the Windows EXE installer to update (current: v${versionInfo?.current || ""}).`,
       };
     }
     if (platform === "linux") {
       return {
         label: "Download AppImage (Linux)",
-        url: `https://github.com/borhandarabi/routechi/releases/download/v${cleanLatest}/OmniRoute-${cleanLatest}.AppImage`,
-        desc: `A new version of the OmniRoute desktop app is available. Please download the Linux AppImage package to update (current: v${versionInfo?.current || ""}).`,
+        url: `https://github.com/borhandarabi/routechi/releases/download/v${cleanLatest}/RouteChi-${cleanLatest}.AppImage`,
+        desc: `A new version of the RouteChi desktop app is available. Please download the Linux AppImage package to update (current: v${versionInfo?.current || ""}).`,
       };
     }
     return {
       label: "Download Update",
       url: `https://github.com/borhandarabi/routechi/releases/tag/v${cleanLatest}`,
-      desc: `A new version of the OmniRoute desktop app is available. Please download the respective app format for your system to update (current: v${versionInfo?.current || ""}).`,
+      desc: `A new version of the RouteChi desktop app is available. Please download the respective app format for your system to update (current: v${versionInfo?.current || ""}).`,
     };
   }, [platform, versionInfo?.latest, versionInfo?.current]);
 
@@ -528,7 +528,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
               {
                 step: "restart",
                 status: "pending",
-                message: "Waiting for OmniRoute to restart with the new version.",
+                message: "Waiting for RouteChi to restart with the new version.",
               },
             ]
           : [
@@ -540,7 +540,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
               {
                 step: "restart",
                 status: "pending",
-                message: "Waiting for OmniRoute to restart with the new version.",
+                message: "Waiting for RouteChi to restart with the new version.",
               },
             ];
 
@@ -572,14 +572,14 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
               next = mergeUpdateStep(next, {
                 step: "complete",
                 status: "done",
-                message: `OmniRoute is now running v${targetVersion}.`,
+                message: `RouteChi is now running v${targetVersion}.`,
               });
 
               return next;
             });
             setUpdating(false);
             setUpdatePhase("done");
-            notify.success(`OmniRoute updated to v${targetVersion}.`);
+            notify.success(`RouteChi updated to v${targetVersion}.`);
             await fetchData();
             return;
           }
@@ -603,7 +603,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
             next = mergeUpdateStep(next, {
               step: "restart",
               status: "pending",
-              message: `Waiting for OmniRoute to come back on v${targetVersion}.`,
+              message: `Waiting for RouteChi to come back on v${targetVersion}.`,
             });
 
             return next;
@@ -628,7 +628,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
             next = mergeUpdateStep(next, {
               step: "restart",
               status: "running",
-              message: "Service restart in progress. Waiting for OmniRoute to come back online...",
+              message: "Service restart in progress. Waiting for RouteChi to come back online...",
             });
 
             return next;
@@ -783,7 +783,7 @@ export default function HomePageClient({ machineId }: HomePageClientProps) {
                     ? "Update Complete!"
                     : updatePhase === "failed"
                       ? "Update Failed"
-                      : "Updating OmniRoute..."}
+                      : "Updating RouteChi..."}
                 </h3>
                 <p className="text-xs text-text-muted mt-0.5">
                   {updatePhase === "done"

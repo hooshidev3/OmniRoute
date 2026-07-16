@@ -1,12 +1,12 @@
 ---
-title: "OmniRoute Fly.io 部署指南"
+title: "RouteChi Fly.io 部署指南"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute Fly.io 部署指南
+# RouteChi Fly.io 部署指南
 
-本文档记录 OmniRoute 在 Fly.io 上的实际部署方法，适用于两类场景：
+本文档记录 RouteChi 在 Fly.io 上的实际部署方法，适用于两类场景：
 
 - 首次把当前项目部署到 Fly.io
 - 后续代码更新后继续发布
@@ -92,7 +92,7 @@ flyctl version
 
 ```powershell
 git clone https://github.com/borhandarabi/routechi.git
-cd OmniRoute
+cd RouteChi
 ```
 
 ### 4.2 确认应用名

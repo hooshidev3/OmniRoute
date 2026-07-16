@@ -1,16 +1,16 @@
 ---
-title: "یکپارچه‌سازی‌های CLI — نشانه‌گیری هر CLI کدنویسی روی OmniRoute"
+title: "یکپارچه‌سازی‌های CLI — نشانه‌گیری هر CLI کدنویسی روی RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
 # یکپارچه‌سازی‌های CLI
 
-OmniRoute مجموعه‌ای از دستورات `setup-*` را عرضه می‌کند که یک CLI کدنویسی
-(Codex، Claude Code، OpenCode، Cline، …) را پیکربندی می‌کنند تا از OmniRoute به‌عنوان
-backend خود استفاده کند — در نتیجه ابزار با **یک** endpoint صحبت می‌کند و OmniRoute
+RouteChi مجموعه‌ای از دستورات `setup-*` را عرضه می‌کند که یک CLI کدنویسی
+(Codex، Claude Code، OpenCode، Cline، …) را پیکربندی می‌کنند تا از RouteChi به‌عنوان
+backend خود استفاده کند — در نتیجه ابزار با **یک** endpoint صحبت می‌کند و RouteChi
 آن را با سقوط خودکار (auto-fallback) به ارائه‌دهندهٔ درست هدایت می‌کند. هر دستور
-**کاتالوگ زندهٔ** مدل‌ها را از یک OmniRoute در حال اجرا (محلی یا راهور) می‌خواند و
+**کاتالوگ زندهٔ** مدل‌ها را از یک RouteChi در حال اجرا (محلی یا راهور) می‌خواند و
 فایل پیکربندی خود ابزار را روی ماشین **شما** می‌نویسد. کلید API هرجا که ابزار پشتیبانی
 کند از طریق env var ارجاع داده می‌شود، بنابراین راز هرگز روی دیسک نوشته نمی‌شود
 (استثناها در ادامه ذکر شده‌اند).
@@ -24,7 +24,7 @@ backend خود استفاده کند — در نتیجه ابزار با **یک*
 
 - [پیکربندی Claude Code](./CLAUDE-CODE-CONFIGURATION.md)
 - [پیکربندی Codex CLI](./CODEX-CLI-CONFIGURATION.md)
-- [حالت راهور](./REMOTE-MODE.md) — هدایت یک OmniRoute راهور (VPS / Tailnet) از لپ‌تاپ خود
+- [حالت راهور](./REMOTE-MODE.md) — هدایت یک RouteChi راهور (VPS / Tailnet) از لپ‌تاپ خود
 
 ---
 
@@ -55,7 +55,7 @@ backend خود استفاده کند — در نتیجه ابزار با **یک*
 
 یادداشت‌هایی دربارهٔ پرچم‌ها (تأییدشده در منبع دستور):
 
-- `--remote <url>` — کاتالوگ را از یک OmniRoute راهور می‌گیرد (`--port` و context فعال
+- `--remote <url>` — کاتالوگ را از یک RouteChi راهور می‌گیرد (`--port` و context فعال
   را بازنویسی می‌کند). `--api-key <key>` اعتبارنامه را برای آن سرور فراهم می‌کند
   (پیش‌فرض env var `OMNIROUTE_API_KEY`، یا توکن context فعال).
 - `--only <patterns>` — زیررشته‌های جدا‌شده با ویرگول؛ فقط شناسه‌های مدلی را نگه می‌دارد
@@ -67,7 +67,7 @@ backend خود استفاده کند — در نتیجه ابزار با **یک*
   تعاملی انتخاب می‌شود): Cline، Kilo، Roo، Goose، Qwen، Aider. این ابزارها
   همچنین `--yes` را برای اجراهای غیرتعاملی می‌پذیرند (که در این صورت `--model` الزامی است).
   `setup-opencode` از `--model` برای تنظیم مدل پیش‌فرض top-level استفاده می‌کند.
-- `--port <port>` — پورت OmniRoute محلی (پیش‌فرض `20128`، زمانی که `--remote` تنظیم شده باشد
+- `--port <port>` — پورت RouteChi محلی (پیش‌فرض `20128`، زمانی که `--remote` تنظیم شده باشد
   نادیده گرفته می‌شود). روی همهٔ `setup-*` و هر دو لانچر وجود دارد.
 - دو لانچر (`launch`، `launch-codex`) پرچم `--profile <name>` را برای انتخاب
   پروفایلی که توسط `setup-claude` / `setup-codex` نوشته شده می‌پذیرند، به‌علاوهٔ
@@ -82,7 +82,7 @@ backend خود استفاده کند — در نتیجه ابزار با **یک*
 
 ## استفادهٔ محلی
 
-با OmniRoute در حال اجرا روی `localhost:20128`، کافی است دستور setup را برای ابزار
+با RouteChi در حال اجرا روی `localhost:20128`، کافی است دستور setup را برای ابزار
 خود اجرا کنید. کاتالوگ از سرور محلی گرفته می‌شود.
 
 ```bash
@@ -110,8 +110,8 @@ routechi setup-continue --dry-run
 اجرای بدون نوشتن هیچ پیکربندی (فقط تزریق env):
 
 ```bash
-routechi launch                 # Claude Code → local OmniRoute
-routechi launch-codex           # Codex CLI → local OmniRoute
+routechi launch                 # Claude Code → local RouteChi
+routechi launch-codex           # Codex CLI → local RouteChi
 routechi launch-codex --profile glm52
 ```
 
@@ -119,7 +119,7 @@ routechi launch-codex --profile glm52
 
 ## استفادهٔ راهور
 
-هر دستور setup را با `--remote` + `--api-key` به یک OmniRoute راهور نشانه بگیرید.
+هر دستور setup را با `--remote` + `--api-key` به یک RouteChi راهور نشانه بگیرید.
 کاتالوگ از راهور گرفته می‌شود؛ پیکربندی روی ماشین محلی شما نوشته می‌شود.
 
 ```bash
@@ -152,7 +152,7 @@ routechi launch                      # ← Claude Code against the remote
 
 ## قراردادهای Base URL (کدام ابزارها `/v1` می‌خواهند)
 
-OmniRoute رابط OpenAI را در `/v1`، رابط Anthropic را در root، و یک رابط بومی Gemini را
+RouteChi رابط OpenAI را در `/v1`، رابط Anthropic را در root، و یک رابط بومی Gemini را
 در `/v1beta` عرضه می‌کند. هر یکپارچه‌سازی به شکلی که ابزارش انتظار دارد متصل شده است
 (تأییدشده در منبع دستور):
 
@@ -170,7 +170,7 @@ OmniRoute رابط OpenAI را در `/v1`، رابط Anthropic را در root، 
 ## نگه‌داشتن وابستگی‌های بومی هنگام به‌روزرسانی: `--include=optional`
 
 وقتی با `routechi update` به‌روزرسانی می‌کنید (پس از تأیید، یا با `--apply`)،
-OmniRoute نصب را با `--include=optional` پخته‌شده درون آن اجرا می‌کند:
+RouteChi نصب را با `--include=optional` پخته‌شده درون آن اجرا می‌کند:
 
 ```bash
 npm install -g routechi@latest --include=optional

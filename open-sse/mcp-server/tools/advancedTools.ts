@@ -1,6 +1,6 @@
 /**
- * OmniRoute MCP Advanced Tools — 13 intelligence tools that differentiate
- * OmniRoute from all other AI gateways.
+ * RouteChi MCP Advanced Tools — 13 intelligence tools that differentiate
+ * RouteChi from all other AI gateways.
  *
  * Tools:
  *   1. omniroute_simulate_route     — Dry-run routing simulation
@@ -19,7 +19,7 @@
 import { logToolCall } from "../audit.ts";
 import { getMcpHttpAuthHeadersForInternalFetch } from "../httpAuthContext.ts";
 import { normalizeQuotaResponse } from "../../../src/shared/contracts/quota.ts";
-import { resolveOmniRouteBaseUrl } from "../../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
+import { resolveRouteChiBaseUrl } from "../../../src/shared/utils/resolveRouteChiBaseUrl.ts";
 import {
   getComboModelProvider,
   getComboModelString,
@@ -31,7 +31,7 @@ import type {
 } from "../../../src/shared/constants/routingStrategies.ts";
 import { normalizeRoutingStrategy } from "../../../src/shared/constants/routingStrategies.ts";
 
-const OMNIROUTE_BASE_URL = resolveOmniRouteBaseUrl();
+const OMNIROUTE_BASE_URL = resolveRouteChiBaseUrl();
 const OMNIROUTE_API_KEY = process.env.OMNIROUTE_API_KEY || "";
 
 async function apiFetch(path: string, options: RequestInit = {}): Promise<unknown> {
@@ -487,7 +487,7 @@ export async function handleSetResilienceProfile(args: {
       };
     }
 
-    // Apply to OmniRoute via API using the plan-aligned resilience structure.
+    // Apply to RouteChi via API using the plan-aligned resilience structure.
     await apiFetch("/api/resilience", {
       method: "PATCH",
       body: JSON.stringify(settings),

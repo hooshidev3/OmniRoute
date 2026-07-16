@@ -1267,7 +1267,7 @@ test("Provider registry: chatgpt-web exposes the current ChatGPT Web model catal
   );
 });
 
-test("Executor MODEL_MAP: OmniRoute IDs translate to ChatGPT backend slugs", async () => {
+test("Executor MODEL_MAP: RouteChi IDs translate to ChatGPT backend slugs", async () => {
   reset();
   const m = installMockFetch();
   try {
@@ -2223,7 +2223,7 @@ test("Image gen: file-service:// pointer resolves to download URL and is appende
     const content = json.choices[0].message.content;
     assert.match(content, /Here's your kitten:/);
     // The signed chatgpt.com URL is downloaded server-side and re-served
-    // from the OmniRoute cache; clients see a stable /v1/chatgpt-web/image
+    // from the RouteChi cache; clients see a stable /v1/chatgpt-web/image
     // path, never the session-signed estuary URL (which 403s anonymously).
     assert.match(content, /!\[image\]\([^)]*\/v1\/chatgpt-web\/image\/[a-f0-9]+\)/);
     assert.doesNotMatch(content, /files\.oaiusercontent\.com/);
@@ -2294,7 +2294,7 @@ test("Image gen: sediment:// pointer prefers /files/<id>/download over /attachme
     // returns either way, and we care more about not hitting an extra
     // round-trip); the /attachment endpoint is a fallback for when the
     // primary 404s. The mock /files/ response also doubles as the image
-    // bytes that are cached behind the emitted OmniRoute image URL.
+    // bytes that are cached behind the emitted RouteChi image URL.
     assert.match(
       content,
       /!\[image\]\([^)]*\/v1\/chatgpt-web\/image\/[a-f0-9]+\)/,
@@ -2501,7 +2501,7 @@ test("Image gen: signed URL bytes are cached and exposed via /v1/chatgpt-web/ima
   reset();
   // Real-world flow: /files/<id>/download returns a chatgpt.com estuary URL
   // signed for the user's session — that URL 403s for any anonymous client,
-  // so we fetch the bytes, cache them locally, and emit an OmniRoute image URL.
+  // so we fetch the bytes, cache them locally, and emit an RouteChi image URL.
   const pngBytes = Buffer.from([
     0x89,
     0x50,
@@ -2570,7 +2570,7 @@ test("Image gen: signed URL bytes are cached and exposed via /v1/chatgpt-web/ima
       calls.signed++;
       // tls-client-node returns binary bodies as a "data:<mime>;base64,..."
       // string (see its response.js bytes() impl); the executor decodes it
-      // back into bytes before putting the image in OmniRoute's cache.
+      // back into bytes before putting the image in RouteChi's cache.
       return {
         status: 200,
         headers: makeHeaders({ "Content-Type": "image/png" }),
@@ -2674,7 +2674,7 @@ test("Image gen: prior data: image URIs are stripped from history before upstrea
   }
 });
 
-test("Image edit: cached OmniRoute image URL continues the saved ChatGPT conversation", async () => {
+test("Image edit: cached RouteChi image URL continues the saved ChatGPT conversation", async () => {
   reset();
   const { storeChatGptImage } = await import("../../open-sse/services/chatgptImageCache.ts");
   const imageId = storeChatGptImage(Buffer.from([1, 2, 3]), "image/png", 30_000, {
@@ -3063,7 +3063,7 @@ test("Image edit handler: no cached match returns 400 (does not silently generat
     assert.equal((result as { status?: unknown }).status, 400);
     assert.match(
       String((result as { error?: unknown }).error),
-      /generated through this OmniRoute instance/
+      /generated through this RouteChi instance/
     );
     assert.equal(m.calls.session, 0, "no upstream calls were attempted");
     assert.equal(m.calls.conv, 0, "no chat-completion was attempted");

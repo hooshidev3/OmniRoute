@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * OmniRoute — UI i18n key sync (next-intl message catalogs).
+ * RouteChi — UI i18n key sync (next-intl message catalogs).
  *
  * Source of truth: `src/i18n/messages/en.json`. Every other locale JSON in
  * `src/i18n/messages/` should mirror the same key tree. This script replicates
@@ -15,7 +15,7 @@
  *   npm run i18n:sync-ui -- --translate-markers
  *   npm run i18n:sync-ui -- --translate-markers --locale=pt-BR --concurrency=4
  *
- * --translate-markers calls the OmniRoute translation backend (same env vars
+ * --translate-markers calls the RouteChi translation backend (same env vars
  * as `run-translation.mjs`) and replaces every `__MISSING__:<en>` placeholder
  * with a translated string. Missing env vars cause the script to fail
  * fast — the markers stay in place for a later run.

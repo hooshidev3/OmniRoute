@@ -25,7 +25,7 @@ import { collectApiRouteFiles } from "./lib/apiRoutes.mjs";
 const ROOT = process.cwd();
 const DOCS = path.join(ROOT, "docs");
 
-// Padrões que NÃO são rotas internas do OmniRoute (ruído estrutural, não drift).
+// Padrões que NÃO são rotas internas do RouteChi (ruído estrutural, não drift).
 // Adicione aqui (com justificativa) em vez da allowlist quando uma categoria gera
 // falsos positivos — a allowlist é só para endpoints stale REAIS.
 const IGNORE = [

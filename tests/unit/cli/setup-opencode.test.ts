@@ -9,7 +9,7 @@ const RAW = JSON.stringify({
   $schema: "https://opencode.ai/config.json",
   provider: {
     omniroute: {
-      name: "OmniRoute",
+      name: "RouteChi",
       npm: "@ai-sdk/openai-compatible",
       options: { baseURL: "http://vps:20128/v1", apiKey: "sk-secret-literal" },
       models: {

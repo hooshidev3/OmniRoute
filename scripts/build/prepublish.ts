@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * OmniRoute — Prepublish Build Script
+ * RouteChi — Prepublish Build Script
  *
  * Consumes the .build/next/standalone artifact produced by `npm run build`
  * (build-next-isolated.mjs) and assembles the npm staging `dist/` directory.
@@ -109,7 +109,7 @@ function removeEmptyDirectories(dir: string): boolean {
   return hasFiles;
 }
 
-console.log("🔨 OmniRoute — Building for npm publish...\n");
+console.log("🔨 RouteChi — Building for npm publish...\n");
 
 // ── Step 1: Clean previous dist/ directory ─────────────────
 if (existsSync(DIST_DIR)) {

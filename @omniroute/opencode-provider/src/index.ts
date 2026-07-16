@@ -1,10 +1,10 @@
 /**
- * OpenCode provider plugin for OmniRoute AI Gateway.
+ * OpenCode provider plugin for RouteChi AI Gateway.
  *
  * Generates an OpenCode-compatible provider object that points to a running
- * OmniRoute instance. The output follows the OpenCode config schema
+ * RouteChi instance. The output follows the OpenCode config schema
  * (https://opencode.ai/config.json) and delegates the runtime to
- * `@ai-sdk/openai-compatible` so OpenCode can drive any OmniRoute-exposed
+ * `@ai-sdk/openai-compatible` so OpenCode can drive any RouteChi-exposed
  * model through its standard OpenAI-compatible client.
  *
  * Two ways to consume the helper:
@@ -12,8 +12,8 @@
  *  1. As code, when you build your own opencode.json programmatically:
  *
  *     ```ts
- *     import { buildOmniRouteOpenCodeConfig } from "@omniroute/opencode-provider";
- *     const config = buildOmniRouteOpenCodeConfig({
+ *     import { buildRouteChiOpenCodeConfig } from "@omniroute/opencode-provider";
+ *     const config = buildRouteChiOpenCodeConfig({
  *       baseURL: "http://localhost:20128",
  *       apiKey: "sk_omniroute",
  *     });
@@ -23,8 +23,8 @@
  *  2. As a single-provider entry to merge into an existing opencode.json:
  *
  *     ```ts
- *     import { createOmniRouteProvider } from "@omniroute/opencode-provider";
- *     const provider = createOmniRouteProvider({ baseURL, apiKey });
+ *     import { createRouteChiProvider } from "@omniroute/opencode-provider";
+ *     const provider = createRouteChiProvider({ baseURL, apiKey });
  *     // provider -> the value to place under provider.omniroute in opencode.json
  *     ```
  *
@@ -40,7 +40,7 @@ export const OPENCODE_CONFIG_SCHEMA = "https://opencode.ai/config.json" as const
  * Default catalog of models surfaced to OpenCode when the caller does not
  * supply an explicit `models` list.
  *
- * Curated set covering the most commonly deployed OmniRoute models. Synced
+ * Curated set covering the most commonly deployed RouteChi models. Synced
  * with the Alph4d0g/opencode-omniroute-auth OMNIROUTE_DEFAULT_MODELS constant
  * (https://github.com/Alph4d0g/opencode-omniroute-auth, MIT) and extended
  * with Claude Code passthrough models (`cc/` prefix).
@@ -81,7 +81,7 @@ export interface ModelCapabilities {
 
 /**
  * Default per-model context window sizes (tokens) for the curated default catalog.
- * Matches the context lengths used by OmniRoute's provider registry.
+ * Matches the context lengths used by RouteChi's provider registry.
  */
 export const OMNIROUTE_DEFAULT_MODEL_CONTEXT_LENGTHS: Record<string, number> = {
   "cc/claude-opus-4-8": 1_000_000,
@@ -99,7 +99,7 @@ export const OMNIROUTE_DEFAULT_MODEL_CONTEXT_LENGTHS: Record<string, number> = {
  *
  * Conservative defaults: every default model accepts attachments, tool calls
  * and temperature; `reasoning` is opt-in per model id. Callers override per
- * model via `OmniRouteProviderOptions.modelCapabilities`.
+ * model via `RouteChiProviderOptions.modelCapabilities`.
  */
 export const OMNIROUTE_DEFAULT_MODEL_CAPABILITIES: Record<string, ModelCapabilities> = {
   "cc/claude-opus-4-8": { attachment: true, reasoning: true, temperature: true, tool_call: true },
@@ -122,12 +122,12 @@ export const OMNIROUTE_DEFAULT_MODEL_CAPABILITIES: Record<string, ModelCapabilit
   "gemini-3-flash": { attachment: true, temperature: true, tool_call: true },
 };
 
-export interface OmniRouteProviderOptions {
-  /** OmniRoute base URL, with or without trailing `/v1`. Required. */
+export interface RouteChiProviderOptions {
+  /** RouteChi base URL, with or without trailing `/v1`. Required. */
   baseURL: string;
-  /** OmniRoute API key. Required. Use `sk_omniroute` for local instances without REQUIRE_API_KEY. */
+  /** RouteChi API key. Required. Use `sk_omniroute` for local instances without REQUIRE_API_KEY. */
   apiKey: string;
-  /** Override the display name shown in OpenCode. Default: `"OmniRoute"`. */
+  /** Override the display name shown in OpenCode. Default: `"RouteChi"`. */
   displayName?: string;
   /** Override the model catalog. Accepts model ids (strings) or live model entries from `fetchLiveModels`. When entries carry a `contextLength`, it is used directly — no hardcoded map needed. */
   models?: readonly (string | { id: string; contextLength?: number })[];
@@ -180,7 +180,7 @@ export interface OpenCodeModelEntry {
 }
 
 export interface OpenCodeProviderEntry {
-  /** Identifier of the OpenCode runtime package that will speak to OmniRoute. */
+  /** Identifier of the OpenCode runtime package that will speak to RouteChi. */
   npm: typeof OMNIROUTE_PROVIDER_NPM;
   /** Display name in the OpenCode UI. */
   name: string;
@@ -240,7 +240,7 @@ export function normalizeBaseURL(rawBaseURL: string): string {
  * Build the `provider.omniroute` entry for an OpenCode config document.
  * The returned object is JSON-serialisable and safe to embed verbatim.
  */
-export function createOmniRouteProvider(options: OmniRouteProviderOptions): OpenCodeProviderEntry {
+export function createRouteChiProvider(options: RouteChiProviderOptions): OpenCodeProviderEntry {
   const baseURL = normalizeBaseURL(options.baseURL);
   const apiKey = requireNonEmpty(options.apiKey, "apiKey");
 
@@ -297,7 +297,7 @@ export function createOmniRouteProvider(options: OmniRouteProviderOptions): Open
 
   return {
     npm: OMNIROUTE_PROVIDER_NPM,
-    name: options.displayName?.trim() || "OmniRoute",
+    name: options.displayName?.trim() || "RouteChi",
     options: { baseURL, apiKey },
     models,
   };
@@ -311,13 +311,13 @@ export function createOmniRouteProvider(options: OmniRouteProviderOptions): Open
  * top-level `model` / `small_model` keys prefixed with `"omniroute/"` so
  * OpenCode resolves them through the configured provider.
  */
-export function buildOmniRouteOpenCodeConfig(
-  options: OmniRouteProviderOptions
+export function buildRouteChiOpenCodeConfig(
+  options: RouteChiProviderOptions
 ): OpenCodeConfigDocument {
   const doc: OpenCodeConfigDocument = {
     $schema: OPENCODE_CONFIG_SCHEMA,
     provider: {
-      [OMNIROUTE_PROVIDER_KEY]: createOmniRouteProvider(options),
+      [OMNIROUTE_PROVIDER_KEY]: createRouteChiProvider(options),
     },
   };
 
@@ -335,7 +335,7 @@ export function buildOmniRouteOpenCodeConfig(
 }
 
 /**
- * Merge the OmniRoute provider entry (and optional `model` / `small_model`
+ * Merge the RouteChi provider entry (and optional `model` / `small_model`
  * keys) into an already-existing OpenCode config object.
  *
  * Performs a non-destructive merge: all top-level keys in `existing` are
@@ -358,9 +358,9 @@ export function buildOmniRouteOpenCodeConfig(
  */
 export function mergeIntoExistingConfig(
   existing: Record<string, unknown>,
-  options: OmniRouteProviderOptions
+  options: RouteChiProviderOptions
 ): Record<string, unknown> {
-  const partial = buildOmniRouteOpenCodeConfig(options);
+  const partial = buildRouteChiOpenCodeConfig(options);
 
   const merged: Record<string, unknown> = { ...existing };
 
@@ -394,12 +394,12 @@ export const OMNIROUTE_MCP_DEFAULT_SCOPES = [
   "read:compression",
 ] as const;
 
-export type OmniRouteMCPScope = (typeof OMNIROUTE_MCP_DEFAULT_SCOPES)[number] | string;
+export type RouteChiMCPScope = (typeof OMNIROUTE_MCP_DEFAULT_SCOPES)[number] | string;
 
-export interface OmniRouteMCPOptions {
+export interface RouteChiMCPOptions {
   /** Absolute path to the MCP server entry point (TypeScript or compiled JS). */
   serverPath: string;
-  /** OmniRoute API key forwarded to the MCP server as `OMNIROUTE_API_KEY`. */
+  /** RouteChi API key forwarded to the MCP server as `OMNIROUTE_API_KEY`. */
   apiKey: string;
   /**
    * Management API key used for management-scoped operations.
@@ -411,7 +411,7 @@ export interface OmniRouteMCPOptions {
    * When omitted `OMNIROUTE_MCP_ENFORCE_SCOPES` is not set and all scopes are
    * available (development default). Pass an explicit list to restrict access.
    */
-  scopes?: OmniRouteMCPScope[];
+  scopes?: RouteChiMCPScope[];
   /**
    * Runtime used to execute the MCP server.
    *
@@ -432,7 +432,7 @@ export interface OpenCodeMCPServerEntry {
  *
  * @example
  * ```ts
- * const mcpEntry = createOmniRouteMCPEntry({
+ * const mcpEntry = createRouteChiMCPEntry({
  *   serverPath: "/home/user/.local/share/omniroute/open-sse/mcp-server/server.ts",
  *   apiKey: "sk_omniroute",
  *   managementApiKey: "sk_manage_...",
@@ -441,7 +441,7 @@ export interface OpenCodeMCPServerEntry {
  * // Place at config.mcp.servers.omniroute
  * ```
  */
-export function createOmniRouteMCPEntry(options: OmniRouteMCPOptions): OpenCodeMCPServerEntry {
+export function createRouteChiMCPEntry(options: RouteChiMCPOptions): OpenCodeMCPServerEntry {
   const serverPath = requireNonEmpty(options.serverPath, "serverPath");
   const apiKey = requireNonEmpty(options.apiKey, "apiKey");
 
@@ -492,14 +492,14 @@ async function fetchJSON<T>(url: string, apiKey: string, timeoutMs: number): Pro
 
 /**
  * Lightweight model descriptor returned by `fetchLiveModels`.
- * The shape mirrors the subset of fields that OmniRoute's `/v1/models`
+ * The shape mirrors the subset of fields that RouteChi's `/v1/models`
  * endpoint reliably provides across versions, normalised from both
- * camelCase and snake_case variants used by different OmniRoute releases.
+ * camelCase and snake_case variants used by different RouteChi releases.
  *
  * Attribution: field-variant normalisation logic adapted from
  * https://github.com/Alph4d0g/opencode-omniroute-auth (MIT).
  */
-export interface OmniRouteLiveModel {
+export interface RouteChiLiveModel {
   id: string;
   name: string;
   /** Context window length in tokens (e.g. 200000 for Claude, 1000000 for Gemini). */
@@ -507,27 +507,27 @@ export interface OmniRouteLiveModel {
 }
 
 /**
- * Fetch the live model catalog from a running OmniRoute instance.
+ * Fetch the live model catalog from a running RouteChi instance.
  *
  * Returns an array of `{ id, name }` objects from `GET /v1/models`. Handles
  * both the camelCase (`modelId`, `displayName`) and snake_case (`model_id`,
- * `display_name`) field variants across OmniRoute versions.
+ * `display_name`) field variants across RouteChi versions.
  *
  * Useful for dynamically populating the `models` option of
- * `createOmniRouteProvider` / `buildOmniRouteOpenCodeConfig` instead of
+ * `createRouteChiProvider` / `buildRouteChiOpenCodeConfig` instead of
  * relying on `OMNIROUTE_DEFAULT_OPENCODE_MODELS`.
  *
- * @param baseURL   - OmniRoute base URL (with or without `/v1`).
- * @param apiKey    - OmniRoute API key.
+ * @param baseURL   - RouteChi base URL (with or without `/v1`).
+ * @param apiKey    - RouteChi API key.
  * @param timeoutMs - Request timeout in milliseconds (default 5000).
  *
  * @example
  * ```ts
  * const models = await fetchLiveModels("http://localhost:20128", "sk_omniroute");
- * const config = buildOmniRouteOpenCodeConfig({
+ * const config = buildRouteChiOpenCodeConfig({
  *   baseURL: "http://localhost:20128",
  *   apiKey: "sk_omniroute",
- *   models,                    // OmniRouteLiveModel[] — contextLength auto-extracted
+ *   models,                    // RouteChiLiveModel[] — contextLength auto-extracted
  *   modelLabels: Object.fromEntries(models.map((m) => [m.id, m.name])),
  * });
  * ```
@@ -536,7 +536,7 @@ export async function fetchLiveModels(
   baseURL: string,
   apiKey: string,
   timeoutMs = 5_000
-): Promise<OmniRouteLiveModel[]> {
+): Promise<RouteChiLiveModel[]> {
   const key = requireNonEmpty(apiKey, "apiKey");
   const url = `${normalizeBaseURL(baseURL)}/models`;
 
@@ -548,7 +548,7 @@ export async function fetchLiveModels(
       ? ((body as { data: unknown[] }).data as unknown[])
       : [];
 
-  const models: OmniRouteLiveModel[] = [];
+  const models: RouteChiLiveModel[] = [];
   for (const raw of rawList) {
     if (typeof raw !== "object" || raw === null) continue;
     const r = raw as Record<string, unknown>;
@@ -573,8 +573,8 @@ export async function fetchLiveModels(
             ? r.display_name.trim()
             : id;
 
-    // Extract context_length from OmniRoute's /v1/models response.
-    // OmniRoute returns context_length in snake_case for both synced
+    // Extract context_length from RouteChi's /v1/models response.
+    // RouteChi returns context_length in snake_case for both synced
     // models (with inputTokenLimit) and custom models; the catalog's
     // getDefaultContextFallback also injects it from registry defaults.
     const contextLength =
@@ -594,7 +594,7 @@ export async function fetchLiveModels(
  * Valid per-combo compression override values.
  * An empty string clears any existing override (inherits global setting).
  */
-export type OmniRouteCompressionOverride =
+export type RouteChiCompressionOverride =
   | ""
   | "off"
   | "lite"
@@ -616,16 +616,16 @@ const VALID_COMPRESSION_OVERRIDES = new Set<string>([
 ]);
 
 /** Slim combo descriptor returned by `listCombos`. */
-export interface OmniRouteCombo {
+export interface RouteChiCombo {
   id: string;
   name: string;
   strategy: string;
   active: boolean;
-  compressionOverride: OmniRouteCompressionOverride;
+  compressionOverride: RouteChiCompressionOverride;
 }
 
 /**
- * Fetch the active routing combo list from a running OmniRoute instance.
+ * Fetch the active routing combo list from a running RouteChi instance.
  *
  * Returns an array of combo descriptors from `GET /api/combos`. The
  * `compressionOverride` field reflects the per-combo compression strategy
@@ -634,7 +634,7 @@ export interface OmniRouteCombo {
  * Requires a management-scoped API key (Bearer `manage` scope) when the
  * instance has `REQUIRE_API_KEY` enabled.
  *
- * @param baseURL          - OmniRoute base URL (with or without `/v1`).
+ * @param baseURL          - RouteChi base URL (with or without `/v1`).
  * @param managementApiKey - API key with `manage` scope.
  * @param timeoutMs        - Request timeout in milliseconds (default 5000).
  */
@@ -642,7 +642,7 @@ export async function listCombos(
   baseURL: string,
   managementApiKey: string,
   timeoutMs = 5_000
-): Promise<OmniRouteCombo[]> {
+): Promise<RouteChiCombo[]> {
   const key = requireNonEmpty(managementApiKey, "managementApiKey");
   const base = normalizeBaseURL(baseURL).replace(/\/v1$/, "");
   const url = `${base}/api/combos`;
@@ -654,7 +654,7 @@ export async function listCombos(
       ? ((body as { combos: unknown[] }).combos as unknown[])
       : [];
 
-  const combos: OmniRouteCombo[] = [];
+  const combos: RouteChiCombo[] = [];
   for (const raw of rawList) {
     if (typeof raw !== "object" || raw === null) continue;
     const r = raw as Record<string, unknown>;
@@ -668,7 +668,7 @@ export async function listCombos(
 
     const rawOverride = typeof r.compressionOverride === "string" ? r.compressionOverride : "";
     const compressionOverride = VALID_COMPRESSION_OVERRIDES.has(rawOverride)
-      ? (rawOverride as OmniRouteCompressionOverride)
+      ? (rawOverride as RouteChiCompressionOverride)
       : "";
 
     combos.push({ id, name, strategy, active, compressionOverride });
@@ -678,11 +678,11 @@ export async function listCombos(
 }
 
 /**
- * Options for `createOmniRouteComboConfig`.
- * Mirrors the subset of combo fields exposed by the OmniRoute `/api/combos`
+ * Options for `createRouteChiComboConfig`.
+ * Mirrors the subset of combo fields exposed by the RouteChi `/api/combos`
  * PATCH / POST payload that are safe to set programmatically.
  */
-export interface OmniRouteComboConfigOptions {
+export interface RouteChiComboConfigOptions {
   /** Human-readable combo name. */
   name: string;
   /** Routing strategy (e.g. `"priority"`, `"weighted"`, `"round-robin"`). */
@@ -691,7 +691,7 @@ export interface OmniRouteComboConfigOptions {
    * Per-combo compression override.
    * Empty string removes any override (inherits global setting).
    */
-  compressionOverride?: OmniRouteCompressionOverride;
+  compressionOverride?: RouteChiCompressionOverride;
   /** Whether this combo is active for routing. Default: `true`. */
   active?: boolean;
   /**
@@ -702,14 +702,14 @@ export interface OmniRouteComboConfigOptions {
 }
 
 /**
- * Build a typed combo payload suitable for OmniRoute's management API.
+ * Build a typed combo payload suitable for RouteChi's management API.
  *
  * The returned object is JSON-serialisable and safe to pass as the body of a
  * `POST /api/combos` (create) or `PATCH /api/combos/:id` (update) request.
  *
  * @example
  * ```ts
- * const payload = createOmniRouteComboConfig({
+ * const payload = createRouteChiComboConfig({
  *   name: "claude-primary",
  *   strategy: "priority",
  *   compressionOverride: "standard",
@@ -722,8 +722,8 @@ export interface OmniRouteComboConfigOptions {
  * });
  * ```
  */
-export function createOmniRouteComboConfig(
-  options: OmniRouteComboConfigOptions
+export function createRouteChiComboConfig(
+  options: RouteChiComboConfigOptions
 ): Record<string, unknown> {
   const name = requireNonEmpty(options.name, "name");
   const strategy = requireNonEmpty(options.strategy, "strategy");
@@ -754,16 +754,16 @@ export function createOmniRouteComboConfig(
  * config generator. Only fields present in
  * https://opencode.ai/config.json#AgentConfig are exposed.
  */
-export interface OmniRouteRoleOverrides {
+export interface RouteChiRoleOverrides {
   /** Forward to OpenCode's `temperature` field. */
   temperature?: number;
   /** Forward to OpenCode's `top_p` field. */
   top_p?: number;
 }
 
-/** Per-role binding used by `createOmniRouteAgentBlock`. */
-export interface OmniRouteAgentRole extends OmniRouteRoleOverrides {
-  /** OmniRoute model id, e.g. `"claude-sonnet-4-5-thinking"`. */
+/** Per-role binding used by `createRouteChiAgentBlock`. */
+export interface RouteChiAgentRole extends RouteChiRoleOverrides {
+  /** RouteChi model id, e.g. `"claude-sonnet-4-5-thinking"`. */
   modelId: string;
   /** Optional tools allow-list; per OpenCode schema, map of tool name → enabled. */
   tools?: Record<string, boolean>;
@@ -771,14 +771,14 @@ export interface OmniRouteAgentRole extends OmniRouteRoleOverrides {
   prompt?: string;
 }
 
-/** Options for `createOmniRouteAgentBlock`. */
-export interface OmniRouteAgentBlockOptions {
+/** Options for `createRouteChiAgentBlock`. */
+export interface RouteChiAgentBlockOptions {
   /** Per-role bindings. Keys become entries under OpenCode's `agent` block. */
-  roles: Record<string, OmniRouteAgentRole>;
+  roles: Record<string, RouteChiAgentRole>;
 }
 
 /** Single entry inside the emitted OpenCode `agent` block. */
-export interface OpenCodeAgentEntry extends OmniRouteRoleOverrides {
+export interface OpenCodeAgentEntry extends RouteChiRoleOverrides {
   /** Always emitted as `"omniroute/<modelId>"`. */
   model: string;
   /** Per OpenCode schema, `Record<string, boolean>`. */
@@ -787,7 +787,7 @@ export interface OpenCodeAgentEntry extends OmniRouteRoleOverrides {
   prompt?: string;
 }
 
-function buildAgentEntry(role: OmniRouteAgentRole): OpenCodeAgentEntry | undefined {
+function buildAgentEntry(role: RouteChiAgentRole): OpenCodeAgentEntry | undefined {
   if (!role || typeof role.modelId !== "string") return undefined;
   const modelId = role.modelId.trim();
   if (!modelId) return undefined;
@@ -811,7 +811,7 @@ function buildAgentEntry(role: OmniRouteAgentRole): OpenCodeAgentEntry | undefin
 
 /**
  * Build the OpenCode `agent` block, pre-wired so each agent role routes to a
- * specific OmniRoute model. Useful for `.opencode/agent/*.md` defaults and
+ * specific RouteChi model. Useful for `.opencode/agent/*.md` defaults and
  * scaffolded `opencode.json` files.
  *
  * Emitted fields are limited to those declared in OpenCode's `AgentConfig`
@@ -822,7 +822,7 @@ function buildAgentEntry(role: OmniRouteAgentRole): OpenCodeAgentEntry | undefin
  *
  * @example
  * ```ts
- * const agentBlock = createOmniRouteAgentBlock({
+ * const agentBlock = createRouteChiAgentBlock({
  *   roles: {
  *     build: { modelId: "claude-sonnet-4-5-thinking", temperature: 0.2 },
  *     plan: { modelId: "claude-opus-4-5-thinking", top_p: 0.95 },
@@ -832,8 +832,8 @@ function buildAgentEntry(role: OmniRouteAgentRole): OpenCodeAgentEntry | undefin
  * // -> { build: { model: "omniroute/claude-sonnet-4-5-thinking", temperature: 0.2 }, ... }
  * ```
  */
-export function createOmniRouteAgentBlock(
-  options: OmniRouteAgentBlockOptions
+export function createRouteChiAgentBlock(
+  options: RouteChiAgentBlockOptions
 ): Record<string, OpenCodeAgentEntry> {
   const out: Record<string, OpenCodeAgentEntry> = {};
   const roles = options.roles ?? {};
@@ -845,46 +845,46 @@ export function createOmniRouteAgentBlock(
 }
 
 /**
- * Per-mode binding used by `createOmniRouteModesBlock`.
+ * Per-mode binding used by `createRouteChiModesBlock`.
  *
  * @deprecated OpenCode's top-level `mode` block is deprecated in favour of
- * `agent`. Prefer `OmniRouteAgentRole` + `createOmniRouteAgentBlock`. This
+ * `agent`. Prefer `RouteChiAgentRole` + `createRouteChiAgentBlock`. This
  * type and the corresponding helper are kept for back-compat with configs
  * still using `mode:`.
  */
-export interface OmniRouteMode extends OmniRouteAgentRole {}
+export interface RouteChiMode extends RouteChiAgentRole {}
 
 /**
- * Options for `createOmniRouteModesBlock`.
+ * Options for `createRouteChiModesBlock`.
  *
- * @deprecated See `OmniRouteMode`.
+ * @deprecated See `RouteChiMode`.
  */
-export interface OmniRouteModesBlockOptions {
+export interface RouteChiModesBlockOptions {
   /** Per-mode bindings. Keys become entries under OpenCode's deprecated top-level `mode` block. */
-  modes: Record<string, OmniRouteMode>;
+  modes: Record<string, RouteChiMode>;
 }
 
 /**
  * Single entry inside the emitted OpenCode `mode` block.
  *
- * @deprecated See `OmniRouteMode`.
+ * @deprecated See `RouteChiMode`.
  */
 export interface OpenCodeModeEntry extends OpenCodeAgentEntry {}
 
 /**
  * Build the OpenCode top-level `mode` block, pre-wired so each mode routes to
- * a specific OmniRoute model. Emits the same shape as the `agent` block since
+ * a specific RouteChi model. Emits the same shape as the `agent` block since
  * OpenCode's schema treats them identically (both reference `AgentConfig`).
  *
  * Modes with empty / missing `modelId` are skipped.
  *
  * @deprecated OpenCode's top-level `mode` block is deprecated in favour of
- * `agent`. Prefer `createOmniRouteAgentBlock`. This helper is kept for
+ * `agent`. Prefer `createRouteChiAgentBlock`. This helper is kept for
  * back-compat with configs still using `mode:`.
  *
  * @example
  * ```ts
- * const modesBlock = createOmniRouteModesBlock({
+ * const modesBlock = createRouteChiModesBlock({
  *   modes: {
  *     build: { modelId: "claude-sonnet-4-5-thinking", tools: { edit: true, bash: true } },
  *     plan: { modelId: "claude-opus-4-5-thinking", prompt: "Plan first, code later." },
@@ -893,8 +893,8 @@ export interface OpenCodeModeEntry extends OpenCodeAgentEntry {}
  * });
  * ```
  */
-export function createOmniRouteModesBlock(
-  options: OmniRouteModesBlockOptions
+export function createRouteChiModesBlock(
+  options: RouteChiModesBlockOptions
 ): Record<string, OpenCodeModeEntry> {
   const out: Record<string, OpenCodeModeEntry> = {};
   const modes = options.modes ?? {};
@@ -905,4 +905,4 @@ export function createOmniRouteModesBlock(
   return out;
 }
 
-export default createOmniRouteProvider;
+export default createRouteChiProvider;

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 // anonymous functionDeclaration. After the OpenAI->Gemini step Gemini rejected the
 // whole request with a 400:
 //   "...function_declarations[N].name: Invalid function name."
-// (OmniRoute already throws for *unknown* hosted tool types up front, but a
+// (RouteChi already throws for *unknown* hosted tool types up front, but a
 // whitelisted-type tool — function/custom/command — that arrives without a name
 // still fell through the catch-all and produced `name: ""`.)
 // Fix: skip any Responses tool that reaches the catch-all without a non-empty

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   buildDroidCustomModels,
-  isOmniRouteCustomModel,
+  isRouteChiCustomModel,
   normalizeDroidModelList,
 } from "../../src/shared/services/droidCustomModels.ts";
 
@@ -47,7 +47,7 @@ test("buildDroidCustomModels emits one entry per model with sequential ids", () 
   });
 
   assert.equal(out.length, 2);
-  assert.equal(out[0].id, "custom:OmniRoute-0");
+  assert.equal(out[0].id, "custom:RouteChi-0");
   assert.equal(out[0].index, 0);
   assert.equal(out[0].model, "openai/gpt-5");
   assert.equal(out[0].displayName, "openai/gpt-5");
@@ -56,7 +56,7 @@ test("buildDroidCustomModels emits one entry per model with sequential ids", () 
   assert.equal(out[0].noImageSupport, false);
   assert.equal(out[0].baseUrl, "http://localhost:20128/v1");
   assert.equal(out[0].apiKey, "sk_omniroute");
-  assert.equal(out[1].id, "custom:OmniRoute-1");
+  assert.equal(out[1].id, "custom:RouteChi-1");
   assert.equal(out[1].index, 1);
 });
 
@@ -68,14 +68,14 @@ test("buildDroidCustomModels promotes activeModel to index 0", () => {
   });
 
   assert.equal(out[0].model, "anthropic/claude-4");
-  assert.equal(out[0].id, "custom:OmniRoute-0");
+  assert.equal(out[0].id, "custom:RouteChi-0");
   assert.equal(out[0].index, 0);
   // Remaining entries are re-indexed in their original relative order
   assert.equal(out[1].model, "openai/gpt-5");
-  assert.equal(out[1].id, "custom:OmniRoute-1");
+  assert.equal(out[1].id, "custom:RouteChi-1");
   assert.equal(out[1].index, 1);
   assert.equal(out[2].model, "google/gemini");
-  assert.equal(out[2].id, "custom:OmniRoute-2");
+  assert.equal(out[2].id, "custom:RouteChi-2");
   assert.equal(out[2].index, 2);
 });
 
@@ -110,13 +110,13 @@ test("buildDroidCustomModels throws on empty list", () => {
   );
 });
 
-test("isOmniRouteCustomModel matches any custom:OmniRoute-<i> id (multi-model)", () => {
-  assert.equal(isOmniRouteCustomModel({ id: "custom:OmniRoute-0" }), true);
-  assert.equal(isOmniRouteCustomModel({ id: "custom:OmniRoute-1" }), true);
-  assert.equal(isOmniRouteCustomModel({ id: "custom:OmniRoute-42" }), true);
-  assert.equal(isOmniRouteCustomModel({ id: "custom:Other-0" }), false);
-  assert.equal(isOmniRouteCustomModel({ id: 42 as unknown }), false);
-  assert.equal(isOmniRouteCustomModel(null), false);
-  assert.equal(isOmniRouteCustomModel(undefined), false);
-  assert.equal(isOmniRouteCustomModel({}), false);
+test("isRouteChiCustomModel matches any custom:RouteChi-<i> id (multi-model)", () => {
+  assert.equal(isRouteChiCustomModel({ id: "custom:RouteChi-0" }), true);
+  assert.equal(isRouteChiCustomModel({ id: "custom:RouteChi-1" }), true);
+  assert.equal(isRouteChiCustomModel({ id: "custom:RouteChi-42" }), true);
+  assert.equal(isRouteChiCustomModel({ id: "custom:Other-0" }), false);
+  assert.equal(isRouteChiCustomModel({ id: 42 as unknown }), false);
+  assert.equal(isRouteChiCustomModel(null), false);
+  assert.equal(isRouteChiCustomModel(undefined), false);
+  assert.equal(isRouteChiCustomModel({}), false);
 });

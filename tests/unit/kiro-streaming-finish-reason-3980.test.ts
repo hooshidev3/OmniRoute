@@ -1,6 +1,6 @@
 /**
  * Regression test for #3980 — Kiro (Responses API) streaming tool calls:
- * OmniRoute changed `finish_reason` from `tool_calls` to `stop`, breaking
+ * RouteChi changed `finish_reason` from `tool_calls` to `stop`, breaking
  * agent workflows (Hermes). The terminal `messageStopEvent` hardcoded
  * `finish_reason: "stop"` even when the stream contained tool calls.
  */

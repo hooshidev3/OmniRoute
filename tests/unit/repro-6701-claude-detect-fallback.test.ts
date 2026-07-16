@@ -1,5 +1,5 @@
 /**
- * Repro for #6701 — Claude Code CLI reported "not found" in OmniRoute's
+ * Repro for #6701 — Claude Code CLI reported "not found" in RouteChi's
  * dashboard even though the user has used it before (settings.json present)
  * and upstream 9router (same machine, same settings.json) reports it as
  * "Connected".
@@ -8,13 +8,13 @@
  * only ever answers `installed` from binary resolution (known install paths
  * + PATH lookup via `where.exe`/`command -v`). If the CLI binary is not
  * currently resolvable (stale PATH inherited by a long-running/background
- * OmniRoute process, binary moved, etc.) it unconditionally reports
+ * RouteChi process, binary moved, etc.) it unconditionally reports
  * installed:false — even when `~/.claude/settings.json` proves the tool was
  * installed and used before.
  *
  * Upstream 9router's equivalent route (src/app/api/cli-tools/claude-settings/route.js)
  * has a second-chance fallback: if `where`/`which` fails, it still reports
- * installed:true when the settings file exists on disk. OmniRoute's rewrite
+ * installed:true when the settings file exists on disk. RouteChi's rewrite
  * into cliRuntime.ts dropped that fallback, which is the concrete regression
  * relative to 9router this issue's screenshots capture.
  *

@@ -39,7 +39,7 @@ Pour la matrice de tests complète, voir `CONTRIBUTING.md` → "Exécution des t
 
 ## Projet en un coup d'œil
 
-**OmniRoute** — proxy/router AI unifié. Un point de terminaison, 160+ fournisseurs LLM, retour automatique.
+**RouteChi** — proxy/router AI unifié. Un point de terminaison, 160+ fournisseurs LLM, retour automatique.
 
 | Couche            | Emplacement             | Objectif                                                                      |
 | ----------------- | ----------------------- | ----------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ Les routes API suivent un modèle cohérent : `Route → pré-vérification CORS
 
 ## État d'Exécution de Résilience
 
-OmniRoute a trois mécanismes de défaillance temporaire liés mais distincts. Gardez leur portée séparée lors du débogage du comportement de routage. Voir le
+RouteChi a trois mécanismes de défaillance temporaire liés mais distincts. Gardez leur portée séparée lors du débogage du comportement de routage. Voir le
 [diagramme de résilience à 3 couches](./docs/diagrams/exported/resilience-3layers.svg)
 (source : [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 pour une vue d'ensemble.
@@ -410,4 +410,4 @@ git push -u origin feat/your-feature
 13. Ne jamais interpoler des chemins externes ou des valeurs d'exécution dans des scripts shell passés à `exec()`/`spawn()` — passez plutôt par l'option `env`. Référence : `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Ne jamais ignorer une alerte CodeQL / Secret-Scanning sans (a) d'abord vérifier la documentation des modèles ci-dessus pour voir si l'assistant s'applique, et (b) enregistrer la justification technique dans le commentaire de rejet. Précédent : `js/stack-trace-exposure` soulevé sur des sites d'appel qui passent déjà par `sanitizeErrorMessage()` est une limitation connue de CodeQL (les assainisseurs personnalisés ne sont pas reconnus) — rejeter comme `faux positif` en faisant référence à `docs/security/ERROR_SANITIZATION.md`.
 15. Ne jamais exposer des routes qui lancent des processus enfants (`/api/mcp/`, `/api/cli-tools/runtime/`) sans classification `isLocalOnlyPath()` dans `src/server/authz/routeGuard.ts`. L'application de la boucle de retour se produit inconditionnellement avant toute vérification d'authentification — un JWT divulgué via un tunnel ne peut pas déclencher le lancement de processus. Voir `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Ne jamais inclure de bandeaux `Co-Authored-By` qui créditent un assistant IA, un LLM ou un compte d'automatisation (par ex. noms contenant "Claude", "GPT", "Copilot", "Bot" ; e-mails à `anthropic.com` / `openai.com` / adresses `noreply.github.com` détenues par des bots). De tels bandeaux redirigent l'attribution des commits vers le compte du bot sur GitHub, masquant le véritable auteur (`diegosouzapw`) dans l'historique de la PR. Les contributeurs humains — y compris les auteurs de PR upstream et les rapporteurs d'issues portés dans OmniRoute — PEUVENT et DOIVENT être crédités avec des bandeaux standard `Co-authored-by: Name <email>` ; les workflows de port upstream (`/port-upstream-features`, `/port-upstream-issues`) en dépendent.
+16. Ne jamais inclure de bandeaux `Co-Authored-By` qui créditent un assistant IA, un LLM ou un compte d'automatisation (par ex. noms contenant "Claude", "GPT", "Copilot", "Bot" ; e-mails à `anthropic.com` / `openai.com` / adresses `noreply.github.com` détenues par des bots). De tels bandeaux redirigent l'attribution des commits vers le compte du bot sur GitHub, masquant le véritable auteur (`diegosouzapw`) dans l'historique de la PR. Les contributeurs humains — y compris les auteurs de PR upstream et les rapporteurs d'issues portés dans RouteChi — PEUVENT et DOIVENT être crédités avec des bandeaux standard `Co-authored-by: Name <email>` ; les workflows de port upstream (`/port-upstream-features`, `/port-upstream-issues`) en dépendent.

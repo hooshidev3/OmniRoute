@@ -2,7 +2,7 @@
  * Port of upstream decolua/9router#663 (closes upstream #557).
  *
  * Scenario: Claude Code (or any caller) hits a Qwen model with an OpenAI body
- * that carries `stream: false`. OmniRoute, however, sets the executor-level
+ * that carries `stream: false`. RouteChi, however, sets the executor-level
  * `stream` flag to `true` for Claude-Code-compatible providers via
  * `upstreamStream = stream || isClaudeCodeCompatible`
  * (`open-sse/handlers/chatCore.ts`). DefaultExecutor.transformRequest then runs

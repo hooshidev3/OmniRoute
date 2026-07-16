@@ -13,6 +13,6 @@ export default defineConfig({
   minify: false,
 });
 
-// CJS consumers should prefer named imports (`require(pkg).createOmniRouteProvider`).
+// CJS consumers should prefer named imports (`require(pkg).createRouteChiProvider`).
 // The `default` export is also exposed for ESM ergonomics, which makes tsup warn
 // about mixed exports — that's expected and harmless for this package.

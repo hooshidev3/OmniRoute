@@ -11,7 +11,7 @@ describe("bin/omniroute.mjs MCP path handling", () => {
       return;
     }
 
-    const testPath = "C:\\Users\\test\\projects\\OmniRoute\\bin\\mcp-server.mjs";
+    const testPath = "C:\\Users\\test\\projects\\RouteChi\\bin\\mcp-server.mjs";
     const fileUrl = pathToFileURL(testPath);
 
     assert.ok(fileUrl.href.startsWith("file:///"), "URL should start with file:///");
@@ -26,7 +26,7 @@ describe("bin/omniroute.mjs MCP path handling", () => {
       return;
     }
 
-    const testPath = "/home/user/projects/OmniRoute/bin/mcp-server.mjs";
+    const testPath = "/home/user/projects/RouteChi/bin/mcp-server.mjs";
     const fileUrl = pathToFileURL(testPath);
 
     assert.ok(fileUrl.href.startsWith("file:///"), "URL should start with file:///");

@@ -1,5 +1,5 @@
 /**
- * Security regression: when OmniRoute itself runs behind an external reverse
+ * Security regression: when RouteChi itself runs behind an external reverse
  * proxy (nginx / Caddy / Cloudflare Tunnel), `req.socket.remoteAddress` is the
  * proxy hop — usually 127.0.0.1 — not the real end-user.
  *
@@ -51,7 +51,7 @@ test("classifyStampedPeerLocality: loopback socket WITHOUT a proxy stamp stays l
 });
 
 test("classifyStampedPeerLocality: loopback socket WITH a proxy stamp is REMOTE (fail closed)", () => {
-  // OmniRoute is behind nginx/Caddy/Cloudflare; the socket peer is the proxy.
+  // RouteChi is behind nginx/Caddy/Cloudflare; the socket peer is the proxy.
   // The real end-user is somewhere on the public internet → must not be trusted
   // as local, otherwise the LOCAL_ONLY spawn-capable surface is reachable from
   // a tunnel.
@@ -71,7 +71,7 @@ test("classifyStampedPeerLocality: loopback socket WITH a proxy stamp is REMOTE 
 });
 
 test("classifyStampedPeerLocality: private-LAN socket WITH a proxy stamp is still REMOTE", () => {
-  // Caddy/nginx running on a LAN box in front of OmniRoute. We do not know how
+  // Caddy/nginx running on a LAN box in front of RouteChi. We do not know how
   // the proxy is exposed (it could be tunneled to the public internet), so any
   // proxy hop downgrades locality to remote.
   assert.equal(

@@ -13,7 +13,7 @@ import { testOAuthConnection } from "../../src/app/api/providers/[id]/test/route
 // invalid body. The endpoint returns 400 (bad request) when auth is accepted and
 // 401/403 when the token is bad — exactly the signal the test should be using.
 //
-// Important OmniRoute-specific constraint: codex is a `rotating` provider (shares
+// Important RouteChi-specific constraint: codex is a `rotating` provider (shares
 // an Auth0 family with openai — see `rotationGroupFor`). The probe path must NOT
 // burn a single-use refresh_token from a connection test (precedent: openai/codex
 // #9648, see comment in route.ts above the rotating-provider guard). The probe

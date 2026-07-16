@@ -39,7 +39,7 @@ npm run test:all
 
 ## प्रकल्पाचा आढावा
 
-**OmniRoute** — एकत्रित AI प्रॉक्सी/राउटर. एक एंडपॉइंट, 160+ LLM प्रदाते, स्वयंचलित फॉलबॅक.
+**RouteChi** — एकत्रित AI प्रॉक्सी/राउटर. एक एंडपॉइंट, 160+ LLM प्रदाते, स्वयंचलित फॉलबॅक.
 
 | स्तर          | स्थान                   | उद्देश                                                       |
 | ------------- | ----------------------- | ------------------------------------------------------------ |
@@ -82,7 +82,7 @@ API मार्ग एक सुसंगत नमुना अनुसरण
 
 ## प्रतिकार रनटाइम स्थिती
 
-OmniRoute कडे तीन संबंधित पण भिन्न तात्पुरत्या-अपयश यांत्रिके आहेत. रूटिंग वर्तन डिबग करताना त्यांचा व्याप्ती वेगळी ठेवा. एक झलक नकाशासाठी [3-लेयर प्रतिकार आरेख](./docs/diagrams/exported/resilience-3layers.svg) पहा (स्त्रोत: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd)).
+RouteChi कडे तीन संबंधित पण भिन्न तात्पुरत्या-अपयश यांत्रिके आहेत. रूटिंग वर्तन डिबग करताना त्यांचा व्याप्ती वेगळी ठेवा. एक झलक नकाशासाठी [3-लेयर प्रतिकार आरेख](./docs/diagrams/exported/resilience-3layers.svg) पहा (स्त्रोत: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd)).
 
 ### प्रदाता सर्किट ब्रेकर
 
@@ -387,4 +387,4 @@ git push -u origin feat/your-feature
 13. कधीही बाह्य पथ किंवा रनटाइम मूल्ये `exec()`/`spawn()` कडे पाठवलेल्या शेल स्क्रिप्टमध्ये स्ट्रिंग-इंटरपोलेट करू नका — त्याऐवजी `env` पर्यायाद्वारे पास करा. संदर्भ: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. कधीही CodeQL / Secret-Scanning अलर्ट नाकारू नका (a) वर दिलेल्या पॅटर्न दस्तऐवजांची तपासणी न करता, आणि (b) नकारात्मक टिप्पणीत तांत्रिक कारणाची नोंद न करता. उदाहरण: `js/stack-trace-exposure` कॉलसाइटवर उभा राहिला आहे जो आधीच `sanitizeErrorMessage()` द्वारे मार्गदर्शित आहे, हे एक ज्ञात CodeQL मर्यादा आहे (कस्टम सॅनिटायझर्स ओळखले जात नाहीत) — `docs/security/ERROR_SANITIZATION.md` संदर्भित करून `false positive` म्हणून नकारा.
 15. कधीही चाइल्ड प्रक्रियांचा स्पॉन करणारे मार्ग (`/api/mcp/`, `/api/cli-tools/runtime/`) समाविष्ट करू नका `src/server/authz/routeGuard.ts` मध्ये `isLocalOnlyPath()` वर्गीकरणाशिवाय. लूपबॅक अंमलबजावणी कोणत्याही प्रमाणीकरण तपासणीपूर्वी अनिवार्यपणे होते — टनलद्वारे गळती झालेला JWT प्रक्रिया स्पॉनिंगला ट्रिगर करू शकत नाही. पहा `docs/security/ROUTE_GUARD_TIERS.md`.
-16. AI सहाय्यक, LLM किंवा स्वयंचलित खात्याला श्रेय देणारे `Co-Authored-By` ट्रेलर्स कधीही समाविष्ट करू नका (उदा. "Claude", "GPT", "Copilot", "Bot" असलेली नावे; `anthropic.com` / `openai.com` / बॉट-मालकीच्या `noreply.github.com` पत्त्यांवरील ईमेल). असे ट्रेलर्स GitHub वर बॉट खात्यात कमिट अॅट्रिब्यूशन रूट करतात, PR इतिहासात खऱ्या लेखकाला (`diegosouzapw`) लपवतात. मानवी सहयोगी — upstream PR लेखक आणि OmniRoute मध्ये पोर्ट केले जाणारे issue रिपोर्टर सह — मानक `Co-authored-by: Name <email>` ट्रेलर्ससह श्रेय मिळवू शकतात आणि मिळावे; upstream-port वर्कफ्लो (`/port-upstream-features`, `/port-upstream-issues`) यावर अवलंबून आहेत.
+16. AI सहाय्यक, LLM किंवा स्वयंचलित खात्याला श्रेय देणारे `Co-Authored-By` ट्रेलर्स कधीही समाविष्ट करू नका (उदा. "Claude", "GPT", "Copilot", "Bot" असलेली नावे; `anthropic.com` / `openai.com` / बॉट-मालकीच्या `noreply.github.com` पत्त्यांवरील ईमेल). असे ट्रेलर्स GitHub वर बॉट खात्यात कमिट अॅट्रिब्यूशन रूट करतात, PR इतिहासात खऱ्या लेखकाला (`diegosouzapw`) लपवतात. मानवी सहयोगी — upstream PR लेखक आणि RouteChi मध्ये पोर्ट केले जाणारे issue रिपोर्टर सह — मानक `Co-authored-by: Name <email>` ट्रेलर्ससह श्रेय मिळवू शकतात आणि मिळावे; upstream-port वर्कफ्लो (`/port-upstream-features`, `/port-upstream-issues`) यावर अवलंबून आहेत.

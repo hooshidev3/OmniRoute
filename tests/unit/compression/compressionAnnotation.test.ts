@@ -40,8 +40,8 @@ describe("formatCompressionAnnotation", () => {
     assert.ok(result.includes("dedupx2"), `missing dedupx2 in: ${result}`);
   });
 
-  it("is ASCII-only so it survives HTTP header (X-OmniRoute-Compression) construction", () => {
-    // Regression: the annotation is appended to the X-OmniRoute-Compression response
+  it("is ASCII-only so it survives HTTP header (X-RouteChi-Compression) construction", () => {
+    // Regression: the annotation is appended to the X-RouteChi-Compression response
     // header, a latin-1 ByteString. A non-ASCII char (e.g. U+2192 →) throws at
     // Headers/Response construction → 500 on every compressed response with rules.
     const stats = makeStats({
@@ -53,9 +53,9 @@ describe("formatCompressionAnnotation", () => {
       assert.ok(ch.codePointAt(0)! <= 0xff, `non-latin1 char ${JSON.stringify(ch)} in header value: ${value}`);
     }
     // Must not throw at real Headers/Response construction.
-    assert.doesNotThrow(() => new Headers({ "X-OmniRoute-Compression": value }));
-    const res = new Response(null, { headers: { "X-OmniRoute-Compression": value } });
-    assert.equal(res.headers.get("X-OmniRoute-Compression"), value);
+    assert.doesNotThrow(() => new Headers({ "X-RouteChi-Compression": value }));
+    const res = new Response(null, { headers: { "X-RouteChi-Compression": value } });
+    assert.equal(res.headers.get("X-RouteChi-Compression"), value);
   });
 
   it("orders rule counts descending by count", () => {

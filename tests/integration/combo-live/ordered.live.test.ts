@@ -277,7 +277,7 @@ test("live failover — broken primary falls over to healthy provider", {
       assert.ok(text.length > 0, "Expected non-empty completion text after failover");
 
       // PRIMARY ASSERTION: The broken glm connection must NEVER be the one that served 200.
-      // The X-OmniRoute-Selected-Connection-Id header is set on error/fallback paths — it
+      // The X-RouteChi-Selected-Connection-Id header is set on error/fallback paths — it
       // identifies the LAST connection that handled the response (i.e. the fallback winner).
       const servedConn = h.servedProvider(response);
       if (servedConn !== undefined) {

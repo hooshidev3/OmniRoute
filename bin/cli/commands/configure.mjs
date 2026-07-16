@@ -7,7 +7,7 @@ import { t } from "../i18n.mjs";
 
 /**
  * `omniroute configure <cli>` — interactive provider+model picker that writes a
- * local CLI config pointed at the ACTIVE OmniRoute context (local or remote).
+ * local CLI config pointed at the ACTIVE RouteChi context (local or remote).
  *
  * The model catalog comes from the active context's GET /v1/models, so when you
  * are in remote mode (`omniroute connect ...`) you pick from the remote server's

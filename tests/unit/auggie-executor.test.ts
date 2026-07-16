@@ -366,7 +366,7 @@ test("execute() aborts a long-running CLI process instead of hanging (streaming)
 
 // ─── refreshCredentials() is a no-op ────────────────────────────────────────
 
-test("refreshCredentials() is a no-op (auggie has no OmniRoute-managed credentials)", async () => {
+test("refreshCredentials() is a no-op (auggie has no RouteChi-managed credentials)", async () => {
   const executor = new AuggieExecutor();
   const result = await executor.refreshCredentials({} as never);
   assert.equal(result, null);

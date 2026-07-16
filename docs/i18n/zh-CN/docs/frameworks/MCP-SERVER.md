@@ -1,10 +1,10 @@
 ---
-title: "OmniRoute MCP Server Documentation"
+title: "RouteChi MCP Server Documentation"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute MCP 服务器文档
+# RouteChi MCP 服务器文档
 
 > 包含 94 个工具的 MCP 服务器，覆盖路由、缓存、压缩、记忆、技能、代理、连接池和上下文源操作。
 >
@@ -16,7 +16,7 @@ lastUpdated: 2026-06-28
 
 ## 安装
 
-OmniRoute MCP 内置。启动方式：
+RouteChi MCP 内置。启动方式：
 
 ```bash
 routechi --mcp
@@ -76,7 +76,7 @@ Claude Desktop、Cursor、Cline 及其他兼容 MCP 客户端的配置，参见 
 | `omniroute_get_combo_metrics`     | `read:combos`           | 指定 Combo 的性能指标                                        |
 | `omniroute_switch_combo`          | `write:combos`          | 激活或停用 Combo                                             |
 | `omniroute_check_quota`           | `read:quota`            | 已用/总配额、剩余百分比、重置时间、Token 健康状态            |
-| `omniroute_route_request`         | `execute:completions`   | 通过 OmniRoute 路由发送聊天补全请求                          |
+| `omniroute_route_request`         | `execute:completions`   | 通过 RouteChi 路由发送聊天补全请求                          |
 | `omniroute_cost_report`           | `read:usage`            | 按时间段（会话/天/周/月）的费用报告                          |
 | `omniroute_list_models_catalog`   | `read:models`           | 完整模型目录，包含能力、状态、定价                           |
 
@@ -84,7 +84,7 @@ Claude Desktop、Cursor、Cline 及其他兼容 MCP 客户端的配置，参见 
 
 | 工具                   | 权限域             | 描述                                                                                  |
 | :--------------------- | :----------------- | :------------------------------------------------------------------------------------ |
-| `omniroute_web_search` | `execute:search`   | 通过 OmniRoute 搜索网关进行 Web 搜索（Serper/Brave/Perplexity/Exa/Tavily/Google PSE/Linkup/SearchAPI/SearXNG），支持容灾 |
+| `omniroute_web_search` | `execute:search`   | 通过 RouteChi 搜索网关进行 Web 搜索（Serper/Brave/Perplexity/Exa/Tavily/Google PSE/Linkup/SearchAPI/SearXNG），支持容灾 |
 
 ## 高级工具（11）— 阶段 2
 
@@ -123,7 +123,7 @@ Claude Desktop、Cursor、Cline 及其他兼容 MCP 客户端的配置，参见 
 
 ### MCP 无障碍树过滤器（v3.8.0）
 
-除了上述 5 个压缩工具，OmniRoute 还包含一个执行后过滤器，在 MCP 浏览器/无障碍工具的**工具结果**返回给代理之前对其进行压缩。此过滤器本身不是工具——它对任何包含冗长的无障碍树或浏览器快照文本（≥2000 字符）的工具结果透明运行。
+除了上述 5 个压缩工具，RouteChi 还包含一个执行后过滤器，在 MCP 浏览器/无障碍工具的**工具结果**返回给代理之前对其进行压缩。此过滤器本身不是工具——它对任何包含冗长的无障碍树或浏览器快照文本（≥2000 字符）的工具结果透明运行。
 
 关键行为：
 
@@ -213,7 +213,7 @@ curl -X DELETE http://localhost:20128/api/settings/notion
 
 ### 云代理
 
-云代理是外部 AI 编程代理（codex-cloud、devin、jules），通过与大语言模型服务商相同的连接模型接入 OmniRoute。它们通过自己的 REST 接口（`/api/v1/agents/*`）暴露，**不**属于 MCP 工具目录——调用云代理不消耗 MCP 权限域。
+云代理是外部 AI 编程代理（codex-cloud、devin、jules），通过与大语言模型服务商相同的连接模型接入 RouteChi。它们通过自己的 REST 接口（`/api/v1/agents/*`）暴露，**不**属于 MCP 工具目录——调用云代理不消耗 MCP 权限域。
 
 - 实现：`src/lib/cloudAgent/`（`registry.ts`、`agents/codex-cloud.ts`、`agents/devin.ts`、`agents/jules.ts`）。
 - 生命周期：`createTask`、`getStatus`、`approvePlan`、`sendMessage`、`listSources`。
@@ -286,7 +286,7 @@ MCP 工具通过 API Key 权限域进行认证。权限域执行集中在 `open-
 
 | 变量                                      | 默认值                              | 用途                                                                                                                       |
 | :---------------------------------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| `OMNIROUTE_BASE_URL`                      | `http://localhost:20128`            | MCP 服务器调用 OmniRoute 内部 API 时使用的基础 URL                                                                          |
+| `OMNIROUTE_BASE_URL`                      | `http://localhost:20128`            | MCP 服务器调用 RouteChi 内部 API 时使用的基础 URL                                                                          |
 | `OMNIROUTE_API_KEY`                       | （空）                              | 转发为 `Authorization: Bearer` 给内部 API 调用的 API Key                                                                     |
 | `OMNIROUTE_MCP_ENFORCE_SCOPES`            | `false`（仅 `"true"` 启用）         | 启用后，缺少权限域时拒绝工具调用并在审计日志中记录 `scope_denied:<reason>`                                                  |
 | `OMNIROUTE_MCP_SCOPES`                    | （空）                              | 逗号分隔的权限域白名单，视为默认"可用"（当调用方不提供自身权限域时使用）                                                   |

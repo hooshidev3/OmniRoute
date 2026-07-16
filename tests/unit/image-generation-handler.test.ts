@@ -877,7 +877,7 @@ test("handleImageGeneration sanitizes Antigravity upstream error payloads", asyn
         error: {
           code: 500,
           message:
-            "failed at /Users/backryun/OmniRoute/open-sse/handlers/imageGeneration.ts:1\nstack",
+            "failed at /Users/backryun/RouteChi/open-sse/handlers/imageGeneration.ts:1\nstack",
           status: "INTERNAL",
         },
       }),

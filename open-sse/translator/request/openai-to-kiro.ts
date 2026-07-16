@@ -687,7 +687,7 @@ export function buildKiroPayload(model, body, stream, credentials) {
   // claude-opus-4-20250514) are never mistaken for a dash-separated minor
   // version and corrupted into claude-opus-4.20250514 (upstream 9router #2270).
   // Synthetic Kiro selector variants (`-thinking`, `-agentic`) are local aliases:
-  // strip them before the request leaves OmniRoute so Kiro only receives real
+  // strip them before the request leaves RouteChi so Kiro only receives real
   // upstream model IDs. We intentionally do not inject an agentic system prompt here.
   const { upstream: normalizedModel, thinking: modelRequestsThinking } =
     resolveKiroModelAlias(model);

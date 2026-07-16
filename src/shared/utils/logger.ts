@@ -1,5 +1,5 @@
 /**
- * Structured Logger — Pino-based logger for OmniRoute
+ * Structured Logger — Pino-based logger for RouteChi
  *
  * Usage:
  *   import { logger } from "@/shared/utils/logger";

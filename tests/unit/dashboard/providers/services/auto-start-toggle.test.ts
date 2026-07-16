@@ -20,9 +20,9 @@ describe("AutoStartToggle — module shape", () => {
 describe("AutoStartToggle — default description", () => {
   it("description uses service name when not provided", () => {
     const name = "cliproxy";
-    const description = `Launch ${name} automatically when OmniRoute starts`;
+    const description = `Launch ${name} automatically when RouteChi starts`;
     assert.ok(description.includes(name));
-    assert.ok(description.includes("OmniRoute"));
+    assert.ok(description.includes("RouteChi"));
   });
 
   it("auto-start endpoint path is correct for any service name", () => {

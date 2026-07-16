@@ -46,7 +46,7 @@ test("buildIngestEntry defaults missing optional fields to a valid entry", () =>
     host: "daily-cloudcode-pa.googleapis.com",
     path: "/v1internal:streamGenerateContent",
     status: "error",
-    error: "OmniRoute 400: bad request",
+    error: "RouteChi 400: bad request",
   });
 
   assert.equal(entry.requestBody, null);
@@ -55,7 +55,7 @@ test("buildIngestEntry defaults missing optional fields to a valid entry", () =>
   assert.equal(entry.responseSize, 0);
   assert.deepEqual(entry.requestHeaders, {});
   assert.equal(entry.status, "error");
-  assert.equal(entry.error, "OmniRoute 400: bad request");
+  assert.equal(entry.error, "RouteChi 400: bad request");
   // No latencies → no totalLatencyMs key.
   assert.equal("totalLatencyMs" in entry, false);
 

@@ -14,7 +14,7 @@
  *   1. Resolve conversationId via providerSessionRegistry (maps agent chat_id
  *      to MiMo conversationId for multi-turn continuity).
  *   2. Save conversation: POST /open-apis/chat/conversation/save
- *   3. Prepare messages with tool support (OmniRoute native webTools.ts).
+ *   3. Prepare messages with tool support (RouteChi native webTools.ts).
  *   4. POST /open-apis/bot/chat - SSE response.
  *   5. Think mode processing via shared thinkModeProcessor.ts
  *      (passthrough / strip / separate modes).
@@ -27,7 +27,7 @@
  *   - persistSession=true: keep chat on platform for reuse (rolling-window
  *     memory across requests with same agentChatId).
  *
- * Tool calling: OmniRoute native <tool>{json}</tool> protocol
+ * Tool calling: RouteChi native <tool>{json}</tool> protocol
  * (via webTools.ts + chatgptWebTools.ts).
  *
  * Headers: default headers are used as-is. Users can override via
@@ -487,7 +487,7 @@ async function uploadImageToMimo(
 /**
  * Convert MiMo usage to OpenAI usage format.
  * MiMo sends: { promptTokens, completionTokens, totalTokens, nativeUsage: { ... } }
- * OmniRoute expects: { prompt_tokens, completion_tokens, total_tokens,
+ * RouteChi expects: { prompt_tokens, completion_tokens, total_tokens,
  *   prompt_tokens_details: { cached_tokens }, completion_tokens_details: { reasoning_tokens } }
  *
  * The nativeUsage object already has the right field names (prompt_tokens,
@@ -609,7 +609,7 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
       }
     }
 
-    // 4. Prepare messages with tool support (OmniRoute native webTools.ts)
+    // 4. Prepare messages with tool support (RouteChi native webTools.ts)
     const messages = (bodyObj.messages as OpenAIMessage[]) || [];
     const { hasTools, requestedTools, effectiveMessages } = prepareToolMessages(bodyObj, messages);
     const query = buildMimoQuery(effectiveMessages as OpenAIMessage[]);
@@ -830,7 +830,7 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
             if (usage) chunk.usage = usage;
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
           };
-          // Terminal usage chunk (OmniRoute standard: empty choices array + usage before [DONE])
+          // Terminal usage chunk (RouteChi standard: empty choices array + usage before [DONE])
           const emitUsage = (usage: Record<string, unknown>) => {
             const chunk = {
               id,
@@ -1008,7 +1008,7 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
     const finalContent = stripCitations(contentAfterThink);
     const finalThinking = reasoning ? stripCitations(reasoning) : null;
 
-    // Parse tool calls using OmniRoute native webTools.ts
+    // Parse tool calls using RouteChi native webTools.ts
     let toolCalls: ReturnType<typeof buildToolAwareResult>["toolCalls"] = null;
     let finishReason = "stop";
     if (hasTools) {

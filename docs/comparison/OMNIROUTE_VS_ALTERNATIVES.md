@@ -1,17 +1,17 @@
 ---
-title: "OmniRoute vs Alternatives"
+title: "RouteChi vs Alternatives"
 version: 3.8.43
 lastUpdated: 2026-07-01
 ---
 
-# OmniRoute vs Alternatives
+# RouteChi vs Alternatives
 
 Objective feature comparison vs popular open-source AI routers.
 
 > **Methodology**: Public repos audited 2026-Q2. Versions as listed.
 > Submit corrections via PR — we want this to be accurate.
 
-| Feature                                            |                  OmniRoute 3.8                   |  LiteLLM 1.x   | OpenRouter (SaaS) |   Portkey   |
+| Feature                                            |                  RouteChi 3.8                   |  LiteLLM 1.x   | OpenRouter (SaaS) |   Portkey   |
 | -------------------------------------------------- | :----------------------------------------------: | :------------: | :---------------: | :---------: |
 | **Providers**                                      |                     **237+**                     |      ~100      |        ~50        |     ~30     |
 | **Free-tier providers**                            |                     **90+**                      |      n/a       |    passthrough    |     n/a     |
@@ -39,7 +39,7 @@ Objective feature comparison vs popular open-source AI routers.
 | **Tunnel support (Cloudflared, Tailscale, Ngrok)** |                        ✅                        |       ❌       |        n/a        |     n/a     |
 | **License**                                        |                       MIT                        |      MIT       |    proprietary    | proprietary |
 
-## When to choose OmniRoute
+## When to choose RouteChi
 
 - You self-host and want **maximum provider coverage** (237+, 90+ with a free tier)
 - You need a **built-in MCP server** (LLM tools, memory, skills exposed as tools)

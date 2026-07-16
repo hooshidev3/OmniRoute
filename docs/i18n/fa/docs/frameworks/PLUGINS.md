@@ -1,10 +1,10 @@
 ---
-title: "سامانه افزونه‌های CLI ی OmniRoute"
+title: "سامانه افزونه‌های CLI ی RouteChi"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# سامانه افزونه‌های CLI ی OmniRoute
+# سامانه افزونه‌های CLI ی RouteChi
 
 CLI ی `omniroute` را بدون تغییر هسته‌ی آن گسترش دهید. افزونه‌ها از قرارداد نام‌گذاری `omniroute-cmd-*` پیروی می‌کنند، مشابه `gh extension` یا `kubectl plugin`.
 
@@ -56,7 +56,7 @@ omniroute-cmd-myplugin/
 export const meta = {
   name: "myplugin",
   version: "0.1.0",
-  description: "My plugin for OmniRoute",
+  description: "My plugin for RouteChi",
   omnirouteApi: ">=4.0.0",
 };
 
@@ -83,7 +83,7 @@ export function register(program, ctx) {
 
 | Property                     | Type             | Description                                        |
 | ---------------------------- | ---------------- | -------------------------------------------------- |
-| `ctx.apiFetch(path, opts)`   | `async function` | Authenticated fetch to the OmniRoute server        |
+| `ctx.apiFetch(path, opts)`   | `async function` | Authenticated fetch to the RouteChi server        |
 | `ctx.emit(data, opts)`       | `function`       | Output in table/json/jsonl/csv per `--output` flag |
 | `ctx.t(key)`                 | `async function` | i18n translation lookup                            |
 | `ctx.withSpinner(label, fn)` | `async function` | Wraps async fn with ora spinner                    |

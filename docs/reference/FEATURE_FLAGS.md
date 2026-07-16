@@ -6,7 +6,7 @@ lastUpdated: 2026-06-28
 
 # Feature Flags
 
-> Runtime toggles that change OmniRoute's behavior **without a redeploy**.
+> Runtime toggles that change RouteChi's behavior **without a redeploy**.
 > Every flag listed here is defined in
 > [`src/shared/constants/featureFlagDefinitions.ts`](../../src/shared/constants/featureFlagDefinitions.ts)
 > — the single source of truth. The dashboard and the REST API both read from

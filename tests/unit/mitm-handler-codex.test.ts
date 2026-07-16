@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { CodexHandler } from "../../src/mitm/handlers/codex.ts";
 import { runHandler } from "./_mitmHandlerHarness.ts";
 
-test("codex handler — forwards Chat Completions payload via OmniRoute", async () => {
+test("codex handler — forwards Chat Completions payload via RouteChi", async () => {
   const r = await runHandler(
     new CodexHandler(),
     { model: "gpt-4.1", messages: [] },

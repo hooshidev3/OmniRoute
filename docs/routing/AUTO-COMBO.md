@@ -1,10 +1,10 @@
 ---
-title: "OmniRoute Auto-Combo Engine"
+title: "RouteChi Auto-Combo Engine"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute Auto-Combo Engine
+# RouteChi Auto-Combo Engine
 
 > **For Users**: Looking for a quick start? See the [Auto-Combo User Guide](../getting-started/AUTO-COMBO-GUIDE.md) for simple explanations and examples.
 
@@ -61,7 +61,7 @@ model: "auto/cheap"           # cheapest per token
 
 **What happens:**
 
-1. OmniRoute detects `auto/` prefix in `src/sse/handlers/chat.ts`
+1. RouteChi detects `auto/` prefix in `src/sse/handlers/chat.ts`
 2. Queries all **active provider connections** from the database
 3. Filters to those with valid credentials (API key or OAuth token)
 4. Determines the model per connection (`connection.defaultModel` or provider's first model)
@@ -157,17 +157,17 @@ when the header is absent.
 
 | Header                        | Accepts                                                                                                                                                                                 | Effect                                                                                                                                                                                              |
 | :----------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `X-OmniRoute-Mode`            | a preset alias (`fast`, `balanced`, `quality`, `cheap`, `reliable`, `offline`) or a raw pack name (`ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`, `reliability-first`) | Overrides the scoring weights for this request. `balanced`/`default` force the default weights (no pack). Unknown values are ignored (config preserved).                                            |
-| `X-OmniRoute-Budget`          | a positive number (max USD per request)                                                                                                                                                 | Hard cost ceiling: candidates whose estimated cost exceeds it are filtered before selection. What happens when **every** candidate exceeds it is controlled by `X-OmniRoute-Budget-Fallback` below. |
-| `X-OmniRoute-Budget-Fallback` | `cheapest` (default, aliases: `cheapest-viable`, `soft`) or `strict` (aliases: `block`, `hard`)                                                                                        | `cheapest`: falls back to the globally cheapest candidate even though it still exceeds the cap (legacy behavior). `strict`: refuses to select — the request fails fast with `HTTP 402` instead of silently overspending. Unknown values are ignored. |
+| `X-RouteChi-Mode`            | a preset alias (`fast`, `balanced`, `quality`, `cheap`, `reliable`, `offline`) or a raw pack name (`ship-fast`, `cost-saver`, `quality-first`, `offline-friendly`, `reliability-first`) | Overrides the scoring weights for this request. `balanced`/`default` force the default weights (no pack). Unknown values are ignored (config preserved).                                            |
+| `X-RouteChi-Budget`          | a positive number (max USD per request)                                                                                                                                                 | Hard cost ceiling: candidates whose estimated cost exceeds it are filtered before selection. What happens when **every** candidate exceeds it is controlled by `X-RouteChi-Budget-Fallback` below. |
+| `X-RouteChi-Budget-Fallback` | `cheapest` (default, aliases: `cheapest-viable`, `soft`) or `strict` (aliases: `block`, `hard`)                                                                                        | `cheapest`: falls back to the globally cheapest candidate even though it still exceeds the cap (legacy behavior). `strict`: refuses to select — the request fails fast with `HTTP 402` instead of silently overspending. Unknown values are ignored. |
 
 ```bash
 # Force the fastest profile, cap this request at $0.05, and hard-block instead of overspending
 curl -sS http://localhost:20128/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "X-OmniRoute-Mode: fast" \
-  -H "X-OmniRoute-Budget: 0.05" \
-  -H "X-OmniRoute-Budget-Fallback: strict" \
+  -H "X-RouteChi-Mode: fast" \
+  -H "X-RouteChi-Budget: 0.05" \
+  -H "X-RouteChi-Budget-Fallback: strict" \
   -d '{"model":"auto","messages":[{"role":"user","content":"hi"}]}'
 ```
 
@@ -178,7 +178,7 @@ resolved values feed the engine's existing `config.modePack` / `config.budgetCap
 
 ## All Routing Strategies
 
-OmniRoute's combo engine supports **18 routing strategies** (declared in `src/shared/constants/routingStrategies.ts` → `ROUTING_STRATEGY_VALUES`). The Auto Combo engine itself is exposed under the `auto` strategy; the others are available for persisted combos.
+RouteChi's combo engine supports **18 routing strategies** (declared in `src/shared/constants/routingStrategies.ts` → `ROUTING_STRATEGY_VALUES`). The Auto Combo engine itself is exposed under the `auto` strategy; the others are available for persisted combos.
 
 | Strategy            | Description                                                                                                                  |
 | :------------------ | :--------------------------------------------------------------------------------------------------------------------------- |
@@ -623,8 +623,8 @@ This suite runs in CI (`test:integration` job) with `--test-concurrency=1` and
 
 | Command                                | What it does                                                                   |
 | :------------------------------------- | :----------------------------------------------------------------------------- |
-| `npm run test:combo:live`              | In-process real routing with `RUN_COMBO_LIVE=1`; snapshots a live OmniRoute DB |
-| `npm run test:combo:live:vps`          | HTTP calls against a live OmniRoute server (set `COMBO_LIVE_BASE_URL`)         |
+| `npm run test:combo:live`              | In-process real routing with `RUN_COMBO_LIVE=1`; snapshots a live RouteChi DB |
+| `npm run test:combo:live:vps`          | HTTP calls against a live RouteChi server (set `COMBO_LIVE_BASE_URL`)         |
 | `npm run test:combo:live:vps:failover` | Same, with deliberate failover scenarios                                       |
 
 These smoke tests exercise the real wire path (combo → provider → completion). They are

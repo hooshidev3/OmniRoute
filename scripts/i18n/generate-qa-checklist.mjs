@@ -218,7 +218,7 @@ async function runAutomatedChecks() {
       if (content.includes("**[English](#-omniroute--the-free-ai-gateway)**")) {
         anchorLineRemoved = false;
       }
-      if (content.includes("## 🇧🇷 OmniRoute")) {
+      if (content.includes("## 🇧🇷 RouteChi")) {
         brAppendixRemoved = false;
       }
     } catch {
@@ -273,7 +273,7 @@ async function main() {
   automatedChecksLines.push(
     `- Language selector (🌐 **Languages:**) in README (es/fr/de/ja/ar): **${automated.readmeLabelChecks.every((item) => item.ok) ? "OK" : "FALHAS"}**`,
     `- Linha legacy EN/PT removida em ja/ar: **${automated.anchorLineRemoved ? "OK" : "PENDENTE"}**`,
-    `- Apêndice "## 🇧🇷 OmniRoute" removido em ja/ar: **${automated.brAppendixRemoved ? "OK" : "PENDENTE"}**`,
+    `- Apêndice "## 🇧🇷 RouteChi" removido em ja/ar: **${automated.brAppendixRemoved ? "OK" : "PENDENTE"}**`,
     "- RTL habilitado globalmente para `ar` e `he` via `dir=rtl` no layout."
   );
 

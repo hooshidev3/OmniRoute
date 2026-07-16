@@ -39,7 +39,7 @@ Pentru matricea completă a testelor, consultați `CONTRIBUTING.md` → "Rularea
 
 ## Proiect pe scurt
 
-**OmniRoute** — proxy/router AI unificat. Un endpoint, 160+ furnizori LLM, fallback automat.
+**RouteChi** — proxy/router AI unificat. Un endpoint, 160+ furnizori LLM, fallback automat.
 
 | Strat            | Locație                 | Scop                                                                          |
 | ---------------- | ----------------------- | ----------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ Rutele API urmează un model consistent: `Ruta → CORS preflight → validare c
 
 ## Starea de Execuție a Rezilienței
 
-OmniRoute are trei mecanisme de eșec temporar, legate dar distincte. Mențineți domeniul lor separat atunci când depanați comportamentul rutării. Consultați diagrama [rezilienței cu 3 straturi](./docs/diagrams/exported/resilience-3layers.svg)
+RouteChi are trei mecanisme de eșec temporar, legate dar distincte. Mențineți domeniul lor separat atunci când depanați comportamentul rutării. Consultați diagrama [rezilienței cu 3 straturi](./docs/diagrams/exported/resilience-3layers.svg)
 (sursa: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))
 pentru o hartă rapidă.
 
@@ -409,4 +409,4 @@ git push -u origin feat/your-feature
 13. Nu interpolare niciodată string-uri externe sau valori de runtime în scripturi shell transmise la `exec()`/`spawn()` — treci prin opțiunea `env` în schimb. Referință: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Nu ignora niciodată un alert CodeQL / Secret-Scanning fără (a) să verifici mai întâi documentele de model de mai sus pentru a vedea dacă ajutorul se aplică, și (b) să înregistrezi justificarea tehnică în comentariul de respingere. Precedent: `js/stack-trace-exposure` ridicat pe callsites care deja rotează prin `sanitizeErrorMessage()` este o limitare cunoscută CodeQL (sanitizatori personalizați nerecunoscuți) — respinge ca `false positive` referindu-te la `docs/security/ERROR_SANITIZATION.md`.
 15. Nu expune niciodată rute care generează procese copil (`/api/mcp/`, `/api/cli-tools/runtime/`) fără clasificarea `isLocalOnlyPath()` în `src/server/authz/routeGuard.ts`. Aplicarea loopback-ului se întâmplă necondiționat înainte de orice verificare de autentificare — un JWT scurs prin tunel nu poate declanșa generarea procesului. Vezi `docs/security/ROUTE_GUARD_TIERS.md`.
-16. Niciodată să nu includeți trailere `Co-Authored-By` care creditează un asistent AI, LLM sau cont de automatizare (de ex. nume conținând "Claude", "GPT", "Copilot", "Bot"; e-mailuri la `anthropic.com` / `openai.com` / adrese `noreply.github.com` deținute de boți). Astfel de trailere direcționează atribuirea commit-ului către contul botului pe GitHub, ascunzând autorul real (`diegosouzapw`) în istoricul PR. Colaboratorii umani — inclusiv autorii de PR-uri upstream și raportorii de issue portate în OmniRoute — POT și AR TREBUI să fie creditați cu trailere standard `Co-authored-by: Name <email>`; fluxurile de lucru upstream-port (`/port-upstream-features`, `/port-upstream-issues`) depind de aceasta.
+16. Niciodată să nu includeți trailere `Co-Authored-By` care creditează un asistent AI, LLM sau cont de automatizare (de ex. nume conținând "Claude", "GPT", "Copilot", "Bot"; e-mailuri la `anthropic.com` / `openai.com` / adrese `noreply.github.com` deținute de boți). Astfel de trailere direcționează atribuirea commit-ului către contul botului pe GitHub, ascunzând autorul real (`diegosouzapw`) în istoricul PR. Colaboratorii umani — inclusiv autorii de PR-uri upstream și raportorii de issue portate în RouteChi — POT și AR TREBUI să fie creditați cu trailere standard `Co-authored-by: Name <email>`; fluxurile de lucru upstream-port (`/port-upstream-features`, `/port-upstream-issues`) depind de aceasta.

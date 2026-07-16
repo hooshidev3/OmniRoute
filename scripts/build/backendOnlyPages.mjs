@@ -6,7 +6,7 @@
  * `build-next-isolated.mjs` calls `stubDashboardPages()` BEFORE `next build` and
  * `restoreDashboardPages()` in a `finally` afterward.
  *
- * WHY: OmniRoute embedders that only consume the HTTP API (`/api/*`, `/v1/*`, `/v1beta/*`)
+ * WHY: RouteChi embedders that only consume the HTTP API (`/api/*`, `/v1/*`, `/v1beta/*`)
  * — e.g. the VibeProxy desktop app, headless self-hosters, CI that only needs the router —
  * do NOT need the Next.js dashboard UI. Building it dominates `next build`: the ~126 leaf
  * pages pull in heavy client vendor chunks (recharts, monaco-editor, @xyflow, mermaid,
@@ -55,7 +55,7 @@ const UI_BASENAME_RE = /^(page|layout|template|loading|error|global-error|not-fo
 const ROUTE_FILE_RE = /[\\/]route\.(ts|js|tsx|jsx)$/;
 
 /**
- * Strip a leading `"use server"` module directive. Some OmniRoute API Route Handlers
+ * Strip a leading `"use server"` module directive. Some RouteChi API Route Handlers
  * (`src/app/api/**\/route.ts`) carry a top-level `"use server"` — which registers the module
  * as a React Server-Actions provider. Once the dashboard pages that import those exports as
  * actions are stubbed away, Next's FlightClientEntryPlugin still has the action registered but

@@ -3,7 +3,7 @@
  *
  * Background: `tsx` is a runtime `dependency` (not dev), and the published CLI
  * registers it at boot (`bin/omniroute.mjs` → `await import("tsx/esm")`) to load
- * OmniRoute's own `.ts` sources. A fresh `npm install omniroute` therefore pulls
+ * RouteChi's own `.ts` sources. A fresh `npm install omniroute` therefore pulls
  * `esbuild` transitively via `tsx`. #5757 worried a broken esbuild could make a
  * fresh install "build-fragile", and proposed forcing `esbuild@0.27.4`.
  *

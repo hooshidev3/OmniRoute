@@ -107,7 +107,7 @@ curl https://localhost:20128/api/services/9router/status \
 
 Toggle 9Router auto-start
 
-When enabled, 9Router starts automatically on the next OmniRoute boot. **LOCAL_ONLY** — loopback only.
+When enabled, 9Router starts automatically on the next RouteChi boot. **LOCAL_ONLY** — loopback only.
 
 ```bash
 curl -X POST https://localhost:20128/api/services/9router/auto-start \
@@ -196,7 +196,7 @@ curl https://localhost:20128/api/services/cliproxy/status \
 
 Toggle CLIProxyAPI auto-start
 
-When enabled, CLIProxyAPI starts automatically on the next OmniRoute boot. **LOCAL_ONLY** — loopback only.
+When enabled, CLIProxyAPI starts automatically on the next RouteChi boot. **LOCAL_ONLY** — loopback only.
 
 ```bash
 curl -X POST https://localhost:20128/api/services/cliproxy/auto-start \
@@ -285,7 +285,7 @@ curl https://localhost:20128/api/services/mux/status \
 
 Toggle Mux auto-start
 
-When enabled, Mux starts automatically on the next OmniRoute boot. **LOCAL_ONLY** — loopback only.
+When enabled, Mux starts automatically on the next RouteChi boot. **LOCAL_ONLY** — loopback only.
 
 ```bash
 curl -X POST https://localhost:20128/api/services/mux/auto-start \
@@ -374,7 +374,7 @@ curl https://localhost:20128/api/services/bifrost/status \
 
 Toggle Bifrost auto-start
 
-When enabled, Bifrost starts automatically on the next OmniRoute boot. **LOCAL_ONLY** — loopback only.
+When enabled, Bifrost starts automatically on the next RouteChi boot. **LOCAL_ONLY** — loopback only.
 
 ```bash
 curl -X POST https://localhost:20128/api/services/bifrost/auto-start \

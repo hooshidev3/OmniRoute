@@ -15,7 +15,7 @@
  * comes from this synthesis step.
  *
  * Ported from upstream decolua/9router (Daniil Schovkunov), adapted JS → TS and
- * wired through OmniRoute's existing combo schema (combo.config.judgeModel /
+ * wired through RouteChi's existing combo schema (combo.config.judgeModel /
  * combo.config.fusionTuning).
  */
 import { errorResponse, sanitizeErrorMessage } from "../utils/error.ts";

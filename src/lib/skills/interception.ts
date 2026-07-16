@@ -294,7 +294,7 @@ export async function handleToolCallExecution(
       // Anthropic only permits tool_result blocks in user messages. This helper
       // returns a single assistant response, so there is no valid place to put a
       // server-side skill result as tool_result here. Keep client-native tool_use
-      // blocks untouched, remove the OmniRoute-handled tool_use blocks, and expose
+      // blocks untouched, remove the RouteChi-handled tool_use blocks, and expose
       // their results as plain assistant text instead of corrupting history with
       // assistant-side tool_result blocks. See #2815.
       //

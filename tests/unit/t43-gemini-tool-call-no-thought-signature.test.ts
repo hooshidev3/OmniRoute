@@ -1,7 +1,7 @@
 /**
  * T43: Gemini tool call parts must NOT inject fake thoughtSignature.
  *
- * After the fix for issue #1410, OmniRoute no longer injects a hardcoded
+ * After the fix for issue #1410, RouteChi no longer injects a hardcoded
  * DEFAULT_THINKING_GEMINI_SIGNATURE into tool call parts. The Gemini 3+ API
  * strictly validates thought signatures cryptographically, and injecting a
  * stale/fake one causes 400 errors.

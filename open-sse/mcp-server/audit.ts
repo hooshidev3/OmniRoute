@@ -251,7 +251,7 @@ async function openFallbackAuditDb(dbPath: string, nativeMessage: string): Promi
 
 /**
  * Lazy-load the database connection.
- * Uses the same SQLite database as the main OmniRoute app.
+ * Uses the same SQLite database as the main RouteChi app.
  *
  * Driver priority:
  *   1. better-sqlite3 — fast native binding (when its compiled `.node`

@@ -1,12 +1,12 @@
 ---
-title: "OmniRoute Fly.io Deployment Guide"
+title: "RouteChi Fly.io Deployment Guide"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute Fly.io Deployment Guide
+# RouteChi Fly.io Deployment Guide
 
-This document describes the actual deployment process for OmniRoute on Fly.io, covering two scenarios:
+This document describes the actual deployment process for RouteChi on Fly.io, covering two scenarios:
 
 - Deploying the current project to Fly.io for the first time
 - Publishing subsequent code updates
@@ -92,7 +92,7 @@ flyctl version
 
 ```powershell
 git clone https://github.com/borhandarabi/routechi.git
-cd OmniRoute
+cd RouteChi
 ```
 
 ### 4.2 Confirm the Application Name

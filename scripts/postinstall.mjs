@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Post-install warm-up for OmniRoute native runtimes.
+ * Post-install warm-up for RouteChi native runtimes.
  *
  * Runs after the main `scripts/build/postinstall.mjs` binary-copy step.
  * Tries to pre-resolve better-sqlite3 into ~/.omniroute/runtime/ so that

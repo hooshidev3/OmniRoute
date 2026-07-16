@@ -87,11 +87,11 @@ import {
 } from "../services/compression/engines/mcpAccessibility/constants.ts";
 import { getDbInstance } from "../../src/lib/db/core.ts";
 import { normalizeQuotaResponse } from "../../src/shared/contracts/quota.ts";
-import { resolveOmniRouteBaseUrl } from "../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
+import { resolveRouteChiBaseUrl } from "../../src/shared/utils/resolveRouteChiBaseUrl.ts";
 import { getMcpModelsCatalog } from "./catalog.ts";
 export { getMcpModelsCatalog } from "./catalog.ts";
 
-const OMNIROUTE_BASE_URL = resolveOmniRouteBaseUrl();
+const OMNIROUTE_BASE_URL = resolveRouteChiBaseUrl();
 const MCP_ENFORCE_SCOPES = process.env.OMNIROUTE_MCP_ENFORCE_SCOPES === "true";
 const MCP_ALLOWED_SCOPES = new Set(
   (process.env.OMNIROUTE_MCP_SCOPES || "")
@@ -185,13 +185,13 @@ function normalizeComboModels(
   });
 }
 
-function getOmniRouteApiKey(): string {
+function getRouteChiApiKey(): string {
   return process.env.OMNIROUTE_API_KEY || "";
 }
 
 export async function omniRouteFetch(path: string, options: RequestInit = {}): Promise<unknown> {
   const url = `${OMNIROUTE_BASE_URL}${path}`;
-  const apiKey = getOmniRouteApiKey();
+  const apiKey = getRouteChiApiKey();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     // Static env key is only a fallback; the per-caller MCP identity forwarded via
@@ -206,7 +206,7 @@ export async function omniRouteFetch(path: string, options: RequestInit = {}): P
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "Unknown error");
-    throw new Error(`OmniRoute API error [${response.status}]: ${errorText}`);
+    throw new Error(`RouteChi API error [${response.status}]: ${errorText}`);
   }
 
   return response.json();
@@ -686,7 +686,7 @@ export function createMcpServer(): McpServer {
     "omniroute_get_health",
     {
       description:
-        "Returns OmniRoute health status including uptime, memory, circuit breakers, rate limits, and cache stats",
+        "Returns RouteChi health status including uptime, memory, circuit breakers, rate limits, and cache stats",
       inputSchema: getHealthInput,
     },
     withScopeEnforcement("omniroute_get_health", async (args) => {
@@ -743,7 +743,7 @@ export function createMcpServer(): McpServer {
   server.registerTool(
     "omniroute_route_request",
     {
-      description: "Sends a chat completion request through OmniRoute intelligent routing",
+      description: "Sends a chat completion request through RouteChi intelligent routing",
       inputSchema: routeRequestInput,
     },
     withScopeEnforcement("omniroute_route_request", (args) =>
@@ -896,7 +896,7 @@ export function createMcpServer(): McpServer {
     "omniroute_db_health_check",
     {
       description:
-        "Diagnoses or repairs OmniRoute database drift, including broken combo references and orphan quota/domain rows",
+        "Diagnoses or repairs RouteChi database drift, including broken combo references and orphan quota/domain rows",
       inputSchema: dbHealthCheckInput,
     },
     withScopeEnforcement("omniroute_db_health_check", (args) =>
@@ -908,7 +908,7 @@ export function createMcpServer(): McpServer {
     "omniroute_sync_pricing",
     {
       description:
-        "Syncs pricing data from external sources (LiteLLM) into OmniRoute without overwriting user-set prices",
+        "Syncs pricing data from external sources (LiteLLM) into RouteChi without overwriting user-set prices",
       inputSchema: syncPricingInput,
     },
     withScopeEnforcement("omniroute_sync_pricing", (args) =>
@@ -920,7 +920,7 @@ export function createMcpServer(): McpServer {
     "omniroute_web_search",
     {
       description:
-        "Performs a web search using OmniRoute's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
+        "Performs a web search using RouteChi's search gateway. Supports multiple providers (Serper, Brave, Perplexity, Exa, Tavily) with automatic failover. Returns search results with titles, URLs, snippets, and position data.",
       inputSchema: webSearchInput,
     },
     withScopeEnforcement("omniroute_web_search", (args) =>
@@ -932,7 +932,7 @@ export function createMcpServer(): McpServer {
     "omniroute_web_fetch",
     {
       description:
-        "Fetches and extracts content from a URL using OmniRoute's web fetch gateway. Supports multiple providers (Firecrawl, Jina Reader, Tavily) with automatic failover. Returns the page content as markdown, HTML, links, or screenshot, along with metadata.",
+        "Fetches and extracts content from a URL using RouteChi's web fetch gateway. Supports multiple providers (Firecrawl, Jina Reader, Tavily) with automatic failover. Returns the page content as markdown, HTML, links, or screenshot, along with metadata.",
       inputSchema: webFetchInput,
     },
     withScopeEnforcement("omniroute_web_fetch", (args) => handleWebFetch(webFetchInput.parse(args)))
@@ -1348,10 +1348,10 @@ export async function startMcpStdio(): Promise<void> {
   process.once("SIGINT", stopHeartbeatOnce);
   process.once("SIGTERM", stopHeartbeatOnce);
 
-  console.error("[MCP] OmniRoute MCP Server starting (stdio transport)...");
+  console.error("[MCP] RouteChi MCP Server starting (stdio transport)...");
   try {
     await server.connect(transport);
-    console.error("[MCP] OmniRoute MCP Server connected and ready.");
+    console.error("[MCP] RouteChi MCP Server connected and ready.");
   } finally {
     if (closeAuditDb()) {
       console.error("[MCP] Audit database checkpointed and closed.");

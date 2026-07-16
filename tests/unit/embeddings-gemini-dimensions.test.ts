@@ -13,7 +13,7 @@ const { handleEmbedding } = await import("../../open-sse/handlers/embeddings.ts"
 // clients may request a smaller embedding (e.g. 1536 for pgvector schemas) via the
 // `dimensions` field. The Gemini native API uses `outputDimensionality` instead;
 // Google's OpenAI-compatibility shim does not document the `dimensions` translation,
-// so OmniRoute must forward `outputDimensionality` alongside `dimensions` for Gemini
+// so RouteChi must forward `outputDimensionality` alongside `dimensions` for Gemini
 // embedding requests to guarantee the requested vector size lands at the model.
 
 function captureFetch(captured: { body?: Record<string, unknown> }) {

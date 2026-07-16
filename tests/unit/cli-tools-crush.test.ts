@@ -172,7 +172,7 @@ test("crush-settings DELETE: removes only the omniroute provider entry", async (
             base_url: "http://localhost:20128/v1",
             api_key: "sk-test",
             models: [
-              { id: "openai/gpt-5", name: "OmniRoute: openai/gpt-5", context_window: 128000 },
+              { id: "openai/gpt-5", name: "RouteChi: openai/gpt-5", context_window: 128000 },
             ],
           },
           other: { type: "openai-compat", base_url: "http://example.com/v1" },

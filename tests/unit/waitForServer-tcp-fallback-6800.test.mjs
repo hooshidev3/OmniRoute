@@ -2,7 +2,7 @@
 // server "ready" based on a raw-TCP-accept fallback when the HTTP layer never
 // answers a single request. This reproduces exactly the reported symptom: port
 // enters LISTEN / accepts TCP, but GET /api/monitoring/health (and any other
-// route) hangs indefinitely — yet the CLI still printed "OmniRoute is running!".
+// route) hangs indefinitely — yet the CLI still printed "RouteChi is running!".
 
 import { test } from "node:test";
 import assert from "node:assert/strict";

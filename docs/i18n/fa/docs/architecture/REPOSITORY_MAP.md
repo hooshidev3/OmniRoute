@@ -7,14 +7,14 @@ lastUpdated: 2026-06-28
 # نقشه مخزن
 
 > **توضیح یک‌خطی برای هر دایرکتوری و فایل ریشه.**
-> آخرین به‌روزرسانی: 2026-06-28 — OmniRoute v3.8.40
+> آخرین به‌روزرسانی: 2026-06-28 — RouteChi v3.8.40
 >
 > از این نقشه برای پیمایش سریع codebase استفاده کنید. برای بررسی عمیق، لینک‌های مستندات اختصاصی را دنبال کنید.
 
 ## درخت سطح‌بالا
 
 ```
-OmniRoute/
+RouteChi/
 ├── src/                  # Next.js 16 application (UI + API routes + libs + domain + server)
 ├── open-sse/             # Streaming engine workspace (handlers, executors, translator, MCP server)
 ├── electron/             # Desktop wrapper (Electron 41 + electron-builder 26.10)
@@ -386,7 +386,7 @@ open-sse/
 | `RELEASE_CHECKLIST.md`      | جریان کامل انتشار (skill‌ها، husky، commit‌های متعارف، استقرار)                       |
 | `COVERAGE_PLAN.md`          | اهداف پوشش و حالت فعلی                                                      |
 | `FREE_TIERS.md`             | provider‌های free-tier گردآوری‌شده (۴۸+ رایگان + ۱۱ OAuth)                                     |
-| `CLI-TOOLS.md`              | ادغام‌های CLI خارجی + CLI داخلی OmniRoute                                    |
+| `CLI-TOOLS.md`              | ادغام‌های CLI خارجی + CLI داخلی RouteChi                                    |
 | `I18N.md`                   | معماری i18n، افزودن یک زبان، ۳۰ locale                                      |
 
 ### بررسی عمیق زیرسیستم

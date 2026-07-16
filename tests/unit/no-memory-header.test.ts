@@ -18,7 +18,7 @@ test("isNoMemoryRequested is true for truthy header values (plain object)", () =
 });
 
 test("isNoMemoryRequested is case-insensitive on the header NAME", () => {
-  assert.equal(isNoMemoryRequested({ "X-OmniRoute-No-Memory": "true" }), true);
+  assert.equal(isNoMemoryRequested({ "X-RouteChi-No-Memory": "true" }), true);
 });
 
 test("isNoMemoryRequested works with a Headers instance", () => {

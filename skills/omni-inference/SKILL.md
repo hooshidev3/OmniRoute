@@ -223,7 +223,7 @@ curl https://localhost:20128/api/v1/providers/{provider}/models \
 
 Document OCR
 
-Mistral OCR–compatible document OCR endpoint. Accepts a JSON body referencing a document/image and returns extracted text. Success responses carry the `X-OmniRoute-*` cost-telemetry headers.
+Mistral OCR–compatible document OCR endpoint. Accepts a JSON body referencing a document/image and returns extracted text. Success responses carry the `X-RouteChi-*` cost-telemetry headers.
 
 ```bash
 curl -X POST https://localhost:20128/api/v1/ocr \
@@ -236,7 +236,7 @@ curl -X POST https://localhost:20128/api/v1/ocr \
 
 Translate audio to English
 
-OpenAI Whisper–compatible audio translation (multipart/form-data). Unlike `/api/v1/audio/transcriptions`, output is always English regardless of the source language. Success responses carry the `X-OmniRoute-*` cost-telemetry headers.
+OpenAI Whisper–compatible audio translation (multipart/form-data). Unlike `/api/v1/audio/transcriptions`, output is always English regardless of the source language. Success responses carry the `X-RouteChi-*` cost-telemetry headers.
 
 ```bash
 curl -X POST https://localhost:20128/api/v1/audio/translations \
@@ -403,7 +403,7 @@ curl -X POST $OMNIROUTE_URL/v1/audio/speech \
   -H "Content-Type: application/json" \
   -d '{
     "model": "tts-1",
-    "input": "Hello from OmniRoute.",
+    "input": "Hello from RouteChi.",
     "voice": "alloy",
     "response_format": "mp3"
   }' --output speech.mp3
@@ -521,7 +521,7 @@ curl -X POST $OMNIROUTE_URL/v1/web/search \
   -H "Content-Type: application/json" \
   -d '{
     "model": "tavily/search",
-    "query": "OmniRoute github latest release",
+    "query": "RouteChi github latest release",
     "max_results": 5,
     "include_answer": true
   }'

@@ -3,7 +3,7 @@
  *
  * xAI (Grok) has no public per-account quota API (the billing console at
  * console.x.ai requires a session cookie, not an API key), so — exactly like
- * the Xiaomi MiMo self-track pattern — OmniRoute self-tracks it: it sums the
+ * the Xiaomi MiMo self-track pattern — RouteChi self-tracks it: it sums the
  * tokens it routed to the connection from `usage_history` and surfaces them
  * as a cumulative, uncapped ("unlimited") usage figure on the quota
  * dashboard. These tests cover the aggregation helper + the fetcher shape,

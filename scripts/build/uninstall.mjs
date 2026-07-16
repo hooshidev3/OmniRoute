@@ -9,7 +9,7 @@ const uninstallAlreadyInProgress =
   process.env.OMNIROUTE_SKIP_UNINSTALL_HOOK === "1" ||
   process.env.npm_lifecycle_event === "uninstall";
 
-console.log("🛑 OmniRoute Uninstaller");
+console.log("🛑 RouteChi Uninstaller");
 console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
 // 1. Stop PM2 process if it exists
@@ -52,7 +52,7 @@ if (uninstallAlreadyInProgress) {
         OMNIROUTE_SKIP_UNINSTALL_HOOK: "1",
       },
     });
-    console.log("\n✅ OmniRoute has been successfully uninstalled from your system.");
+    console.log("\n✅ RouteChi has been successfully uninstalled from your system.");
     if (!fullUninstall) {
       console.log(`ℹ️ Your configurations and databases were preserved in ${dataDir}.`);
     }

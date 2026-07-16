@@ -130,7 +130,7 @@ describe("combo selected connection success handling", () => {
           status: 200,
           headers: {
             "content-type": "application/json",
-            "X-OmniRoute-Selected-Connection-Id": dynamicConnId,
+            "X-RouteChi-Selected-Connection-Id": dynamicConnId,
           },
         });
       },
@@ -335,7 +335,7 @@ describe("combo selected connection success handling", () => {
           status: 200,
           headers: {
             "content-type": "application/json",
-            "X-OmniRoute-Selected-Connection-Id": dynamicConnId,
+            "X-RouteChi-Selected-Connection-Id": dynamicConnId,
           },
         });
       },

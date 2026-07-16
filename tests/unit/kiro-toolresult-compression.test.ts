@@ -2,7 +2,7 @@
  * Kiro (AWS CodeWhisperer) tool-result compression — ported from upstream
  * decolua/9router#1194 (zanuartri).
  *
- * The upstream PR added Kiro-format support directly inside RTK. OmniRoute
+ * The upstream PR added Kiro-format support directly inside RTK. RouteChi
  * lifts that capability to `bodyAdapter`, so the Kiro envelope
  * (`conversationState.history[].userInputMessage.userInputMessageContext.toolResults`)
  * flattens to OpenAI-shape `role:"tool"` messages — every compression engine

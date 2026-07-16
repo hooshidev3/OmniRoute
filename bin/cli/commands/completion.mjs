@@ -79,7 +79,7 @@ function installPath(shell) {
 function generateZshScript() {
   return `#compdef omniroute
 
-# OmniRoute zsh completion (dynamic)
+# RouteChi zsh completion (dynamic)
 _omniroute_get_cache() {
   local key="$1"
   local cache="$HOME/.omniroute/completion-cache.json"
@@ -99,10 +99,10 @@ _omniroute_get_cache() {
 _omniroute() {
   local -a commands
   commands=(
-    'serve:Start the OmniRoute server'
+    'serve:Start the RouteChi server'
     'stop:Stop the server'
     'restart:Restart the server'
-    'setup:Configure OmniRoute'
+    'setup:Configure RouteChi'
     'doctor:Run health diagnostics'
     'status:Show server status'
     'logs:View application logs'
@@ -186,7 +186,7 @@ compdef _omniroute omniroute
 
 function generateBashScript() {
   return `#!/bin/bash
-# OmniRoute CLI bash completion (dynamic)
+# RouteChi CLI bash completion (dynamic)
 
 _omniroute_get_cache() {
   local key="$1"
@@ -239,7 +239,7 @@ complete -F _omniroute omniroute
 }
 
 function generateFishScript() {
-  return `# OmniRoute CLI fish completion (dynamic)
+  return `# RouteChi CLI fish completion (dynamic)
 complete -c omniroute -f
 
 set -l commands serve stop restart setup doctor status logs providers config keys models combo chat stream completion dashboard open backup restore health quota cache mcp a2a tunnel env memory skills update test

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OmniRoute i18n Translation Validator
+RouteChi i18n Translation Validator
 Script for comparing source (en.json) with any translation
 Detects missing translations and source changes needing updates
 
@@ -230,7 +230,7 @@ def get_translation_file() -> Path:
 def generate_report():
     """Generate full translation report"""
     translation_file = get_translation_file()
-    print_header("OmniRoute Translation Report")
+    print_header("RouteChi Translation Report")
     print(f"Source: {SOURCE_FILE}")
     print(f"Translation: {translation_file}\n")
 
@@ -493,7 +493,7 @@ def export_markdown(output_file: str) -> int:
 
 def usage():
     print("""
-OmniRoute i18n Translation Validator
+RouteChi i18n Translation Validator
 
 Usage: validate_translation.py [command] [options]
 

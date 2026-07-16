@@ -95,7 +95,7 @@ const TOOL_COMMIT_DIRECTIVE = [
 ].join("\n");
 
 // NOTE: composer-api primes the model into "agent mode" with a fabricated
-// prior switch_mode exchange (AGENT_MODE_PRIMER). On OmniRoute's native-tool
+// prior switch_mode exchange (AGENT_MODE_PRIMER). On RouteChi's native-tool
 // agent endpoint that primer is counterproductive — it references a
 // non-existent switch_mode tool and measurably LOWERED the tool-call rate in
 // live A/B (56% vs 69%), so it is intentionally not ported.
@@ -1094,7 +1094,7 @@ export class CursorExecutor extends BaseExecutor {
       return {
         response: buildErrorResponse(
           501,
-          "Cursor provider requires Node.js http2, which is unavailable in this runtime (Edge / Cloudflare Workers / similar). Run OmniRoute on a Node.js runtime to use cursor.",
+          "Cursor provider requires Node.js http2, which is unavailable in this runtime (Edge / Cloudflare Workers / similar). Run RouteChi on a Node.js runtime to use cursor.",
           "unsupported_runtime"
         ),
         url,

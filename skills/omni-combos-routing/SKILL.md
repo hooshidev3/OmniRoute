@@ -114,7 +114,7 @@ See the full OpenAPI specification at `GET /api/openapi/spec` or `docs/openapi.y
 <!-- skill:custom-start -->
 <!-- Migrated from skills/omniroute-routing/SKILL.md (preserved curated content) -->
 
-# OmniRoute — Routing & Combos
+# RouteChi — Routing & Combos
 
 Requires `OMNIROUTE_URL` and `OMNIROUTE_KEY`. See [entry-point SKILL](https://raw.githubusercontent.com/borhandarabi/routechi/main/skills/omniroute/SKILL.md) for setup.
 
@@ -223,7 +223,7 @@ curl -X POST $OMNIROUTE_URL/api/routing/simulate \
 
 Returns which provider would be selected and why — no actual API call is made.
 
-## Via MCP (if OmniRoute is your MCP server)
+## Via MCP (if RouteChi is your MCP server)
 
 ```
 omniroute_list_combos     → list all combos

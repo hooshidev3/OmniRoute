@@ -1,5 +1,5 @@
 /**
- * omniroute setup-qwen — configure Qwen Code (QwenLM/qwen-code) for OmniRoute.
+ * omniroute setup-qwen — configure Qwen Code (QwenLM/qwen-code) for RouteChi.
  *
  * Qwen Code is a terminal AI agent with a file-based config at
  * ~/.qwen/settings.json. For a custom OpenAI-compatible endpoint it uses a
@@ -44,7 +44,7 @@ export function resolveQwenTarget(opts = {}) {
   return { baseUrl: ensureV1(root), apiKey };
 }
 
-/** Merge the OmniRoute modelProvider into Qwen's settings.json (preserve rest). */
+/** Merge the RouteChi modelProvider into Qwen's settings.json (preserve rest). */
 export function buildQwenSettings(existing, { baseUrl, model }) {
   const s = existing && typeof existing === "object" ? { ...existing } : {};
   const providers = Array.isArray(s.modelProviders)
@@ -52,7 +52,7 @@ export function buildQwenSettings(existing, { baseUrl, model }) {
     : [];
   providers.push({
     id: "omniroute",
-    name: "OmniRoute",
+    name: "RouteChi",
     authType: "openai",
     baseUrl,
     envKey: "OMNIROUTE_API_KEY",
@@ -97,7 +97,7 @@ export async function runSetupQwenCommand(opts = {}) {
   const configPath =
     opts.configPath ?? opts["config-path"] ?? join(os.homedir(), ".qwen", "settings.json");
 
-  printHeading("OmniRoute → Qwen Code (openai-compatible)");
+  printHeading("RouteChi → Qwen Code (openai-compatible)");
   printInfo(`baseUrl: ${baseUrl}`);
 
   let model = opts.model;
@@ -140,11 +140,11 @@ export function registerSetupQwen(program) {
   program
     .command("setup-qwen")
     .description(
-      "Configure Qwen Code for OmniRoute: write ~/.qwen/settings.json (openai modelProvider)"
+      "Configure Qwen Code for RouteChi: write ~/.qwen/settings.json (openai modelProvider)"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--model <id>", "Model id for Qwen (required unless picked interactively)")
     .option("--config-path <path>", "settings.json path (default: ~/.qwen/settings.json)")
     .option("--yes", "Non-interactive: do not prompt (requires --model)")

@@ -1,5 +1,5 @@
 /**
- * Gap 8 regression: every host OmniRoute can spoof in startMitm() must be
+ * Gap 8 regression: every host RouteChi can spoof in startMitm() must be
  * enumerated by collectManagedHosts() so stopMitm() can remove it. Without
  * this, agent + custom-host /etc/hosts lines leak across start/stop cycles and
  * keep hijacking those hostnames machine-wide after the user thinks MITM is off.

@@ -1,6 +1,6 @@
 // Regression guard for the escalated mesh-bot report: a user generated an
 // image via the ChatGPT Web provider; the image WAS produced upstream but
-// OmniRoute returned `502 "ChatGPT Web completed without returning image
+// RouteChi returned `502 "ChatGPT Web completed without returning image
 // markdown"` — i.e. the silent-drop path where an image_asset_pointer existed
 // but resolution failed, and the handler reported it as "no image made".
 //

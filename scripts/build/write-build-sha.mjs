@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * write-build-sha.mjs — HEAD sentinel guard for OmniRoute release builds.
+ * write-build-sha.mjs — HEAD sentinel guard for RouteChi release builds.
  *
  * Writes OMNIROUTE_BUILD_SHA (or git rev-parse --short HEAD) into:
  *   - dist/BUILD_SHA

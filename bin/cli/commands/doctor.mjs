@@ -512,7 +512,7 @@ export async function runDoctorCommand(opts = {}, context = {}) {
   if (isJson) {
     console.log(JSON.stringify(result, null, 2));
   } else {
-    printHeading("OmniRoute Doctor");
+    printHeading("RouteChi Doctor");
     console.log(`Data dir: ${result.dataDir}`);
     console.log(`Database: ${result.dbPath}\n`);
     for (const check of result.checks) {

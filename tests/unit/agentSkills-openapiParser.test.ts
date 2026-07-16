@@ -38,7 +38,7 @@ function withFixtureOpenapi(yamlContent: string): { cleanup: () => void } {
 const FIXTURE_YAML = `
 openapi: 3.1.0
 info:
-  title: OmniRoute Test
+  title: RouteChi Test
   version: 1.0.0
 paths:
   /api/providers:

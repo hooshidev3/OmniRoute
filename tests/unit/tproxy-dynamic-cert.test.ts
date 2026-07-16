@@ -15,16 +15,16 @@ const { generateMitmCa, issueLeafCert, DynamicCertStore } = await import(
 );
 
 test("generateMitmCa produces a CA certificate (basicConstraints CA, key+cert PEM)", async () => {
-  const ca = await generateMitmCa("OmniRoute MITM CA (test)");
+  const ca = await generateMitmCa("RouteChi MITM CA (test)");
   assert.match(ca.key, /-----BEGIN (RSA )?PRIVATE KEY-----/);
   assert.match(ca.cert, /-----BEGIN CERTIFICATE-----/);
   const x = new X509Certificate(ca.cert);
   assert.equal(x.ca, true, "CA cert must have basicConstraints CA:TRUE");
-  assert.match(x.subject, /OmniRoute MITM CA \(test\)/);
+  assert.match(x.subject, /RouteChi MITM CA \(test\)/);
 });
 
 test("issueLeafCert issues a host leaf signed by the CA, with SAN + chain", async () => {
-  const ca = await generateMitmCa("OmniRoute MITM CA (test)");
+  const ca = await generateMitmCa("RouteChi MITM CA (test)");
   const leaf = await issueLeafCert("api.stripe.com", ca);
   assert.match(leaf.key, /PRIVATE KEY-----/);
   // cert bundle = leaf + CA chain so clients can build the path
@@ -41,7 +41,7 @@ test("issueLeafCert issues a host leaf signed by the CA, with SAN + chain", asyn
 });
 
 test("DynamicCertStore caches one SecureContext per hostname", async () => {
-  const store = new DynamicCertStore("OmniRoute MITM CA (test)");
+  const store = new DynamicCertStore("RouteChi MITM CA (test)");
   const a1 = await store.getSecureContext("a.example.com");
   const a2 = await store.getSecureContext("a.example.com");
   const b1 = await store.getSecureContext("b.example.com");
@@ -51,7 +51,7 @@ test("DynamicCertStore caches one SecureContext per hostname", async () => {
 });
 
 test("DynamicCertStore.createSNICallback resolves a context for the SNI host", async () => {
-  const store = new DynamicCertStore("OmniRoute MITM CA (test)");
+  const store = new DynamicCertStore("RouteChi MITM CA (test)");
   const cb = store.createSNICallback();
   const ctx = await new Promise((resolve, reject) =>
     cb("dynamic.example.org", (err: Error | null, c: unknown) => (err ? reject(err) : resolve(c)))
@@ -60,7 +60,7 @@ test("DynamicCertStore.createSNICallback resolves a context for the SNI host", a
 });
 
 test("the CA exposes its cert PEM so it can be installed in the trust store", async () => {
-  const store = new DynamicCertStore("OmniRoute MITM CA (test)");
+  const store = new DynamicCertStore("RouteChi MITM CA (test)");
   const caPem = await store.getCaCertPem();
   assert.match(caPem, /-----BEGIN CERTIFICATE-----/);
   assert.equal(new X509Certificate(caPem).ca, true);

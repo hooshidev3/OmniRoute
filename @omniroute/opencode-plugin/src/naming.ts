@@ -1,5 +1,5 @@
 /**
- * Universal model naming template for the OmniRoute plugin.
+ * Universal model naming template for the RouteChi plugin.
  *
  * Naming pipeline:
  *   [tag] <provider-label><separator><display-name><suffix>

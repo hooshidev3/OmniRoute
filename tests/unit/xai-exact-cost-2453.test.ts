@@ -11,7 +11,7 @@
  * NOTE: the upstream PR used a /1e12 divisor (100x under-report) — this port
  * uses the doc-verified /1e10 divisor instead.
  *
- * OmniRoute previously always estimated cost from token counts × static
+ * RouteChi previously always estimated cost from token counts × static
  * pricing, discarding this exact figure. This test proves calculateCost()/
  * computeCostFromPricing() now trust the exact figure when present, and
  * still fall back to the token-based estimate when it is absent (control).

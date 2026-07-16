@@ -1,6 +1,6 @@
 import {
-  attachOmniRouteMetaHeaders,
-  buildOmniRouteResponseMetaHeaders,
+  attachRouteChiMetaHeaders,
+  buildRouteChiResponseMetaHeaders,
 } from "@/domain/omnirouteResponseMeta";
 import { OMNIROUTE_RESPONSE_HEADERS } from "@/shared/constants/headers";
 
@@ -20,7 +20,7 @@ const STREAMING_RESPONSE_HEADER_DENYLIST = new Set([
  * `x-middleware-next`, `x-middleware-override-headers`,
  * `x-middleware-set-cookie`, and the `x-middleware-request-*` family.
  *
- * OmniRoute forwards upstream response headers verbatim. If we re-emit those
+ * RouteChi forwards upstream response headers verbatim. If we re-emit those
  * headers from an App Router route handler, Next 16's `app-route` runtime
  * interprets `x-middleware-rewrite` as a `NextResponse.rewrite()` call and
  * throws `NextResponse.rewrite() was used in a app route handler` — turning a
@@ -58,7 +58,7 @@ export function stripNextMiddlewareControlHeaders(headers: Headers): void {
 
 export function buildStreamingResponseHeaders(
   providerHeaders: Headers,
-  meta: Parameters<typeof buildOmniRouteResponseMetaHeaders>[0]
+  meta: Parameters<typeof buildRouteChiResponseMetaHeaders>[0]
 ): Record<string, string> {
   const forwardedHeaders: [string, string][] = [];
   providerHeaders.forEach((value, key) => {
@@ -78,7 +78,7 @@ export function buildStreamingResponseHeaders(
     "X-Accel-Buffering": "no",
     [OMNIROUTE_RESPONSE_HEADERS.cache]: "MISS",
   };
-  attachOmniRouteMetaHeaders(responseHeaders, meta);
+  attachRouteChiMetaHeaders(responseHeaders, meta);
   return responseHeaders;
 }
 

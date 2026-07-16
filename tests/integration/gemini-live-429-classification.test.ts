@@ -2,7 +2,7 @@
  * Gemini 429 classification integration tests.
  *
  * Tests the end-to-end classification path for Gemini rate-limit errors
- * through OmniRoute. Sends bursts of requests to try to trigger published
+ * through RouteChi. Sends bursts of requests to try to trigger published
  * RPM/RPD limits, then verifies the classification is correct.
  *
  * The tests are "best effort" — if rate limits aren't triggered (Gemini

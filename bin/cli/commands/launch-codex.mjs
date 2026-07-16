@@ -43,7 +43,7 @@ function tomlAssign(key, value) {
 }
 
 /**
- * Resolve the OmniRoute root base URL + auth for codex, honouring (in order):
+ * Resolve the RouteChi root base URL + auth for codex, honouring (in order):
  * explicit flags → active context (remote mode) → localhost:<port>.
  * @returns {{ baseUrl:string, authToken:string|undefined }}
  */
@@ -77,7 +77,7 @@ export function resolveCodexTarget(opts = {}) {
   return { baseUrl, authToken };
 }
 
-/** Health-check an OmniRoute root URL before launching Codex. */
+/** Health-check an RouteChi root URL before launching Codex. */
 async function healthCheck(baseUrl, timeoutMs = 3000) {
   try {
     const res = await fetch(`${baseUrl}/api/monitoring/health`, {
@@ -106,7 +106,7 @@ export function buildCodexEnv(baseEnv, authToken) {
 /**
  * Codex `-c` flags that define the `omniroute` provider inline, so launch works
  * WITHOUT a pre-existing ~/.codex/config.toml. Mirrors free-claude-code.
- * @param {string} baseUrl  OmniRoute root URL (no /v1)
+ * @param {string} baseUrl  RouteChi root URL (no /v1)
  * @returns {string[]}
  */
 export function buildCodexProviderArgs(baseUrl) {
@@ -114,7 +114,7 @@ export function buildCodexProviderArgs(baseUrl) {
     "-c",
     tomlAssign("model_provider", "omniroute"),
     "-c",
-    tomlAssign("model_providers.omniroute.name", "OmniRoute"),
+    tomlAssign("model_providers.omniroute.name", "RouteChi"),
     "-c",
     tomlAssign("model_providers.omniroute.base_url", `${baseUrl}/v1`),
     "-c",
@@ -138,7 +138,7 @@ export async function runLaunchCodexCommand(opts = {}, codexArgs = []) {
     console.error(
       (
         t("launch.notRunning") ||
-        "OmniRoute is not reachable at {port}. Start it with 'omniroute serve'."
+        "RouteChi is not reachable at {port}. Start it with 'omniroute serve'."
       ).replace("{port}", baseUrl)
     );
     return 1;
@@ -177,18 +177,18 @@ export function registerLaunchCodex(program) {
   program
     .command("launch-codex")
     .description(
-      t("launchCodex.description") || "Launch Codex CLI pointed at OmniRoute (local or remote VPS)"
+      t("launchCodex.description") || "Launch Codex CLI pointed at RouteChi (local or remote VPS)"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
     .option(
       "--remote <url>",
-      "Remote OmniRoute base URL, e.g. http://192.168.0.15:20128 (overrides --port + context)"
+      "Remote RouteChi base URL, e.g. http://192.168.0.15:20128 (overrides --port + context)"
     )
     .option("--profile <name>", "Codex profile to activate (passed as --profile <name>)")
     .option("-p, --p <name>", "Alias for --profile")
     .option(
       "--api-key <key>",
-      "OmniRoute API key (overrides OMNIROUTE_API_KEY env var for this invocation)"
+      "RouteChi API key (overrides OMNIROUTE_API_KEY env var for this invocation)"
     )
     .allowUnknownOption(true)
     .allowExcessArguments(true)

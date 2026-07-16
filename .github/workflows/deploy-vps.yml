@@ -14,7 +14,7 @@ jobs:
     if: >-
       (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
       && vars.DEPLOY_ENABLED == 'true'
-    name: Deploy OmniRoute to VPS
+    name: Deploy RouteChi to VPS
     runs-on: ubuntu-latest
     steps:
       - name: Check VPS SSH reachability from runner
@@ -55,7 +55,7 @@ jobs:
           script: |
             set -euo pipefail
 
-            echo "=== Updating OmniRoute ==="
+            echo "=== Updating RouteChi ==="
             npm install -g routechi@latest
             INSTALLED_VERSION=$(omniroute --version 2>/dev/null | tr -d '[:space:]' || echo "unknown")
             echo "Installed CLI version: $INSTALLED_VERSION"

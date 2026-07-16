@@ -22,10 +22,10 @@ An engine's role is described by **two independent axes**, encoded together in t
 registry's `RouterBackendDefinition`:
 
 1. **Lifecycle** (`RouterBackendLifecycle`) — _how the engine runs_:
-   - `in-process` — runs inside the OmniRoute Node process (the native TS pipeline).
-   - `supervised` — a local child process OmniRoute installs/starts/stops/health-checks
+   - `in-process` — runs inside the RouteChi Node process (the native TS pipeline).
+   - `supervised` — a local child process RouteChi installs/starts/stops/health-checks
      via `ServiceSupervisor`, then consumes as a provider connection.
-   - `external` — an HTTP endpoint OmniRoute dispatches to but does **not** manage
+   - `external` — an HTTP endpoint RouteChi dispatches to but does **not** manage
      (configured by an env base URL).
    - `disabled` — registered but not selectable.
 2. **Selection axis** (relay routing backend) — _whether the relay dispatches to it_:

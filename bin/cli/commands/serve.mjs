@@ -18,7 +18,7 @@ import { resolveTlsOptions } from "../../../scripts/dev/tls-options.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const _pkg = JSON.parse(readFileSync(join(__dirname, "..", "..", "..", "package.json"), "utf8"));
 
-// URL scheme for the "OmniRoute is running" banner — flipped to https when
+// URL scheme for the "RouteChi is running" banner — flipped to https when
 // opt-in TLS (#5242) is active. Process-scoped: one `serve` run = one scheme.
 let urlScheme = "http";
 const ROOT = join(__dirname, "..", "..", "..");
@@ -238,7 +238,7 @@ function runDaemon(serverJs, env, memoryLimit, dashboardPort, apiPort) {
   });
   writePidFile("server", server.pid);
   server.unref();
-  console.log(`\x1b[32m✔ OmniRoute started in background (PID: ${server.pid})\x1b[0m`);
+  console.log(`\x1b[32m✔ RouteChi started in background (PID: ${server.pid})\x1b[0m`);
   console.log(`  \x1b[1mDashboard:\x1b[0m  ${urlScheme}://localhost:${dashboardPort}`);
   console.log(`  \x1b[1mAPI Base:\x1b[0m   ${urlScheme}://localhost:${apiPort}/v1`);
 }
@@ -283,7 +283,7 @@ function runWithoutRecovery(serverJs, env, memoryLimit, dashboardPort, apiPort, 
   });
 
   const shutdown = () => {
-    console.log("\n\x1b[33m⏹ Shutting down OmniRoute...\x1b[0m");
+    console.log("\n\x1b[33m⏹ Shutting down RouteChi...\x1b[0m");
     cleanupPidFile("server");
     server.kill("SIGTERM");
     setTimeout(() => {
@@ -428,7 +428,7 @@ async function onReady(dashboardPort, apiPort, noOpen, startedAt) {
       : "0.0";
 
   console.log(`
-  \x1b[32m✔ OmniRoute is running!\x1b[0m \x1b[2m(started in ${elapsed}s)\x1b[0m
+  \x1b[32m✔ RouteChi is running!\x1b[0m \x1b[2m(started in ${elapsed}s)\x1b[0m
 
   \x1b[1m  Dashboard:\x1b[0m  ${dashboardUrl}
   \x1b[1m  API Base:\x1b[0m   ${apiUrl}/v1

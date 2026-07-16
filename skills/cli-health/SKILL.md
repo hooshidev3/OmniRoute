@@ -75,7 +75,7 @@ routechi health watch
 
 ### `status`
 
-Show OmniRoute status dashboard
+Show RouteChi status dashboard
 
 **Flags:**
 

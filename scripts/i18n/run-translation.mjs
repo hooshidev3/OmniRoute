@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * OmniRoute — Docs translation pipeline (hash-based, incremental).
+ * RouteChi — Docs translation pipeline (hash-based, incremental).
  *
  * Source of truth: `config/i18n.json` (locale list) and the original English
  * markdown files at the repo root (`CLAUDE.md`, `GEMINI.md`, `README.md`, …)

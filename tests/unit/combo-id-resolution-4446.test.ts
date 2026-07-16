@@ -6,7 +6,7 @@ import path from "node:path";
 
 // #4446 — opencode-plugin publishes combos by `combo.id` and the OpenCode
 // `--model` dispatch path forwards a lowercased bare slug (e.g. "master-light")
-// for a combo provisioned as "MASTER-LIGHT". OmniRoute's combo resolver only
+// for a combo provisioned as "MASTER-LIGHT". RouteChi's combo resolver only
 // matched by EXACT, case-sensitive `name`, so the slug resolved to nothing and
 // the request fell through to provider inference → "Unable to determine
 // provider for model 'master-light'". These tests lock the additive fallbacks:

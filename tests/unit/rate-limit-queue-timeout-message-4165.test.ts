@@ -1,7 +1,7 @@
 /**
  * #4165 — surface a clear error when the request-queue (Bottleneck) drops a job.
  *
- * OmniRoute schedules every rate-limited request through Bottleneck with
+ * RouteChi schedules every rate-limited request through Bottleneck with
  * `{ expiration: requestQueue.maxWaitMs }` (open-sse/services/rateLimitManager.ts).
  * When a job exceeds that budget Bottleneck throws the raw message
  * `"This job timed out after <N> ms."` — which is indistinguishable from an
@@ -9,7 +9,7 @@
  * queue saturation as a provider outage because the 502 body / call-log
  * `last_error` carried that upstream-looking string across many providers.
  *
- * The fix rewrites that specific Bottleneck error into a clear, OmniRoute-owned
+ * The fix rewrites that specific Bottleneck error into a clear, RouteChi-owned
  * message that names the knob (`resilienceSettings.requestQueue.maxWaitMs`) and
  * explicitly says it is NOT an upstream timeout, while preserving the original
  * error as `.cause` and tagging `.code = "RATE_LIMIT_QUEUE_TIMEOUT"` so callers
@@ -60,7 +60,7 @@ async function triggerQueueTimeout() {
   });
 }
 
-test("#4165 queue-timeout surfaces a clear OmniRoute error, not the raw upstream-looking string", async () => {
+test("#4165 queue-timeout surfaces a clear RouteChi error, not the raw upstream-looking string", async () => {
   let caught: (Error & { code?: string; cause?: { message?: string } }) | undefined;
   try {
     await triggerQueueTimeout();

@@ -1,11 +1,11 @@
 /**
  * Feature #6122 — root-less / no-sudo mode for the MITM cert-trust path.
  *
- * OmniRoute funnels every privileged MITM command through the single choke
+ * RouteChi funnels every privileged MITM command through the single choke
  * point `execFileWithPassword("sudo", ["-S", ...], password)`, which strips the
  * leading `sudo -S` when running as root or when `sudo` is not on PATH. This
  * feature adds a third opt-out trigger — the `OMNIROUTE_NO_SUDO` env flag — so
- * OmniRoute starts cleanly in a root-less / user-namespace deployment where
+ * RouteChi starts cleanly in a root-less / user-namespace deployment where
  * `/usr/bin/sudo` exists but must not be used.
  *
  * These tests assert the RESOLVED argv (via the pure `resolveSudoSpawn` seam)
@@ -84,13 +84,13 @@ test("resolveSudoSpawn: a non-sudo command is never touched, regardless of the f
   try {
     const { finalCommand, finalArgs, stripSudo, needsPassword } = resolveSudoSpawn(
       "certutil",
-      ["-A", "-n", "OmniRoute"],
+      ["-A", "-n", "RouteChi"],
       NON_ROOT_WITH_SUDO
     );
     assert.equal(stripSudo, false);
     assert.equal(needsPassword, false);
     assert.equal(finalCommand, "certutil");
-    assert.deepEqual(finalArgs, ["-A", "-n", "OmniRoute"]);
+    assert.deepEqual(finalArgs, ["-A", "-n", "RouteChi"]);
   } finally {
     if (prev === undefined) delete process.env.OMNIROUTE_NO_SUDO;
     else process.env.OMNIROUTE_NO_SUDO = prev;

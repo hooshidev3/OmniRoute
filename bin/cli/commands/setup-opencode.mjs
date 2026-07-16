@@ -75,7 +75,7 @@ export async function runSetupOpencodeCommand(opts = {}) {
   const dryRun = Boolean(opts.dryRun ?? opts["dry-run"]);
   const only = opts.only ? opts.only.split(",").map((s) => s.trim()).filter(Boolean) : null;
 
-  printHeading("OmniRoute → OpenCode provider (openai-compatible)");
+  printHeading("RouteChi → OpenCode provider (openai-compatible)");
   printInfo(`Connecting to ${baseUrl} …`);
 
   // Deferred import: opencode.ts is TypeScript; tsx is registered by
@@ -88,7 +88,7 @@ export async function runSetupOpencodeCommand(opts = {}) {
     raw = await generateOpencodeConfig({ baseUrl, apiKey, model: opts.model, providerId: "omniroute" });
   } catch (err) {
     printError(`Failed to generate opencode.json: ${err?.message || err}`);
-    printInfo("Make sure OmniRoute is running and --remote/--api-key are correct.");
+    printInfo("Make sure RouteChi is running and --remote/--api-key are correct.");
     return 1;
   }
 
@@ -113,12 +113,12 @@ export function registerSetupOpencode(program) {
   program
     .command("setup-opencode")
     .description(
-      "Generate the OmniRoute openai-compatible provider in ~/.config/opencode/opencode.json " +
+      "Generate the RouteChi openai-compatible provider in ~/.config/opencode/opencode.json " +
         "from the live model catalog (local or remote VPS)"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--model <id>", "Set the default top-level model (omniroute/<id>)")
     .option("--only <patterns>", "Comma-separated substrings — keep only matching model IDs")
     .option("--dry-run", "Print what would be written without touching the filesystem")

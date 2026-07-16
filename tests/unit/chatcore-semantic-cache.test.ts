@@ -19,7 +19,7 @@ const { generateSignature, setCachedResponse, clearCache } = await import(
 );
 const { OMNIROUTE_RESPONSE_HEADERS } = await import("../../src/shared/constants/headers.ts");
 const { calculateCost } = await import("../../src/lib/usage/costCalculator.ts");
-const { formatOmniRouteCost } = await import("../../src/domain/omnirouteResponseMeta.ts");
+const { formatRouteChiCost } = await import("../../src/domain/omnirouteResponseMeta.ts");
 
 test.after(() => {
   core.resetDbInstance();
@@ -208,7 +208,7 @@ test("checkSemanticCache returns a non-streaming JSON HIT with cache headers + l
   assert.ok(result, "HIT -> non-null result");
   assert.equal(result.success, true, "HIT result.success is true");
   const res = result.response as Response;
-  assert.equal(res.headers.get(OMNIROUTE_RESPONSE_HEADERS.cache), "HIT", "X-OmniRoute-Cache: HIT");
+  assert.equal(res.headers.get(OMNIROUTE_RESPONSE_HEADERS.cache), "HIT", "X-RouteChi-Cache: HIT");
   assert.equal(
     res.headers.get(OMNIROUTE_RESPONSE_HEADERS.cacheHit),
     "true",
@@ -310,10 +310,10 @@ test("checkSemanticCache HITs even when the cached body has no usage (cost falls
 
 // ─── Cache-HIT cost reporting (PRD-2026-06-19-cache-hit-cost-reporting) ───────
 // A HIT does NOT call upstream, so the INCREMENTAL cost of serving it is ≈0. The
-// X-OmniRoute-Response-Cost must therefore be 0 (so billing consumers don't charge
-// for cache hits), while the original cost is surfaced via X-OmniRoute-Cost-Saved.
+// X-RouteChi-Response-Cost must therefore be 0 (so billing consumers don't charge
+// for cache hits), while the original cost is surfaced via X-RouteChi-Cost-Saved.
 
-test("checkSemanticCache HIT bills 0 incremental cost and reports the original cost in X-OmniRoute-Cost-Saved", async () => {
+test("checkSemanticCache HIT bills 0 incremental cost and reports the original cost in X-RouteChi-Cost-Saved", async () => {
   clearCache();
   const usage = { prompt_tokens: 1000, completion_tokens: 1000, total_tokens: 2000 };
   const cached = {
@@ -335,7 +335,7 @@ test("checkSemanticCache HIT bills 0 incremental cost and reports the original c
 
   // The original (would-have-been) cost — computed with the SAME calculator the handler
   // uses, against the same fresh DATA_DIR, so the values match deterministically.
-  const expectedSaved = formatOmniRouteCost(
+  const expectedSaved = formatRouteChiCost(
     await calculateCost(args.provider, args.model, usage as Record<string, number>)
   );
   assert.notEqual(
@@ -359,7 +359,7 @@ test("checkSemanticCache HIT bills 0 incremental cost and reports the original c
   assert.equal(
     res.headers.get(OMNIROUTE_RESPONSE_HEADERS.costSaved),
     expectedSaved,
-    "X-OmniRoute-Cost-Saved reflects the original cost the cache avoided"
+    "X-RouteChi-Cost-Saved reflects the original cost the cache avoided"
   );
 });
 

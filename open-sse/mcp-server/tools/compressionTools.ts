@@ -1,5 +1,5 @@
 /**
- * OmniRoute MCP Compression Tools — Manage and monitor prompt compression.
+ * RouteChi MCP Compression Tools — Manage and monitor prompt compression.
  *
  * Tools:
  *   1. omniroute_compression_status   — Get compression config, analytics, and cache stats
@@ -415,7 +415,7 @@ export const compressionTools = {
       // Retrieve must use the SAME principal the CCR store used at compression time:
       // `String(apiKeyInfo.id)` (chatCore → getApiKeyMetadata(rawKey)). On MCP HTTP
       // transports the raw key lives in httpAuthContext (not in extra.authInfo, since
-      // OmniRoute auth is API-key not OAuth-clientId) — resolve it to the same key id
+      // RouteChi auth is API-key not OAuth-clientId) — resolve it to the same key id
       // so the block is found. Without this the caller resolved to "anonymous" and the
       // store-key never matched (#5649). Cross-tenant IDOR stays closed: a different
       // key → different id → miss; no key → undefined → anonymous bucket only.

@@ -302,7 +302,7 @@ export async function createLiveHarness(prefix: string): Promise<LiveHarness> {
    *
    * ## Signal source
    * `withSelectedConnectionHeader` in `src/sse/handlers/chatHelpers.ts` sets
-   * `X-OmniRoute-Selected-Connection-Id` on the response, but only on the
+   * `X-RouteChi-Selected-Connection-Id` on the response, but only on the
    * **non-success return paths** in `src/sse/handlers/chat.ts` (error recovery,
    * fallback, timeout paths). On a clean first-attempt 200 success the handler
    * returns `result.response` directly at line 1239 without calling
@@ -321,7 +321,7 @@ export async function createLiveHarness(prefix: string): Promise<LiveHarness> {
    * OpenAI-shape response body as an additional signal.
    */
   function servedProvider(response: Response): string | undefined {
-    const connectionId = response.headers.get("X-OmniRoute-Selected-Connection-Id");
+    const connectionId = response.headers.get("X-RouteChi-Selected-Connection-Id");
     if (!connectionId) return undefined;
     // Sync read from the already-built map (populated eagerly at harness init).
     if (!_connMap) return undefined;
@@ -333,7 +333,7 @@ export async function createLiveHarness(prefix: string): Promise<LiveHarness> {
    * Use this when you want a resolved value after the first listLiveConnections call.
    */
   async function servedProviderAsync(response: Response): Promise<string | undefined> {
-    const connectionId = response.headers.get("X-OmniRoute-Selected-Connection-Id");
+    const connectionId = response.headers.get("X-RouteChi-Selected-Connection-Id");
     if (!connectionId) return undefined;
     const map = await _getConnMap();
     return map.get(connectionId);

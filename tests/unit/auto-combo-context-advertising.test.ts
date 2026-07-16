@@ -6,7 +6,7 @@
  *  1. /api/combos/auto never exposed context_length, so the opencode plugin
  *     advertised `limit: { context: 0 }` for auto combos. opencode disables
  *     its smart auto-compaction entirely when context === 0, letting the
- *     conversation grow until OmniRoute's destructive purifyHistory() drops
+ *     conversation grow until RouteChi's destructive purifyHistory() drops
  *     old messages silently.
  *  2. chatCore's proactive-compression block overrode the per-target context
  *     limit with min(...allComboTargets) even though chatCore always executes

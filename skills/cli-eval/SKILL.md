@@ -152,13 +152,13 @@ routechi simulate [prompt]
 <!-- skill:custom-start -->
 <!-- Migrated from skills/omniroute-cli-eval/SKILL.md (preserved curated content) -->
 
-# OmniRoute — CLI Evals
+# RouteChi — CLI Evals
 
 Requires the `omniroute` CLI. See [CLI entry-point skill](https://raw.githubusercontent.com/borhandarabi/routechi/main/skills/omniroute-cli/SKILL.md) for install + global flags.
 
 ## What are evals?
 
-Evals are automated test suites that score LLM outputs against expected answers or rubrics. OmniRoute stores suites and run results in its local database.
+Evals are automated test suites that score LLM outputs against expected answers or rubrics. RouteChi stores suites and run results in its local database.
 
 ## Eval suites
 

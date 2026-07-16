@@ -11,12 +11,12 @@ test("buildNonStreamingJsonResponse sets content-length for the serialized JSON 
     },
     {
       "Content-Type": "application/json",
-      "X-OmniRoute-Cache": "MISS",
+      "X-RouteChi-Cache": "MISS",
     }
   );
 
   const text = await response.text();
   assert.equal(response.headers.get("Content-Type"), "application/json");
-  assert.equal(response.headers.get("X-OmniRoute-Cache"), "MISS");
+  assert.equal(response.headers.get("X-RouteChi-Cache"), "MISS");
   assert.equal(response.headers.get("Content-Length"), String(Buffer.byteLength(text)));
 });

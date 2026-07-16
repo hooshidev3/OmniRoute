@@ -1,4 +1,4 @@
-// Regression test for #3440 — Vertex AI rejects tool calls because OmniRoute
+// Regression test for #3440 — Vertex AI rejects tool calls because RouteChi
 // emits an `id` field inside `function_call` / `function_response` parts.
 //
 // Vertex AI (aiplatform.googleapis.com) follows an older Gemini REST schema whose

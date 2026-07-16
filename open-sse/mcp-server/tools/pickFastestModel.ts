@@ -1,7 +1,7 @@
 import { logToolCall } from "../audit.ts";
 import { getMcpHttpAuthHeadersForInternalFetch } from "../httpAuthContext.ts";
 import { normalizeQuotaResponse } from "../../../src/shared/contracts/quota.ts";
-import { resolveOmniRouteBaseUrl } from "../../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
+import { resolveRouteChiBaseUrl } from "../../../src/shared/utils/resolveRouteChiBaseUrl.ts";
 import {
   getComboModelProvider,
   getComboModelString,
@@ -11,7 +11,7 @@ import type { AutoRoutingStrategyValue } from "../../../src/shared/constants/rou
 import { rankBySpeed, DEFAULT_SPEED_WEIGHTS } from "../../services/autoCombo/speedRanking.ts";
 import type { SpeedCandidate } from "../../services/autoCombo/speedRanking.ts";
 
-const OMNIROUTE_BASE_URL = resolveOmniRouteBaseUrl();
+const OMNIROUTE_BASE_URL = resolveRouteChiBaseUrl();
 const OMNIROUTE_API_KEY = process.env.OMNIROUTE_API_KEY || "";
 
 async function apiFetch(path: string, options: RequestInit = {}): Promise<unknown> {

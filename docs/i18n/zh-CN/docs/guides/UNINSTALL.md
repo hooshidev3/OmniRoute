@@ -1,20 +1,20 @@
 ---
-title: "OmniRoute — 卸载指南"
+title: "RouteChi — 卸载指南"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute — 卸载指南
+# RouteChi — 卸载指南
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/guides/UNINSTALL.md) | 🇧🇷 [Português (Brasil)](../../pt-BR/docs/guides/UNINSTALL.md) | 🇪🇸 [Español](../../es/docs/guides/UNINSTALL.md) | 🇫🇷 [Français](../../fr/docs/guides/UNINSTALL.md) | 🇮🇹 [Italiano](../../it/docs/guides/UNINSTALL.md) | 🇷🇺 [Русский](../../ru/docs/guides/UNINSTALL.md) | 🇨🇳 [中文 (简体)](../../zh-CN/docs/guides/UNINSTALL.md) | 🇩🇪 [Deutsch](../../de/docs/guides/UNINSTALL.md) | 🇮🇳 [हिन्दी](../../in/docs/guides/UNINSTALL.md) | 🇹🇭 [ไทย](../../th/docs/guides/UNINSTALL.md) | 🇺🇦 [Українська](../../uk-UA/docs/guides/UNINSTALL.md) | 🇸🇦 [العربية](../../ar/docs/guides/UNINSTALL.md) | 🇯🇵 [日本語](../../ja/docs/guides/UNINSTALL.md) | 🇻🇳 [Tiếng Việt](../../vi/docs/guides/UNINSTALL.md) | 🇧🇬 [Български](../../bg/docs/guides/UNINSTALL.md) | 🇩🇰 [Dansk](../../da/docs/guides/UNINSTALL.md) | 🇫🇮 [Suomi](../../fi/docs/guides/UNINSTALL.md) | 🇮🇱 [עברית](../../he/docs/guides/UNINSTALL.md) | 🇭🇺 [Magyar](../../hu/docs/guides/UNINSTALL.md) | 🇮🇩 [Bahasa Indonesia](../../id/docs/guides/UNINSTALL.md) | 🇰🇷 [한국어](../../ko/docs/guides/UNINSTALL.md) | 🇲🇾 [Bahasa Melayu](../../ms/docs/guides/UNINSTALL.md) | 🇳🇱 [Nederlands](../../nl/docs/guides/UNINSTALL.md) | 🇳🇴 [Norsk](../../no/docs/guides/UNINSTALL.md) | 🇵🇹 [Português (Portugal)](../../pt/docs/guides/UNINSTALL.md) | 🇷🇴 [Română](../../ro/docs/guides/UNINSTALL.md) | 🇵🇱 [Polski](../../pl/docs/guides/UNINSTALL.md) | 🇸🇰 [Slovenčina](../../sk/docs/guides/UNINSTALL.md) | 🇸🇪 [Svenska](../../sv/docs/guides/UNINSTALL.md) | 🇵🇭 [Filipino](../../phi/docs/guides/UNINSTALL.md) | 🇨🇿 [Čeština](../../cs/docs/guides/UNINSTALL.md)
 
-本指南介绍如何从系统中彻底移除 OmniRoute。
+本指南介绍如何从系统中彻底移除 RouteChi。
 
 ---
 
 ## 快速卸载（v3.6.2+）
 
-OmniRoute 提供两个内置脚本用于干净移除：
+RouteChi 提供两个内置脚本用于干净移除：
 
 ### 保留数据
 
@@ -22,7 +22,7 @@ OmniRoute 提供两个内置脚本用于干净移除：
 npm run uninstall
 ```
 
-此命令移除 OmniRoute 应用程序，但**保留** `~/.omniroute/` 中的数据库、配置、API Key 和服务商设置。如果你计划稍后重装并希望保留现有配置，请使用此方式。
+此命令移除 RouteChi 应用程序，但**保留** `~/.omniroute/` 中的数据库、配置、API Key 和服务商设置。如果你计划稍后重装并希望保留现有配置，请使用此方式。
 
 ### 完全移除
 
@@ -89,12 +89,12 @@ docker compose down -v
 
 **Windows：**
 
-- 打开 `设置 → 应用 → OmniRoute → 卸载`
+- 打开 `设置 → 应用 → RouteChi → 卸载`
 - 或从安装目录运行 NSIS 卸载程序
 
 **macOS：**
 
-- 将 `OmniRoute.app` 从 `/Applications` 拖入废纸篓
+- 将 `RouteChi.app` 从 `/Applications` 拖入废纸篓
 - 删除数据：`rm -rf ~/Library/Application Support/omniroute`
 
 **Linux：**
@@ -116,7 +116,7 @@ rm -rf ~/.omniroute
 
 ## 数据目录
 
-OmniRoute 默认将数据存储在以下位置：
+RouteChi 默认将数据存储在以下位置：
 
 | 平台          | 默认路径                      | 覆盖方式                   |
 | ------------- | ----------------------------- | ------------------------- |

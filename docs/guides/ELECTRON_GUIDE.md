@@ -9,7 +9,7 @@ lastUpdated: 2026-06-28
 > **Source of truth:** `electron/` workspace
 > **Last updated:** 2026-06-28 — v3.8.40
 
-OmniRoute ships a cross-platform desktop app (Windows / macOS / Linux) built on
+RouteChi ships a cross-platform desktop app (Windows / macOS / Linux) built on
 **Electron 41** + **electron-builder 26.10**. The desktop app spawns the Next.js
 standalone server as a child process, points a `BrowserWindow` at it, and adds a
 system tray, auto-updater, IPC bridge, and zero-config secret bootstrap.
@@ -47,7 +47,7 @@ Confirmed from `electron/package.json`:
 | `better-sqlite3`   | `^12.9.0`                  |
 | App version        | `3.8.0`                    |
 | App id             | `online.omniroute.desktop` |
-| Product name       | `OmniRoute`                |
+| Product name       | `RouteChi`                |
 
 ## Scripts (root `package.json`)
 
@@ -168,7 +168,7 @@ Persisted to `<DATA_DIR>/server.env`. `DATA_DIR` resolves to:
 - `BrowserWindow`: 1400×900 (min 1024×700), `backgroundColor: "#0a0a0a"`.
 - macOS: `titleBarStyle: "hiddenInset"`, traffic-light at `{ x: 16, y: 16 }`.
 - Windows/Linux: native title bar.
-- Close button minimizes to tray; the tray menu has **Open OmniRoute**, **Open Dashboard** (external browser), **Server Port** submenu, **Check for Updates**, **Quit**.
+- Close button minimizes to tray; the tray menu has **Open RouteChi**, **Open Dashboard** (external browser), **Server Port** submenu, **Check for Updates**, **Quit**.
 
 ## Content Security Policy
 
@@ -252,9 +252,9 @@ AppImage signing is optional — set `LINUX_GPG_KEY` if signing.
 
 Artifacts land in `electron/dist-electron/`:
 
-- `OmniRoute Setup X.Y.Z.exe`, `OmniRoute-X.Y.Z-portable.exe` (Windows)
-- `OmniRoute-X.Y.Z-mac.dmg`, `OmniRoute-X.Y.Z-arm64-mac.dmg` (macOS)
-- `OmniRoute-X.Y.Z.AppImage`, `omniroute-desktop_X.Y.Z_amd64.deb` (Linux)
+- `RouteChi Setup X.Y.Z.exe`, `RouteChi-X.Y.Z-portable.exe` (Windows)
+- `RouteChi-X.Y.Z-mac.dmg`, `RouteChi-X.Y.Z-arm64-mac.dmg` (macOS)
+- `RouteChi-X.Y.Z.AppImage`, `omniroute-desktop_X.Y.Z_amd64.deb` (Linux)
 
 Releases are published to GitHub Releases (`borhandarabi/routechi`), which is also where `electron-updater` checks for new versions.
 

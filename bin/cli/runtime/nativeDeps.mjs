@@ -34,7 +34,7 @@ export function ensureRuntimeDir() {
           name: "omniroute-runtime",
           version: "1.0.0",
           private: true,
-          description: "User-writable runtime deps for OmniRoute (native binaries)",
+          description: "User-writable runtime deps for RouteChi (native binaries)",
         },
         null,
         2

@@ -1,5 +1,5 @@
 /**
- * Device-token pool — backed by the OmniRoute main SQLite database.
+ * Device-token pool — backed by the RouteChi main SQLite database.
  *
  * Device tokens are required by the Aliyun captcha verification step. They
  * are obtained by running a Playwright script that visits chat.z.ai and
@@ -309,5 +309,5 @@ export function clearPool(): void {
  * Close the database handle. No-op now — DB lifecycle is managed by core.
  */
 export function closeDeviceTokenPool(): void {
-  // No-op — DB lifecycle is managed by OmniRoute core
+  // No-op — DB lifecycle is managed by RouteChi core
 }

@@ -1,10 +1,10 @@
 ---
-title: "OmniRoute MCP Server Documentation"
+title: "RouteChi MCP Server Documentation"
 version: 3.8.40
 lastUpdated: 2026-06-28
 ---
 
-# OmniRoute MCP Server Documentation
+# RouteChi MCP Server Documentation
 
 > Model Context Protocol server with 94 tools across routing, cache, compression, memory, skills, proxy, pool, and context source operations.
 >
@@ -16,7 +16,7 @@ lastUpdated: 2026-06-28
 
 ## Installation
 
-OmniRoute MCP is built-in. Start it with:
+RouteChi MCP is built-in. Start it with:
 
 ```bash
 routechi --mcp
@@ -77,7 +77,7 @@ Cursor, Cline, and compatible MCP client setup.
 | `omniroute_get_combo_metrics`   | `read:combos`         | Performance metrics for a specific combo                      |
 | `omniroute_switch_combo`        | `write:combos`        | Activate or deactivate a combo                                |
 | `omniroute_check_quota`         | `read:quota`          | Quota used/total, percent remaining, reset time, token health |
-| `omniroute_route_request`       | `execute:completions` | Send a chat completion through OmniRoute routing              |
+| `omniroute_route_request`       | `execute:completions` | Send a chat completion through RouteChi routing              |
 | `omniroute_cost_report`         | `read:usage`          | Cost report by period (session/day/week/month)                |
 | `omniroute_list_models_catalog` | `read:models`         | Full model catalog with capabilities, status, pricing         |
 
@@ -85,7 +85,7 @@ Cursor, Cline, and compatible MCP client setup.
 
 | Tool                   | Scopes           | Description                                                                                                                        |
 | :--------------------- | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| `omniroute_web_search` | `execute:search` | Web search through OmniRoute search gateway (Serper/Brave/Perplexity/Exa/Tavily/Google PSE/Linkup/SearchAPI/SearXNG) with failover |
+| `omniroute_web_search` | `execute:search` | Web search through RouteChi search gateway (Serper/Brave/Perplexity/Exa/Tavily/Google PSE/Linkup/SearchAPI/SearXNG) with failover |
 
 ## Advanced Tools (11) — Phase 2
 
@@ -127,7 +127,7 @@ receipts and are marked with `source: "mcp_metadata_estimate"`.
 
 ### MCP Accessibility Tree Filter (v3.8.0)
 
-Separate from the 5 compression tools above, OmniRoute includes a post-execution filter that
+Separate from the 5 compression tools above, RouteChi includes a post-execution filter that
 compresses the **tool results** of MCP browser/accessibility tools before they are returned to the
 agent. This filter is not itself a tool — it runs transparently on any tool result that contains
 verbose accessibility-tree or browser-snapshot text (≥2000 chars).
@@ -224,7 +224,7 @@ frameworks ship alongside the MCP server in v3.8.0 and are documented separately
 ### Cloud Agents
 
 Cloud Agents are out-of-process AI coding agents (codex-cloud, devin, jules) wired into
-OmniRoute through the same connection model used for LLM providers. They are exposed via
+RouteChi through the same connection model used for LLM providers. They are exposed via
 their own REST surface (`/api/v1/agents/*`) and are **not** part of the MCP tool catalog
 — calling a Cloud Agent does not consume an MCP scope.
 
@@ -304,7 +304,7 @@ Wildcard scopes are supported: `read:*` grants all read-scopes, `*` grants full 
 
 | Variable                                | Default                            | Purpose                                                                                                                  |
 | :-------------------------------------- | :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
-| `OMNIROUTE_BASE_URL`                    | `http://localhost:20128`           | Base URL the MCP server uses when calling OmniRoute internal APIs                                                        |
+| `OMNIROUTE_BASE_URL`                    | `http://localhost:20128`           | Base URL the MCP server uses when calling RouteChi internal APIs                                                        |
 | `OMNIROUTE_API_KEY`                     | (empty)                            | API key forwarded as `Authorization: Bearer` to internal API calls                                                       |
 | `OMNIROUTE_MCP_ENFORCE_SCOPES`          | `false` (only `"true"` enables it) | When enabled, missing scopes deny tool calls and log `scope_denied:<reason>` in audit log                                |
 | `OMNIROUTE_MCP_SCOPES`                  | (empty)                            | Comma-separated allowlist of scopes considered "available" by default (used when caller does not provide its own scopes) |

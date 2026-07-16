@@ -39,7 +39,7 @@ Tam test matrisası üçün `CONTRIBUTING.md` → "Testləri İcra Etmək" bölm
 
 ## Layihəyə Qısa Baxış
 
-**OmniRoute** — birləşdirilmiş AI proxy/router. Bir uç nöqtə, 160+ LLM təminatçısı, avtomatik geri dönmə.
+**RouteChi** — birləşdirilmiş AI proxy/router. Bir uç nöqtə, 160+ LLM təminatçısı, avtomatik geri dönmə.
 
 | Təbəqə        | Yer                     | Məqsəd                                                          |
 | ------------- | ----------------------- | --------------------------------------------------------------- |
@@ -82,7 +82,7 @@ API marşrutları ardıcıl bir nümunəni izləyir: `Marşrut → CORS əvvəlc
 
 ## Davamlılıq İcraat Vəziyyəti
 
-OmniRoute-un üç əlaqəli, lakin fərqli müvəqqəti uğursuzluq mexanizmi var. Marşrut davranışını düzəldərkən onların
+RouteChi-un üç əlaqəli, lakin fərqli müvəqqəti uğursuzluq mexanizmi var. Marşrut davranışını düzəldərkən onların
 sahəsini ayrı saxlayın. Bir baxışda xəritə üçün
 [3-laylı davamlılıq diaqramı](./docs/diagrams/exported/resilience-3layers.svg)
 (mənbə: [docs/diagrams/resilience-3layers.mmd](./docs/diagrams/resilience-3layers.mmd))-na baxın.
@@ -403,4 +403,4 @@ git push -u origin feat/your-feature
 13. Heç vaxt xarici yolları və ya icra dəyərlərini `exec()`/`spawn()`-a ötürülən shell skriptlərinə string-interpolate etməyin — bunun əvəzinə `env` seçimi vasitəsilə ötürün. İstinad: `src/mitm/cert/install.ts::updateNssDatabases`.
 14. Heç vaxt CodeQL / Gizli-Skanlama xəbərdarlığını (a) əvvəlcə yuxarıdakı naxış sənədlərini yoxlamadan, köməkçinin tətbiq olunub-olunmadığını görmək üçün, və (b) rədd etmə şərhində texniki əsaslandırmanı qeyd etmədən rədd etməyin. Precedent: `js/stack-trace-exposure` `sanitizeErrorMessage()` vasitəsilə yönləndirilən çağırış yerlərində qaldırılmışdır, bu, tanınmayan xüsusi sanitizatorların olduğu məlum CodeQL məhdudiyyətidir — `docs/security/ERROR_SANITIZATION.md`-ə istinad edərək `false positive` olaraq rədd edin.
 15. Heç vaxt uşaq prosesləri yaradan marşrutları (`/api/mcp/`, `/api/cli-tools/runtime/`) `src/server/authz/routeGuard.ts`-də `isLocalOnlyPath()` təsnifatı olmadan daxil etməyin. Loopback icrası hər hansı bir auth yoxlamasından əvvəl şərtsiz baş verir — tunel vasitəsilə sızan JWT prosesin yaranmasına səbəb ola bilməz. `docs/security/ROUTE_GUARD_TIERS.md`-ə baxın.
-16. Heç vaxt commit mesajlarında AI assistant, LLM və ya avtomatlaşdırma hesabını kreditə salan `Co-Authored-By` əlavələrini daxil etməyin (məsələn, "Claude", "GPT", "Copilot", "Bot" sözlərini ehtiva edən adlar; `anthropic.com` / `openai.com` / bot-aid olan `noreply.github.com` ünvanlarında olan emaillər). Belə əlavələr commitləri GitHub-da bot hesabına aid edir və PR tarixində real müəllifi (`diegosouzapw`) gizlədir. İnsan əməkdaşları — o cümlədən upstream PR müəllifləri və OmniRoute-a köçürülən issue məruzəçiləri — standart `Co-authored-by: Name <email>` əlavələri ilə kreditə salına BİLƏRLƏR və SALINMALIDIRLAR; upstream-port iş axınları (`/port-upstream-features`, `/port-upstream-issues`) bundan asılıdır.
+16. Heç vaxt commit mesajlarında AI assistant, LLM və ya avtomatlaşdırma hesabını kreditə salan `Co-Authored-By` əlavələrini daxil etməyin (məsələn, "Claude", "GPT", "Copilot", "Bot" sözlərini ehtiva edən adlar; `anthropic.com` / `openai.com` / bot-aid olan `noreply.github.com` ünvanlarında olan emaillər). Belə əlavələr commitləri GitHub-da bot hesabına aid edir və PR tarixində real müəllifi (`diegosouzapw`) gizlədir. İnsan əməkdaşları — o cümlədən upstream PR müəllifləri və RouteChi-a köçürülən issue məruzəçiləri — standart `Co-authored-by: Name <email>` əlavələri ilə kreditə salına BİLƏRLƏR və SALINMALIDIRLAR; upstream-port iş axınları (`/port-upstream-features`, `/port-upstream-issues`) bundan asılıdır.

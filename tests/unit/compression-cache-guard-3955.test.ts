@@ -8,7 +8,7 @@
  * providers (no `cache_control` markers) the guard was skipped. With compression active
  * and `preserveSystemPrompt: false` (or a prefix-compressing mode) this rewrote the
  * system prompt / earliest messages and guaranteed a cache miss — higher token spend
- * through OmniRoute than going direct.
+ * through RouteChi than going direct.
  *
  * Fix: `isCachingProvider` ALONE is sufficient to protect the prefix (skipSystemPrompt),
  * independent of explicit `cache_control`. A non-caching provider is unaffected.

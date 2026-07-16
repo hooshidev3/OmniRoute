@@ -1,4 +1,4 @@
-# 🚀 OmniRoute — Gateway AI Gratis (Bahasa Indonesia)
+# 🚀 RouteChi — Gateway AI Gratis (Bahasa Indonesia)
 
 🌐 **Languages:** 🇺🇸 [English](../../../README.md) · 🇸🇦 [ar](../ar/README.md) · 🇧🇬 [bg](../bg/README.md) · 🇧🇩 [bn](../bn/README.md) · 🇨🇿 [cs](../cs/README.md) · 🇩🇰 [da](../da/README.md) · 🇩🇪 [de](../de/README.md) · 🇪🇸 [es](../es/README.md) · 🇮🇷 [fa](../fa/README.md) · 🇫🇮 [fi](../fi/README.md) · 🇫🇷 [fr](../fr/README.md) · 🇮🇳 [gu](../gu/README.md) · 🇮🇱 [he](../he/README.md) · 🇮🇳 [hi](../hi/README.md) · 🇭🇺 [hu](../hu/README.md) · 🇮🇩 [id](../id/README.md) · 🇮🇹 [it](../it/README.md) · 🇯🇵 [ja](../ja/README.md) · 🇰🇷 [ko](../ko/README.md) · 🇮🇳 [mr](../mr/README.md) · 🇲🇾 [ms](../ms/README.md) · 🇳🇱 [nl](../nl/README.md) · 🇳🇴 [no](../no/README.md) · 🇵🇭 [phi](../phi/README.md) · 🇵🇱 [pl](../pl/README.md) · 🇵🇹 [pt](../pt/README.md) · 🇧🇷 [pt-BR](../pt-BR/README.md) · 🇷🇴 [ro](../ro/README.md) · 🇷🇺 [ru](../ru/README.md) · 🇸🇰 [sk](../sk/README.md) · 🇸🇪 [sv](../sv/README.md) · 🇰🇪 [sw](../sw/README.md) · 🇮🇳 [ta](../ta/README.md) · 🇮🇳 [te](../te/README.md) · 🇹🇭 [th](../th/README.md) · 🇹🇷 [tr](../tr/README.md) · 🇺🇦 [uk-UA](../uk-UA/README.md) · 🇵🇰 [ur](../ur/README.md) · 🇻🇳 [vi](../vi/README.md) · 🇨🇳 [zh-CN](../zh-CN/README.md)
 
@@ -52,7 +52,7 @@ _Proxy API universal Anda — satu endpoint, 100+ penyedia, tanpa downtime. Kini
 ## 🖼️ Dashboard Utama
 
 <div align="center">
-  <img src="./docs/screenshots/MainOmniRoute.png" alt="OmniRoute Dashboard" width="800"/>
+  <img src="./docs/screenshots/MainRouteChi.png" alt="RouteChi Dashboard" width="800"/>
 </div>
 
 ---
@@ -80,7 +80,7 @@ _Proxy API universal Anda — satu endpoint, 100+ penyedia, tanpa downtime. Kini
 
 ### 🤖 Penyedia AI Gratis untuk agen coding favorit Anda
 
-_Hubungkan IDE atau alat CLI berbasis AI apa pun melalui OmniRoute — gateway API gratis untuk coding tanpa batas._
+_Hubungkan IDE atau alat CLI berbasis AI apa pun melalui RouteChi — gateway API gratis untuk coding tanpa batas._
 
   <table>
     <tr>
@@ -156,7 +156,7 @@ _Hubungkan IDE atau alat CLI berbasis AI apa pun melalui OmniRoute — gateway A
 
 ---
 
-## 🤔 Mengapa OmniRoute?
+## 🤔 Mengapa RouteChi?
 
 **Berhenti membuang uang dan terus mencapai batas:**
 
@@ -165,7 +165,7 @@ _Hubungkan IDE atau alat CLI berbasis AI apa pun melalui OmniRoute — gateway A
 - <img src="https://img.shields.io/badge/✗-e74c3c?style=flat-square" height="16"/> API mahal ($20-50/bulan per penyedia)
 - <img src="https://img.shields.io/badge/✗-e74c3c?style=flat-square" height="16"/> Perpindahan manual antar penyedia
 
-**OmniRoute mengatasi ini:**
+**RouteChi mengatasi ini:**
 
 - ✅ **Maksimalkan langganan** - Pantau kuota, gunakan setiap bit sebelum reset
 - ✅ **Fallback otomatis** - Langganan → Kunci API → Murah → Gratis, tanpa downtime
@@ -191,7 +191,7 @@ Saat membuka issue, jalankan perintah system-info dan lampirkan file yang dihasi
 npm run system-info
 ```
 
-Perintah ini menghasilkan `system-info.txt` berisi versi Node.js, versi OmniRoute, detail OS, alat CLI yang terpasang (qoder, gemini, claude, codex, antigravity, droid, dll.), status Docker/PM2, dan paket sistem — semua yang dibutuhkan untuk mereproduksi masalah Anda dengan cepat. Lampirkan file tersebut langsung ke GitHub issue Anda.
+Perintah ini menghasilkan `system-info.txt` berisi versi Node.js, versi RouteChi, detail OS, alat CLI yang terpasang (qoder, gemini, claude, codex, antigravity, droid, dll.), status Docker/PM2, dan paket sistem — semua yang dibutuhkan untuk mereproduksi masalah Anda dengan cepat. Lampirkan file tersebut langsung ke GitHub issue Anda.
 
 ---
 
@@ -205,7 +205,7 @@ Perintah ini menghasilkan `system-info.txt` berisi versi Node.js, versi OmniRout
        │ http://localhost:20128/v1
        ↓
 ┌─────────────────────────────────────────┐
-│           OmniRoute (Router Cerdas)       │
+│           RouteChi (Router Cerdas)       │
 │  • Translasi format (OpenAI ↔ Claude)   │
 │  • Pelacakan kuota + Embeddings + Gambar│
 │  • Refresh token otomatis               │
@@ -224,16 +224,16 @@ Hasil: Tidak pernah berhenti coding, biaya minimal
 
 ---
 
-## 🎯 Apa yang Diselesaikan OmniRoute — 30 Masalah Nyata & Kasus Penggunaan
+## 🎯 Apa yang Diselesaikan RouteChi — 30 Masalah Nyata & Kasus Penggunaan
 
-> **Setiap developer yang menggunakan alat AI menghadapi masalah ini setiap hari.** OmniRoute dibangun untuk menyelesaikannya semua — dari pembengkakan biaya hingga pemblokiran regional, dari alur OAuth yang rusak hingga operasi protokol dan observabilitas enterprise.
+> **Setiap developer yang menggunakan alat AI menghadapi masalah ini setiap hari.** RouteChi dibangun untuk menyelesaikannya semua — dari pembengkakan biaya hingga pemblokiran regional, dari alur OAuth yang rusak hingga operasi protokol dan observabilitas enterprise.
 
 <details>
 <summary><b>💸 1. "Saya membayar langganan mahal tapi masih terganggu oleh batas"</b></summary>
 
 Developer membayar $20–200/bulan untuk Claude Pro, Codex Pro, atau GitHub Copilot. Meski sudah membayar, kuota memiliki batas — 5 jam penggunaan, batas mingguan, atau batas rate per menit. Di tengah sesi coding, penyedia berhenti merespons dan developer kehilangan fokus dan produktivitas.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Fallback 4-Tier Cerdas** — Jika kuota langganan habis, secara otomatis mengarahkan ke Kunci API → Murah → Gratis tanpa intervensi manual
 - **Pelacakan Batas Penyedia** — Snapshot kuota yang di-cache diperbarui sesuai jadwal sisi server (default `PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES=70`) dengan pembaruan manual tersedia di UI
@@ -250,7 +250,7 @@ Developer membayar $20–200/bulan untuk Claude Pro, Codex Pro, atau GitHub Copi
 
 OpenAI menggunakan satu format, Claude (Anthropic) menggunakan format lain, Gemini pun berbeda lagi. Jika seorang developer ingin menguji model dari penyedia berbeda atau melakukan fallback di antara mereka, mereka perlu mengonfigurasi ulang SDK, mengganti endpoint, dan menangani format yang tidak kompatibel. Penyedia kustom (FriendLI, NIM) memiliki endpoint model non-standar.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Endpoint Terpadu** — Satu `http://localhost:20128/v1` berfungsi sebagai proxy untuk semua 100+ penyedia
 - **Translasi Format** — Otomatis dan transparan: OpenAI ↔ Claude ↔ Gemini ↔ Responses API
@@ -267,7 +267,7 @@ OpenAI menggunakan satu format, Claude (Anthropic) menggunakan format lain, Gemi
 
 Penyedia seperti OpenAI/Codex memblokir akses dari wilayah geografis tertentu. Pengguna mendapat kesalahan seperti `unsupported_country_region_territory` saat OAuth dan koneksi API. Ini sangat membuat frustasi para developer dari negara berkembang.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Konfigurasi Proxy 3-Level** — Proxy yang dapat dikonfigurasi di 3 level: global (semua lalu lintas), per-penyedia (hanya satu penyedia), dan per-koneksi/kunci
 - **Lencana Proxy Berkode Warna** — Indikator visual: 🟢 proxy global, 🟡 proxy penyedia, 🔵 proxy koneksi, selalu menampilkan IP
@@ -284,7 +284,7 @@ Penyedia seperti OpenAI/Codex memblokir akses dari wilayah geografis tertentu. P
 
 Tidak semua orang bisa membayar $20–200/bulan untuk langganan AI. Pelajar, developer dari negara berkembang, penghobi, dan freelancer membutuhkan akses ke model berkualitas tanpa biaya sama sekali.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Ollama Cloud** — Model Ollama yang di-host di cloud pada `api.ollama.com` dengan tier "Light usage" gratis; gunakan prefix `ollamacloud/<model>`
 - **Combo Hanya Gratis** — Rantai `if/kimi-k2-thinking → qw/qwen3-coder-plus` = $0/bulan tanpa downtime
@@ -298,7 +298,7 @@ Tidak semua orang bisa membayar $20–200/bulan untuk langganan AI. Pelajar, dev
 
 Saat mengekspos gateway AI ke jaringan (LAN, VPS, Docker), siapa pun yang memiliki alamat tersebut dapat mengonsumsi token/kuota developer. Tanpa perlindungan, API rentan terhadap penyalahgunaan, injeksi prompt, dan eksploitasi.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Manajemen Kunci API** — Pembuatan, rotasi, dan pembatasan lingkup per penyedia dengan halaman `/dashboard/api-manager` yang didedikasikan
 - **Izin Tingkat Model** — Batasi kunci API ke model tertentu (`openai/*`, pola wildcard), dengan toggle Izinkan Semua/Batasi
@@ -316,7 +316,7 @@ Saat mengekspos gateway AI ke jaringan (LAN, VPS, Docker), siapa pun yang memili
 
 Penyedia AI bisa menjadi tidak stabil, mengembalikan kesalahan 5xx, atau mencapai batas rate sementara. Jika developer bergantung pada satu penyedia, mereka akan terganggu. Tanpa circuit breaker, percobaan ulang berulang dapat menyebabkan aplikasi crash.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Antrian & Pacing Permintaan** — Bucket permintaan per-koneksi memperhalus lonjakan sebelum mencapai batas rate upstream
 - **Pendinginan Koneksi** — Satu koneksi mendingin setelah kegagalan yang dapat dicoba ulang dengan petunjuk `Retry-After` upstream opsional dan backoff eksponensial
@@ -331,7 +331,7 @@ Penyedia AI bisa menjadi tidak stabil, mengembalikan kesalahan 5xx, atau mencapa
 <details>
 <summary><b>🔧 7. "Mengonfigurasi setiap alat AI membosankan dan berulang"</b></summary>
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Dashboard Alat CLI** — Halaman khusus dengan pengaturan satu klik untuk Claude Code, Codex CLI, OpenClaw, Kilo Code, Antigravity, Cline
 - **Generator Konfigurasi GitHub Copilot** — Menghasilkan `chatLanguageModels.json` untuk VS Code dengan pemilihan model massal
@@ -343,7 +343,7 @@ Penyedia AI bisa menjadi tidak stabil, mengembalikan kesalahan 5xx, atau mencapa
 <details>
 <summary><b>🔑 8. "Mengelola token OAuth dari beberapa penyedia adalah mimpi buruk"</b></summary>
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Refresh Token Otomatis** — Token OAuth diperbarui di latar belakang sebelum kedaluwarsa
 - **OAuth Multi-Akun** — Beberapa akun per penyedia melalui ekstraksi token JWT/ID
@@ -358,7 +358,7 @@ Penyedia AI bisa menjadi tidak stabil, mengembalikan kesalahan 5xx, atau mencapa
 
 Developer menggunakan beberapa penyedia berbayar tetapi tidak memiliki tampilan pengeluaran yang terpadu. Setiap penyedia memiliki dashboard penagihan sendiri, tetapi tidak ada tampilan konsolidasi. Biaya tak terduga bisa menumpuk.
 
-**Cara OmniRoute menyelesaikannya:**
+**Cara RouteChi menyelesaikannya:**
 
 - **Dashboard Analitik Biaya** — Pelacakan biaya per-token dan manajemen anggaran per penyedia
 - **Batas Anggaran per Tier** — Batas pengeluaran per tier yang memicu fallback otomatis
@@ -373,7 +373,7 @@ Developer menggunakan beberapa penyedia berbayar tetapi tidak memiliki tampilan 
 
 Saat panggilan gagal, pengembang tidak mengetahui apakah itu batas kecepatan, token kedaluwarsa, format salah, atau kesalahan penyedia. Log terfragmentasi di terminal yang berbeda. Tanpa observabilitas, debugging adalah trial-and-error.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Dasbor Log Terpadu** — 4 tab: Log Permintaan, Log Proksi, Log Audit, Konsol
 - **Penampil Log Konsol** — Penampil gaya terminal real-time dengan level kode warna, gulir otomatis, pencarian, filter
@@ -381,7 +381,7 @@ Saat panggilan gagal, pengembang tidak mengetahui apakah itu batas kecepatan, to
 - **Translator Playground** — 4 mode debugging: Playground (terjemahan format), Chat Tester (pulang pergi), Test Bench (batch), Live Monitor (real-time)
 - **Telemetri Permintaan** — latensi p50/p95/p99 + penelusuran X-Request-Id
 - **Artefak Detail Berbasis File** — Log aplikasi dirotasi berdasarkan ukuran, hari penyimpanan, dan jumlah arsip; payload permintaan/respons terperinci ada di `DATA_DIR/call_logs/` dan diputar secara independen dari ringkasan SQLite
-- **Laporan Info Sistem** — `npm run system-info` menghasilkan `system-info.txt` dengan lingkungan lengkap Anda (versi Node, versi OmniRoute, OS, alat CLI, status Docker/PM2). Lampirkan saat melaporkan masalah untuk triase instan.
+- **Laporan Info Sistem** — `npm run system-info` menghasilkan `system-info.txt` dengan lingkungan lengkap Anda (versi Node, versi RouteChi, OS, alat CLI, status Docker/PM2). Lampirkan saat melaporkan masalah untuk triase instan.
 
 </details>
 
@@ -390,7 +390,7 @@ Saat panggilan gagal, pengembang tidak mengetahui apakah itu batas kecepatan, to
 
 Menginstal, mengonfigurasi, dan memelihara proksi AI di berbagai lingkungan (lokal, VPS, Docker, cloud) membutuhkan banyak tenaga. Masalah seperti jalur hardcode, `EACCES` pada direktori, konflik port, dan pembangunan lintas platform menambah gesekan.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **instal global npm** — `npm install -g routechi && omniroute` — selesai
 - **Docker Multi-Platform** — asli AMD64 + ARM64 (Apple Silicon, AWS Graviton, Raspberry Pi)
@@ -407,7 +407,7 @@ Menginstal, mengonfigurasi, dan memelihara proksi AI di berbagai lingkungan (lok
 
 Tim di negara-negara yang tidak berbahasa Inggris, khususnya di Amerika Latin, Asia, dan Eropa, kesulitan dengan antarmuka yang hanya berbahasa Inggris. Hambatan bahasa mengurangi adopsi dan meningkatkan kesalahan konfigurasi.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Dasbor i18n — 30 Bahasa** — 500+ tombol diterjemahkan termasuk Arab, Bulgaria, Denmark, Jerman, Spanyol, Finlandia, Prancis, Ibrani, Hindi, Hungaria, Indonesia, Italia, Jepang, Korea, Melayu, Belanda, Norwegia, Polandia, Portugis (PT/BR), Rumania, Rusia, Slovakia, Swedia, Thailand, Ukraina, Vietnam, China, Filipina, Inggris
 - **Dukungan RTL** — Dukungan kanan ke kiri untuk bahasa Arab dan Ibrani
@@ -421,7 +421,7 @@ Tim di negara-negara yang tidak berbahasa Inggris, khususnya di Amerika Latin, A
 
 AI bukan hanya penyelesaian obrolan. Pengembang perlu membuat gambar, mentranskripsikan audio, membuat penyematan untuk RAG, mengubah peringkat dokumen, dan memoderasi konten. Setiap API memiliki titik akhir dan format yang berbeda.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Sematan** — `/v1/embeddings` dengan 6 penyedia dan 9+ model
 - **Pembuatan Gambar** — `/v1/images/generations` dengan 10 penyedia dan 20+ model (OpenAI, xAI, Together, Fireworks, Nebius, Hyperbolic, NanoBanana, Antigravity, SD WebUI, ComfyUI)
@@ -440,7 +440,7 @@ AI bukan hanya penyelesaian obrolan. Pengembang perlu membuat gambar, mentranskr
 
 Pengembang ingin mengetahui model mana yang terbaik untuk kasus penggunaan mereka — kode, terjemahan, penalaran — tetapi membandingkan secara manual itu lambat. Tidak ada alat evaluasi terintegrasi.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Evaluasi LLM** — Pengujian set emas dengan 10 kasus yang dimuat sebelumnya yang mencakup salam, matematika, geografi, pembuatan kode, kepatuhan JSON, terjemahan, penurunan harga, penolakan keamanan
 - **4 Strategi Pertandingan** — `exact`, `contains`, `regex`, `custom` (fungsi JS)
@@ -455,7 +455,7 @@ Pengembang ingin mengetahui model mana yang terbaik untuk kasus penggunaan merek
 
 Seiring bertambahnya volume permintaan, tanpa menyimpan pertanyaan yang sama akan menghasilkan biaya duplikat. Tanpa idempotensi, permintaan duplikat akan membuang-buang pemrosesan. Batasan tarif per penyedia harus dipatuhi.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Cache Semantik** — Cache dua tingkat (tanda tangan + semantik) mengurangi biaya dan latensi
 - **Request Idempoency** — Jendela deduplikasi 5 detik untuk permintaan yang identik
@@ -471,7 +471,7 @@ Seiring bertambahnya volume permintaan, tanpa menyimpan pertanyaan yang sama aka
 
 Pengembang yang menginginkan semua respons dalam bahasa tertentu, dengan nada tertentu, atau ingin membatasi token penalaran. Mengonfigurasi ini di setiap alat/permintaan tidak praktis.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Injeksi Perintah Sistem** — Perintah global diterapkan ke semua permintaan
 - **Validasi Anggaran Berpikir** — Kontrol alokasi token penalaran per permintaan (passthrough, otomatis, kustom, adaptif)
@@ -489,7 +489,7 @@ Pengembang yang menginginkan semua respons dalam bahasa tertentu, dengan nada te
 
 Many AI gateways expose MCP only as a hidden implementation detail. Teams need a visible, manageable operation layer.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - MCP muncul di navigasi dasbor dan tab protokol titik akhir
 - Halaman manajemen MCP khusus dengan proses, alat, cakupan, dan audit
@@ -502,7 +502,7 @@ Many AI gateways expose MCP only as a hidden implementation detail. Teams need a
 
 Alur kerja agen memerlukan balasan langsung dan eksekusi streaming jangka panjang dengan kontrol siklus hidup.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Titik akhir A2A JSON-RPC (`POST /a2a`) dengan `message/send` dan `message/stream`
 - Streaming SSE dengan propagasi status terminal
@@ -515,7 +515,7 @@ Alur kerja agen memerlukan balasan langsung dan eksekusi streaming jangka panjan
 
 Tim operasional perlu mengetahui apakah MCP benar-benar aktif, bukan hanya apakah API dapat dijangkau.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - File detak jantung runtime dengan PID, stempel waktu, transportasi, jumlah alat, dan mode cakupan
 - API status MCP menggabungkan detak jantung + aktivitas terkini
@@ -528,7 +528,7 @@ Tim operasional perlu mengetahui apakah MCP benar-benar aktif, bukan hanya apaka
 
 Saat alat mengubah konfigurasi atau memicu tindakan operasi, tim memerlukan kemampuan penelusuran forensik.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Pencatatan audit yang didukung SQLite untuk panggilan alat MCP
 - Filter berdasarkan alat, keberhasilan/kegagalan, kunci API, dan penomoran halaman
@@ -541,7 +541,7 @@ Saat alat mengubah konfigurasi atau memicu tindakan operasi, tim memerlukan kema
 
 Different clients should have least-privilege access to tool categories.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - 10 cakupan MCP granular untuk akses alat terkontrol
 - Penegakan cakupan dan visibilitas di UI manajemen MCP
@@ -554,7 +554,7 @@ Different clients should have least-privilege access to tool categories.
 
 Tim memerlukan perubahan runtime yang cepat selama insiden atau peristiwa biaya.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Beralih aktivasi kombo langsung dari dasbor MCP
 - Sesuaikan pengaturan antrean, cooldown, pemutus, dan tunggu dari halaman Ketahanan khusus
@@ -567,7 +567,7 @@ Tim memerlukan perubahan runtime yang cepat selama insiden atau peristiwa biaya.
 
 Without lifecycle visibility, task incidents become hard to triage.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Daftar tugas/pemfilteran berdasarkan status/keterampilan dengan penomoran halaman
 - Telusuri metadata tugas, peristiwa, dan artefak
@@ -580,7 +580,7 @@ Without lifecycle visibility, task incidents become hard to triage.
 
 Alur kerja streaming memerlukan wawasan operasional tentang konkurensi dan koneksi langsung.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Penghitung aliran aktif terintegrasi ke dalam status A2A
 - Stempel waktu tugas terakhir dan jumlah per negara bagian
@@ -593,7 +593,7 @@ Alur kerja streaming memerlukan wawasan operasional tentang konkurensi dan konek
 
 Klien dan orkestra eksternal memerlukan metadata yang dapat dibaca mesin untuk orientasi.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Kartu Agen terungkap di `/.well-known/agent.json`
 - Kemampuan dan keterampilan yang ditunjukkan dalam manajemen UI
@@ -606,7 +606,7 @@ Klien dan orkestra eksternal memerlukan metadata yang dapat dibaca mesin untuk o
 
 If users cannot discover protocol surfaces, adoption and support quality drop.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Halaman **Endpoint** terkonsolidasi dengan tab untuk Proxy, MCP, A2A, dan API Endpoints
 - Pengalih status layanan inline (Online/Offline) untuk MCP dan A2A
@@ -619,7 +619,7 @@ If users cannot discover protocol surfaces, adoption and support quality drop.
 
 Mock tests are not enough to validate protocol compatibility before release.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Suite E2E yang mem-boot aplikasi dan menggunakan transportasi klien MCP SDK yang sebenarnya
 - Klien A2A menguji penemuan, pengiriman, streaming, dapatkan, dan pembatalan aliran
@@ -632,7 +632,7 @@ Mock tests are not enough to validate protocol compatibility before release.
 
 Splitting observability by protocol creates blind spots and longer MTTR.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Dasbor/log/analitik terpadu dalam satu produk
 - Kesehatan + audit + permintaan telemetri di seluruh lapisan OpenAI, MCP, dan A2A
@@ -645,7 +645,7 @@ Splitting observability by protocol creates blind spots and longer MTTR.
 
 Menjalankan banyak layanan terpisah akan meningkatkan biaya operasional dan mode kegagalan.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Proksi yang kompatibel dengan OpenAI, server MCP, dan server A2A dalam satu tumpukan
 - Otentikasi bersama, ketahanan, penyimpanan data, dan kemampuan observasi
@@ -658,7 +658,7 @@ Menjalankan banyak layanan terpisah akan meningkatkan biaya operasional dan mode
 
 Tim kehilangan kecepatan saat menggabungkan beberapa layanan dan skrip ad-hoc.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - Strategi titik akhir terpadu untuk klien dan agen
 - UI manajemen protokol bawaan dan jalur validasi asap
@@ -671,7 +671,7 @@ Tim kehilangan kecepatan saat menggabungkan beberapa layanan dan skrip ad-hoc.
 
 Selama proses debug mendalam, riwayat panjang dengan hasil alat dengan cepat melampaui jendela token penyedia, menyebabkan permintaan gagal dan konteks tidak ada lagi.
 
-**Bagaimana OmniRoute menyelesaikannya:**
+**Bagaimana RouteChi menyelesaikannya:**
 
 - **Kompresi Konteks Proaktif** — Mengevaluasi anggaran token sebelum permintaan mencapai hulu dan secara proaktif memangkas riwayat percakapan lama dengan mekanisme pencarian biner yang cerdas.
 - **Pengaman Integritas Struktural** — Secara otomatis melacak definisi `tool_use` yang eksplisit dan memastikan bahwa jika masukan alat terpotong, `tool_result` yang terkait juga dihapus dengan aman, sehingga mencegah kesalahan validasi API.
@@ -763,7 +763,7 @@ Dasbor terbuka di `http://localhost:20128` dan URL dasar API adalah `http://loca
 
 #### Arch Linux (AUR)
 
-Pengguna Arch Linux dapat menginstal [AUR package](https://aur.archlinux.org/packages/omniroute-bin), yang menginstal OmniRoute dan menyediakan layanan pengguna systemd:
+Pengguna Arch Linux dapat menginstal [AUR package](https://aur.archlinux.org/packages/omniroute-bin), yang menginstal RouteChi dan menyediakan layanan pengguna systemd:
 
 ```bash
 yay -S omniroute-bin
@@ -788,14 +788,14 @@ PORT=20128 DASHBOARD_PORT=20129 omniroute
 
 ### 2) Menghapus Instalasi
 
-Saat Anda tidak lagi memerlukan OmniRoute, kami menyediakan dua skrip cepat untuk penghapusan bersih:
+Saat Anda tidak lagi memerlukan RouteChi, kami menyediakan dua skrip cepat untuk penghapusan bersih:
 
 | Command                  | Action                                                                                       |
 | ------------------------ | -------------------------------------------------------------------------------------------- |
 | `npm run uninstall`      | Menghapus aplikasi sistem tetapi **menyimpan DB dan konfigurasi Anda** di `~/.omniroute`.    |
 | `npm run uninstall:full` | Menghapus aplikasi DAN secara permanen **menghapus semua konfigurasi, kunci, dan database**. |
 
-> Catatan: Untuk menjalankan perintah ini, navigasikan ke folder proyek OmniRoute (jika Anda mengkloningnya) dan jalankan. Alternatifnya, jika diinstal secara global, Anda cukup menjalankan `npm uninstall -g omniroute`.
+> Catatan: Untuk menjalankan perintah ini, navigasikan ke folder proyek RouteChi (jika Anda mengkloningnya) dan jalankan. Alternatifnya, jika diinstal secara global, Anda cukup menjalankan `npm uninstall -g omniroute`.
 
 ### Batas Waktu Streaming yang Berlangsung Lama
 
@@ -804,16 +804,16 @@ Untuk sebagian besar penerapan, Anda hanya memerlukan:
 | Variable                 | Default                       | Purpose                                                                                                                                                                      |
 | ------------------------ | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `REQUEST_TIMEOUT_MS`     | `600000`                      | Garis dasar bersama untuk batas waktu mulai respons upstream, batas waktu Undici yang tersembunyi, permintaan sidik jari TLS, dan batas waktu permintaan/proksi jembatan API |
-| `STREAM_IDLE_TIMEOUT_MS` | inherits `REQUEST_TIMEOUT_MS` | Kesenjangan maksimum antara potongan streaming sebelum OmniRoute membatalkan aliran SSE                                                                                      |
+| `STREAM_IDLE_TIMEOUT_MS` | inherits `REQUEST_TIMEOUT_MS` | Kesenjangan maksimum antara potongan streaming sebelum RouteChi membatalkan aliran SSE                                                                                      |
 
 Kompatibilitas mundur dipertahankan: `FETCH_TIMEOUT_MS`, `API_BRIDGE_PROXY_TIMEOUT_MS`, dan var batas waktu per lapisan lainnya yang ada masih berfungsi dan menggantikan garis dasar bersama.
 
-Untuk upstream yang kompatibel dengan Kode Claude (`anthropic-compatible-cc-*`), OmniRoute juga memperoleh header `X-Stainless-Timeout` keluar dari batas waktu pengambilan yang diselesaikan sehingga batas waktu baca sisi penyedia tetap selaras dengan konfigurasi env Anda.
+Untuk upstream yang kompatibel dengan Kode Claude (`anthropic-compatible-cc-*`), RouteChi juga memperoleh header `X-Stainless-Timeout` keluar dari batas waktu pengambilan yang diselesaikan sehingga batas waktu baca sisi penyedia tetap selaras dengan konfigurasi env Anda.
 
-Untuk reverse proxy pihak ketiga yang kompatibel dengan Claude Code, OmniRoute tetap menggunakan default
+Untuk reverse proxy pihak ketiga yang kompatibel dengan Claude Code, RouteChi tetap menggunakan default
 `anthropic-beta` disetel konservatif dan, ketika `Client Cache Control` tersisa di `Auto`,
 hanya meneruskan penanda `cache_control` yang disediakan klien. Jika permintaan tidak menyertakan
-`cache_control`, OmniRoute tidak memasukkan penanda milik jembatan.
+`cache_control`, RouteChi tidak memasukkan penanda milik jembatan.
 
 Penggantian tingkat lanjut tersedia jika Anda memerlukan kontrol yang lebih baik:
 
@@ -831,10 +831,10 @@ Penggantian tingkat lanjut tersedia jika Anda memerlukan kontrol yang lebih baik
 | `API_BRIDGE_SERVER_KEEPALIVE_TIMEOUT_MS` | `5000`                                     | Batas waktu tetap hidup di server jembatan API                                 |
 | `API_BRIDGE_SERVER_SOCKET_TIMEOUT_MS`    | `0`                                        | Batas waktu ketidakaktifan soket di server jembatan API (`0` menonaktifkannya) |
 
-Untuk permintaan streaming, `FETCH_TIMEOUT_MS` hanya mencakup pengaturan koneksi/menunggu respons upstream pertama. Setelah aliran aktif, OmniRoute hanya akan dibatalkan pada keadaan terhenti sebenarnya (`STREAM_IDLE_TIMEOUT_MS`) atau tubuh Undici tidak aktif (`FETCH_BODY_TIMEOUT_MS`).
+Untuk permintaan streaming, `FETCH_TIMEOUT_MS` hanya mencakup pengaturan koneksi/menunggu respons upstream pertama. Setelah aliran aktif, RouteChi hanya akan dibatalkan pada keadaan terhenti sebenarnya (`STREAM_IDLE_TIMEOUT_MS`) atau tubuh Undici tidak aktif (`FETCH_BODY_TIMEOUT_MS`).
 
-Jika Anda menjalankan OmniRoute di belakang Nginx, Caddy, Cloudflare, atau proksi terbalik lainnya, pastikan proksi tersebut
-waktu tunggu juga lebih tinggi daripada waktu tunggu aliran/pengambilan OmniRoute Anda.
+Jika Anda menjalankan RouteChi di belakang Nginx, Caddy, Cloudflare, atau proksi terbalik lainnya, pastikan proksi tersebut
+waktu tunggu juga lebih tinggi daripada waktu tunggu aliran/pengambilan RouteChi Anda.
 
 ### 2) Hubungkan penyedia dan buat kunci API Anda
 
@@ -842,7 +842,7 @@ waktu tunggu juga lebih tinggi daripada waktu tunggu aliran/pengambilan OmniRout
 2. Buka Dasbor → `Endpoints` dan buat kunci API.
 3. (Opsional) Buka Dasbor → `Combos` dan atur rantai cadangan Anda.
 
-### 3) Arahkan alat pengkodean Anda ke OmniRoute
+### 3) Arahkan alat pengkodean Anda ke RouteChi
 
 ```txt
 Base URL: http://localhost:20128/v1
@@ -1002,7 +1002,7 @@ post_install() {
 
 ## 🐳 Docker
 
-OmniRoute tersedia sebagai image Docker publik di [Docker Hub](https://hub.docker.com/r/borhandarabi/routechi).
+RouteChi tersedia sebagai image Docker publik di [Docker Hub](https://hub.docker.com/r/borhandarabi/routechi).
 
 **Quick run:**
 
@@ -1047,17 +1047,17 @@ Dukungan dasbor untuk penerapan Docker kini mencakup **Cloudflare Quick Tunnel**
 Notes:
 
 - URL Terowongan Cepat bersifat sementara dan berubah setelah setiap restart.
-- Terowongan Cepat tidak dipulihkan secara otomatis setelah OmniRoute atau kontainer dimulai ulang. Aktifkan kembali dari dasbor bila diperlukan.
+- Terowongan Cepat tidak dipulihkan secara otomatis setelah RouteChi atau kontainer dimulai ulang. Aktifkan kembali dari dasbor bila diperlukan.
 - Penginstalan terkelola saat ini mendukung Linux, macOS, dan Windows di `x64` / `arm64`.
 - Terkelola Quick Tunnels default ke transportasi HTTP/2 untuk menghindari peringatan buffer UDP QUIC yang berisik di lingkungan kontainer yang terbatas. Setel `CLOUDFLARED_PROTOCOL=quic` atau `auto` jika Anda menginginkan transportasi lain.
 - Gambar Docker menggabungkan akar CA sistem dan meneruskannya ke `cloudflared` yang dikelola, yang menghindari kegagalan kepercayaan TLS ketika terowongan melakukan bootstrap di dalam wadah.
-- SQLite berjalan dalam mode WAL. `docker stop` harus dibiarkan selesai sehingga OmniRoute dapat memeriksa kembali perubahan terbaru ke `storage.sqlite`.
+- SQLite berjalan dalam mode WAL. `docker stop` harus dibiarkan selesai sehingga RouteChi dapat memeriksa kembali perubahan terbaru ke `storage.sqlite`.
 - File Compose yang dibundel sudah menetapkan masa tenggang penghentian 40 detik. Jika Anda menjalankan image secara langsung, pertahankan `--stop-timeout 40` (atau serupa) sehingga penghentian manual tidak menghentikan pembersihan pematian.
-- Setel `CLOUDFLARED_BIN=/absolute/path/to/cloudflared` jika Anda ingin OmniRoute menggunakan biner yang sudah ada alih-alih mengunduhnya.
+- Setel `CLOUDFLARED_BIN=/absolute/path/to/cloudflared` jika Anda ingin RouteChi menggunakan biner yang sudah ada alih-alih mengunduhnya.
 
 **Menggunakan Docker Compose dengan Caddy (HTTPS Auto-TLS):**
 
-OmniRoute dapat diekspos dengan aman menggunakan penyediaan SSL otomatis Caddy. Pastikan data DNS A domain Anda mengarah ke IP server Anda.
+RouteChi dapat diekspos dengan aman menggunakan penyediaan SSL otomatis Caddy. Pastikan data DNS A domain Anda mengarah ke IP server Anda.
 
 ```yaml
 services:
@@ -1093,12 +1093,12 @@ volumes:
 
 ## 🖥️ Aplikasi Desktop — Offline & Selalu Aktif
 
-> 🆕 **BARU!** OmniRoute kini tersedia sebagai **aplikasi desktop asli** untuk Windows, macOS, dan Linux.
+> 🆕 **BARU!** RouteChi kini tersedia sebagai **aplikasi desktop asli** untuk Windows, macOS, dan Linux.
 
-Jalankan OmniRoute sebagai aplikasi desktop mandiri — tanpa terminal, tanpa browser, tanpa internet untuk model lokal. Aplikasi berbasis Electron meliputi:
+Jalankan RouteChi sebagai aplikasi desktop mandiri — tanpa terminal, tanpa browser, tanpa internet untuk model lokal. Aplikasi berbasis Electron meliputi:
 
 - 🖥️ **Jendela Asli** — Jendela aplikasi khusus dengan integrasi baki sistem
-- 🔄 **Mulai Otomatis** — Luncurkan OmniRoute saat login sistem
+- 🔄 **Mulai Otomatis** — Luncurkan RouteChi saat login sistem
 - 🔔 **Pemberitahuan Asli** — Dapatkan peringatan jika kuota habis atau masalah penyedia
 - ⚡ **Instal Sekali Klik** — NSIS (Windows), DMG (macOS), AppImage (Linux)
 - 🌐 **Mode Offline** — Bekerja sepenuhnya offline dengan server yang dibundel
@@ -1118,7 +1118,7 @@ npm run electron:build:linux   # Linux (.AppImage)
 
 ### System Tray
 
-Saat diminimalkan, OmniRoute ada di baki sistem Anda dengan tindakan cepat:
+Saat diminimalkan, RouteChi ada di baki sistem Anda dengan tindakan cepat:
 
 - Buka dasbor
 - Ubah port server
@@ -1176,7 +1176,7 @@ NVIDIA NIM (nvidia/)   → 70+ open models — 40 RPM forever
 Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
 ```
 
-**Tanpa biaya. Jangan pernah berhenti melakukan pengkodean.** Konfigurasikan ini sebagai satu kombo OmniRoute dan semua fallback terjadi secara otomatis — tidak pernah ada peralihan manual.
+**Tanpa biaya. Jangan pernah berhenti melakukan pengkodean.** Konfigurasikan ini sebagai satu kombo RouteChi dan semua fallback terjadi secara otomatis — tidak pernah ada peralihan manual.
 
 ---
 
@@ -1184,7 +1184,7 @@ Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
 
 ## 🆓 Model Gratis — Apa yang Sebenarnya Anda Dapatkan
 
-> Semua model di bawah **100% gratis tanpa memerlukan kartu kredit**. OmniRoute melakukan rute otomatis di antara keduanya ketika satu kuota habis — gabungkan semuanya untuk kombo $0 yang tidak dapat dipecahkan.
+> Semua model di bawah **100% gratis tanpa memerlukan kartu kredit**. RouteChi melakukan rute otomatis di antara keduanya ketika satu kuota habis — gabungkan semuanya untuk kombo $0 yang tidak dapat dipecahkan.
 
 ### 🔵 MODEL CLAUDE (melalui Kiro — ID AWS Builder)
 
@@ -1326,7 +1326,7 @@ Kemudian di tab `/dashboard/media` → **Transkripsi**: unggah file audio atau v
 
 ## 💡 Fitur Utama
 
-OmniRoute v3.6 dibangun sebagai platform operasional, bukan hanya proxy relai.
+RouteChi v3.6 dibangun sebagai platform operasional, bukan hanya proxy relai.
 
 ### 🆕 Baru — Sorotan v3.6.x (Apr 2026)
 
@@ -1505,7 +1505,7 @@ Combo: "my-coding-stack"
   4. if/kimi-k2-thinking
 ```
 
-Ketika kuota, tarif, atau kesehatan gagal, OmniRoute secara otomatis berpindah ke kandidat berikutnya tanpa peralihan manual.
+Ketika kuota, tarif, atau kesehatan gagal, RouteChi secara otomatis berpindah ke kandidat berikutnya tanpa peralihan manual.
 
 #### Manajemen protokol yang terlihat dan dapat dioperasikan
 
@@ -1530,11 +1530,11 @@ Ditambah validasi protokol dengan klien nyata melalui `npm run test:protocols:e2
 
 ## 🧪 Evaluasi (Evals)
 
-OmniRoute menyertakan kerangka evaluasi bawaan untuk menguji kualitas respons LLM terhadap rangkaian emas. Akses melalui **Analytics → Evals** di dasbor.
+RouteChi menyertakan kerangka evaluasi bawaan untuk menguji kualitas respons LLM terhadap rangkaian emas. Akses melalui **Analytics → Evals** di dasbor.
 
 ### Golden Set Bawaan
 
-"OmniRoute Golden Set" yang dimuat sebelumnya berisi kasus uji untuk:
+"RouteChi Golden Set" yang dimuat sebelumnya berisi kasus uji untuk:
 
 - Salam, matematika, geografi, pembuatan kode
 - Kepatuhan format JSON, terjemahan, pembuatan penurunan harga
@@ -1643,7 +1643,7 @@ Models:
   cc/claude-haiku-4-5-20251001
 ```
 
-**Kiat Pro:** Gunakan Opus untuk tugas kompleks, Soneta untuk kecepatan. OmniRoute melacak kuota per model!
+**Kiat Pro:** Gunakan Opus untuk tugas kompleks, Soneta untuk kecepatan. RouteChi melacak kuota per model!
 
 ### OpenAI Codex (Plus/Pro)
 
@@ -1664,7 +1664,7 @@ Setiap akun Codex kini memiliki kebijakan yang dapat diubah di `Dashboard -> Pro
 - `5h` (ON/OFF): menerapkan kebijakan ambang jendela 5 jam.
 - `Weekly` (ON/OFF): menerapkan kebijakan ambang jendela mingguan.
 - Perilaku ambang batas: ketika jendela yang diaktifkan mencapai >=90% penggunaan, akun tersebut dilewati.
-- Perilaku rotasi: OmniRoute merutekan ke akun Codex berikutnya yang memenuhi syarat secara otomatis.
+- Perilaku rotasi: RouteChi merutekan ke akun Codex berikutnya yang memenuhi syarat secara otomatis.
 - Perilaku reset: ketika waktu `resetAt` penyedia telah berlalu, akun akan memenuhi syarat lagi secara otomatis.
 
 Scenarios:
@@ -1701,7 +1701,7 @@ Models:
 
 **Model:** `nvidia/llama-3.3-70b-instruct`, `nvidia/mistral-7b-instruct`, dan 50+ lainnya
 
-**Kiat Pro:** API yang kompatibel dengan OpenAI — bekerja secara lancar dengan terjemahan format OmniRoute!
+**Kiat Pro:** API yang kompatibel dengan OpenAI — bekerja secara lancar dengan terjemahan format RouteChi!
 
 ### DeepSeek
 
@@ -1852,7 +1852,7 @@ Cost: $0 forever!
 ```
 Settings → Models → Advanced:
   OpenAI API Base URL: http://localhost:20128/v1
-  OpenAI API Key: [from OmniRoute dashboard]
+  OpenAI API Key: [from RouteChi dashboard]
   Model: cc/claude-opus-4-7
 ```
 
@@ -1893,7 +1893,7 @@ Dashboard → CLI Tools → OpenClaw → Select Model → Apply
 }
 ```
 
-> **Catatan:** OpenClaw hanya berfungsi dengan OmniRoute lokal. Gunakan `127.0.0.1` alih-alih `localhost` untuk menghindari masalah resolusi IPv6.
+> **Catatan:** OpenClaw hanya berfungsi dengan RouteChi lokal. Gunakan `127.0.0.1` alih-alih `localhost` untuk menghindari masalah resolusi IPv6.
 
 ### Cline / Continue / RooCode
 
@@ -1901,18 +1901,18 @@ Dashboard → CLI Tools → OpenClaw → Select Model → Apply
 Settings → API Configuration:
   Provider: OpenAI Compatible
   Base URL: http://localhost:20128/v1
-  API Key: [from OmniRoute dashboard]
+  API Key: [from RouteChi dashboard]
   Model: if/kimi-k2-thinking
 ```
 
 ### OpenCode
 
-**Langkah 1:** Tambahkan OmniRoute sebagai penyedia khusus:
+**Langkah 1:** Tambahkan RouteChi sebagai penyedia khusus:
 
 ```bash
 opencode
 /connect
-# Select "Other" → Enter ID: "omniroute" → Enter your OmniRoute API key
+# Select "Other" → Enter ID: "omniroute" → Enter your RouteChi API key
 ```
 
 **Langkah 2:** Buat/edit `opencode.json` di root proyek Anda:
@@ -1923,7 +1923,7 @@ opencode
   "provider": {
     "omniroute": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "OmniRoute",
+      "name": "RouteChi",
       "options": {
         "baseURL": "http://localhost:20128/v1"
       },
@@ -1941,10 +1941,10 @@ opencode
 
 ```bash
 /models
-# Select any OmniRoute model from the list
+# Select any RouteChi model from the list
 ```
 
-> **Tips:** Tambahkan model apa pun yang tersedia di titik akhir OmniRoute `/v1/models` Anda ke bagian `models`. Gunakan format `provider/model-id` dari dasbor OmniRoute Anda.
+> **Tips:** Tambahkan model apa pun yang tersedia di titik akhir RouteChi `/v1/models` Anda ke bagian `models`. Gunakan format `provider/model-id` dari dasbor RouteChi Anda.
 
 </details>
 
@@ -1967,7 +1967,7 @@ opencode
 
 **OAuth token expired**
 
-- Disegarkan secara otomatis oleh OmniRoute
+- Disegarkan secara otomatis oleh RouteChi
 - Jika masalah terus berlanjut: Dasbor → Penyedia → Sambungkan kembali
 
 **High costs**
@@ -2005,7 +2005,7 @@ opencode
 **Tes koneksi menunjukkan "Tidak Valid" untuk penyedia yang kompatibel dengan OpenAI**
 
 - Banyak penyedia tidak mengekspos titik akhir `/models`
-- OmniRoute v1.0.6+ menyertakan validasi fallback melalui penyelesaian obrolan
+- RouteChi v1.0.6+ menyertakan validasi fallback melalui penyelesaian obrolan
 - Pastikan URL dasar menyertakan akhiran `/v1`
 
 ### 🔐 OAuth di Server Jarak Jauh
@@ -2013,9 +2013,9 @@ opencode
 <a name="oauth-on-a-remote-server"></a>
 <a name="oauth-em-servidor-remoto"></a>
 
-> **⚠️ Penting bagi pengguna yang menjalankan OmniRoute di VPS, Docker, atau server jarak jauh mana pun**
+> **⚠️ Penting bagi pengguna yang menjalankan RouteChi di VPS, Docker, atau server jarak jauh mana pun**
 
-Kredensial OAuth yang disertakan dalam OmniRoute didaftarkan **hanya untuk `localhost`**. Saat Anda mengakses OmniRoute di server jarak jauh (misalnya `https://omniroute.myserver.com`), Google menolak autentikasi dengan:
+Kredensial OAuth yang disertakan dalam RouteChi didaftarkan **hanya untuk `localhost`**. Saat Anda mengakses RouteChi di server jarak jauh (misalnya `https://omniroute.myserver.com`), Google menolak autentikasi dengan:
 
 ```
 Error 400: redirect_uri_mismatch
@@ -2035,7 +2035,7 @@ Go to: [https://console.cloud.google.com/apis/credentials](https://console.cloud
 
 - Klik **"+ Buat Kredensial"** → **"ID klien OAuth"**
 - Jenis aplikasi: **"Aplikasi web"**
-- Nama: apa pun yang Anda suka (mis. `OmniRoute Remote`)
+- Nama: apa pun yang Anda suka (mis. `RouteChi Remote`)
 
 **3. Add Authorized Redirect URIs**
 
@@ -2064,7 +2064,7 @@ GEMINI_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GEMINI_OAUTH_CLIENT_SECRET=GOCSPX-your-secret
 ```
 
-**6. Restart OmniRoute**
+**6. Restart RouteChi**
 
 ```bash
 # npm:
@@ -2084,10 +2084,10 @@ Google will now redirect correctly to `https://your-server.com/callback`.
 
 Jika Anda tidak ingin menyiapkan kredensial Anda sendiri saat ini, Anda masih dapat menggunakan **alur URL manual**:
 
-1. OmniRoute membuka URL otorisasi Google
+1. RouteChi membuka URL otorisasi Google
 2. Setelah otorisasi, Google mencoba mengalihkan ke `localhost` (yang gagal di server jauh)
 3. **Salin URL lengkap** dari bilah alamat browser Anda (meskipun halaman tidak dimuat)
-4. Tempelkan URL tersebut ke bidang yang ditampilkan di modal koneksi OmniRoute
+4. Tempelkan URL tersebut ke bidang yang ditampilkan di modal koneksi RouteChi
 5. Klik **"Hubungkan"**
 
 > Ini berfungsi karena kode otorisasi di URL valid terlepas dari apakah halaman pengalihan dimuat.
@@ -2144,7 +2144,7 @@ Jika Anda tidak ingin menyiapkan kredensial Anda sendiri saat ini, Anda masih da
 
 ## 🗺️ Roadmap
 
-OmniRoute memiliki **218+ fitur yang direncanakan** di berbagai fase pengembangan. Berikut adalah bidang-bidang utamanya:
+RouteChi memiliki **218+ fitur yang direncanakan** di berbagai fase pengembangan. Berikut adalah bidang-bidang utamanya:
 
 | Category                      | Planned Features | Highlights                                                                                                          |
 | ----------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------- |

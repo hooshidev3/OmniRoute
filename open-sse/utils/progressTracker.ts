@@ -2,7 +2,7 @@
  * Progress Tracker — Phase 9.3
  *
  * Emits SSE `event: progress` events during long streaming responses.
- * Opt-in via X-OmniRoute-Progress: true header.
+ * Opt-in via X-RouteChi-Progress: true header.
  *
  * Progress events contain:
  *   { tokens_generated, elapsed_ms }

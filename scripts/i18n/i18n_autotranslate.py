@@ -5,7 +5,7 @@ DEPRECATED 2026-05-13. Use `npm run i18n:run`
 removed in v3.10.
 
 The Node-based translator is hash-incremental (only retranslates files
-whose source SHA-256 changed), runs the OmniRoute Cloud LLM through
+whose source SHA-256 changed), runs the RouteChi Cloud LLM through
 OMNIROUTE_TRANSLATION_* env vars, and is wired into `npm run i18n:run`
 and `npm run i18n:check`.
 
@@ -53,7 +53,7 @@ def translate_block(text, target_language, api_url, api_key, model):
         return text
 
     prompt = (
-        f"You are a professional technical translator working on the OmniRoute proxy project documentation.\n"
+        f"You are a professional technical translator working on the RouteChi proxy project documentation.\n"
         f"Translate the following Markdown text from English to {target_language}.\n"
         f"CRITICAL RULES:\n"
         f"- Do NOT translate code blocks (```...```).\n"
@@ -131,8 +131,8 @@ def process_file(file_path, target_language, api_url, api_key, model):
         print(f"  ⏩ {file_path.name} already fully translated or no English blocks found.")
 
 def main():
-    parser = argparse.ArgumentParser(description="OmniRoute Auto-Translator for i18n Markdown")
-    parser.add_argument("--api-url", default="http://localhost:20128/v1", help="Base URL of OmniRoute or target provider")
+    parser = argparse.ArgumentParser(description="RouteChi Auto-Translator for i18n Markdown")
+    parser.add_argument("--api-url", default="http://localhost:20128/v1", help="Base URL of RouteChi or target provider")
     parser.add_argument("--api-key", default="sk-test", help="API Key for the provider")
     parser.add_argument("--model", default="gemini/gemini-3-flash", help="Model name to use")
     parser.add_argument("--lang", default=None, help="Process only a specific language code (e.g. pt-BR)")

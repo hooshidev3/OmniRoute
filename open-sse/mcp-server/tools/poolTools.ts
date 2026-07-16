@@ -1,5 +1,5 @@
 /**
- * OmniRoute MCP Session Pool Tools — Manage and monitor anonymous web session pools.
+ * RouteChi MCP Session Pool Tools — Manage and monitor anonymous web session pools.
  *
  * Tools:
  *   1. omniroute_pool_status   — Get pool stats for one or all providers

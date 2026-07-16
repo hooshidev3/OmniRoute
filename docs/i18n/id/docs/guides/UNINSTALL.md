@@ -1,16 +1,16 @@
-# OmniRoute — Panduan Mencopot Pemasangan (Bahasa Indonesia)
+# RouteChi — Panduan Mencopot Pemasangan (Bahasa Indonesia)
 
 🌐 **Languages:** 🇺🇸 [English](../../../../docs/UNINSTALL.md) · 🇸🇦 [ar](../../ar/docs/UNINSTALL.md) · 🇧🇬 [bg](../../bg/docs/UNINSTALL.md) · 🇧🇩 [bn](../../bn/docs/UNINSTALL.md) · 🇨🇿 [cs](../../cs/docs/UNINSTALL.md) · 🇩🇰 [da](../../da/docs/UNINSTALL.md) · 🇩🇪 [de](../../de/docs/UNINSTALL.md) · 🇪🇸 [es](../../es/docs/UNINSTALL.md) · 🇮🇷 [fa](../../fa/docs/UNINSTALL.md) · 🇫🇮 [fi](../../fi/docs/UNINSTALL.md) · 🇫🇷 [fr](../../fr/docs/UNINSTALL.md) · 🇮🇳 [gu](../../gu/docs/UNINSTALL.md) · 🇮🇱 [he](../../he/docs/UNINSTALL.md) · 🇮🇳 [hi](../../hi/docs/UNINSTALL.md) · 🇭🇺 [hu](../../hu/docs/UNINSTALL.md) · 🇮🇩 [id](../../id/docs/UNINSTALL.md) · 🇮🇹 [it](../../it/docs/UNINSTALL.md) · 🇯🇵 [ja](../../ja/docs/UNINSTALL.md) · 🇰🇷 [ko](../../ko/docs/UNINSTALL.md) · 🇮🇳 [mr](../../mr/docs/UNINSTALL.md) · 🇲🇾 [ms](../../ms/docs/UNINSTALL.md) · 🇳🇱 [nl](../../nl/docs/UNINSTALL.md) · 🇳🇴 [no](../../no/docs/UNINSTALL.md) · 🇵🇭 [phi](../../phi/docs/UNINSTALL.md) · 🇵🇱 [pl](../../pl/docs/UNINSTALL.md) · 🇵🇹 [pt](../../pt/docs/UNINSTALL.md) · 🇧🇷 [pt-BR](../../pt-BR/docs/UNINSTALL.md) · 🇷🇴 [ro](../../ro/docs/UNINSTALL.md) · 🇷🇺 [ru](../../ru/docs/UNINSTALL.md) · 🇸🇰 [sk](../../sk/docs/UNINSTALL.md) · 🇸🇪 [sv](../../sv/docs/UNINSTALL.md) · 🇰🇪 [sw](../../sw/docs/UNINSTALL.md) · 🇮🇳 [ta](../../ta/docs/UNINSTALL.md) · 🇮🇳 [te](../../te/docs/UNINSTALL.md) · 🇹🇭 [th](../../th/docs/UNINSTALL.md) · 🇹🇷 [tr](../../tr/docs/UNINSTALL.md) · 🇺🇦 [uk-UA](../../uk-UA/docs/UNINSTALL.md) · 🇵🇰 [ur](../../ur/docs/UNINSTALL.md) · 🇻🇳 [vi](../../vi/docs/UNINSTALL.md) · 🇨🇳 [zh-CN](../../zh-CN/docs/UNINSTALL.md)
 
 ---
 
-Panduan ini menjelaskan cara mencopot pemasangan OmniRoute dari sistem Anda secara bersih.
+Panduan ini menjelaskan cara mencopot pemasangan RouteChi dari sistem Anda secara bersih.
 
 ---
 
 ## Mencopot Pemasangan dengan Cepat (v3.6.2+)
 
-OmniRoute menyediakan dua skrip bawaan untuk penghapusan yang bersih:
+RouteChi menyediakan dua skrip bawaan untuk penghapusan yang bersih:
 
 ### Pertahankan Data Anda
 
@@ -18,7 +18,7 @@ OmniRoute menyediakan dua skrip bawaan untuk penghapusan yang bersih:
 npm run uninstall
 ```
 
-Perintah ini menghapus aplikasi OmniRoute tetapi **mempertahankan** basis data, konfigurasi, kunci API, dan pengaturan penyedia Anda di `~/.omniroute/`. Gunakan ini jika Anda berencana memasang ulang nanti dan ingin menyimpan pengaturan yang ada.
+Perintah ini menghapus aplikasi RouteChi tetapi **mempertahankan** basis data, konfigurasi, kunci API, dan pengaturan penyedia Anda di `~/.omniroute/`. Gunakan ini jika Anda berencana memasang ulang nanti dan ingin menyimpan pengaturan yang ada.
 
 ### Penghapusan Penuh
 
@@ -85,12 +85,12 @@ docker compose down -v
 
 **Windows:**
 
-- Buka `Settings → Apps → OmniRoute → Uninstall`
+- Buka `Settings → Apps → RouteChi → Uninstall`
 - Atau jalankan uninstaller NSIS dari direktori instalasi
 
 **macOS:**
 
-- Seret `OmniRoute.app` dari `/Applications` ke Trash
+- Seret `RouteChi.app` dari `/Applications` ke Trash
 - Hapus data: `rm -rf ~/Library/Application Support/omniroute`
 
 **Linux:**
@@ -112,7 +112,7 @@ rm -rf ~/.omniroute
 
 ## Direktori Data
 
-OmniRoute menyimpan data di lokasi-lokasi berikut secara default:
+RouteChi menyimpan data di lokasi-lokasi berikut secara default:
 
 | Platform      | Jalur Default                 | Pengganti                 |
 | ------------- | ----------------------------- | ------------------------- |

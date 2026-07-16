@@ -220,8 +220,8 @@ test("#2257 — no bearer + REQUIRE_API_KEY=false → anonymous (unchanged, no f
 });
 
 // ─── #3504 — non-usable Authorization must NOT short-circuit the URL path token ─
-// VS Code Copilot sends its own (empty / non-OmniRoute) Authorization header even
-// when the OmniRoute key lives in the URL path of a /vscode tokenized endpoint.
+// VS Code Copilot sends its own (empty / non-RouteChi) Authorization header even
+// when the RouteChi key lives in the URL path of a /vscode tokenized endpoint.
 // A non-"Bearer <token>" Authorization must fall through to the URL token instead
 // of returning null and 401'ing under REQUIRE_API_KEY=true.
 

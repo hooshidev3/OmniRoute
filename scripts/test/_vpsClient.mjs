@@ -1,7 +1,7 @@
 /**
  * scripts/test/_vpsClient.mjs
  *
- * Reusable Phase-3 VPS HTTP client for OmniRoute combo live-smoke tests.
+ * Reusable Phase-3 VPS HTTP client for RouteChi combo live-smoke tests.
  * NOT a test file — intentionally placed in scripts/test/ so check:test-discovery
  * does not scan it.
  *
@@ -228,7 +228,7 @@ const isMain = process.argv[1]?.endsWith("_vpsClient.mjs") ||
 
 if (isMain) {
   (async () => {
-    console.log("=== OmniRoute VPS Phase-3 Preflight ===");
+    console.log("=== RouteChi VPS Phase-3 Preflight ===");
     console.log(`Base URL: ${BASE_URL}`);
     console.log(`API key: ${API_KEY ? "set (Bearer)" : "not set (REQUIRE_API_KEY=false)"}`);
     console.log();

@@ -1,25 +1,25 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-test("runOmniRouteCli: missing command returns error", async () => {
+test("runRouteChiCli: missing command returns error", async () => {
   const { getCopilotTool } = await import("../../src/lib/copilot/tools.ts");
-  const tool = getCopilotTool("runOmniRouteCli");
+  const tool = getCopilotTool("runRouteChiCli");
   assert.ok(tool);
   const result = await tool.handler({});
   assert.equal(result, "Please provide a command to execute.");
 });
 
-test("runOmniRouteCli: empty command returns error", async () => {
+test("runRouteChiCli: empty command returns error", async () => {
   const { getCopilotTool } = await import("../../src/lib/copilot/tools.ts");
-  const tool = getCopilotTool("runOmniRouteCli");
+  const tool = getCopilotTool("runRouteChiCli");
   assert.ok(tool);
   const result = await tool.handler({ command: "" });
   assert.equal(result, "Please provide a command to execute.");
 });
 
-test("runOmniRouteCli: returns CLI-not-found when omniroute unavailable", async () => {
+test("runRouteChiCli: returns CLI-not-found when omniroute unavailable", async () => {
   const { getCopilotTool } = await import("../../src/lib/copilot/tools.ts");
-  const tool = getCopilotTool("runOmniRouteCli");
+  const tool = getCopilotTool("runRouteChiCli");
   assert.ok(tool);
   const originalPath = process.env.PATH;
   try {

@@ -40,7 +40,7 @@ test("T40: OpenCode config path resolves per-platform", () => {
   assert.equal(linuxDefault, path.join("/home/dev", ".config", "opencode", "opencode.json"));
 
   // #3330: OpenCode uses XDG `~/.config/opencode/` on ALL platforms including
-  // Windows (NOT %APPDATA%) — OmniRoute must write where OpenCode reads.
+  // Windows (NOT %APPDATA%) — RouteChi must write where OpenCode reads.
   const windowsPath = resolveOpencodeConfigPath(
     "win32",
     { APPDATA: "C:\\Users\\dev\\AppData\\Roaming" },
@@ -135,7 +135,7 @@ test("T40: OpenCode merge preserves unrelated config and updates only provider.o
       provider: {
         custom: { name: "Custom Provider" },
         omniroute: {
-          name: "Old OmniRoute",
+          name: "Old RouteChi",
           options: { baseURL: "http://old-host/v1", apiKey: "old-key" },
         },
       },

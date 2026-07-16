@@ -2,12 +2,12 @@
  * Inspired by upstream PR decolua/9router#398 — expand the static OpenAI and
  * Gemini model lists with current first-class variants.
  *
- * Scope (minimal): only models that OmniRoute already references throughout
+ * Scope (minimal): only models that RouteChi already references throughout
  * its sibling subsystems (cost estimator, task fitness, free catalog, image
  * registry) but happens not to expose in the direct `openai` / `gemini`
- * provider registry. We do NOT restore models OmniRoute deliberately curated
+ * provider registry. We do NOT restore models RouteChi deliberately curated
  * out (e.g. o1, gpt-4-turbo) nor re-add embedding/TTS/image entries that
- * OmniRoute deliberately keeps in their own typed registries
+ * RouteChi deliberately keeps in their own typed registries
  * (`embeddingRegistry.ts`, `audioRegistry.ts`, `imageRegistry.ts`).
  */
 import test from "node:test";

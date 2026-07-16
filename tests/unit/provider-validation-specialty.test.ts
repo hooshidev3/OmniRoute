@@ -2611,7 +2611,7 @@ test("copilot-web validator: empty input → paste prompt", async () => {
 
 // ─── copilot-m365-web validator ──────────────────────────────────────────────
 
-test("copilot-m365-web validator: accepts pasted OmniRoute credential without /models probe", async () => {
+test("copilot-m365-web validator: accepts pasted RouteChi credential without /models probe", async () => {
   globalThis.fetch = async () => {
     throw new Error("should not fetch");
   };

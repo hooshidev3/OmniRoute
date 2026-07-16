@@ -1,15 +1,15 @@
 /**
  * Regression test for #6859.
  *
- * `resolveOmniRoutePluginOptions()` auto-prefixes `providerId` with
+ * `resolveRouteChiPluginOptions()` auto-prefixes `providerId` with
  * `"opencode-"` (commit 75b52e286) so OpenCode 1.17.8+'s native-adapter gate
  * accepts it as an OC-registered provider id. That prefixed value must stay
  * OC-internal (AuthHook.provider / provider registration keys) — it must
- * NEVER leak into the identifiers OmniRoute's own server parses to resolve
+ * NEVER leak into the identifiers RouteChi's own server parses to resolve
  * credentials (`mapRawModelToModelV2`'s `id`/`providerID`,
  * `mapComboToModelV2`'s `providerID`, and the dynamic-hook catalog keys).
  *
- * OmniRoute's server-side `parseModel()` (open-sse/services/model.ts) splits
+ * RouteChi's server-side `parseModel()` (open-sse/services/model.ts) splits
  * a dispatched model string on `/` to recover the provider name and look up
  * credentials. If the plugin embeds the OC-gate-prefixed id in that string,
  * the server looks up credentials for a provider named "opencode-omniroute"
@@ -22,13 +22,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  createOmniRouteProviderHook,
+  createRouteChiProviderHook,
   mapRawModelToModelV2,
-  resolveOmniRoutePluginOptions,
+  resolveRouteChiPluginOptions,
 } from "../src/index.js";
 
 /**
- * Minimal stand-in for OmniRoute's own `parseModel()` (open-sse/services/
+ * Minimal stand-in for RouteChi's own `parseModel()` (open-sse/services/
  * model.ts), which splits a dispatched `<providerID>/<modelID>` string on the
  * FIRST "/" to recover the provider name used for credential lookup. Kept
  * local (rather than cross-importing the real module) so this package's
@@ -43,22 +43,22 @@ function splitProviderFromDispatchedModel(modelStr: string): string {
 const apiAuth = (key: string) => ({ type: "api" as const, key });
 
 test("#6859: server-facing model id/providerID must resolve to the unprefixed provider name", () => {
-  const resolved = resolveOmniRoutePluginOptions();
+  const resolved = resolveRouteChiPluginOptions();
 
   // The OC-gate-compatible id stays prefixed — it is legitimate for
   // AuthHook.provider / provider registration.
   assert.equal(resolved.providerId, "opencode-omniroute");
 
   // A second, unprefixed id must be exposed for anything that reaches
-  // OmniRoute's own server (model id prefix, ModelV2.providerID, combo keys).
+  // RouteChi's own server (model id prefix, ModelV2.providerID, combo keys).
   assert.equal(
     resolved.omnirouteProviderId,
     "omniroute",
-    "resolveOmniRoutePluginOptions() must expose an unprefixed omnirouteProviderId"
+    "resolveRouteChiPluginOptions() must expose an unprefixed omnirouteProviderId"
   );
 
   // A bare raw /v1/models entry (no existing "/" in its id — the common
-  // case for OmniRoute's catalog) mapped with the server-facing id.
+  // case for RouteChi's catalog) mapped with the server-facing id.
   const model = mapRawModelToModelV2(
     { id: "claude-opus-4-7" },
     { providerId: resolved.omnirouteProviderId, baseURL: "http://localhost:20128" }
@@ -67,7 +67,7 @@ test("#6859: server-facing model id/providerID must resolve to the unprefixed pr
   assert.equal(model.providerID, "omniroute");
   assert.equal(model.id, "omniroute/claude-opus-4-7");
 
-  // OpenCode dispatches back to OmniRoute using `providerID/modelKey`
+  // OpenCode dispatches back to RouteChi using `providerID/modelKey`
   // (matches the issue's own repro: `-m opencode-omniroute/oc/big-pickle`).
   const dispatchedModelString = `${model.providerID}/claude-opus-4-7`;
   const parsedProvider = splitProviderFromDispatchedModel(dispatchedModelString);
@@ -80,8 +80,8 @@ test("#6859: server-facing model id/providerID must resolve to the unprefixed pr
   );
 });
 
-test("#6859: createOmniRouteProviderHook end-to-end — catalog keys/providerID never carry the OC-gate prefix", async () => {
-  const hook = createOmniRouteProviderHook(
+test("#6859: createRouteChiProviderHook end-to-end — catalog keys/providerID never carry the OC-gate prefix", async () => {
+  const hook = createRouteChiProviderHook(
     { baseURL: "https://or.example.com/v1" },
     {
       fetcher: async () => [{ id: "claude-opus-4-7" }],

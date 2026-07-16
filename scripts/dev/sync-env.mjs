@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * OmniRoute — Environment Sync
+ * RouteChi — Environment Sync
  *
  * Ensures .env exists and contains the selected keys from .env.example.
  * Runs on installs and can be executed manually via `npm run env:sync`.
@@ -43,7 +43,7 @@ const CRYPTO_SECRETS = {
   // STORAGE_ENCRYPTION_KEY: Generated at server startup instead of postinstall.
   // Generated in bin/omniroute.mjs:ensureStorageEncryptionKey() and persisted to
   // ~/.omniroute/.env to survive across upgrades. This prevents credential loss
-  // when upgrading OmniRoute (issue #1622).
+  // when upgrading RouteChi (issue #1622).
   MACHINE_ID_SALT: () => `omniroute-${randomBytes(8).toString("hex")}`,
 };
 

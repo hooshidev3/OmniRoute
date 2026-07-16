@@ -146,7 +146,7 @@ export async function onError(ctx) {
 }
 
 /**
- * onShutdown — flush pending events before OmniRoute exits.
+ * onShutdown — flush pending events before RouteChi exits.
  */
 export async function onShutdown() {
   if (!langfuseClient) return;

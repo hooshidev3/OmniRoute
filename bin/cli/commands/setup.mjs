@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { createPrompt, printHeading, printInfo, printSuccess } from "../io.mjs";
-import { openOmniRouteDb } from "../sqlite.mjs";
+import { openRouteChiDb } from "../sqlite.mjs";
 import { getSettings, hashManagementPassword, updateSettings } from "../settings-store.mjs";
 import { testProviderApiKey } from "../provider-test.mjs";
 import { updateProviderTestResult, upsertApiKeyProviderConnection } from "../provider-store.mjs";
@@ -179,8 +179,8 @@ export async function runSetupCommand(opts = {}) {
   const prompt = createPrompt();
 
   try {
-    printHeading("OmniRoute Setup");
-    const { db, dbPath } = await openOmniRouteDb();
+    printHeading("RouteChi Setup");
+    const { db, dbPath } = await openRouteChiDb();
     printInfo(`Database: ${dbPath}`);
 
     const before = getSettings(db);

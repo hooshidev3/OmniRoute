@@ -24,7 +24,7 @@ const contentSecurityPolicy = [
   "media-src 'self' data: blob:",
   // `ws:` is permitted scheme-wide (mirroring the bare `wss:` already allowed) so the
   // dashboard can open `ws://<lan-or-tailscale-host>:*` to its own Live WS server when
-  // OmniRoute is reached from a non-loopback host. Same-origin HTTP fetches stay covered
+  // RouteChi is reached from a non-loopback host. Same-origin HTTP fetches stay covered
   // by `'self'`; the loopback origins remain listed explicitly for clarity. (#5083)
   "connect-src 'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:* https: ws: wss:",
   "worker-src 'self' blob:",
@@ -96,7 +96,7 @@ function readTimeoutMs(...values) {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Opt-in subpath deployment behind a reverse proxy (e.g. nginx/Caddy serving
-  // OmniRoute under https://host/omniroute/). Empty by default so root-path
+  // RouteChi under https://host/omniroute/). Empty by default so root-path
   // deployments are unaffected. Next.js strips this prefix from `pathname`
   // before route matching, so authz classification (classifyRoute/isLocalOnlyPath)
   // keeps operating on un-prefixed paths — see src/server/authz/pipeline.ts for
@@ -138,7 +138,7 @@ const nextConfig = {
   output: "standalone",
   compress: true,
   productionBrowserSourceMaps: false,
-  // OmniRoute is a proxy for AI APIs — request bodies routinely include
+  // RouteChi is a proxy for AI APIs — request bodies routinely include
   // multi-MB payloads (vision models, image edits, base64-encoded files,
   // long chat histories with embedded images). Next.js's Server Action
   // handler intercepts POSTs with multipart/form-data or
@@ -155,7 +155,7 @@ const nextConfig = {
     // uploads (OpenAI-compatible /v1/files) routinely exceed this. Match the
     // 512 MB server-side cap; tune via env if needed.
     proxyClientMaxBodySize: process.env.NEXT_PROXY_BODY_LIMIT || "512mb",
-    // Next's internal router proxy defaults to 30s when this is unset. OmniRoute
+    // Next's internal router proxy defaults to 30s when this is unset. RouteChi
     // can legitimately hold non-streaming chat requests open for minutes while an
     // upstream provider finishes, so reuse the existing request-timeout knobs.
     proxyTimeout: readTimeoutMs(process.env.REQUEST_TIMEOUT_MS, process.env.FETCH_TIMEOUT_MS),
@@ -364,7 +364,7 @@ const nextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
-      // G-10: allow OmniRoute's own dashboard to embed the 9Router UI via our reverse proxy.
+      // G-10: allow RouteChi's own dashboard to embed the 9Router UI via our reverse proxy.
       // `frame-ancestors 'self'` overrides the global `frame-ancestors 'none'` only for this
       // path. The route is already LOCAL_ONLY (routeGuard.ts) so remote origins cannot reach it.
       {

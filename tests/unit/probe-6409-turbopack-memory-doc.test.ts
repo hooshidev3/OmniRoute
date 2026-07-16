@@ -3,12 +3,12 @@
  *
  * Root cause: PR #6283 (merged 2026-07-05, one day before this issue was filed)
  * made Turbopack the default bundler for `npm run build` (previously opt-in via
- * OMNIROUTE_USE_TURBOPACK=1). OmniRoute pins `next@^16.2.6` (resolved 16.2.9),
+ * OMNIROUTE_USE_TURBOPACK=1). RouteChi pins `next@^16.2.6` (resolved 16.2.9),
  * a version line where Turbopack *production* builds are known upstream to use
  * dramatically more memory than webpack on large module graphs (Vercel reported
  * ~21.5 GB on their own dashboard app before the memory-eviction fix landed in
  * Next 16.3 — not yet stable on npm as of this triage, only canary/preview).
- * OmniRoute's own module graph is large (open-sse workspace, thousands of
+ * RouteChi's own module graph is large (open-sse workspace, thousands of
  * modules), matching the class of app that hits this.
  *
  * A working escape hatch already exists (`OMNIROUTE_USE_TURBOPACK=0` reverts to

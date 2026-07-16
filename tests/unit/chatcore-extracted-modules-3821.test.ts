@@ -114,7 +114,7 @@ test("checkIdempotencyCache returns a hit Response reusing the same key after a 
 
   assert.equal(result.idempotencyKey, key, "the resolved key is returned for the save site to reuse");
   assert.ok(result.hit, "a cached entry produces a hit");
-  assert.equal(result.hit!.response.headers.get("X-OmniRoute-Idempotent"), "true");
+  assert.equal(result.hit!.response.headers.get("X-RouteChi-Idempotent"), "true");
 });
 
 test("checkIdempotencyCache resolves a null key when no idempotency headers are present", async () => {

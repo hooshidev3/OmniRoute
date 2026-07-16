@@ -1,5 +1,5 @@
 /**
- * omniroute setup-roo — configure Roo Code (RooVeterinaryInc.roo-cline) for OmniRoute.
+ * omniroute setup-roo — configure Roo Code (RooVeterinaryInc.roo-cline) for RouteChi.
  *
  * Roo is a VS Code extension (Cline fork). Its live settings live in opaque VS
  * Code globalStorage, but Roo supports **Settings Import** + an
@@ -8,7 +8,7 @@
  * Code settings.json exists) + prints the UI steps as the guaranteed path.
  *
  * OpenAI-compatible: baseUrl WITH /v1 (Roo appends /chat/completions). The model
- * must support native OpenAI tool-calling (OmniRoute does).
+ * must support native OpenAI tool-calling (RouteChi does).
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -51,9 +51,9 @@ export function resolveRooTarget(opts = {}) {
 export function buildRooImport({ baseUrl, apiKey, model }) {
   return {
     providerProfiles: {
-      currentApiConfigName: "OmniRoute",
+      currentApiConfigName: "RouteChi",
       apiConfigs: {
-        OmniRoute: {
+        RouteChi: {
           apiProvider: "openai",
           openAiBaseUrl: baseUrl,
           openAiApiKey: apiKey || "sk_omniroute",
@@ -103,7 +103,7 @@ export async function runSetupRooCommand(opts = {}) {
   const vscodePath =
     opts.vscodeSettings ?? opts["vscode-settings"] ?? join(os.homedir(), ".config", "Code", "User", "settings.json");
 
-  printHeading("OmniRoute → Roo Code (OpenAI-compatible)");
+  printHeading("RouteChi → Roo Code (OpenAI-compatible)");
   printInfo(`Server: ${baseUrl}`);
 
   let model = opts.model;
@@ -130,7 +130,7 @@ export async function runSetupRooCommand(opts = {}) {
 
   if (dryRun) {
     console.log(`\n── [dry-run] ${importPath} ──`);
-    console.log(JSON.stringify({ ...importDoc, providerProfiles: { ...importDoc.providerProfiles, apiConfigs: { OmniRoute: { ...importDoc.providerProfiles.apiConfigs.OmniRoute, openAiApiKey: apiKey ? "set" : "sk_omniroute" } } } }, null, 2));
+    console.log(JSON.stringify({ ...importDoc, providerProfiles: { ...importDoc.providerProfiles, apiConfigs: { RouteChi: { ...importDoc.providerProfiles.apiConfigs.RouteChi, openAiApiKey: apiKey ? "set" : "sk_omniroute" } } } }, null, 2));
     console.log(`\n── [dry-run] ${vscodePath} ── ${vscodeExists ? "(would set roo-cline.autoImportSettingsPath)" : "(skipped — file absent)"}`);
   } else {
     mkdirSync(join(importPath, ".."), { recursive: true });
@@ -155,11 +155,11 @@ export function registerSetupRoo(program) {
   program
     .command("setup-roo")
     .description(
-      "Configure Roo Code for OmniRoute: write a Roo import JSON + autoImport pointer + print UI steps"
+      "Configure Roo Code for RouteChi: write a Roo import JSON + autoImport pointer + print UI steps"
     )
-    .option("--port <port>", "Local OmniRoute port (ignored when --remote is set)", "20128")
-    .option("--remote <url>", "Remote OmniRoute URL, e.g. http://192.168.0.15:20128")
-    .option("--api-key <key>", "OmniRoute API key (defaults to OMNIROUTE_API_KEY env var)")
+    .option("--port <port>", "Local RouteChi port (ignored when --remote is set)", "20128")
+    .option("--remote <url>", "Remote RouteChi URL, e.g. http://192.168.0.15:20128")
+    .option("--api-key <key>", "RouteChi API key (defaults to OMNIROUTE_API_KEY env var)")
     .option("--model <id>", "Model id for Roo (required unless picked interactively)")
     .option("--import-path <path>", "Roo import JSON path (default: ~/.omniroute/roo-settings.json)")
     .option("--vscode-settings <path>", "VS Code settings.json (default: ~/.config/Code/User/settings.json)")

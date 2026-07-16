@@ -34,8 +34,8 @@ function makeAgentSkills(): AgentSkill[] {
       area: `area-${i}`,
       icon: "api",
       endpoints: [`GET /api/skill-${i}`],
-      rawUrl: `https://raw.githubusercontent.com/example/OmniRoute/main/skills/omni-skill-${i}/SKILL.md`,
-      githubUrl: `https://github.com/example/OmniRoute/blob/main/skills/omni-skill-${i}/SKILL.md`,
+      rawUrl: `https://raw.githubusercontent.com/example/RouteChi/main/skills/omni-skill-${i}/SKILL.md`,
+      githubUrl: `https://github.com/example/RouteChi/blob/main/skills/omni-skill-${i}/SKILL.md`,
     });
   }
   for (let i = 0; i < 20; i++) {
@@ -47,8 +47,8 @@ function makeAgentSkills(): AgentSkill[] {
       area: `cli-area-${i}`,
       icon: "terminal",
       cliCommands: [`skill${i} run`],
-      rawUrl: `https://raw.githubusercontent.com/example/OmniRoute/main/skills/cli-skill-${i}/SKILL.md`,
-      githubUrl: `https://github.com/example/OmniRoute/blob/main/skills/cli-skill-${i}/SKILL.md`,
+      rawUrl: `https://raw.githubusercontent.com/example/RouteChi/main/skills/cli-skill-${i}/SKILL.md`,
+      githubUrl: `https://github.com/example/RouteChi/blob/main/skills/cli-skill-${i}/SKILL.md`,
     });
   }
   return skills;

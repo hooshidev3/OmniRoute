@@ -507,7 +507,7 @@ test("createSSEStream passthrough suppresses trailing prose plus textual tool ca
 test("createSSEStream passthrough suppresses textual tool calls for unknown tools", async () => {
   let onCompletePayload = null;
   const toolText = `[Tool call: search_files_ide]
-Arguments: {"path":"/opt/OmniRoute/src","target":"files"}`;
+Arguments: {"path":"/opt/RouteChi/src","target":"files"}`;
 
   const text = await readTransformed(
     [
@@ -603,7 +603,7 @@ test("createSSEStream suppresses malformed compact textual tool-call content", a
             content: {
               parts: [
                 {
-                  text: "[Tool call: search_files_ide{file_glob:*combos*.ts,path:/opt/OmniRoute,target:files}]",
+                  text: "[Tool call: search_files_ide{file_glob:*combos*.ts,path:/opt/RouteChi,target:files}]",
                 },
               ],
             },
@@ -2233,10 +2233,10 @@ test("createSSEStream passthrough drops empty choices array chunks", async () =>
   );
 
   // Empty choices WITHOUT usage are DROPPED, never replaced with a synthetic
-  // "[OmniRoute] Upstream returned an empty response. Please retry." chunk. That
+  // "[RouteChi] Upstream returned an empty response. Please retry." chunk. That
   // injection (reintroduced by #3422) was fed back by clients as a turn and caused
   // the retry loop #3388/#3502, which #3400 had fixed by dropping the chunk.
-  assert.doesNotMatch(text, /\[OmniRoute\] Upstream returned an empty response/);
+  assert.doesNotMatch(text, /\[RouteChi\] Upstream returned an empty response/);
   // Subsequent valid chunks must still pass through untouched.
   assert.match(text, /"content":"Hello"/);
   assert.match(text, /"finish_reason":"stop"/);
@@ -2289,7 +2289,7 @@ test("createSSEStream passthrough forwards OpenAI usage-only empty choices chunk
     }
   );
 
-  assert.doesNotMatch(text, /\[OmniRoute\] Upstream returned an empty response/);
+  assert.doesNotMatch(text, /\[RouteChi\] Upstream returned an empty response/);
   assert.match(text, /"choices":\[\]/);
   assert.match(text, /"usage":\{"prompt_tokens":7,"completion_tokens":3,"total_tokens":10\}/);
   assert.equal(onCompletePayload.status, 200);

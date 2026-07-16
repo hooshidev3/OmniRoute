@@ -562,7 +562,7 @@ async function translateTextRaw(text, targetLanguage, sourceLanguage = "en", att
     response = await fetch(url, {
       signal: controller.signal,
       headers: {
-        "User-Agent": "Mozilla/5.0 OmniRoute-I18N",
+        "User-Agent": "Mozilla/5.0 RouteChi-I18N",
       },
     });
   } catch (error) {

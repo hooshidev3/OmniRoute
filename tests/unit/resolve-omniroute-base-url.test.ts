@@ -3,12 +3,12 @@ import test from "node:test";
 
 import {
   DEFAULT_OMNIROUTE_BASE_URL,
-  resolveOmniRouteBaseUrl,
-} from "../../src/shared/utils/resolveOmniRouteBaseUrl.ts";
+  resolveRouteChiBaseUrl,
+} from "../../src/shared/utils/resolveRouteChiBaseUrl.ts";
 
-test("resolveOmniRouteBaseUrl prefers OMNIROUTE_BASE_URL", () => {
+test("resolveRouteChiBaseUrl prefers OMNIROUTE_BASE_URL", () => {
   assert.equal(
-    resolveOmniRouteBaseUrl({
+    resolveRouteChiBaseUrl({
       OMNIROUTE_BASE_URL: "https://internal.example.com/",
       BASE_URL: "https://base.example.com",
       NEXT_PUBLIC_BASE_URL: "https://public.example.com",
@@ -17,9 +17,9 @@ test("resolveOmniRouteBaseUrl prefers OMNIROUTE_BASE_URL", () => {
   );
 });
 
-test("resolveOmniRouteBaseUrl falls back to BASE_URL", () => {
+test("resolveRouteChiBaseUrl falls back to BASE_URL", () => {
   assert.equal(
-    resolveOmniRouteBaseUrl({
+    resolveRouteChiBaseUrl({
       BASE_URL: "https://base.example.com/",
       NEXT_PUBLIC_BASE_URL: "https://public.example.com",
     }),
@@ -27,18 +27,18 @@ test("resolveOmniRouteBaseUrl falls back to BASE_URL", () => {
   );
 });
 
-test("resolveOmniRouteBaseUrl falls back to NEXT_PUBLIC_BASE_URL", () => {
+test("resolveRouteChiBaseUrl falls back to NEXT_PUBLIC_BASE_URL", () => {
   assert.equal(
-    resolveOmniRouteBaseUrl({
+    resolveRouteChiBaseUrl({
       NEXT_PUBLIC_BASE_URL: "https://public.example.com/",
     }),
     "https://public.example.com"
   );
 });
 
-test("resolveOmniRouteBaseUrl ignores blank values", () => {
+test("resolveRouteChiBaseUrl ignores blank values", () => {
   assert.equal(
-    resolveOmniRouteBaseUrl({
+    resolveRouteChiBaseUrl({
       OMNIROUTE_BASE_URL: "   ",
       BASE_URL: "",
       NEXT_PUBLIC_BASE_URL: " https://public.example.com/ ",
@@ -47,6 +47,6 @@ test("resolveOmniRouteBaseUrl ignores blank values", () => {
   );
 });
 
-test("resolveOmniRouteBaseUrl uses the default localhost fallback", () => {
-  assert.equal(resolveOmniRouteBaseUrl({}), DEFAULT_OMNIROUTE_BASE_URL);
+test("resolveRouteChiBaseUrl uses the default localhost fallback", () => {
+  assert.equal(resolveRouteChiBaseUrl({}), DEFAULT_OMNIROUTE_BASE_URL);
 });

@@ -58,11 +58,11 @@ export interface ResolveAutoStrategyDeps {
   relayOptions?: {
     bypassProviderQuotaPolicy?: boolean;
     sessionId?: string | null;
-    /** Per-request X-OmniRoute-Mode value (#6024/#6025). */
+    /** Per-request X-RouteChi-Mode value (#6024/#6025). */
     mode?: string | null;
-    /** Per-request X-OmniRoute-Budget value in USD (#6023). */
+    /** Per-request X-RouteChi-Budget value in USD (#6023). */
     budgetCap?: number | null;
-    /** Per-request X-OmniRoute-Budget-Fallback value ("cheapest" | "strict") — #3470. */
+    /** Per-request X-RouteChi-Budget-Fallback value ("cheapest" | "strict") — #3470. */
     budgetFallback?: "cheapest" | "strict" | null;
   } | null;
   resilienceSettings: ResilienceSettings;
@@ -169,8 +169,8 @@ export async function resolveAutoStrategyOrder(
     slaPolicy,
   } = parseAutoConfig(combo, eligibleTargets);
 
-  // Per-request overrides (#6023 / #6024 / #6025 / #3470): X-OmniRoute-Budget,
-  // X-OmniRoute-Budget-Fallback and X-OmniRoute-Mode headers (threaded via
+  // Per-request overrides (#6023 / #6024 / #6025 / #3470): X-RouteChi-Budget,
+  // X-RouteChi-Budget-Fallback and X-RouteChi-Mode headers (threaded via
   // relayOptions) take precedence over the combo's stored config for this single
   // request. Unknown/garbage header values are ignored so the saved config is
   // preserved.

@@ -1,6 +1,6 @@
 /**
  * Gap 9 regression: uninstallCert() was fully implemented but had ZERO
- * production call sites — the OmniRoute root CA stayed trusted machine-wide
+ * production call sites — the RouteChi root CA stayed trusted machine-wide
  * forever after MITM was disabled. These tests pin the wiring contract:
  *   (a) the cert module exports uninstallCert + checkCertInstalled, and
  *   (b) the cert route now exposes a DELETE handler that performs the removal.

@@ -1,6 +1,6 @@
 /**
  * One-shot regen of ~/.config/opencode/opencode.json from the live
- * OmniRoute /v1/models catalog. Run after a catalog change to refresh
+ * RouteChi /v1/models catalog. Run after a catalog change to refresh
  * the opencode client.
  *
  * Usage:  bun run scripts/regen-opencode-config.ts
@@ -14,7 +14,7 @@ const apiKey = process.env.OMNIROUTE_KEY ?? process.env.OPENCODE_API_KEY ?? "";
 if (!apiKey) {
   console.error(
     "OMNIROUTE_KEY (or OPENCODE_API_KEY) env var is required. " +
-      "Find it in OmniRoute dashboard → Settings → API Keys."
+      "Find it in RouteChi dashboard → Settings → API Keys."
   );
   process.exit(1);
 }

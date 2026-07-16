@@ -1,7 +1,7 @@
 /**
  * tests/unit/vertex-spend-usage.test.ts
  *
- * Vertex AI exposes no native usage/quota API for an API key or Service Account, so OmniRoute
+ * Vertex AI exposes no native usage/quota API for an API key or Service Account, so RouteChi
  * SELF-TRACKS spend: it sums the tokens it routed to the connection (usage_history) and prices
  * them via the backend pricing table, surfacing a "$X used since this account was added" figure.
  * These tests cover the aggregation helper + the fetcher response shape with a real temp DB.

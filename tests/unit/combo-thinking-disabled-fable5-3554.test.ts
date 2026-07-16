@@ -10,7 +10,7 @@ import {
 // internal title/name-generation calls. That value is valid for claude-opus-4-8 and
 // claude-sonnet-4-6, but claude-fable-5 defaults to adaptive thinking and REJECTS
 // `thinking.type:"disabled"` with an upstream 400. When the substituted target rejects
-// `disabled`, OmniRoute must strip the now-invalid value instead of forwarding it.
+// `disabled`, RouteChi must strip the now-invalid value instead of forwarding it.
 
 test("#3554 claude-fable-5 is flagged as rejecting thinking.type:disabled", () => {
   assert.equal(getModelSpec("claude-fable-5")?.rejectsThinkingDisabled, true);

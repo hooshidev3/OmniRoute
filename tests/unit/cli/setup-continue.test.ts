@@ -26,7 +26,7 @@ test("buildContinueModels skips uncategorised models", () => {
   assert.equal(buildContinueModels(["some/unknown-model"], "http://x/v1").length, 0);
 });
 
-test("mergeContinueConfig replaces prior OmniRoute models, keeps others", () => {
+test("mergeContinueConfig replaces prior RouteChi models, keeps others", () => {
   const existing = {
     name: "My Config",
     models: [
