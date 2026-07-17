@@ -869,7 +869,7 @@
     "cloudAgents": "Agentes de nuvem",
     "memory": "Memória",
     "skills": "Habilidades",
-    "omniSkills": "OmniSkills",
+    "omniSkills": "RouteChiSkills",
     "agentSkills": "Habilidades do agente",
     "docs": "Documentação",
     "issues": "Problemas",
@@ -1007,7 +1007,7 @@
     "settingsResilience": "Resilience",
     "modelLockout": "__MISSING__:Model Lockout",
     "settingsAdvanced": "Advanced",
-    "omniProxySection": "OmniProxy",
+    "omniProxySection": "RouteChiProxy",
     "quotaTracker": "Provider Quota",
     "providerQuota": "Provider Quota",
     "runtime": "Runtime",
@@ -8956,20 +8956,20 @@
       "open": "__MISSING__:Open →",
       "code": {
         "title": "Ferramenta de código",
-        "desc": "Aponta para o Omni",
-        "flow": "você → CLI → Omni → provider",
+        "desc": "Aponta para o RouteChi",
+        "flow": "você → CLI → RouteChi → provider",
         "examples": "ex: claude, codex"
       },
       "agent": {
         "title": "Agente autônomo amplo",
-        "desc": "Aponta para o Omni",
-        "flow": "você → agente → Omni",
+        "desc": "Aponta para o RouteChi",
+        "flow": "você → agente → RouteChi",
         "examples": "ex: hermes, goose"
       },
       "acp": {
-        "title": "CLI usada como backend pelo Omni",
+        "title": "CLI usada como backend pelo RouteChi",
         "desc": "Execução reversa",
-        "flow": "Omni → spawn CLI → resp",
+        "flow": "RouteChi → spawn CLI → resp",
         "examples": "ex: claude, codex (ACP)"
       }
     },
@@ -9074,27 +9074,27 @@
         "crossLinkLabel": "Entenda a diferença →"
       },
       "omni": {
-        "title": "Omni Skills — Entrada",
-        "description": "Omni Skills são ferramentas sandbox que o RouteChi injeta no contexto do modelo a cada solicitação. São executadas pelo RouteChi, não lidas pelo agente.",
+        "title": "RouteChi Skills — Entrada",
+        "description": "RouteChi Skills são ferramentas sandbox que o RouteChi injeta no contexto do modelo a cada solicitação. São executadas pelo RouteChi, não lidas pelo agente.",
         "crossLinkLabel": "Entenda a diferença →"
       },
       "comparison": {
         "colAgent": "Agent Skills",
-        "colOmni": "Omni Skills",
+        "colOmni": "RouteChi Skills",
         "whatIs": {
           "label": "O que é",
           "agent": "Documentação (SKILL.md) que ensina um agente externo a operar o RouteChi",
-          "omni": "Ferramentas executáveis que o Omni injeta como tools nos requests LLM"
+          "omni": "Ferramentas executáveis que o RouteChi injeta como tools nos requests LLM"
         },
         "direction": {
           "label": "Direção",
-          "agent": "Outbound — externo aprende a controlar o Omni",
-          "omni": "Inbound — Omni dá tools aos modelos que passam por ele"
+          "agent": "Outbound — externo aprende a controlar o RouteChi",
+          "omni": "Inbound — RouteChi dá tools aos modelos que passam por ele"
         },
         "executor": {
           "label": "Executor",
           "agent": "Agente externo (lê markdown → age via API/CLI)",
-          "omni": "O próprio Omni (intercepta tool_calls, sandbox Docker)"
+          "omni": "O próprio RouteChi (intercepta tool_calls, sandbox Docker)"
         },
         "storage": {
           "label": "Storage",

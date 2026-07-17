@@ -866,7 +866,7 @@
     "cloudAgents": "Cloud Agenti",
     "memory": "Memory",
     "skills": "Skills",
-    "omniSkills": "OmniSkills",
+    "omniSkills": "RouteChiSkills",
     "agentSkills": "AgentSkills",
     "docs": "Docs",
     "issues": "Problémy",
@@ -1004,7 +1004,7 @@
     "settingsResilience": "Resilience",
     "modelLockout": "__MISSING__:Model Lockout",
     "settingsAdvanced": "Advanced",
-    "omniProxySection": "OmniProxy",
+    "omniProxySection": "RouteChiProxy",
     "quotaTracker": "Provider Quota",
     "providerQuota": "Provider Quota",
     "runtime": "Runtime",
@@ -7365,7 +7365,7 @@
     "versionCommandPlaceholder": "Version Command Placeholder",
     "architectureTitle": "Architecture Title",
     "flowLocalBinary": "Flow Local Binary",
-    "flowRouteChi": "Flow Omni Route",
+    "flowRouteChi": "1 · Request arrives at RouteChi",
     "agentNamePlaceholder": "Agent Name Placeholder",
     "architectureDescription": "Architecture Description",
     "flowExecute": "Flow Execute",
@@ -8739,20 +8739,20 @@
       "open": "__MISSING__:Open →",
       "code": {
         "title": "__MISSING__:Code tool",
-        "desc": "__MISSING__:Points to Omni",
-        "flow": "__MISSING__:you → CLI → Omni → provider",
+        "desc": "__MISSING__:Points to RouteChi",
+        "flow": "__MISSING__:you → CLI → RouteChi → provider",
         "examples": "__MISSING__:e.g.: claude, codex"
       },
       "agent": {
         "title": "__MISSING__:Broad autonomous agent",
-        "desc": "__MISSING__:Points to Omni",
-        "flow": "__MISSING__:you → agent → Omni",
+        "desc": "__MISSING__:Points to RouteChi",
+        "flow": "__MISSING__:you → agent → RouteChi",
         "examples": "__MISSING__:e.g.: hermes, goose"
       },
       "acp": {
-        "title": "__MISSING__:CLI used as backend by Omni",
+        "title": "__MISSING__:CLI used as backend by RouteChi",
         "desc": "__MISSING__:Reverse execution",
-        "flow": "__MISSING__:Omni → spawn CLI → resp",
+        "flow": "__MISSING__:RouteChi → spawn CLI → resp",
         "examples": "__MISSING__:e.g.: claude, codex (ACP)"
       }
     },
@@ -8857,13 +8857,13 @@
         "crossLinkLabel": "__MISSING__:Understand the difference →"
       },
       "omni": {
-        "title": "__MISSING__:Omni Skills — Inbound",
-        "description": "__MISSING__:Omni Skills are sandbox tools that RouteChi injects into the model's context on every request. They are executed by RouteChi, not read by the agent.",
+        "title": "__MISSING__:RouteChi Skills — Inbound",
+        "description": "__MISSING__:RouteChi Skills are sandbox tools that RouteChi injects into the model's context on every request. They are executed by RouteChi, not read by the agent.",
         "crossLinkLabel": "__MISSING__:Understand the difference →"
       },
       "comparison": {
         "colAgent": "__MISSING__:Agent Skills",
-        "colOmni": "__MISSING__:Omni Skills",
+        "colOmni": "__MISSING__:RouteChi Skills",
         "whatIs": {
           "label": "__MISSING__:What it is",
           "agent": "__MISSING__:Machine-readable SKILL.md that teaches an external agent to operate RouteChi",

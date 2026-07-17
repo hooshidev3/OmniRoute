@@ -869,7 +869,7 @@
     "cloudAgents": "雲代理",
     "memory": "記憶",
     "skills": "技能",
-    "omniSkills": "全方位技能",
+    "omniSkills": "RouteChi技能",
     "agentSkills": "代理技能",
     "docs": "文件",
     "issues": "問題反饋",
@@ -1006,7 +1006,7 @@
     "settingsResilience": "彈性",
     "modelLockout": "__MISSING__:Model Lockout",
     "settingsAdvanced": "高階",
-    "omniProxySection": "OmniProxy",
+    "omniProxySection": "RouteChiProxy",
     "quotaTracker": "提供商配額",
     "providerQuota": "提供商配額",
     "runtime": "執行時",
@@ -8841,20 +8841,20 @@
       "open": "__MISSING__:Open →",
       "code": {
         "title": "程式碼工具",
-        "desc": "指向 Omni",
-        "flow": "你 → CLI → Omni → 提供者",
+        "desc": "指向 RouteChi",
+        "flow": "你 → CLI → RouteChi → 提供者",
         "examples": "例如：claude，codex"
       },
       "agent": {
         "title": "廣泛自主代理",
-        "desc": "指向 Omni",
-        "flow": "你 → 代理 → Omni",
+        "desc": "指向 RouteChi",
+        "flow": "你 → 代理 → RouteChi",
         "examples": "例如：hermes，goose"
       },
       "acp": {
-        "title": "Omni 使用的後端 CLI",
+        "title": "RouteChi 使用的後端 CLI",
         "desc": "反向執行",
-        "flow": "Omni → spawn CLI → resp",
+        "flow": "RouteChi → spawn CLI → resp",
         "examples": "例如：claude，codex (ACP)"
       }
     },
@@ -8959,13 +8959,13 @@
         "crossLinkLabel": "瞭解區別 →"
       },
       "omni": {
-        "title": "全能技能 — 入站",
-        "description": "Omni Skills 是 RouteChi 在每個請求中注入到模型上下文中的沙盒工具。它們由 RouteChi 執行，而不是由代理讀取。",
+        "title": "RouteChi技能 — 入站",
+        "description": "RouteChi Skills 是 RouteChi 在每個請求中注入到模型上下文中的沙盒工具。它們由 RouteChi 執行，而不是由代理讀取。",
         "crossLinkLabel": "瞭解差異 →"
       },
       "comparison": {
         "colAgent": "特工技能",
-        "colOmni": "全能技能",
+        "colOmni": "RouteChi技能",
         "whatIs": {
           "label": "它是什麼",
           "agent": "機器可讀的 SKILL.md，教外部代理如何操作 RouteChi",

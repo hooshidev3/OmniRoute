@@ -723,7 +723,7 @@ export const SIDEBAR_SECTIONS: readonly SidebarSectionDefinition[] = [
   {
     id: "omni-proxy",
     titleKey: "omniProxySection",
-    titleFallback: "OmniProxy",
+    titleFallback: "RouteChiProxy",
     children: [
       ...OMNI_PROXY_ITEMS,
       COMPRESSION_CONTEXT_GROUP,

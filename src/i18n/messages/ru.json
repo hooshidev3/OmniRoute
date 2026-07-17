@@ -866,7 +866,7 @@
     "cloudAgents": "Облачные агенты",
     "memory": "Память",
     "skills": "Навыки",
-    "omniSkills": "Омнискиллс",
+    "omniSkills": "RouteChiSkills",
     "agentSkills": "Навыки агента",
     "docs": "Документы",
     "issues": "Проблемы",
@@ -1004,7 +1004,7 @@
     "settingsResilience": "Resilience",
     "modelLockout": "__MISSING__:Model Lockout",
     "settingsAdvanced": "Advanced",
-    "omniProxySection": "OmniProxy",
+    "omniProxySection": "RouteChiProxy",
     "quotaTracker": "Provider Quota",
     "providerQuota": "Provider Quota",
     "runtime": "Runtime",
@@ -7365,7 +7365,7 @@
     "versionCommandPlaceholder": "Version Command Placeholder",
     "architectureTitle": "Architecture Title",
     "flowLocalBinary": "Flow Local Binary",
-    "flowRouteChi": "Flow Omni Route",
+    "flowRouteChi": "1 · Request arrives at RouteChi",
     "agentNamePlaceholder": "Agent Name Placeholder",
     "architectureDescription": "Architecture Description",
     "flowExecute": "Flow Execute",
@@ -8739,20 +8739,20 @@
       "open": "__MISSING__:Open →",
       "code": {
         "title": "Инструмент кода",
-        "desc": "Точки к Omni",
-        "flow": "вы → CLI → Omni → провайдер",
+        "desc": "Точки к RouteChi",
+        "flow": "вы → CLI → RouteChi → провайдер",
         "examples": "например: claude, codex"
       },
       "agent": {
         "title": "Широкий автономный агент",
-        "desc": "Точки к Omni",
-        "flow": "вы → агент → Omni",
+        "desc": "Точки к RouteChi",
+        "flow": "вы → агент → RouteChi",
         "examples": "например: гермес, гусь"
       },
       "acp": {
-        "title": "CLI, используемый в качестве бэкенда Omni",
+        "title": "CLI, используемый в качестве бэкенда RouteChi",
         "desc": "Обратное выполнение",
-        "flow": "Omni → spawn CLI → resp",
+        "flow": "RouteChi → spawn CLI → resp",
         "examples": "например: claude, codex (ACP)"
       }
     },
@@ -8857,13 +8857,13 @@
         "crossLinkLabel": "Понять разницу →"
       },
       "omni": {
-        "title": "Omni Skills — Входящие",
-        "description": "Omni Skills — это инструменты песочницы, которые RouteChi внедряет в контекст модели при каждом запросе. Они выполняются RouteChi, а не считываются агентом.",
+        "title": "RouteChi Skills — Входящие",
+        "description": "RouteChi Skills — это инструменты песочницы, которые RouteChi внедряет в контекст модели при каждом запросе. Они выполняются RouteChi, а не считываются агентом.",
         "crossLinkLabel": "Понять разницу →"
       },
       "comparison": {
         "colAgent": "Навыки агента",
-        "colOmni": "Омни Навыки",
+        "colOmni": "RouteChi Навыки",
         "whatIs": {
           "label": "Что это такое",
           "agent": "Машиночитаемый SKILL.md, который обучает внешнего агента управлять RouteChi",

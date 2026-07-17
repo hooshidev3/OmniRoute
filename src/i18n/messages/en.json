@@ -869,7 +869,7 @@
     "cloudAgents": "Cloud Agents",
     "memory": "Memory",
     "skills": "Skills",
-    "omniSkills": "OmniSkills",
+    "omniSkills": "RouteChiSkills",
     "agentSkills": "AgentSkills",
     "chaosConfig": "Chaos Mode",
     "docs": "Docs",
@@ -1008,7 +1008,7 @@
     "settingsResilience": "Resilience",
     "modelLockout": "Model Lockout",
     "settingsAdvanced": "Advanced",
-    "omniProxySection": "OmniProxy",
+    "omniProxySection": "RouteChiProxy",
     "quotaTracker": "Provider Quota",
     "providerQuota": "Provider Quota",
     "runtime": "Runtime",
@@ -8956,20 +8956,20 @@
       "open": "Open →",
       "code": {
         "title": "Code tool",
-        "desc": "Points to Omni",
-        "flow": "you → CLI → Omni → provider",
+        "desc": "Points to RouteChi",
+        "flow": "you → CLI → RouteChi → provider",
         "examples": "e.g.: claude, codex"
       },
       "agent": {
         "title": "Broad autonomous agent",
-        "desc": "Points to Omni",
-        "flow": "you → agent → Omni",
+        "desc": "Points to RouteChi",
+        "flow": "you → agent → RouteChi",
         "examples": "e.g.: hermes, goose"
       },
       "acp": {
-        "title": "CLI used as backend by Omni",
+        "title": "CLI used as backend by RouteChi",
         "desc": "Reverse execution",
-        "flow": "Omni → spawn CLI → resp",
+        "flow": "RouteChi → spawn CLI → resp",
         "examples": "e.g.: claude, codex (ACP)"
       }
     },
@@ -9074,13 +9074,13 @@
         "crossLinkLabel": "Understand the difference →"
       },
       "omni": {
-        "title": "Omni Skills — Inbound",
-        "description": "Omni Skills are sandbox tools that RouteChi injects into the model's context on every request. They are executed by RouteChi, not read by the agent.",
+        "title": "RouteChi Skills — Inbound",
+        "description": "RouteChi Skills are sandbox tools that RouteChi injects into the model's context on every request. They are executed by RouteChi, not read by the agent.",
         "crossLinkLabel": "Understand the difference →"
       },
       "comparison": {
         "colAgent": "Agent Skills",
-        "colOmni": "Omni Skills",
+        "colOmni": "RouteChi Skills",
         "whatIs": {
           "label": "What it is",
           "agent": "Machine-readable SKILL.md that teaches an external agent to operate RouteChi",

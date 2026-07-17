@@ -8591,7 +8591,7 @@
     "installedTab": "نصب شده",
     "marketplaceTab": "بازار",
     "marketplaceUrlLabel": "آدرس بازار سفارشی",
-    "marketplaceUrlPlaceholder": "برای ثبت رسمی Omniroute خالی بگذارید",
+    "marketplaceUrlPlaceholder": "برای ثبت رسمی RouteChi خالی بگذارید",
     "saveMarketplaceUrl": "ذخیره و بازخوانی",
     "marketplaceUrlSaved": "آدرس بازار به‌روزرسانی شد",
     "marketplaceEmpty": "هیچ افزونه‌ای در بازار یافت نشد.",
@@ -8956,20 +8956,20 @@
       "open": "باز →",
       "code": {
         "title": "ابزار کد",
-        "desc": "به Omni اشاره می‌کند",
-        "flow": "شما → خط فرمان → Omni → ارائه‌دهنده",
+        "desc": "به RouteChi اشاره می‌کند",
+        "flow": "شما → خط فرمان → RouteChi → ارائه‌دهنده",
         "examples": "مثلاً: claude, codex"
       },
       "agent": {
         "title": "کارگزار خودمختار همه منظوره",
-        "desc": "به Omni اشاره می‌کند",
-        "flow": "شما → کارگزار → Omni",
+        "desc": "به RouteChi اشاره می‌کند",
+        "flow": "شما → کارگزار → RouteChi",
         "examples": "مثلاً: hermes, goose"
       },
       "acp": {
-        "title": "خط فرمانی که Omni به عنوان باطن استفاده می‌کند",
+        "title": "خط فرمانی که RouteChi به عنوان باطن استفاده می‌کند",
         "desc": "اجرای معکوس",
-        "flow": "Omni → تولید خط فرمان → پاسخ",
+        "flow": "RouteChi → تولید خط فرمان → پاسخ",
         "examples": "مثلاً: claude, codex (ACP)"
       }
     },
