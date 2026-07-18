@@ -1,2207 +1,1167 @@
-# 🚀 RouteChi — The Free AI Gateway (فارسی)
-
-🌐 **Languages:** 🇺🇸 [English](../../../README.md) · 🇸🇦 [ar](../ar/README.md) · 🇧🇬 [bg](../bg/README.md) · 🇧🇩 [bn](../bn/README.md) · 🇨🇿 [cs](../cs/README.md) · 🇩🇰 [da](../da/README.md) · 🇩🇪 [de](../de/README.md) · 🇪🇸 [es](../es/README.md) · 🇮🇷 [fa](../fa/README.md) · 🇫🇮 [fi](../fi/README.md) · 🇫🇷 [fr](../fr/README.md) · 🇮🇳 [gu](../gu/README.md) · 🇮🇱 [he](../he/README.md) · 🇮🇳 [hi](../hi/README.md) · 🇭🇺 [hu](../hu/README.md) · 🇮🇩 [id](../id/README.md) · 🇮🇹 [it](../it/README.md) · 🇯🇵 [ja](../ja/README.md) · 🇰🇷 [ko](../ko/README.md) · 🇮🇳 [mr](../mr/README.md) · 🇲🇾 [ms](../ms/README.md) · 🇳🇱 [nl](../nl/README.md) · 🇳🇴 [no](../no/README.md) · 🇵🇭 [phi](../phi/README.md) · 🇵🇱 [pl](../pl/README.md) · 🇵🇹 [pt](../pt/README.md) · 🇧🇷 [pt-BR](../pt-BR/README.md) · 🇷🇴 [ro](../ro/README.md) · 🇷🇺 [ru](../ru/README.md) · 🇸🇰 [sk](../sk/README.md) · 🇸🇪 [sv](../sv/README.md) · 🇰🇪 [sw](../sw/README.md) · 🇮🇳 [ta](../ta/README.md) · 🇮🇳 [te](../te/README.md) · 🇹🇭 [th](../th/README.md) · 🇹🇷 [tr](../tr/README.md) · 🇺🇦 [uk-UA](../uk-UA/README.md) · 🇵🇰 [ur](../ur/README.md) · 🇻🇳 [vi](../vi/README.md) · 🇨🇳 [zh-CN](../zh-CN/README.md)
-
----
-
-### Never stop coding. Smart routing to **FREE & low-cost AI models** with automatic fallback.
-
-_Your universal API proxy — one endpoint, 100+ providers, zero downtime. Now with **MCP Server (25 tools)**, **A2A Protocol**, **Memory/Skills Systems** & **Electron Desktop App**._
-
-**Chat Completions • Embeddings • Image Generation • Video • Music • Audio • Reranking • **Web Search** • MCP Server • A2A Protocol • 100% TypeScript**
-
----
-
 <div align="center">
+
+<img src="./docs/screenshots/MainRouteChi.png" alt="RouteChi Dashboard" width="820"/>
+
+<br/>
+
+# 🚀 RouteChi — دروازهٔ هوش مصنوعی رایگان
+
+### هرگز کدنویسی را متوقف نکنید. هر ابزار هوش مصنوعی را به **۲۵۰ ارائه‌دهنده** — **۹۰+ رایگان** — از طریق یک نقطهٔ پایانی متصل کنید.
+
+**کد Claude، Codex، Cursor، Cline، Copilot و Antigravity را به Claude / GPT / Gemini رایگان وصل کنید. سقوط خودکار.**
+<br/>
+
+**فشرده‌سازی RTK + Caveman بین ۱۵ تا ۹۵ درصد توکن ذخیره می‌کند. هرگز به محدودیت برنمی‌خورید.**
+
+<br/>
+
+**حدود ۱.۶ میلیارد توکن رایگان مستند در ماه** — تا **حدود ۲.۱ میلیارد در ماه اول** با اعتبار ثبت‌نام — تجمیع‌شده از سطح‌های رایگان، به‌علاوهٔ یک دنبالهٔ بلند از ارائه‌دهندگان دائمی‌رایگان بدون سقف، و فشرده‌سازی بالا هرکدام را بیشتر می‌کشاند. ([روش شمارش ←](docs/reference/FREE_TIERS.md#tldr--how-much-free-inference-does-omniroute-actually-aggregate))
+
+<br/>
+
+<h3>
+
+⭐ اگر RouteChi به شما کمک کرد هزینه‌ای پس‌انداز کنید و کارتان راحت‌تر شود، به این مخزن ستاره دهید.
+
+</h3>
+
+[![Stars](https://img.shields.io/github/stars/borhandarabi/routechi?style=social)](https://github.com/borhandarabi/routechi)
+<a href="https://trendshift.io/repositories/23589" target="_blank"><img src="https://trendshift.io/api/badge/repositories/23589" alt="diegosouzapw%2FRouteChi | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+[![Star History Rank](https://api.star-history.com/badge?repo=borhandarabi/routechi&theme=dark)](https://www.star-history.com/borhandarabi/routechi)
+
+</br>
+
+[![250 AI Providers](https://img.shields.io/badge/250-AI_Providers-6C5CE7?style=for-the-badge)](#-250-ai-providers--90-free)
+[![90+ Free](https://img.shields.io/badge/90%2B-Free_Tiers-00B894?style=for-the-badge)](#-250-ai-providers--90-free)
+[![1.6B Free Tokens/mo](https://img.shields.io/badge/1.6B-Free_Tokens%2Fmo-00B894?style=for-the-badge)](docs/reference/FREE_TIERS.md)
+[![Token Savings](https://img.shields.io/badge/up_to_95%25-Token_Savings-E17055?style=for-the-badge)](#%EF%B8%8F-save-1595-tokens--automatically)
+[![18 Strategies](https://img.shields.io/badge/18-Routing_Strategies-0984E3?style=for-the-badge)](#-combos--the-flagship)
+[![$0 to start](https://img.shields.io/badge/%240-To_Start-FDCB6E?style=for-the-badge&logoColor=black)](#-quick-start)
+
+<br/>
+
+### 💬 به جامعه بپیوندید
+
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/EkzRkpzKYt)
+[![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/omnirouteOficial)
+[![WhatsApp Global](https://img.shields.io/badge/WhatsApp_Global-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t)
+[![WhatsApp Brasil](https://img.shields.io/badge/WhatsApp_Brasil-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/BTGJXIyjeNIIgExvTMGGhI)
+[![Website](https://img.shields.io/badge/Website-omniroute.online-blue?logo=google-chrome&logoColor=white)](https://omniroute.online)
+
+**سؤال‌ها، نکته‌های ارائه‌دهنده، نقشهٔ راه و پشتیبانی ← [Discord](https://discord.gg/EkzRkpzKYt) · [Telegram](https://t.me/omnirouteOficial) · WhatsApp [🌍 جهانی](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t) / [🇧🇷 برزیل](https://chat.whatsapp.com/BTGJXIyjeNIIgExvTMGGhI)**
+
+<br/>
+
+### 🧩 در دسترس
 
 [![npm version](https://img.shields.io/npm/v/omniroute?color=cb3837&logo=npm)](https://www.npmjs.com/package/omniroute)
+![NPM Monthly](https://img.shields.io/npm/dm/omniroute?label=npm/month&color=cb3837&logo=npm)
 [![Docker Hub](https://img.shields.io/docker/v/borhandarabi/routechi?label=Docker%20Hub&logo=docker&color=2496ED)](https://hub.docker.com/r/borhandarabi/routechi)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+![Docker Pulls](https://img.shields.io/docker/pulls/borhandarabi/routechi?label=docker%20pulls&logo=docker&color=2496ED)
+![Electron Downloads](https://img.shields.io/github/downloads/borhandarabi/routechi/total?style=flat&label=electron%20downloads&logo=electron&color=47848F)
 
-![NPM Downloads](https://img.shields.io/npm/dw/omniroute?label=npm%20down%20week&color=red)
-![NPM Downloads](https://img.shields.io/npm/dm/omniroute?label=npm%20down%20month&color=red)
+[**🚀 شروع سریع**](#-quick-start) • [**🎯 کامبوها**](#-combos--the-flagship) • [**🌐 ارائه‌دهندگان**](#-250-ai-providers--90-free) • [**🔌 CLI و MCP**](#-full-cli--a2a--mcp) • [**🗜️ فشرده‌سازی**](#%EF%B8%8F-save-1595-tokens--automatically) • [**🌍 وب‌سایت**](https://omniroute.online)
 
-![NPM Downloads](https://img.shields.io/npm/d18m/omniroute?label=npm%20down%20year&color=red)
-![Docker Pulls](https://img.shields.io/docker/pulls/borhandarabi/routechi)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/borhandarabi/routechi/total?style=flat&label=eletron%20donwloads&color=blue)
-
-[![stars](https://custom-icon-badges.demolab.com/github/stars/borhandarabi/routechi?logo=star&style=flat)](https://github.com/borhandarabi/routechi/stargazers)
-[![open issues](https://custom-icon-badges.demolab.com/github/issues-raw/borhandarabi/routechi?logo=issue)](https://github.com/borhandarabi/routechi/issues)
-[![license](https://custom-icon-badges.demolab.com/github/license/borhandarabi/routechi?logo=law)](https://github.com/borhandarabi/routechi/blob/main/LICENSE)
-[![last commit](https://custom-icon-badges.demolab.com/github/last-commit/borhandarabi/routechi?logo=history&logoColor=white)](https://github.com/borhandarabi/routechi/commits/main)
-[![total contributions](https://custom-icon-badges.demolab.com/badge/dynamic/json?logo=graph&logoColor=fff&color=blue&label=total%20contributions&query=%24.totalContributions&url=https%3A%2F%2Fstreak-stats.demolab.com%2F%3Fuser%3Ddiegosouzapw%26type%3Djson)](https://github.com/diegosouzapw)
-[![code size](https://custom-icon-badges.demolab.com/github/languages/code-size/borhandarabi/routechi?logo=file-code&logoColor=white)](https://github.com/borhandarabi/routechi)
-[![pr closed](https://custom-icon-badges.demolab.com/github/issues-pr-closed/borhandarabi/routechi?color=purple&logo=git-pull-request&logoColor=white)](https://github.com/borhandarabi/routechi/pulls?q=is%3Apr+is%3Aclosed)
-[![tag](https://custom-icon-badges.demolab.com/github/v/tag/borhandarabi/routechi?logo=tag&logoColor=white)](https://github.com/borhandarabi/routechi/tags)
-[![github streak](https://custom-icon-badges.demolab.com/badge/dynamic/json?logo=fire&logoColor=fff&color=orange&label=github%20streak&query=%24.currentStreak.length&suffix=%20days&url=https%3A%2F%2Fstreak-stats.demolab.com%2F%3Fuser%3Ddiegosouzapw%26type%3Djson)](https://github.com/diegosouzapw)
-[![followers](https://custom-icon-badges.demolab.com/github/followers/diegosouzapw?logo=person-add)](https://github.com/diegosouzapw?tab=followers)
-[![fork](https://custom-icon-badges.demolab.com/github/forks/borhandarabi/routechi?logo=fork)](https://github.com/borhandarabi/routechi/network/members)
-[![watch](https://custom-icon-badges.demolab.com/github/watchers/borhandarabi/routechi?logo=eye)](https://github.com/borhandarabi/routechi/watchers)
-
-[![License](https://img.shields.io/github/license/borhandarabi/routechi)](https://github.com/borhandarabi/routechi/blob/main/LICENSE)
-[![Website](https://img.shields.io/badge/Website-omniroute.online-blue?logo=google-chrome&logoColor=white)](https://omniroute.online)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-Community-25D366?logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t)
-
-[🌐 Website](https://omniroute.online) • [🚀 Quick Start](#-quick-start) • [💡 Features](#-key-features) • [📖 Docs](#-documentation) • [💰 Pricing](#-pricing-at-a-glance) • [💬 WhatsApp](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t)
+[💥 وعده](#-the-promise) • [🤔 چرا](#-why-omniroute) • [🏆 چه چیزی متمایز می‌کند](#-what-sets-omniroute-apart) • [🤖 CLIهای سازگار](#-compatible-clis--coding-agents) • [🖥️ کجا اجرا می‌شود](#%EF%B8%8F-where-omniroute-runs--anywhere) • [🔒 خصوصی](#-private--local-first) • [🎬 در عمل](#-omniroute-in-action) • [📚 کاوش بیشتر](#-explore-more) • [📧 پشتیبانی](#-support--community)
 
 </div>
-
-🌐 **Available in:** 🇺🇸 [English](README.md) | 🇧🇷 [Português (Brasil)](docs/i18n/pt-BR/README.md) | 🇪🇸 [Español](docs/i18n/es/README.md) | 🇫🇷 [Français](docs/i18n/fr/README.md) | 🇮🇹 [Italiano](docs/i18n/it/README.md) | 🇷🇺 [Русский](docs/i18n/ru/README.md) | 🇨🇳 [中文 (简体)](docs/i18n/zh-CN/README.md) | 🇩🇪 [Deutsch](docs/i18n/de/README.md) | 🇮🇳 [हिन्दी](docs/i18n/in/README.md) | 🇹🇭 [ไทย](docs/i18n/th/README.md) | 🇺🇦 [Українська](docs/i18n/uk-UA/README.md) | 🇸🇦 [العربية](docs/i18n/ar/README.md) | 🇯🇵 [日本語](docs/i18n/ja/README.md) | 🇻🇳 [Tiếng Việt](docs/i18n/vi/README.md) | 🇧🇬 [Български](docs/i18n/bg/README.md) | 🇩🇰 [Dansk](docs/i18n/da/README.md) | 🇫🇮 [Suomi](docs/i18n/fi/README.md) | 🇮🇱 [עברית](docs/i18n/he/README.md) | 🇭🇺 [Magyar](docs/i18n/hu/README.md) | 🇮🇩 [Bahasa Indonesia](docs/i18n/id/README.md) | 🇰🇷 [한국어](docs/i18n/ko/README.md) | 🇲🇾 [Bahasa Melayu](docs/i18n/ms/README.md) | 🇳🇱 [Nederlands](docs/i18n/nl/README.md) | 🇳🇴 [Norsk](docs/i18n/no/README.md) | 🇵🇹 [Português (Portugal)](docs/i18n/pt/README.md) | 🇷🇴 [Română](docs/i18n/ro/README.md) | 🇵🇱 [Polski](docs/i18n/pl/README.md) | 🇸🇰 [Slovenčina](docs/i18n/sk/README.md) | 🇸🇪 [Svenska](docs/i18n/sv/README.md) | 🇵🇭 [Filipino](docs/i18n/phi/README.md) | 🇨🇿 [Čeština](docs/i18n/cs/README.md)
-
----
-
-## 🖼️ Main Dashboard
 
 <div align="center">
-  <img src="./docs/screenshots/MainRouteChi.png" alt="RouteChi Dashboard" width="800"/>
+ <b>🌐 به بیش از ۴۲ زبان</b>
+ <table>
+  <tr>
+    <td align="center"><a href="README.md">🇺🇸</a></td>
+    <td align="center"><a href="docs/i18n/pt-BR/README.md">🇧🇷</a></td>
+    <td align="center"><a href="docs/i18n/pt/README.md">🇵🇹</a></td>
+    <td align="center"><a href="docs/i18n/es/README.md">🇪🇸</a></td>
+    <td align="center"><a href="docs/i18n/fr/README.md">🇫🇷</a></td>
+    <td align="center"><a href="docs/i18n/it/README.md">🇮🇹</a></td>
+    <td align="center"><a href="docs/i18n/de/README.md">🇩🇪</a></td>
+    <td align="center"><a href="docs/i18n/nl/README.md">🇳🇱</a></td>
+    <td align="center"><a href="docs/i18n/ru/README.md">🇷🇺</a></td>
+    <td align="center"><a href="docs/i18n/uk-UA/README.md">🇺🇦</a></td>
+    <td align="center"><a href="docs/i18n/pl/README.md">🇵🇱</a></td>
+    <td align="center"><a href="docs/i18n/cs/README.md">🇨🇿</a></td>
+    <td align="center"><a href="docs/i18n/sk/README.md">🇸🇰</a></td>
+    <td align="center"><a href="docs/i18n/ro/README.md">🇷🇴</a></td>
+    <td align="center"><a href="docs/i18n/hu/README.md">🇭🇺</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/i18n/bg/README.md">🇧🇬</a></td>
+    <td align="center"><a href="docs/i18n/da/README.md">🇩🇰</a></td>
+    <td align="center"><a href="docs/i18n/fi/README.md">🇫🇮</a></td>
+    <td align="center"><a href="docs/i18n/no/README.md">🇳🇴</a></td>
+    <td align="center"><a href="docs/i18n/sv/README.md">🇸🇪</a></td>
+    <td align="center"><a href="docs/i18n/zh-CN/README.md">🇨🇳</a></td>
+    <td align="center"><a href="docs/i18n/zh-TW/README.md">🇹🇼</a></td>
+    <td align="center"><a href="docs/i18n/ja/README.md">🇯🇵</a></td>
+    <td align="center"><a href="docs/i18n/ko/README.md">🇰🇷</a></td>
+    <td align="center"><a href="docs/i18n/th/README.md">🇹🇭</a></td>
+    <td align="center"><a href="docs/i18n/vi/README.md">🇻🇳</a></td>
+    <td align="center"><a href="docs/i18n/id/README.md">🇮🇩</a></td>
+    <td align="center"><a href="docs/i18n/ms/README.md">🇲🇾</a></td>
+    <td align="center"><a href="docs/i18n/phi/README.md">🇵🇭</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/i18n/in/README.md">🇮🇳</a></td>
+    <td align="center"><a href="docs/i18n/hi/README.md">🇮🇳</a></td>
+    <td align="center"><a href="docs/i18n/gu/README.md">🇮🇳</a></td>
+    <td align="center"><a href="docs/i18n/mr/README.md">🇮🇳</a></td>
+    <td align="center"><a href="docs/i18n/ta/README.md">🇮🇳</a></td>
+    <td align="center"><a href="docs/i18n/te/README.md">🇮🇳</a></td>
+    <td align="center"><a href="docs/i18n/bn/README.md">🇧🇩</a></td>
+    <td align="center"><a href="docs/i18n/ur/README.md">🇵🇰</a></td>
+    <td align="center"><a href="docs/i18n/fa/README.md">🇮🇷</a></td>
+    <td align="center"><a href="docs/i18n/ar/README.md">🇸🇦</a></td>
+    <td align="center"><a href="docs/i18n/he/README.md">🇮🇱</a></td>
+    <td align="center"><a href="docs/i18n/tr/README.md">🇹🇷</a></td>
+    <td align="center"><a href="docs/i18n/az/README.md">🇦🇿</a></td>
+    <td align="center"><a href="docs/i18n/sw/README.md">🇹🇿</a></td>
+  </tr>
+</table>
 </div>
 
----
+<br/>
 
-## 📸 Dashboard Preview
+<div align="center">
 
-<details>
-<summary><b>Click to see dashboard screenshots</b></summary>
+# 💰 حدود ۱.۶ میلیارد توکن رایگان در ماه
 
-| Page           | Screenshot                                        |
-| -------------- | ------------------------------------------------- |
-| **Providers**  | ![Providers](docs/screenshots/01-providers.png)   |
-| **Combos**     | ![Combos](docs/screenshots/02-combos.png)         |
-| **Analytics**  | ![Analytics](docs/screenshots/03-analytics.png)   |
-| **Health**     | ![Health](docs/screenshots/04-health.png)         |
-| **Translator** | ![Translator](docs/screenshots/05-translator.png) |
-| **Settings**   | ![Settings](docs/screenshots/06-settings.png)     |
-| **CLI Tools**  | ![CLI Tools](docs/screenshots/07-cli-tools.png)   |
-| **Usage Logs** | ![Usage](docs/screenshots/08-usage.png)           |
-| **Endpoints**  | ![Endpoints](docs/screenshots/09-endpoint.png)    |
+</div>
 
-</details>
+> روی هم چیدن دستی سطح‌های رایگان دردناک است — ده‌ها SDK، ده‌ها محدودیت نرخ، و هیچ ایدهٔ روشنی از میزان واقعیِ موجود ندارید. RouteChi سطح‌های رایگان **مستند** از **بیش از ۴۰ استخر ارائه‌دهنده / ۵۰۰+ مدل** را در یک عدد صادقانه تجمیع می‌کند و آن را به‌صورت زنده در داشبورد نمایش می‌دهد (`/dashboard/free-tiers`).
 
----
+- **حدود ۱.۶ میلیارد توکن رایگان در ماه** (پایدار) — و **تا حدود ۲.۱ میلیارد در ماه اول** با اعتبار ثبت‌نام.
+- **حذف تکرار استخر، صادقانه** — هر استخر رایگان مشترک را **یک‌بار** می‌شماریم، بنابراین عدد سرتیتر با سقف‌های محدودیت نرخ متورم نشده است (برخلاف ادعاهای میلیاردی رقبا). (شمارش ۲۴/۷ هر محدودیت نرخ عددی حدود ۱۰ میلیارد می‌شود؛ ما آن را منتشر نمی‌کنیم.)
+- **به‌علاوهٔ غیرقابل‌شمارش** — ارائه‌دهندگان دائمی‌رایگان بدون سقف توکن (SiliconFlow، Z.AI GLM-Flash، Kilo، OpenCode Zen…) و یک **شارژ ۱۰ دلاری OpenRouter** که **۲۴+ میلیون توکن در ماه** را فعال می‌کند، هر دو جداگانه نمایش داده می‌شوند تا هرگز سرتیتر را متورم نکنند.
+- **تفکیک به‌ازای‌مدل**، **مصرف‌شده / باقیماندهٔ زنده** برای ماه جاری، و یک **پرچم شرایط شفاف** به‌ازای هر ارائه‌دهنده.
 
-### 🤖 Free AI Provider for your favorite coding agents
+![Free-Tier Budget card (preview mockup)](docs/screenshots/free-tier-budget-card.svg)
 
-_Connect any AI-powered IDE or CLI tool through RouteChi — free API gateway for unlimited coding._
+> ماکت پیش‌نمایش — پس از اعتبارسنجی صفحهٔ `/dashboard/free-tiers` یک تصویر واقعی قرار می‌گیرد. روش‌شناسی کامل (حذف تکرار استخر، سطح‌های اعتباری، شرایط ارائه‌دهنده): **[docs/reference/FREE_TIERS.md](docs/reference/FREE_TIERS.md)**.
 
-  <table>
-    <tr>
-      <td align="center" width="110">
-        <a href="https://github.com/openclaw/openclaw">
-          <img src="./public/providers/openclaw.png" alt="OpenClaw" width="48"/><br/>
-          <b>OpenClaw</b>
-        </a><br/>
-        <sub>⭐ 205K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/HKUDS/nanobot">
-          <img src="./public/providers/nanobot.png" alt="NanoBot" width="48"/><br/>
-          <b>NanoBot</b>
-        </a><br/>
-        <sub>⭐ 20.9K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/sipeed/picoclaw">
-          <img src="./public/providers/picoclaw.jpg" alt="PicoClaw" width="48"/><br/>
-          <b>PicoClaw</b>
-        </a><br/>
-        <sub>⭐ 14.6K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/zeroclaw-labs/zeroclaw">
-          <img src="./public/providers/zeroclaw.png" alt="ZeroClaw" width="48"/><br/>
-          <b>ZeroClaw</b>
-        </a><br/>
-        <sub>⭐ 9.9K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/nearai/ironclaw">
-          <img src="./public/providers/ironclaw.png" alt="IronClaw" width="48"/><br/>
-          <b>IronClaw</b>
-        </a><br/>
-        <sub>⭐ 2.1K</sub>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" width="110">
-        <a href="https://github.com/anomalyco/opencode">
-          <img src="./public/providers/opencode.svg" alt="OpenCode" width="48"/><br/>
-          <b>OpenCode</b>
-        </a><br/>
-        <sub>⭐ 106K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/openai/codex">
-          <img src="./public/providers/codex.svg" alt="Codex CLI" width="48"/><br/>
-          <b>Codex CLI</b>
-        </a><br/>
-        <sub>⭐ 60.8K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/anthropics/claude-code">
-          <img src="./public/providers/claude.svg" alt="Claude Code" width="48"/><br/>
-          <b>Claude Code</b>
-        </a><br/>
-        <sub>⭐ 67.3K</sub>
-      </td>
-      <td align="center" width="110">
-        <a href="https://github.com/Kilo-Org/kilocode">
-          <img src="./public/providers/kilocode.svg" alt="Kilo Code" width="48"/><br/>
-          <b>Kilo Code</b>
-        </a><br/>
-        <sub>⭐ 15.5K</sub>
-      </td>
-    </tr>
-  </table>
+<br/>
 
-<sub>📡 All agents connect via <code>http://localhost:20128/v1</code> or <code>http://cloud.omniroute.online/v1</code> — one config, unlimited models and quota</sub>
+<div align="center">
 
----
+# 💥 وعده
 
-## 🤔 Why RouteChi?
+</div>
 
-**Stop wasting money and hitting limits:**
+> یک نقطهٔ پایانی. **۲۵۰ ارائه‌دهنده.** هرگز ساخت را متوقف نکنید — و بگذارید RouteChi ارزان‌ترین گزینه‌ای که کار می‌کند را انتخاب کند.
 
-- <img src="https://img.shields.io/badge/✗-e74c3c?style=flat-square" height="16"/> Subscription quota expires unused every month
-- <img src="https://img.shields.io/badge/✗-e74c3c?style=flat-square" height="16"/> Rate limits stop you mid-coding
-- <img src="https://img.shields.io/badge/✗-e74c3c?style=flat-square" height="16"/> Expensive APIs ($20-50/month per provider)
-- <img src="https://img.shields.io/badge/✗-e74c3c?style=flat-square" height="16"/> Manual switching between providers
+<table>
+  <tr>
+    <td width="33%" valign="top"><b>🚫 هرگز به محدودیت برنخورید</b><br/><sub>سقوط خودکار میان ۲۵۰ ارائه‌دهنده در میلی‌ثانیه‌ها. سهمیه تمام شد؟ ارائه‌دهندهٔ بعدی تحویل می‌گیرد — بدون قطعی.</sub></td>
+    <td width="33%" valign="top"><b>💸 تا ۹۵٪ توکن ذخیره کنید</b><br/><sub>فشرده‌سازی ترکیبی RTK + Caveman بین ۱۵ تا ۹۵٪ توکن‌های واجد شرایط را حذف می‌کند (میانگین ~۸۹٪ در نشست‌های پرابزار).</sub></td>
+    <td width="33%" valign="top"><b>🆓 شروع با ۰ دلار</b><br/><sub>۹۰+ ارائه‌دهنده با سطح رایگان، ۱۱ مورد <i>برای همیشه</i> رایگان (Kiro، Qoder، Pollinations، LongCat…). بدون نیاز به کارت.</sub></td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top"><b>🔌 هر ابزاری کار می‌کند</b><br/><sub>۲۴+ عامل کدنویسی — Claude Code، Codex، Cursor، Cline، Copilot، Antigravity — از طریق یک پیکربندی.</sub></td>
+    <td width="33%" valign="top"><b>🧩 یک نقطهٔ پایانی</b><br/><sub>ترجمهٔ OpenAI ↔ Claude ↔ Gemini ↔ Responses API. هر ابزاری را به <code>/v1</code> نشانه بگیرید و به‌سادگی کار می‌کند.</sub></td>
+    <td width="33%" valign="top"><b>🛡️ سطح تولید</b><br/><sub>قطع‌کن‌های مدار، مخفی‌کاری TLS، MCP (۹۴ ابزار)، A2A، حافظه، حفاظت‌ها، ارزیابی‌ها. بیش از ۲۱٬۰۰۰ آزمون.</sub></td>
+  </tr>
+</table>
 
-**RouteChi solves this:**
+<br/>
+<br/>
 
-- ✅ **Maximize subscriptions** - Track quota, use every bit before reset
-- ✅ **Auto fallback** - Subscription → API Key → Cheap → Free, zero downtime
-- ✅ **Multi-account** - Round-robin between accounts per provider
+<div align="center">
 
----
+# 🤔 چرا RouteChi؟
 
-## 📧 Support
+</div>
 
-> 💬 **Join our community!** [WhatsApp Group](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t) — Get help, share tips, and stay updated.
+> دست‌وپا زدن با ۱۰ داشبورد، کلیدهای API مرده و قبض‌های غیرمنتظره را متوقف کنید.
 
-- **Website**: [omniroute.online](https://omniroute.online)
-- **GitHub**: [github.com/borhandarabi/routechi](https://github.com/borhandarabi/routechi)
-- **Issues**: [github.com/borhandarabi/routechi/issues](https://github.com/borhandarabi/routechi/issues)
-- **WhatsApp**: [Community Group](https://chat.whatsapp.com/JI7cDQ1GyaiDHhVBpLxf8b?mode=gi_t)
-- **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md), open a PR, or pick a `good first issue`
+| ❌ درد روزانه                                          | ✅ نحوهٔ برطرف‌کردن توسط RouteChi                                                  |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| 📉 سهمیه اشتراک هر ماه بدون استفاده منقضی می‌شود       | **بیشینه‌سازی اشتراک‌ها** — ردیابی سهمیه، استفاده از هر توکن پیش از بازنشانی        |
+| 🛑 محدودیت نرخ میان کدنویسی متوقف‌تان می‌کند            | **سقوط خودکار ۴ سطحی** — اشتراک ← API ← ارزان ← رایگان، در میلی‌ثانیه‌ها            |
+| 🔥 خروجی ابزارها (`git diff`، `grep`، لاگ‌ها) توکن می‌سوزانند | **فشرده‌سازی RTK + Caveman** — ذخیرهٔ ۱۵–۹۵٪ توکن واجد شرایط به‌ازای هر درخواست       |
+| 💸 APIهای گران (۲۰–۵۰ دلار در ماه به‌ازای هر ارائه‌دهنده) | **مسیریابی بهینه‌شدهٔ هزینه** — مسیردهی خودکار به ارزان‌ترین مدل قابل‌اجرا            |
+| 🧰 هر ابزار هوش مصنوعی تنظیمات خاص خود را می‌خواهد      | **یک نقطهٔ پایانی، هر ابزار، یک داشبورد**                                           |
+| 🌍 هوش مصنوعی در کشور شما مسدود است                    | **پراکسی ۳ سطحی** + مخفی‌کاری اثر انگشت TLS — استفاده از هوش مصنوعی از هر کجا        |
 
-### 🐛 Reporting a Bug?
+<div align="center">
 
-When opening an issue, please run the system-info command and attach the generated file:
+```
+┌──────────────────────────────────────────────────────────┐
+│        Your IDE / CLI  (Claude Code, Cursor, Cline…)       │
+└─────────────────────────┬──────────────────────────────────┘
+                          │ http://localhost:20128/v1
+                          ▼
+┌──────────────────────────────────────────────────────────┐
+│                  RouteChi — Smart Router                  │
+│  RTK + Caveman compression · 18 routing strategies         │
+│  Circuit breakers · TLS stealth · MCP · A2A · Guardrails   │
+└─────────────────────────┬──────────────────────────────────┘
+        ┌─────────────┬────┴────────┬─────────────┐
+        ▼ Tier 1      ▼ Tier 2      ▼ Tier 3       ▼ Tier 4
+   SUBSCRIPTION     API KEY        CHEAP          FREE
+   Claude Code,     DeepSeek,      GLM $0.5,      Kiro, Qoder,
+   Codex, Copilot   Groq, xAI      MiniMax $0.2   Pollinations
+   quota out? ───▶  budget hit? ─▶ budget hit? ─▶ always on
+```
+
+</div>
+
+<br/>
+
+<div align="center">
+
+# 🎯 کامبوها — پرچمدار
+
+</div>
+
+> یک **کامبو** زنجیره‌ای از مدل‌هاست که RouteChi **به‌طور خودکار** میان آن‌ها مسیریابی می‌کند. سهمیه تمام می‌شود، ارائه‌دهنده‌ای شکست می‌خورد، یا هزینه‌ها بالا می‌روند — کامبو بی‌صدا به مدل بعدی می‌لغزد. **این چیزی است که RouteChi را غیرقابل‌شکستن می‌کند.** 🛡️
+
+### ⚡ بدون پیکربندی — فقط از `auto` استفاده کنید
+
+نیازی به ساخت کامبو نیست. مدل خود را روی `auto` (یا یک نوع آن) بگذارید و RouteChi از ارائه‌دهنده‌های متصل‌شده‌تان یک کامبو مجازی با امتیاز زنده می‌سازد:
+
+| شناسه مدل      | برای چه بهینه می‌کند                                            |
+| -------------- | -------------------------------------------------------------- |
+| `auto`         | 🎯 پیش‌فرض متعادل (LKGP — به آخرین ارائه‌دهندهٔ موفق شما می‌چسبد) |
+| `auto/coding`  | 🧑‍💻 وزن‌های اولویت‌کیفیت برای تولید کد                          |
+| `auto/fast`    | ⚡ کم‌ترین تأخیر اول                                         |
+| `auto/cheap`   | 💰 ارزان‌ترین به‌ازای توکن اول                                    |
+| `auto/offline` | 🔋 بیشترین فضای سهمیه / محدودیت نرخ اول                          |
+| `auto/smart`   | 🔭 اولویت‌کیفیت + ۱۰٪ اکتشاف برای یافتن مدل‌های بهتر   |
+
+##
+
+### 🔀 یا کامبو دلخواه خود را بسازید — ۱۸ استراتژی مسیریابی
+
+همهٔ **۱۸** استراتژی — برای هر گام کامبو به‌صورت دلخواه قابل ترکیب:
+
+| #   | استراتژی            | کاری که انجام می‌دهد                                                |
+| --- | ------------------- | ------------------------------------------------------------------ |
+| 1   | `priority`          | فهرست مرتب اولین‌هدف — تخلیهٔ هرکدام پیش از بعدی 🥇                  |
+| 2   | `fill-first`        | پر کردن کامل سهمیهٔ هر هدف پیش از حرکت به بعدی                     |
+| 3   | `weighted`          | تصادفی وزن‌دار بر اساس وزن هر هدف                                  |
+| 4   | `round-robin`       | چرخش میان اهداف به ترتیب                                          |
+| 5   | `p2c`               | تعادل بار تصادفی power-of-two-choices                            |
+| 6   | `least-used`        | انتخاب هدف با کم‌ترین بار فعلی                                     |
+| 7   | `random`            | انتخاب یکنواخت تصادفی (بدون تکرار)                                |
+| 8   | `strict-random`     | تصادفی بدون حذف تکرارها 🎲                                        |
+| 9   | `cost-optimized`    | کمینه‌سازی $ به‌ازای هر درخواست از قیمت‌گذاری زندهٔ کاتالوگ 💸        |
+| 10  | `headroom`          | انتخاب هدف با بیشترین سهمیهٔ باقیمانده                            |
+| 11  | `reset-window`      | ترجیح هدفی که پنجرهٔ سهمیه‌اش زودتر بازنشانی می‌شود                 |
+| 12  | `reset-aware`       | رتبه‌بندی بر اساس زمان بازنشانی سهمیه — پنجره‌های کوتاه اول 📊      |
+| 13  | `context-relay`     | تحویل زمینه میان اهداف برای گفت‌وگوهای طولانی 🧠                  |
+| 14  | `context-optimized` | انتخاب بهترین تناسب برای اندازهٔ زمینهٔ فعلی                       |
+| 15  | `lkgp`              | Last-Known-Good Path — چسبیدن به آخرین هدف موفق                    |
+| 16  | `auto`              | امتیازدهی زندهٔ ۱۲ عاملی میان همهٔ اتصال‌ها 🤖                       |
+| 17  | `fusion`            | گسترش به تابلویی از مدل‌ها + یک قاضی یک پاسخ ترکیب می‌کند 🧬      |
+| 18  | `pipeline`          | زنجیرهٔ گام‌ها — خروجی هر هدف ورودی بعدی می‌شود 🔗                 |
+
+<sub>موتور Auto-Combo هر کاندید را بر اساس **۱۲ عامل** (سلامت، سهمیه، هزینه، تأخیر، نرخ موفقیت، تازگی…) امتیاز می‌دهد — به [`docs/routing/AUTO-COMBO.md`](docs/routing/AUTO-COMBO.md) مراجعه کنید.</sub>
+
+##
+
+### ⚖️ Quota-Share — تقسیم یک اشتراک میان یک تیم ✨ جدید
+
+> چندین کلید را بر روی **همان حساب بالادستی** اجرا می‌کنید (یک طرح Codex Pro، یک کلید Kimi، یک صندلی GLM Coding)؟ یک جهش روی یک کلید می‌تواند کل سهمیهٔ ۵ ساعته / ساعتی را بسوزاند و بقیه را قفل کند. **Quota-Share** سهمیهٔ زمان‌بندی‌شدهٔ یک ارائه‌دهنده را **به‌طور عادلانه** میان کلیدهای یک استخر توزیع می‌کند — و _work-conserving_ است، بنابراین سهمیهٔ بیکار یک عضو به جای هدررفن قرض داده می‌شود.
+
+| تنظیم                       | کاری که کنترل می‌کند                                                            |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| ⚖️ **وزن تخصیص**            | سهم هر کلید از استخر — مثلاً `50 / 30 / 20`                                     |
+| 📐 **ابعاد**                | ردیابی `%` · درخواست‌ها · توکن‌ها · `$`، به‌ازای پنجرهٔ **5h / 7d / per-model**   |
+| 🚦 **سیاست**                | `hard` (مسدود کردن بیش از سهم) · `soft` (کاهش اولویت) · `burst` (استفاده از فضای بیکار) |
+| 🧱 **سقف**                  | سقف مطلق به‌ازای کلید، مستقل از حالت                                            |
+
+```
+Pool "team-codex"   ·   1 Codex Pro account   ·   3 keys   ·   5-hour window
+  ├─ alice    weight 50  ██████████░░░░░░░░░░   ≤ 50% of the shared 5h quota
+  ├─ bob      weight 30  ██████░░░░░░░░░░░░░░   ≤ 30%
+  └─ ci-bot   weight 20  ████░░░░░░░░░░░░░░░░   ≤ 20%
+Generous mode (<50% pool used) → idle shares are lent out
+Strict mode  (≥50% pool used)  → each key held to its fair share
+```
+
+<sub>در مسیر داغ و **پیش از** خروج درخواست از RouteChi اعمال می‌شود، با سقف‌های per-(key, model) + چسبندگی نشست برای یکپارچگی prompt-cache (اکنون با یک کلید غیرفعال‌سازی per-combo / سراسری). 📖 [Quota Sharing Engine](docs/routing/QUOTA_SHARE.md)</sub>
+
+##
+
+### 🧱 تاب‌آوری درون‌ساخته است (۳ لایهٔ مستقل)
+
+| لایه                       | دامنه             | کاری که انجام می‌دهد                                                              |
+| -------------------------- | ----------------- | -------------------------------------------------------------------------------- |
+| 🔌 **قطع‌کن مدار**         | کل ارائه‌دهنده    | توقف کوبیدن روی ارائه‌دهنده‌ای که بالادست شکست می‌خورد؛ کاوش خودکار برای بازیابی |
+| 💤 **خنک‌سازی اتصال**       | یک حساب / کلید    | پرش از یک کلید محدود‌شده در حالی که کلیدهای دیگر سرویس می‌دهند                   |
+| 🎯 **قفل مدل**             | ارائه‌دهنده + مدل | قرنطینهٔ فقط یک مدل محدودشده سهمیه، نه کل اتصال                                   |
+
+```
+Combo: "always-on"                         Strategy: priority
+  1. cc/claude-opus-4-7   ← subscription (use it fully)
+  2. cx/gpt-5.5           ← second subscription
+  3. glm/glm-5.1          ← cheap backup ($0.5/1M)
+  4. kr/claude-sonnet-4.5 ← FREE, unlimited (never fails)
+Result: 4 layers of fallback = zero downtime
+```
+
+<sub>📖 [موتور Auto-Combo](docs/routing/AUTO-COMBO.md) · [راهنمای تاب‌آوری](docs/architecture/RESILIENCE_GUIDE.md)</sub>
+
+<br/>
+
+<div align="center">
+
+# 🏆 چه چیزی RouteChi را متمایز می‌کند
+
+</div>
+
+| امکان                                   | RouteChi                                                            | سایر روترها   |
+| --------------------------------------- | ------------------------------------------------------------------- | ------------- |
+| 🌐 ارائه‌دهندگان                        | **۲۵۰**                                                             | ۲۰–۱۰۰        |
+| 🆓 ارائه‌دهندگان رایگان                 | **۹۰+ (۱۱ مورد برای همیشه رایگان)**                                 | ۱–۵           |
+| 🔀 استراتژی‌های مسیریابی                | **۱۸** (priority، weighted، cost-optimized، context-relay، fusion…) | ۱–۳           |
+| 🗜️ فشرده‌سازی توکن                      | **RTK + Caveman ترکیبی (۱۵–۹۵٪)**                                   | هیچ / ۲۰–۴۰٪  |
+| 🧰 سرور MCP درون‌ساخته                  | **۹۴ ابزار، ۳ انتقال، ۳۰ حوزه**                                     | نادر          |
+| 🤝 پروتکل عاملی A2A                     | **۶ مهارت، JSON-RPC 2.0**                                           | هیچ           |
+| 🧠 حافظه (FTS5 + برداری)                | **بله**                                                             | نادر          |
+| 🛡️ حفاظت‌ها (PII، تزریق، بینایی)        | **بله**                                                             | نادر          |
+| ☁️ عوامل ابری                           | **Codex، Cursor، Devin، Jules**                                     | هیچ           |
+| 🥷 مخفی‌کاری اثر انگشت TLS              | **JA3/JA4 از طریق wreq-js**                                         | هیچ           |
+| 🖥️ چندسکویی                            | **وب · دسکتاپ · Termux · PWA**                                       | فقط وب        |
+| 🌍 i18n                                 | **۴۲ زبان**                                                         | ۰–۴           |
+
+<sub>📊 مقایسهٔ تفصیلی در برابر LiteLLM، OpenRouter و Portkey ← [`docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md`](docs/comparison/OMNIROUTE_VS_ALTERNATIVES.md)</sub>
+
+<br/>
+
+<div align="center">
+
+# ✨ تازه‌ها
+
+</div>
+
+> نکات برجستهٔ اخیر از **v3.8.20 → v3.8.47**. تاریخچهٔ کامل در [`CHANGELOG.md`](CHANGELOG.md).
+
+- **🗜️ سخت‌سازی فشرده‌سازی** — یک **محافظ تورم** به‌صورت پیش‌فرض-روشن (دورریختن نتیجهٔ ترکیبی و ارسال اصل عینی هرگاه فشرده‌سازی پرامپت را _بزرگ‌تر_ می‌کند)، تکمیل **بسته‌های قانون Caveman** برای آلمانی / فرانسوی / ژاپنی (dedup + ultra) به‌علاوهٔ یک **بستهٔ ورودی چینی (文言 / wényán)** جدید با تشخیص خودکار zh-vs-ja، و **فیلترهای RTK برای خروجی بیلد Gradle و .NET (`dotnet`)**. ← [فشرده‌سازی](docs/compression/COMPRESSION_ENGINES.md)
+- **💸 هزینهٔ نرخ-ثابت صادقانه** — ارائه‌دهندگان اشتراک / طرح کدنویسی (ChatGPT Web، grok-web، طرح‌های کدنویسی Minimax / Kimi / GLM / Alibaba، Xiaomi MiMo…) اکنون در تحلیل هزینه **$0** می‌خوانند به‌جای یک برآورد متورم به‌ازای توکن، در حالی که بودجه / سهمیه / مسیریابی بدون تغییر برآورد می‌کنند. ← [مرجع API](docs/reference/API_REFERENCE.md)
+- **⚖️ مسیریابی Quota-Share** — یک استراتژی کامبو اختصاصی که بار را بر اساس _سهمیهٔ موجود_ میان حساب‌ها پخش می‌کند: زمان‌بندی Deficit-Round-Robin، `max_concurrent` به‌ازای اتصال با صف انتظار خنک‌سازی، سطل‌های مصرف چندپنجره‌ای (۵ ساعت / ۷ روز / به‌ازای مدل)، سقف‌های per-(key, model)، چسبندگی نشست برای یکپارچگی prompt-cache (اکنون با یک کلید غیرفعال‌سازی per-combo / سراسری)، و اشباع پیش‌فعال از هدرهای مصرف توکن بالادست. ← [راهنمای تاب‌آوری](docs/architecture/RESILIENCE_GUIDE.md)
+- **🤖 راه‌اندازی CLI/عامل با یک دستور** — یک دستور اختصاصی `setup-*` هر ابزار کدنویسی را پیکربندی می‌کند تا از طریق RouteChi مسیریابی شود (Claude Code، Codex، Cline، Continue، Cursor، Roo Code، Kilo Code، Crush، Goose، Qwen Code، Aider، OpenCode)؛ `omniroute launch` / `omniroute launch-codex` راه‌اندازهای بدون‌پیکربندی هستند. ← [ادغام‌های CLI](docs/guides/CLI-INTEGRATIONS.md)
+- **🛰️ حالت Remote** — هدایت RouteChi روی یک ماشین دور با توکن‌های دسترسی حوزه‌دار (`omniroute connect` / `omniroute contexts` / `omniroute tokens`)، به‌علاوهٔ یک راه‌مند `omniroute login antigravity` که OAuth «native/desktop» گوگل را روی ماشین خودتان اجرا و یک اعتبارنامه را در یک نصب remote/VPS (جایی که بازگشت loopback در دسترس نیست) جا می‌گذارد. ← [حالت Remote](docs/guides/REMOTE-MODE.md)
+- **🧭 مسیریابی خودکار هوشمندتر** — کامبوهای سبک OpenRouter `auto/<category>:<tier>` (مثلاً `auto/coding:fast`، `auto/reasoning:pro`)، یک استراتژی **Fusion** (گسترش به تابلویی از مدل‌ها به‌موازات، سپس ترکیب با یک قاضی)، **مسیریابی آگاه-از-وظیفه** (بهترین اتصال به‌ازای نوع وظیفه)، بازنویسی `X-Route-Model` به‌ازای درخواست، Arena-ELO زنده + هوش مدل models.dev، فهرست مجاز حساب به‌ازای گام، گام‌های کامبو با wildcard ارائه‌دهنده، اجرای nested combo-ref، انتخاب وزن‌دار چسبان، مسیریابی آگاه از `web_search` (اکنون با **قوانین رهگیری web-search/web-fetch به‌ازای مدل**)، مسیریابی بومی **xAI Grok `/v1/responses`**، و **کنترل‌های Auto-Combo به‌ازای درخواست** (بازنویسی پیش‌تنظیم حالت `X-RouteChi-Mode` + سقف سخت هزینهٔ دلاری `X-RouteChi-Budget`، حوزه‌دار به یک درخواست). مدل‌های فقط-embedding و فقط-rerank (JinaAI، OpenRouter سفارشی، مدل‌های reranker…) دیگر از انتخابگر مدل سازنده کامبو ناپدید نمی‌شوند. ← [Auto-Combo](docs/routing/AUTO-COMBO.md)
+- **🗜️ فشرده‌سازی پلاگین‌پذیر** — یک خط لولهٔ ناهمگام از **۱۰ موتور قابل‌ترکیب** با Compression Studios، یک موتور LLMLingua-2 ONNX و یک **Ultra** دوسطحی heuristics/SLM، RTK، Anthropic Context Editing واگذارشده، **Output Styles** (هدایت محور خروجی: terse-prose / less-code / terse-CJK)، یک **دیل بودجهٔ زمینهٔ تطبیقی** (تشدید تنها تا حد نیاز برای جا شدن در پنجرهٔ زمینه)، کنترل به‌ازای درخواست `x-omniroute-compression`، یک ابزار ارزیابی آفلاین اختیاری، مدیریت چرخهٔ عمر پروکسی **Headroom** با یک کلیک از داشبورد (Docker sidecar پشتیبانی می‌شود)، یک **زمین بازی فشرده‌سازی** مصنوعی (خطوط Play + مقایسهٔ A/B با حکم‌های وفاداری دارای سقف دلاری)، یک **دروازهٔ وفاداری per-step** اختیاری که موتور اتلافی را پیش از تخریب پرامپت رد می‌کند، یک **رمزگذار کاندید best-of-N** (GCF در برابر TOON — کوتاه‌تر را نگه می‌دارد، با یک جدول A/B bytes/token در استودیو)، **کدک GCF** توسعه‌یافتهٔ درون‌بسته به spec v3.2 (تسطیح تودرتو — payloadهای عمیقاً تودرتو از ~۳٪ به ~۳۲٪ فشرده‌سازی در برابر JSON می‌رسند)، یک موتور **omniglyph** جدید (زمینه به‌عنوان تصویر، ~۱۰× توکن کمتر روی بلوک تبدیل‌شده)، **بازیابی ranged/grep/stats در CCR** (کشید یک برش دقیق byte/line یا خلاصهٔ یک بلوک ذخیره‌شده به‌جای بسط مجدد)، یک پنل یکپارچه با پروفایل‌های نام‌دار + انتخابگر پروفایل فعال، یک **قطع‌کن خط‌لوله per-engine** اختیاری، یک **موتور سطح LLM** اختیاری (یک پاس مدل برای فشرده‌سازی معنایی با نسبت بالاتر)، یک **موتور چرخهٔ خواندن** که خواندن‌های فایل جایگزین‌شده را فرومی‌کاهد، **انجماد پیشوند مشاهده‌شده‌دراستفاده**، یک **شیب بازخورد بازیابی CCR** تدریجی، یک enum حالت `preserveSystemPrompt`، و یک **ویرایشگر خط‌لوله با drag-reorder** در استودیو. ← [فشرده‌سازی](docs/compression/COMPRESSION_ENGINES.md)
+- **🕵️ رمزگشای شفاف MITM (TPROXY)** — ضبط و ترجمهٔ ترافیک از CLIهایی که متغیرهای env پراکسی را نادیده می‌گیرند، با یک مرجع گواهی per-SNI و یک نصب‌کنندهٔ trust-store. ← [MITM/TPROXY](docs/security/MITM-TPROXY-DECRYPT.md)
+- **💸 تلهومتری هزینه همه‌جا** — هدرهای هزینه/مصرف `X-RouteChi-*` روی هر نقطهٔ پایانی (از جمله رسانه)، یک موتور هزینهٔ غیرتوکنی، یک هدر `X-RouteChi-Cost-Saved` برای cache-HIT، و سهمیه‌های مصرف دلاری به‌ازای کلید. ← [مرجع API](docs/reference/API_REFERENCE.md)
+- **🧠 حافظه‌ای که کنترل می‌کنید** — کوانتی‌سازی برداری int8 اختیاری (Qdrant + sqlite-vec)، **اضمحلال حافظهٔ نوع‌دار** اختیاری (حافظه‌های کم‌ارزش کهنه بر یک برنامهٔ per-type محو می‌شوند)، حافظه به‌صورت پیش‌فرض خاموش، و یک هدر `x-omniroute-no-memory` به‌ازای درخواست. ← [حافظه](docs/frameworks/MEMORY.md)
+- **🛡️ امنیت** — یک نگهبان تزریق پرامپت روی هر مسیر LLM (پشتیبانی‌شده با یک مجموعهٔ تیم‌سرخ)، به‌علاوهٔ یک جست‌وجوی وب DuckDuckGo به‌عنوان راه‌حل نهایی رایگان. ← [حفاظت‌ها](docs/security/GUARDRAILS.md)
+- **🖼️ نقاط پایانی جدید** — `/v1/ocr` (Mistral OCR) و `/v1/audio/translations` (ترجمهٔ صوتی به سبک Whisper) سطح API رسانه‌ای را تکمیل می‌کنند. ← [مرجع API](docs/reference/API_REFERENCE.md)
+- **🌍 استقرار و عملیات** — استقرار `basePath` پراکسی معکوس (`OMNIROUTE_BASE_PATH`، مثلاً سرو کردن RouteChi زیر `/omniroute/`)، تشخیص خودکار زبان مرورگر در نخستین بازدید، ردیابی دستگاه/اتصال به‌ازای API-key (اثر انگشت IP+UA، نقاب‌دار، فقط در حافظه)، اعتماد گواهی MITM بدون root برای کانتینرهای user-namespaced (`OMNIROUTE_NO_SUDO`)، فیلترهای only-configured / only-available در سمت سرور روی صفحهٔ رتبه‌بندی ارائه‌دهندگان رایگان، و **بومی‌سازی چینی سنتی (zh-TW)** برای frontend + CLI. ← [محیط](docs/reference/ENVIRONMENT.md)
+- **🤝 ارائه‌دهندگان و عوامل بیشتر** — Cursor Cloud Agent (عامل ابری چهارم)، CodeBuddy CN (`copilot.tencent.com`)، یک ارائه‌دهندهٔ تولید ویدیوی Google Flow، گیت‌وی‌های جدید **DGrid** و **Pioneer AI** (Fastino Labs)، مترجم‌های ورودی **xAI Grok** به‌علاوهٔ **Grok Build (xAI)** با یک جریان OAuth import-token، GPT-4 / GPT-4o-mini روی ارائه‌دهندهٔ GitHub Copilot، **Factory Droid** چندمدلی، **ZenMux Free** (سطح رایگان session-cookie)، **Alibaba DashScope** text-to-video (`wan2.7-t2v`)، یک کاتالوگ ۲۵۰-ارائه‌دهندهٔ بازنویسی‌شده (OrcaRouter، Wafer AI، OpenAdapter، dit.ai، TokenRouter، …)، تولید رسانهٔ Vertex AI (سخن/رونوشت/موسیقی/ویدیو)، یک کارت ارائه‌دهندهٔ محلی **Ollama** درجه‌یک، **طرح توکن رایگان SenseNova** (گفت‌وگو + متن-به-تصویر)، وارد کردن حساب یک‌کلیکی از CLIProxyAPI (`~/.cli-proxy-api/`)، **Claude Sonnet 5** متصل سرتاسری، یک موج جدید ارائه‌دهنده (**Kenari**، **SumoPod**، **X5Lab**، **Charm Hyper**، **Nube.sh**، **b.ai**، **Qiniu**، **ModelScope**، **Augment/Auggie CLI**، **ClinePass**، تولید تصویر NVIDIA NIM)، وارد کردن حساب Codex از یک access token خام ChatGPT، گیت‌وی **Requesty** (BYOK، ~۲۰۰ درخواست رایگان در روز)، **Yuanbao (web)** به‌عنوان یک ارائه‌دهندهٔ cookie-session (DeepSeek V3/R1 + Hunyuan)، تجمیع‌کنندهٔ LLM میزبانی‌شدهٔ **Zed** (OAuth)، **Claude 5 Sonnet** روی ارائه‌دهندهٔ Claude Web، **استدلال تفکر تطبیقی Kiro** به‌عنوان `reasoning_content` نمایش داده می‌شود، **افزودن انبوهی API-key برای Cloudflare Workers AI**، و **OpenVecta** (گیت‌وی استنتاج هوش مصنوعی). ← [ارائه‌دهندگان](docs/reference/PROVIDER_REFERENCE.md)
+- **⚡ عملکرد و زیرساخت محلی** — یک راه‌انداز Redis محلی یک‌کلیکی (`omniroute redis up`، به‌علاوهٔ یک پنل Redis در داشبورد)، مستقرکننده‌های relay یک‌کلیکی **Cloudflare Workers** و **Deno Deploy** متصل به استخر پراکسی، یک انتخابگر backend-relay (`OMNIROUTE_RELAY_BACKEND=ts|bifrost|auto`) تا `/v1/relay` یک سطح پایدار بماند در حالی که سریع‌ترین backend به‌صورت درونی انتخاب می‌شود، **Bifrost** (Go AI-gateway) و **Mux** (daemon orchestration عامل) به خدمات درجه‌یک embedded/supervised در کنار 9Router/CLIProxyAPI ارتقا یافتند، **Webshare** به‌عنوان یک منبع چهارم پولی در چارچوب ارائه‌دهندهٔ پراکسی رایگان افزوده شد، و **قالب‌های مختصر پراکسی + حالت هدر پروتکل** برای وارد کردن انبوه پراکسی. ← [سرویس‌های درون‌ساخته](docs/frameworks/EMBEDDED-SERVICES.md)
+
+<br/>
+
+<div align="center">
+
+# 🤖 CLIها و عوامل کدنویسی سازگار
+
+> یک پیکربندی — `http://localhost:20128/v1` — و **هر** IDE یا CLI هوش مصنوعی روی مدل‌های رایگان و کم‌هزینه اجرا می‌شود.
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="120"><a href="https://github.com/anthropics/claude-code"><img src="./public/providers/claude.svg" width="52" alt="Claude Code"/><br/><b>Claude Code</b></a></td>
+    <td align="center" width="120"><a href="https://github.com/openai/codex"><img src="./public/providers/codex.svg" width="52" alt="Codex CLI"/><br/><b>Codex CLI</b></a></td>
+    <td align="center" width="120"><img src="./public/providers/cursor.png" width="52" alt="Cursor"/><br/><b>Cursor</b></td>
+    <td align="center" width="120"><img src="./public/providers/copilot.png" width="52" alt="Copilot"/><br/><b>Copilot</b></td>
+    <td align="center" width="120"><img src="./public/providers/continue.png" width="52" alt="Continue"/><br/><b>Continue</b></td>
+  </tr>
+  <tr>
+    <td align="center" width="120"><a href="https://github.com/anomalyco/opencode"><img src="./public/providers/opencode.svg" width="52" alt="OpenCode"/><br/><b>OpenCode</b></a></td>
+    <td align="center" width="120"><a href="https://github.com/Kilo-Org/kilocode"><img src="./public/providers/kilocode.svg" width="52" alt="Kilo Code"/><br/><b>Kilo Code</b></a></td>
+    <td align="center" width="120"><img src="./public/providers/droid.svg" width="52" alt="Droid"/><br/><b>Droid</b></td>
+    <td align="center" width="120"><img src="./public/providers/openclaw.png" width="52" alt="OpenClaw"/><br/><b>OpenClaw</b></td>
+    <td align="center" width="120"><img src="./public/providers/kiro.svg" width="52" alt="Kiro"/><br/><b>Kiro</b></td>
+    <td align="center" width="120"><img src="./public/providers/command-code.svg" width="52" alt="Command Code"/><br/><b>Command</b></td>
+  </tr>
+</table>
+</div>
+
+<div align="center">
+<b>＋ همچنین کار می‌کند با</b> · Cline · Antigravity · Windsurf · AMP · Hermes · Qwen CLI · Roo · Continue · <b>هر ابزار سازگار با OpenAI</b>
+</div>
+
+<sub>📖 راه‌اندازی به‌ازای ابزار برای همهٔ ۲۴+ ابزار ← [`docs/reference/CLI-TOOLS.md`](docs/reference/CLI-TOOLS.md) · 🧩 پلاگین OpenCode ← [`@omniroute/opencode-provider`](https://www.npmjs.com/package/@omniroute/opencode-provider)</sub>
+
+</div>
+
+<br/>
+
+<div align="center">
+
+# 🌐 ۲۵۰ ارائه‌دهندهٔ هوش مصنوعی — ۹۰+ رایگان
+
+</div>
+
+> کامل‌ترین کاتالوگ در میان روترهای متن‌باز: **۲۵۰ ارائه‌دهنده**، **۹۰+ با سطح رایگان**، **۱۱ مورد برای همیشه رایگان**.
+
+<div align="center">
+
+### 🏢 هر آزمایشگاه بزرگ — از طریق یک نقطهٔ پایانی
+
+<table>
+  <tr>
+    <td align="center" width="92"><picture><source media="(prefers-color-scheme:dark)" srcset="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@1.91.0/dark/openai.png"/><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/openai.svg" width="40" alt="OpenAI"/></picture><br/><sub>OpenAI</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/claude-color.svg" width="40" alt="Anthropic"/><br/><sub>Anthropic</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/gemini-color.svg" width="40" alt="Gemini"/><br/><sub>Gemini</sub></td>
+    <td align="center" width="92"><picture><source media="(prefers-color-scheme:dark)" srcset="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@1.91.0/dark/grok.png"/><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/grok.svg" width="40" alt="xAI Grok"/></picture><br/><sub>xAI Grok</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/deepseek-color.svg" width="40" alt="DeepSeek"/><br/><sub>DeepSeek</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/mistral-color.svg" width="40" alt="Mistral"/><br/><sub>Mistral</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qwen-color.svg" width="40" alt="Qwen"/><br/><sub>Qwen</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/meta-color.svg" width="40" alt="Meta Llama"/><br/><sub>Meta Llama</sub></td>
+    <td align="center" width="92"><picture><source media="(prefers-color-scheme:dark)" srcset="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@1.91.0/dark/groq.png"/><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/groq.svg" width="40" alt="Groq"/></picture><br/><sub>Groq</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/nvidia-color.svg" width="40" alt="NVIDIA"/><br/><sub>NVIDIA</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/minimax-color.svg" width="40" alt="MiniMax"/><br/><sub>MiniMax</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/cohere-color.svg" width="40" alt="Cohere"/><br/><sub>Cohere</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/perplexity-color.svg" width="40" alt="Perplexity"/><br/><sub>Perplexity</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/huggingface-color.svg" width="40" alt="Hugging Face"/><br/><sub>HuggingFace</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/together-color.svg" width="40" alt="Together"/><br/><sub>Together</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/fireworks-color.svg" width="40" alt="Fireworks"/><br/><sub>Fireworks</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/cloudflare-color.svg" width="40" alt="Cloudflare"/><br/><sub>Cloudflare</sub></td>
+    <td align="center" width="92"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/baidu-color.svg" width="40" alt="Baidu"/><br/><sub>Baidu</sub></td>
+  </tr>
+</table>
+
+<sub>…و ۲۲۰+ مورد دیگر — هر آیکون به‌صورت زنده از کاتالوگ ارائه‌دهندهٔ داشبورد بازیابی می‌شود. 📖 [مرجع ارائه‌دهنده](docs/reference/PROVIDER_REFERENCE.md)</sub>
+
+<br/>
+
+### 🆓 برای همیشه رایگان — ۰ دلار، بدون کارت
+
+<table>
+  <tr>
+    <td align="center" width="150"><img src="./public/providers/agentrouter.png" width="44" alt="AgentRouter"/><br/><b>AgentRouter</b><br/><sub>GPT-5, Claude, Gemini<br/>$100 free credits</sub></td>
+    <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/qoder-color.svg" width="44" alt="Qoder AI"/><br/><b>Qoder AI</b><br/><sub>Kimi-K2, DeepSeek-R1<br/>Unlimited FREE</sub></td>
+    <td align="center" width="150"><picture><source media="(prefers-color-scheme:dark)" srcset="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@1.91.0/dark/pollinations.png"/><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/pollinations.svg" width="44" alt="Pollinations"/></picture><br/><b>Pollinations</b><br/><sub>GPT-5, Claude, Llama 4<br/>No key needed</sub></td>
+    <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/longcat-color.svg" width="44" alt="LongCat"/><br/><b>LongCat</b><br/><sub>LongCat-2.0<br/>10M tokens one-time (KYC) 🔑</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/cloudflare-color.svg" width="44" alt="Cloudflare AI"/><br/><b>Cloudflare AI</b><br/><sub>50+ models<br/>10K neurons/day</sub></td>
+    <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/nvidia-color.svg" width="44" alt="NVIDIA NIM"/><br/><b>NVIDIA NIM</b><br/><sub>129 models<br/>~40 RPM free</sub></td>
+    <td align="center" width="150"><img src="https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@1.91.0/icons/cerebras-color.svg" width="44" alt="Cerebras"/><br/><b>Cerebras</b><br/><sub>Qwen3 235B<br/>1M tokens/day</sub></td>
+  </tr>
+</table>
+
+📖 کاتالوگ کامل قابل‌خواندن‌بوسیله‌ ماشین ← [`docs/reference/PROVIDER_REFERENCE.md`](docs/reference/PROVIDER_REFERENCE.md)
+
+<br/>
+</div>
+
+<div align="center">
+
+# 🖥️ RouteChi همه‌جا اجرا می‌شود
+
+</div>
+
+> همان اپ، ماشین شما، قوانین شما. از یک نصب سراسری npm تا **گوشی‌تان** از طریق Termux.
+
+| سکو                       | نصب                                       | نکات برجسته                                                |
+| ------------------------- | ----------------------------------------- | --------------------------------------------------------- |
+| 📦 **npm (سراسری)**       | `npm install -g routechi`                 | یک دستور، هر سیستم‌عاملی                                       |
+| 🐳 **Docker**             | `docker run … borhandarabi/routechi`      | چندساختار **AMD64 + ARM64**                              |
+| 🖥️ **دسکتاپ (Electron)**  | `npm run electron:build`                  | پنجرهٔ بومی + system tray — **Windows / macOS / Linux** |
+| 💪 **ARM**                | native `arm64`                            | Raspberry Pi، سرورهای ARM، Apple Silicon                  |
+| 📱 **Android (Termux)**   | `pkg install nodejs && npx -y routechi`   | روی **گوشی‌تان** اجرا می‌شود، ۲۴/۷، بدون root                    |
+| 📲 **PWA**                | «افزودن به صفحهٔ اصلی»                    | تمام‌صفحه، آفلاین، قابل‌نصب از مرورگر                         |
+| 🧩 **پلاگین OpenCode**    | `@omniroute/opencode-provider`            | ادغام بومی OpenCode                                        |
+| 🛠️ **از سورس**            | `npm install && npm run dev`              | روی آن کار کنید، مشارکت کنید                                |
+
+<sub>📖 [راهنمای Docker](docs/guides/DOCKER_GUIDE.md) · [دسکتاپ](electron/README.md) · [Termux](docs/guides/TERMUX_GUIDE.md) · [PWA](docs/guides/PWA_GUIDE.md) · [OpenCode](docs/frameworks/OPENCODE.md)</sub>
+
+<br/>
+
+<div align="center">
+
+# 🔒 خصوصی و محلی-اول
+
+</div>
+
+> کلیدهای شما، ماشین شما، داده‌های شما. RouteChi یک **پراکسی محلی** است — هرگز به خانه تماس نمی‌گیرد.
+
+- 🏠 **۱۰۰٪ روی سخت‌افزار شما اجرا می‌شود** — npm، Docker، دسکتاپ یا گوشی‌تان. هیچ RouteChi ابری در مسیر درخواست نیست.
+- 🔐 **اعتبارنامه‌ها در حالت ساکن رمزگذاری‌شده** — کلیدهای API و توکن‌های OAuth با **AES-256-GCM** مهر و موم می‌شوند.
+- 🚫 **بدون تلهومتری به‌صورت پیش‌فرض** — پرامپت‌های شما فقط به ارائه‌دهندگانی می‌روند که _شما_ انتخاب می‌کنید، هیچ‌جا دیگر.
+- 🛡️ **گیت‌وی سخت‌شده** — حوزه‌بندی API-key، فیلتر IP، محدودیت نرخ، نگهبان تزریق پرامپت، مسیرهای فرآیند فقط-loopback.
+- 📜 **مجوز MIT و کاملاً متن‌باز** — هر خط را ممیزی کنید، برای همیشه self-host کنید.
+
+<sub>📖 [مجوزها](docs/architecture/AUTHZ_GUIDE.md) · [حفاظت‌ها](docs/security/GUARDRAILS.md) · [تطبیق](docs/security/COMPLIANCE.md)</sub>
+
+<br/>
+
+<div align="center">
+
+# 🔌 CLI کامل + A2A و MCP
+
+</div>
+
+> RouteChi فقط یک سرور نیست — یک **کاک‌پیت کامل خط فرمان** با **بیش از ۸۰ دستور** است، به‌علاوهٔ پروتکل‌های عاملی باز تا یک عامل هوش مصنوعی بتواند RouteChi را **خودش** هدایت کند.
+
+### ⌨️ یک CLI واقعی (نه فقط `start`)
 
 ```bash
-npm run system-info
+omniroute               # serve gateway + dashboard (port 20128)
+omniroute chat          # interactive TUI chat client (slash: /model /combo /skill /memory)
+omniroute setup         # guided first-run wizard
+omniroute doctor        # diagnose providers, ports, native deps
 ```
 
-This generates a `system-info.txt` with your Node.js version, RouteChi version, OS details, installed CLI tools (qoder, gemini, claude, codex, antigravity, droid, etc.), Docker/PM2 status, and system packages — everything we need to reproduce your issue quickly. Attach the file directly to your GitHub issue.
+### 🛰️ حالت Remote — CLI اینجا، RouteChi روی یک VPS اجرا شود
 
----
+RouteChi روی یک سرور؟ آن را از لپ‌تاپ‌تان با **همان CLI** هدایت کنید. یک‌بار با یک توکن دسترسی حوزه‌دار وارد شوید؛ هر دستور سپس روی remote هدف قرار می‌گیرد.
 
-## 🔄 How It Works
-
-```
-┌─────────────┐
-│  Your CLI   │  (Claude Code, Codex, OpenClaw, Cursor, Cline...)
-│   Tool      │
-└──────┬──────┘
-       │ http://localhost:20128/v1
-       ↓
-┌─────────────────────────────────────────┐
-│           RouteChi (Smart Router)        │
-│  • Format translation (OpenAI ↔ Claude) │
-│  • Quota tracking + Embeddings + Images │
-│  • Auto token refresh                   │
-└──────┬──────────────────────────────────┘
-       │
-       ├─→ [Tier 1: SUBSCRIPTION] Claude Code, Codex
-       │   ↓ quota exhausted
-       ├─→ [Tier 2: API KEY] DeepSeek, Groq, xAI, Mistral, NVIDIA NIM, etc.
-       │   ↓ budget limit
-       ├─→ [Tier 3: CHEAP] GLM ($0.6/1M), MiniMax ($0.2/1M)
-       │   ↓ budget limit
-       └─→ [Tier 4: FREE] Qoder, Qwen, Kiro (unlimited)
-
-Result: Never stop coding, minimal cost
+```bash
+omniroute connect 192.168.0.15            # password → scoped token, saved as a context
+omniroute models list                     # ← runs against the REMOTE server
+omniroute configure codex                 # ← picks a remote model, writes a local Codex profile
+omniroute tokens create --name ci --scope read   # mint narrower tokens for other machines
+omniroute contexts use default            # ← switch back to the local server
 ```
 
----
+توکن‌ها به‌صورت `read` / `write` / `admin` حوزه‌دارند؛ مسیرهای process-spawning به‌صورت loopback-only باقی می‌مانند.
+<sub>📖 [حالت Remote](docs/guides/REMOTE-MODE.md)</sub>
 
-## 🎯 What RouteChi Solves — 30 Real Pain Points & Use Cases
+<div align="center">
 
-> **Every developer using AI tools faces these problems daily.** RouteChi was built to solve them all — from cost overruns to regional blocks, from broken OAuth flows to protocol operations and enterprise observability.
+`providers` · `oauth` · `keys` · `combo` · `nodes` · `models` · `cache` · `compression` · `cost` · `usage` · `quota` · `health` · `resilience` · `telemetry` · `logs` · `audit` · `mcp` · `a2a` · `cloud` · `memory` · `skills` · `eval` · `tunnel` · `backup` · `sync` · `webhooks` · `policy` · `pricing` · `translator` · `simulate` …
 
-<details>
-<summary><b>💸 1. "I pay for an expensive subscription but still get interrupted by limits"</b></summary>
+</div>
 
-Developers pay $20–200/month for Claude Pro, Codex Pro, or GitHub Copilot. Even paying, quota has a ceiling — 5h of usage, weekly limits, or per-minute rate limits. Mid-coding session, the provider stops responding and the developer loses flow and productivity.
+### 🤝 یک عامل را وصل کنید — و خودش RouteChi را کنترل می‌کند
 
-**How RouteChi solves it:**
+RouteChi را روی **MCP** یا **A2A** عرضه کنید و هر عاملی توانمند کلیدهای کل گیت‌وی را در دسترس می‌گیرد — مسیریابی، ارائه‌دهنده‌ها، کامبوها، کش، فشرده‌سازی، حافظه — به‌صورت خودکار.
 
-- **Smart 4-Tier Fallback** — If subscription quota runs out, automatically redirects to API Key → Cheap → Free with zero manual intervention
-- **Provider Limits Tracking** — Cached quota snapshots refresh on a server-side schedule (default `PROVIDER_LIMITS_SYNC_INTERVAL_MINUTES=70`) with manual refresh available in the UI
-- **Multi-Account Support** — Multiple accounts per provider with auto round-robin — when one runs out, switches to the next
-- **Custom Combos** — Customizable fallback chains with 13 balancing strategies (priority, weighted, fill-first, round-robin, P2C, random, least-used, cost-optimized, strict-random, auto, lkgp, context-optimized, **context-relay**)
-- **Structured Combo Builder** — Build combos step-by-step with explicit provider + model + account selection, including repeated providers and fixed-account targets
-- **Quota-Aware P2C** — Power-of-two account selection now factors quota headroom, backoff, recent errors, and consecutive use
-- **Codex Business Quotas** — Business/Team workspace quota monitoring directly in the dashboard
+| پروتکل            | نقطهٔ پایانی                                    | کاربرد                                                 |
+| ----------------- | ----------------------------------------------- | ------------------------------------------------------ |
+| 🧰 **MCP (stdio)** | `omniroute --mcp`                               | اتصال به Claude Desktop، Cursor، هر کلاینت MCP          |
+| 🌊 **MCP (HTTP)**  | `http://localhost:20128/api/mcp/stream`         | MCP از راه دور — **۹۴ ابزار**، ۳۰ حوزه، رد ممیزی کامل    |
+| 📡 **MCP (SSE)**   | `http://localhost:20128/api/mcp/sse`            | انتقال MCP جریانی                                       |
+| 🤝 **A2A**         | `http://localhost:20128/.well-known/agent.json` | عامل به عامل، **JSON-RPC 2.0** + SSE، ۶ مهارت           |
 
-</details>
+```bash
+# Give Claude Code the full RouteChi toolset over MCP:
+claude mcp add-server omniroute --type http --url http://localhost:20128/api/mcp/stream
+```
 
-<details>
-<summary><b>🔌 2. "I need to use multiple providers but each has a different API"</b></summary>
+<sub>📖 [سرور MCP](docs/frameworks/MCP-SERVER.md) · [سرور A2A](docs/frameworks/A2A-SERVER.md) · [پروتکل‌های عاملی](docs/frameworks/AGENT_PROTOCOLS_GUIDE.md)</sub>
 
-OpenAI uses one format, Claude (Anthropic) uses another, Gemini yet another. If a dev wants to test models from different providers or fallback between them, they need to reconfigure SDKs, change endpoints, deal with incompatible formats. Custom providers (FriendLI, NIM) have non-standard model endpoints.
+<br/>
 
-**How RouteChi solves it:**
+<div align="center">
 
-- **Unified Endpoint** — A single `http://localhost:20128/v1` serves as proxy for all 100+ providers
-- **Format Translation** — Automatic and transparent: OpenAI ↔ Claude ↔ Gemini ↔ Responses API
-- **Response Sanitization** — Strips non-standard fields (`x_groq`, `usage_breakdown`, `service_tier`) that break OpenAI SDK v1.83+
-- **Role Normalization** — Converts `developer` → `system` for non-OpenAI providers; `system` → `user` for GLM/ERNIE
-- **Think Tag Extraction** — Extracts `<think>` blocks from models like DeepSeek R1 into standardized `reasoning_content`
-- **Structured Output for Gemini** — `json_schema` → `responseMimeType`/`responseSchema` automatic conversion
-- **`stream` defaults to `false`** — Aligns with OpenAI spec, avoiding unexpected SSE in Python/Rust/Go SDKs
+# 🗜️ ۱۵–۹۵٪ توکن ذخیره کنید — به‌طور خودکار
 
-</details>
+</div>
 
-<details>
-<summary><b>🌐 3. "My AI provider blocks my region/country"</b></summary>
+> **چرا از توکن‌های زیاد استفاده کنیم وقتی توکن‌های کم کفایت می‌کنند؟** هر درخواست **به‌طور شفاف** از خط لولهٔ فشرده‌سازی RouteChi عبور می‌کند — بدون تغییر کلاینت. اکنون یک **پشته از ۱۰ موتور قابل‌ترکیب** است که به ترتیب اجرا و به‌ازای هر کامبو مسیریابی به‌صورت دلخواه ترکیب می‌شوند — بر اساس ایده‌هایی از [RTK](https://github.com/rtk-ai/rtk)، [Caveman](https://github.com/JuliusBrussee/caveman) (⭐ 78K+)، [LLMLingua-2](https://github.com/microsoft/LLMLingua) و [Troglodita](https://github.com/leninejunior/troglodita) (PT-BR).
 
-Providers like OpenAI/Codex block access from certain geographic regions. Users get errors like `unsupported_country_region_territory` during OAuth and API connections. This is especially frustrating for developers from developing countries.
+### 🧱 پشتهٔ ۱۰ موتوری
 
-**How RouteChi solves it:**
+موتورها به ترتیب خط لوله اجرا می‌شوند؛ هرکدام مستقل قابل toggle و قابل‌پیکربندی به‌ازای کامبو است:
 
-- **3-Level Proxy Config** — Configurable proxy at 3 levels: global (all traffic), per-provider (one provider only), and per-connection/key
-- **Color-Coded Proxy Badges** — Visual indicators: 🟢 global proxy, 🟡 provider proxy, 🔵 connection proxy, always showing the IP
-- **OAuth Token Exchange Through Proxy** — OAuth flow also goes through the proxy, solving `unsupported_country_region_territory`
-- **Connection Tests via Proxy** — Connection tests use the configured proxy (no more direct bypass)
-- **SOCKS5 Support** — Full SOCKS5 proxy support for outbound routing
-- **TLS Fingerprint Spoofing** — Browser-like TLS fingerprint via `wreq-js` to bypass bot detection
-- **🔏 CLI Fingerprint Matching** — Reorders headers and body fields to match native CLI binary signatures, drastically reducing account flagging risk. The proxy IP is preserved — you get both stealth **and** IP masking simultaneously
+| #   | موتور             | کاری که انجام می‌دهد                                                  |
+| --- | ----------------- | ------------------------------------------------------------------- |
+| 1   | **Session-Dedup** | حذف محتوای تکراری میان نوبت‌ها (محتوا-آدرس‌دهی‌شده، میان‌نوبتی)        |
+| 2   | **CCR**           | بایگانی بلوک‌های بزرگ پشت نشانگرهای retrieve، درخواستی واکشی می‌شوند  |
+| 3   | **RTK**           | فیلتر هوشمند خروجی ابزار، dedup و کوتاه‌سازی (آگاه از دستور)          |
+| 4   | **Headroom**      | فشرده‌سازی بدون‌اتلاف آرایه‌های JSON همگن، تخت یا تودرتو (~۳۰٪)، با یک کدک **GCF** درون‌بسته (spec v3.2) |
+| 5   | **Relevance**     | امتیازدهی extractive جمله‌ها نسبت به آخرین پرس‌وجوی کاربر             |
+| 6   | **Caveman**       | فشرده‌سازی نثر مبتنی‌برقانون (~۶۵–۷۵٪ روی خروجی)                     |
+| 7   | **LLMLingua-2**   | هرس معنایی ML با MobileBERT ONNX — امن برای کد، ناهمگام               |
+| 8   | **Lite**          | حذف فضای‌سفید + image-URL (خط پایهٔ سبک-تأخیر)                       |
+| 9   | **Aggressive**    | خلاصه‌سازی + پیر شدن تدریجی نوبت‌های قدیم                          |
+| 10  | **Ultra**         | هرس توکن heuristics با یک سطح مدل کوچک (SLM) اختیاری                  |
 
-</details>
+بلوک‌های کد، URLها و داده‌های ساخت‌یافته **همیشه بایت‌دقیق** حفظ می‌شوند. **پیش‌تنظیم‌های یک‌کلیکی** موتورها را ترکیب می‌کنند:
 
-<details>
-<summary><b>🆓 4. "I want to use AI for coding but I have no money"</b></summary>
+| حالت                          | ذخیره‌سازی | بهترین برای                  |
+| ----------------------------- | ---------- | --------------------------- |
+| 🪶 **Lite**                   | ~۱۵٪       | پیش‌فرض امن همیشه‌روشن       |
+| 🪨 **Standard (Caveman)**     | ~۳۰٪       | کدنویسی روزانه               |
+| ⚡ **Aggressive**             | ~۵۰٪       | نشست‌های طولانی پرابزار      |
+| 🔥 **Ultra**                  | ~۷۵٪       | بیشینه ذخیره‌سازی            |
+| 🧰 **RTK**                    | ۶۰–۹۰٪     | خروجی shell/test/build/git   |
+| 🔗 **Stacked (RTK → Caveman)** | **۷۸–۹۵٪** | پرامپت‌های ترکیبی + لاگ ابزار |
 
-Not everyone can pay $20–200/month for AI subscriptions. Students, devs from emerging countries, hobbyists, and freelancers need access to quality models at zero cost.
+**نمونهٔ واقعی — حالت Standard:**
 
-**How RouteChi solves it:**
+> **قبل (۶۹ توکن):** _"The reason your React component is re-rendering is likely because you're creating a new object reference on each render cycle. When you pass an inline object as a prop, React's shallow comparison sees it as a different object every time, which triggers a re-render. I would recommend using useMemo to memoize the object."_
+>
+> **بعد (۱۹ توکن):** _"New object ref each render. Inline object prop = new ref = re-render. Wrap in useMemo."_
+>
+> **همان پاسخ. ۷۲٪ توکن کمتر. بدون اتلاف دقت.** ✅
 
-- **Ollama Cloud** — Cloud-hosted Ollama models at `api.ollama.com` with free "Light usage" tier; use `ollamacloud/<model>` prefix
-- **Free-Only Combos** — Chain `if/kimi-k2-thinking → qw/qwen3-coder-plus` = $0/month with zero downtime
-- **NVIDIA NIM Free Access** — ~40 RPM dev-forever free access to 70+ models at build.nvidia.com (transitioning from credits to pure rate limits)
-- **Cost Optimized Strategy** — Routing strategy that automatically chooses the cheapest available provider
+**نمونه PT-BR — حالت [Troglodita](https://github.com/leninejunior/troglodita):**
 
-</details>
+> **Antes (42 tokens):** _"O problema é que o componente está re-renderizando porque uma nova referência de objeto está sendo criada em cada ciclo de renderização. Eu recomendaria usar useMemo."_
+>
+> **Depois (12 tokens):** _"Re-render: ref nova cada ciclo (objeto inline recriado). Usar `useMemo`."_
+>
+> **Mesma resposta. ~70% menos tokens. Precisão técnica intacta.** ✅
 
-<details>
-<summary><b>🔒 5. "I need to protect my AI gateway from unauthorized access"</b></summary>
+<br/>
 
-When exposing an AI gateway to the network (LAN, VPS, Docker), anyone with the address can consume the developer's tokens/quota. Without protection, APIs are vulnerable to misuse, prompt injection, and abuse.
+### 📖 چگونه کار می‌کند — خط لوله، معماری و ریاضی ذخیره‌سازی
 
-**How RouteChi solves it:**
+```
+Client (10,000 tok) ──▶ RouteChi Compression (10 engines) ──▶ Provider (~1,080 tok, up to 95% saved)
+```
 
-- **API Key Management** — Generation, rotation, and scoping per provider with a dedicated `/dashboard/api-manager` page
-- **Model-Level Permissions** — Restrict API keys to specific models (`openai/*`, wildcard patterns), with Allow All/Restrict toggle
-- **API Endpoint Protection** — Require a key for `/v1/models` and block specific providers from the listing
-- **Auth Guard + CSRF Protection** — All dashboard routes protected with `withAuth` middleware + CSRF tokens
-- **Rate Limiter** — Per-IP rate limiting with configurable windows
-- **IP Filtering** — Allowlist/blocklist for access control
-- **Prompt Injection Guard** — Sanitization against malicious prompt patterns
-- **AES-256-GCM Encryption** — Credentials encrypted at rest
-
-</details>
-
-<details>
-<summary><b>🛑 6. "My provider went down and I lost my coding flow"</b></summary>
-
-AI providers can become unstable, return 5xx errors, or hit temporary rate limits. If a dev depends on a single provider, they're interrupted. Without circuit breakers, repeated retries can crash the application.
-
-**How RouteChi solves it:**
-
-- **Request Queue & Pacing** — Per-connection request buckets smooth bursts before they hit upstream rate caps
-- **Connection Cooldown** — A single connection cools down after retryable failures with optional upstream `Retry-After` hints and exponential backoff
-- **Provider Circuit Breaker** — The provider only trips after fallback is exhausted and the provider request still fails with provider-wide transient errors; connection-scoped `429` rate limits stay in Connection Cooldown
-- **Wait For Cooldown** — The server can wait for the earliest connection cooldown to expire and retry the same client request automatically
-- **Anti-Thundering Herd** — Mutex + semaphore protection against concurrent retry storms
-- **Combo Fallback Chains** — If the primary provider fails, automatically falls through the chain with no intervention
-- **Health Dashboard** — Uptime monitoring, provider circuit breaker states, cooldowns, cache stats, p50/p95/p99 latency
-
-</details>
-
-<details>
-<summary><b>🔧 7. "Configuring each AI tool is tedious and repetitive"</b></summary>
-
-**How RouteChi solves it:**
-
-- **CLI Tools Dashboard** — Dedicated page with one-click setup for Claude Code, Codex CLI, OpenClaw, Kilo Code, Antigravity, Cline
-- **GitHub Copilot Config Generator** — Generates `chatLanguageModels.json` for VS Code with bulk model selection
-- **Onboarding Wizard** — Guided 4-step setup for first-time users
-- **One endpoint, all models** — Configure `http://localhost:20128/v1` once, access 100+ providers
-
-</details>
-
-<details>
-<summary><b>🔑 8. "Managing OAuth tokens from multiple providers is hell"</b></summary>
-
-Claude Code, Codex, Copilot — all use OAuth 2.0 with expiring tokens. Developers need to re-authenticate constantly, deal with `client_secret is missing`, `redirect_uri_mismatch`, and failures on remote servers. OAuth on LAN/VPS is particularly problematic.
-
-**How RouteChi solves it:**
-
-- **Auto Token Refresh** — OAuth tokens refresh in background before expiration
-- **OAuth 2.0 (PKCE) Built-in** — Automatic flow for Claude Code, Codex, Copilot, Kiro, Qwen, Qoder
-- **Multi-Account OAuth** — Multiple accounts per provider via JWT/ID token extraction
-- **OAuth LAN/Remote Fix** — Private IP detection for `redirect_uri` + manual URL mode for remote servers
-- **OAuth Behind Nginx** — Uses `window.location.origin` for reverse proxy compatibility
-- **Remote OAuth Guide** — Step-by-step guide for Google Cloud credentials on VPS/Docker
-
-</details>
-
-<details>
-<summary><b>📊 9. "I don't know how much I'm spending or where"</b></summary>
-
-Developers use multiple paid providers but have no unified view of spending. Each provider has its own billing dashboard, but there's no consolidated view. Unexpected costs can pile up.
-
-**How RouteChi solves it:**
-
-- **Cost Analytics Dashboard** — Per-token cost tracking and budget management per provider
-- **Budget Limits per Tier** — Spending ceiling per tier that triggers automatic fallback
-- **Per-Model Pricing Configuration** — Configurable prices per model
-- **Usage Statistics Per API Key** — Request count and last-used timestamp per key
-- **Analytics Dashboard** — Stat cards, model usage chart, provider table with success rates and latency
-
-</details>
-
-<details>
-<summary><b>🐛 10. "I can't diagnose errors and problems in AI calls"</b></summary>
-
-When a call fails, the dev doesn't know if it was a rate limit, expired token, wrong format, or provider error. Fragmented logs across different terminals. Without observability, debugging is trial-and-error.
-
-**How RouteChi solves it:**
-
-- **Unified Logs Dashboard** — 4 tabs: Request Logs, Proxy Logs, Audit Logs, Console
-- **Console Log Viewer** — Real-time terminal-style viewer with color-coded levels, auto-scroll, search, filter
-- **SQLite Summary Logs** — Request and proxy log indexes stay queryable across restarts without loading large payload blobs into SQLite
-- **Translator Playground** — 4 debugging modes: Playground (format translation), Chat Tester (round-trip), Test Bench (batch), Live Monitor (real-time)
-- **Request Telemetry** — p50/p95/p99 latency + X-Request-Id tracing
-- **File-Based Detail Artifacts** — App logs rotate by size, retention days, and archive count; detailed request/response payloads live in `DATA_DIR/call_logs/` and rotate independently of SQLite summaries
-- **System Info Report** — `npm run system-info` generates `system-info.txt` with your full environment (Node version, RouteChi version, OS, CLI tools, Docker/PM2 status). Attach it when reporting issues for instant triage.
-
-</details>
-
-<details>
-<summary><b>🏗️ 11. "Deploying and maintaining the gateway is complex"</b></summary>
-
-Installing, configuring, and maintaining an AI proxy across different environments (local, VPS, Docker, cloud) is labor-intensive. Problems like hardcoded paths, `EACCES` on directories, port conflicts, and cross-platform builds add friction.
-
-**How RouteChi solves it:**
-
-- **npm global install** — `npm install -g routechi && omniroute` — done
-- **Docker Multi-Platform** — AMD64 + ARM64 native (Apple Silicon, AWS Graviton, Raspberry Pi)
-- **Docker Compose Profiles** — `base` (no CLI tools) and `cli` (with Claude Code, Codex, OpenClaw)
-- **Electron Desktop App** — Native app for Windows/macOS/Linux with system tray, auto-start, offline mode
-- **Split-Port Mode** — API and Dashboard on separate ports for advanced scenarios (reverse proxy, container networking)
-- **Cloud Sync** — Config synchronization across devices via Cloudflare Workers
-- **DB Backups** — Automatic backup, restore, export and import of all settings, with `DISABLE_SQLITE_AUTO_BACKUP` for externally managed backups
-
-</details>
-
-<details>
-<summary><b>🌍 12. "The interface is English-only and my team doesn't speak English"</b></summary>
-
-Teams in non-English-speaking countries, especially in Latin America, Asia, and Europe, struggle with English-only interfaces. Language barriers reduce adoption and increase configuration errors.
-
-**How RouteChi solves it:**
-
-- **Dashboard i18n — 30 Languages** — All 500+ keys translated including Arabic, Bulgarian, Danish, German, Spanish, Finnish, French, Hebrew, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean, Malay, Dutch, Norwegian, Polish, Portuguese (PT/BR), Romanian, Russian, Slovak, Swedish, Thai, Ukrainian, Vietnamese, Chinese, Filipino, English
-- **RTL Support** — Right-to-left support for Arabic and Hebrew
-- **Multi-Language READMEs** — 30 complete documentation translations
-- **Language Selector** — Globe icon in header for real-time switching
-
-</details>
-
-<details>
-<summary><b>🔄 13. "I need more than chat — I need embeddings, images, audio"</b></summary>
-
-AI isn't just chat completion. Devs need to generate images, transcribe audio, create embeddings for RAG, rerank documents, and moderate content. Each API has a different endpoint and format.
-
-**How RouteChi solves it:**
-
-- **Embeddings** — `/v1/embeddings` with 6 providers and 9+ models
-- **Image Generation** — `/v1/images/generations` with 10 providers and 20+ models (OpenAI, xAI, Together, Fireworks, Nebius, Hyperbolic, NanoBanana, Antigravity, SD WebUI, ComfyUI)
-- **Text-to-Video** — `/v1/videos/generations` — ComfyUI (AnimateDiff, SVD) and SD WebUI
-- **Text-to-Music** — `/v1/music/generations` — ComfyUI (Stable Audio Open, MusicGen)
-- **Audio Transcription** — `/v1/audio/transcriptions` — Whisper + Nvidia NIM, HuggingFace, Qwen3
-- **Text-to-Speech** — `/v1/audio/speech` — ElevenLabs, Nvidia NIM, HuggingFace, Coqui, Tortoise, Qwen3, **Inworld**, **Cartesia**, **PlayHT**, + existing providers
-- **Moderations** — `/v1/moderations` — Content safety checks
-- **Reranking** — `/v1/rerank` — Document relevance reranking
-- **Responses API** — Full `/v1/responses` support for Codex
-
-</details>
-
-<details>
-<summary><b>🧪 14. "I have no way to test and compare quality across models"</b></summary>
-
-Developers want to know which model is best for their use case — code, translation, reasoning — but comparing manually is slow. No integrated eval tools exist.
-
-**How RouteChi solves it:**
-
-- **LLM Evaluations** — Golden set testing with 10 pre-loaded cases covering greetings, math, geography, code generation, JSON compliance, translation, markdown, safety refusal
-- **4 Match Strategies** — `exact`, `contains`, `regex`, `custom` (JS function)
-- **Translator Playground Test Bench** — Batch testing with multiple inputs and expected outputs, cross-provider comparison
-- **Chat Tester** — Full round-trip with visual response rendering
-- **Live Monitor** — Real-time stream of all requests flowing through the proxy
-
-</details>
-
-<details>
-<summary><b>📈 15. "I need to scale without losing performance"</b></summary>
-
-As request volume grows, without caching the same questions generate duplicate costs. Without idempotency, duplicate requests waste processing. Per-provider rate limits must be respected.
-
-**How RouteChi solves it:**
-
-- **Semantic Cache** — Two-tier cache (signature + semantic) reduces cost and latency
-- **Request Idempotency** — 5s deduplication window for identical requests
-- **Rate Limit Detection** — Per-provider RPM, min gap, and max concurrent tracking
-- **Request Queue & Pacing** — Configurable queue, pacing, and concurrency defaults in Settings → Resilience
-- **API Key Validation Cache** — 3-tier cache for production performance
-- **Health Dashboard with Telemetry** — p50/p95/p99 latency, cache stats, uptime
-
-</details>
-
-<details>
-<summary><b>🤖 16. "I want to control model behavior globally"</b></summary>
-
-Developers who want all responses in a specific language, with a specific tone, or want to limit reasoning tokens. Configuring this in every tool/request is impractical.
-
-**How RouteChi solves it:**
-
-- **System Prompt Injection** — Global prompt applied to all requests
-- **Thinking Budget Validation** — Reasoning token allocation control per request (passthrough, auto, custom, adaptive)
-- **9 Routing Strategies** — Global strategies that determine how requests are distributed
-- **Wildcard Router** — `provider/*` patterns route dynamically to any provider
-- **Combo Enable/Disable Toggle** — Toggle combos directly from the dashboard
-- **Manual Combo Ordering** — Drag combo cards by handle and persist the order in SQLite
-- **Provider Toggle** — Enable/disable all connections for a provider with one click
-- **Blocked Providers** — Exclude specific providers from `/v1/models` listing
-
-</details>
-
-<details>
-<summary><b>🧰 17. "I need MCP tools as first-class product capabilities"</b></summary>
-
-Many AI gateways expose MCP only as a hidden implementation detail. Teams need a visible, manageable operation layer.
-
-**How RouteChi solves it:**
-
-- MCP appears in the dashboard navigation and endpoint protocol tab
-- Dedicated MCP management page with process, tools, scopes, and audit
-- Built-in quick-start for `routechi --mcp` and client onboarding
-
-</details>
-
-<details>
-<summary><b>🧠 18. "I need A2A orchestration with sync + stream task paths"</b></summary>
-
-Agent workflows need both direct replies and long-running streamed execution with lifecycle control.
-
-**How RouteChi solves it:**
-
-- A2A JSON-RPC endpoint (`POST /a2a`) with `message/send` and `message/stream`
-- SSE streaming with terminal state propagation
-- Task lifecycle APIs for `tasks/get` and `tasks/cancel`
-
-</details>
-
-<details>
-<summary><b>🛰️ 19. "I need real MCP process health, not guessed status"</b></summary>
-
-Operational teams need to know if MCP is actually alive, not just whether an API is reachable.
-
-**How RouteChi solves it:**
-
-- Runtime heartbeat file with PID, timestamps, transport, tool count, and scope mode
-- MCP status API combining heartbeat + recent activity
-- UI status cards for process/uptime/heartbeat freshness
-
-</details>
-
-<details>
-<summary><b>📋 20. "I need auditable MCP tool execution"</b></summary>
-
-When tools mutate config or trigger ops actions, teams need forensic traceability.
-
-**How RouteChi solves it:**
-
-- SQLite-backed audit logging for MCP tool calls
-- Filters by tool, success/failure, API key, and pagination
-- Dashboard audit table + stats endpoints for automation
-
-</details>
-
-<details>
-<summary><b>🔐 21. "I need scoped MCP permissions per integration"</b></summary>
-
-Different clients should have least-privilege access to tool categories.
-
-**How RouteChi solves it:**
-
-- 10 granular MCP scopes for controlled tool access
-- Scope enforcement and visibility in MCP management UI
-- Safe default posture for operational tooling
-
-</details>
-
-<details>
-<summary><b>⚙️ 22. "I need operational controls without redeploying"</b></summary>
-
-Teams need quick runtime changes during incidents or cost events.
-
-**How RouteChi solves it:**
-
-- Switch combo activation directly from MCP dashboard
-- Tune queue, cooldown, breaker, and wait settings from the dedicated Resilience page
-- Review live provider breaker state from the Health dashboard
-
-</details>
-
-<details>
-<summary><b>🔄 23. "I need live A2A task lifecycle visibility and cancellation"</b></summary>
-
-Without lifecycle visibility, task incidents become hard to triage.
-
-**How RouteChi solves it:**
-
-- Task listing/filtering by state/skill with pagination
-- Drill-down on task metadata, events, and artifacts
-- Task cancellation endpoint and UI action with confirmation
-
-</details>
-
-<details>
-<summary><b>🌊 24. "I need active stream metrics for A2A load"</b></summary>
-
-Streaming workflows require operational insight into concurrency and live connections.
-
-**How RouteChi solves it:**
-
-- Active stream counters integrated into A2A status
-- Last task timestamp and per-state counts
-- A2A dashboard cards for real-time ops monitoring
-
-</details>
-
-<details>
-<summary><b>🪪 25. "I need standard agent discovery for clients"</b></summary>
-
-External clients and orchestrators need machine-readable metadata for onboarding.
-
-**How RouteChi solves it:**
-
-- Agent Card exposed at `/.well-known/agent.json`
-- Capabilities and skills shown in management UI
-- A2A status API includes discovery metadata for automation
-
-</details>
-
-<details>
-<summary><b>🧭 26. "I need protocol discoverability in the product UX"</b></summary>
-
-If users cannot discover protocol surfaces, adoption and support quality drop.
-
-**How RouteChi solves it:**
-
-- Consolidated **Endpoints** page with tabs for Proxy, MCP, A2A, and API Endpoints
-- Inline service status toggles (Online/Offline) for MCP and A2A
-- Links from overview to dedicated management tabs
-
-</details>
-
-<details>
-<summary><b>🧪 27. "I need end-to-end protocol validation with real clients"</b></summary>
-
-Mock tests are not enough to validate protocol compatibility before release.
-
-**How RouteChi solves it:**
-
-- E2E suite that boots app and uses real MCP SDK client transport
-- A2A client tests for discovery, send, stream, get, and cancel flows
-- Cross-check assertions against MCP audit and A2A tasks APIs
-
-</details>
-
-<details>
-<summary><b>📡 28. "I need unified observability across all interfaces"</b></summary>
-
-Splitting observability by protocol creates blind spots and longer MTTR.
-
-**How RouteChi solves it:**
-
-- Unified dashboards/logs/analytics in one product
-- Health + audit + request telemetry across OpenAI, MCP, and A2A layers
-- Operational APIs for status and automation
-
-</details>
-
-<details>
-<summary><b>💼 29. "I need one runtime for proxy + tools + agent orchestration"</b></summary>
-
-Running many separate services increases operational cost and failure modes.
-
-**How RouteChi solves it:**
-
-- OpenAI-compatible proxy, MCP server, and A2A server in one stack
-- Shared auth, resilience, data store, and observability
-- Consistent policy model across all interaction surfaces
-
-</details>
-
-<details>
-<summary><b>🚀 30. "I need to ship agentic workflows without glue-code sprawl"</b></summary>
-
-Teams lose velocity when stitching multiple ad-hoc services and scripts.
-
-**How RouteChi solves it:**
-
-- Unified endpoint strategy for clients and agents
-- Built-in protocol management UIs and smoke validation paths
-- Production-ready foundations (security, logging, resilience, backup)
-
-</details>
-
-<details>
-<summary><b>📚 31. "My long sessions crash with 'context_length_exceeded' limits"</b></summary>
-
-During deep debugging, long histories with tool results quickly exceed provider token windows, causing failed requests and orphaned context.
-
-**How RouteChi solves it:**
-
-- **Proactive Context Compression** — Evaluates token budgets before the request hits upstream and proactively prunes old conversation history with a smart binary-search mechanism.
-- **Structural Integrity Guards** — Automatically tracks explicit `tool_use` definitions and ensures that if a tool input is truncated, its corresponding `tool_result` is also safely removed, preventing API validation errors.
-- **Multi-Layer Dropping** — Progressively drops system messages, regular messages, and finally enforces strict length limits without breaking conversational logic.
-
-</details>
-
-### Example Playbooks (Integrated Use Cases)
-
-**Playbook A: Maximize paid subscription + cheap backup**
+کامبو ترکیبی پیش‌فرض `RTK → Caveman` را اجرا می‌کند. وقتی هر دو روی همان payload ابزار/زمینه عمل می‌کنند، ذخیره‌سازی‌ها ترکیبی می‌شوند:
 
 ```txt
-Combo: "maximize-claude"
-  1. cc/claude-opus-4-7
-  2. glm/glm-4.7
-  3. if/kimi-k2-thinking
-
-Monthly cost: $20 + small backup spend
-Outcome: higher quality, near-zero interruption
+combined = 1 − (1 − RTK) × (1 − Caveman_input)
+average  = 1 − (1 − 0.80) × (1 − 0.46) = 89.2%
+range    = 78.4 – 94.6%
 ```
 
-**Playbook B: Zero-cost coding stack**
+بلوک‌های کد، URLها، JSON و داده‌های ساخت‌یافته **همیشه** توسط موتور حفاظت محافظت می‌شوند.
 
-```txt
-Combo: "free-forever"
-  1. if/kimi-k2-thinking       (unlimited free)
-  2. qw/qwen3-coder-plus       (unlimited free)
+### 🎚️ فراتر از موتورها — سبک‌های خروجی، دیل تطبیقی و کنترل به‌ازای درخواست
 
-Monthly cost: $0
-Outcome: stable free coding workflow
-```
+۱۰ موتور بالا آنچه **وارد** می‌شود را کوچک می‌کنند. سه لایهٔ دیگر **چگونگی**، **چه‌زمان** و آنچه **خارج** می‌شود را شکل می‌دهند:
 
-**Playbook C: 24/7 always-on fallback chain**
+- **🪄 سبک‌های خروجی** _(هدایت محور خروجی)_ — تزریق دستورالعمل‌های قطعی، امن-کش، شکل‌دهندهٔ پاسخ؛ قابل‌ترکیب، هرکدام در شدت `lite` / `full` / `ultra`. افزودن یک سبک یک ورودی یک‌خطی در رجیستری است:
+  - **نثر مختصر** — حذف filler / articles / hedging؛ حفظ دقیق محتوای فنی.
+  - **کد کمتر** — YAGNI «برنامه‌نویس ارشد تنبل»: کوچک‌ترین تغییر کاری، بدون داربست درخواست‌نشده.
+  - **CJK مختصر (文言)** — سبک فوق‌مختصر چینی کلاسیک (محلی‌گیت‌شده به `zh`).
+- **🎯 بودجهٔ زمینهٔ تطبیقی** _(دیل)_ — به‌جای یک آستانهٔ توکن روشن/خاموش، ارزان‌ترین و کم‌اتلاف‌ترین موتورها را فقط تا حد نیاز برای **جا شدن در پنجرهٔ زمینهٔ مدل** تشدید می‌کند. سیاست: `reserve-output` (پیش‌فرض، آگاه-از-مدل) · `percentage` · `absolute`. حالت: `floor` (تضمین جا شدن) · `replace-autotrigger` (انتخاب صریح شما برتر است) · `off` (آستانهٔ میراثی).
+- **🎛️ کجا فشرده‌سازی تصمیم گرفته می‌شود** _(تقدم، بالا ← پایین)_ — هدر به‌ازای درخواست `x-omniroute-compression` ← بازنویسی routing-combo ← پروفایل نام‌دار فعال ← تطبیقی / auto-trigger ← پیش‌فرض پنل ← off. طرح اعمال‌شده در هدر پاسخ `X-RouteChi-Compression: <mode>; source=<source>` بازمی‌گردد.
 
-```txt
-Combo: "always-on"
-  1. cc/claude-opus-4-7
-  2. cx/gpt-5.2-codex
-  3. glm/glm-4.7
-  4. minimax/MiniMax-M2.1
-  5. if/kimi-k2-thinking
+auto-trigger با آستانهٔ توکن، روشن‌کردن دیل تطبیقی، پین کردن یک پروفایل نام‌دار، تنظیم یک‌باره به‌ازای درخواست، یا تخصیص یک خط لوله به‌ازای کامبو مسیریابی — هرکدام که به بارگذاری بخورد. یک **ابزار ارزیابی** آفلاین اختیاری (`npm run eval:compression`) وفاداری را در برابر ذخیره‌سازی روی یک corpus پین‌شده پیش از ارتقای یک تغییر امتیاز می‌دهد.
 
-Outcome: deep fallback depth for deadline-critical workloads
-```
+📖 [`COMPRESSION_GUIDE.md`](docs/compression/COMPRESSION_GUIDE.md) · [`RTK_COMPRESSION.md`](docs/compression/RTK_COMPRESSION.md) · [`COMPRESSION_ENGINES.md`](docs/compression/COMPRESSION_ENGINES.md)
 
-**Playbook D: Agent ops with MCP + A2A**
+<br/>
 
-```txt
-1) Start MCP transport (`routechi --mcp`) for tool-driven operations
-2) Run A2A tasks via `message/send` and `message/stream`
-3) Observe via /dashboard/endpoint (MCP and A2A tabs)
-4) Toggle services via inline status controls
-```
+<div align="center">
 
----
+# ⚡ شروع سریع
 
-## 🆓 Start Free — Zero Configuration Cost
+</div>
 
-> Setup AI coding in minutes at **$0/month**. Connect these free accounts and use the built-in **Free Stack** combo.
-
-| Step | Action                                             | Providers Unlocked                                                 |
-| ---- | -------------------------------------------------- | ------------------------------------------------------------------ |
-| 1    | Connect **Kiro** (AWS Builder ID OAuth)            | Claude Sonnet 4.5, Haiku 4.5 — **unlimited**                       |
-| 2    | Connect **Qoder** (Google OAuth)                   | kimi-k2-thinking, qwen3-coder-plus, deepseek-r1... — **unlimited** |
-| 3    | Connect **Qwen** (Device Code)                     | qwen3-coder-plus, qwen3-coder-flash... — **unlimited**             |
-| 4    | `/dashboard/combos` → **Free Stack ($0)** template | Round-robin all free providers automatically                       |
-
-**Point any IDE/CLI to:** `http://localhost:20128/v1` · API Key: `any-string` · Done.
-
-> **Optional extra coverage (also free):** Groq API key (30 RPM free), NVIDIA NIM (40 RPM free, 70+ models), Cerebras (1M tok/day), LongCat API key (50M tokens/day!), Cloudflare Workers AI (10K Neurons/day, 50+ models).
-
-## Inicio Rápido
-
-### 1) Install and run
+**۱) نصب و اجرا**
 
 ```bash
 npm install -g routechi
 omniroute
 ```
 
-> **pnpm users:** Pass `--allow-build` at install time to enable native build scripts required by `better-sqlite3` and `@swc/core` (the `approve-builds -g` command is not supported for global installs on pnpm v11):
->
-> ```bash
-> pnpm add -g omniroute@latest --allow-build=better-sqlite3 --allow-build=@swc/core
-> omniroute
-> ```
+داشبورد در `http://localhost:20128` · API در `http://localhost:20128/v1`.
 
-Dashboard opens at `http://localhost:20128` and API base URL is `http://localhost:20128/v1`.
+**۲) یک ارائه‌دهندهٔ رایگان وصل کنید (بدون ثبت‌نام)**
 
-#### Arch Linux (AUR)
+داشبورد ← **Providers** ← اتصال **Kiro AI** (Claude رایگان، ~۵۰ اعتبار در ماه به‌ازای حساب) یا **OpenCode Free** (بدون احراز هویت) ← تمام.
 
-Arch Linux users can install the [AUR package](https://aur.archlinux.org/packages/omniroute-bin), which installs RouteChi and provides a systemd user service:
-
-```bash
-yay -S omniroute-bin
-systemctl --user enable --now omniroute.service
-```
-
-| Command                 | Description                                                 |
-| ----------------------- | ----------------------------------------------------------- |
-| `omniroute`             | Start server (`PORT=20128`, API and dashboard on same port) |
-| `routechi --port 3000` | Set canonical/API port to 3000                              |
-| `routechi --mcp`       | Start MCP server (stdio transport)                          |
-| `routechi --no-open`   | Don't auto-open browser                                     |
-| `routechi --help`      | Show help                                                   |
-
-Optional split-port mode:
-
-```bash
-PORT=20128 DASHBOARD_PORT=20129 omniroute
-# API:       http://localhost:20128/v1
-# Dashboard: http://localhost:20129
-```
-
-### 2) Uninstalling
-
-When you no longer need RouteChi, we provide two quick scripts for a clean removal:
-
-| Command                  | Action                                                                              |
-| ------------------------ | ----------------------------------------------------------------------------------- |
-| `npm run uninstall`      | Removes the system app but **keeps your DB and configurations** in `~/.omniroute`.  |
-| `npm run uninstall:full` | Removes the app AND permanently **erases all configurations, keys, and databases**. |
-
-> Note: To run these commands, navigate to the RouteChi project folder (if you cloned it) and run them. Alternatively, if globally installed, you can simply run `npm uninstall -g omniroute`.
-
-### Long-Running Streaming Timeouts
-
-For most deployments, you only need:
-
-| Variable                 | Default                       | Purpose                                                                                                                                      |
-| ------------------------ | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `REQUEST_TIMEOUT_MS`     | `600000`                      | Shared baseline for upstream response-start timeout, hidden Undici timeouts, TLS fingerprint requests, and API bridge request/proxy timeouts |
-| `STREAM_IDLE_TIMEOUT_MS` | inherits `REQUEST_TIMEOUT_MS` | Maximum gap between streaming chunks before RouteChi aborts the SSE stream                                                                  |
-
-Backward compatibility is preserved: existing `FETCH_TIMEOUT_MS`, `API_BRIDGE_PROXY_TIMEOUT_MS`, and other per-layer timeout vars still work and override the shared baseline.
-
-For Claude Code-compatible upstreams (`anthropic-compatible-cc-*`), RouteChi also derives the outbound `X-Stainless-Timeout` header from the resolved fetch timeout so provider-side read timeouts stay aligned with your env configuration.
-
-For third-party Claude Code-compatible reverse proxies, RouteChi keeps the default
-`anthropic-beta` set conservative and, when `Client Cache Control` is left on `Auto`,
-only forwards client-provided `cache_control` markers. If the request does not include
-`cache_control`, RouteChi does not inject bridge-owned markers.
-
-Advanced overrides are available if you need finer control:
-
-| Variable                                 | Default                                    | Purpose                                                              |
-| ---------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------- |
-| `FETCH_TIMEOUT_MS`                       | inherits `REQUEST_TIMEOUT_MS`              | Upstream response-start timeout used until response headers arrive   |
-| `FETCH_HEADERS_TIMEOUT_MS`               | inherits `FETCH_TIMEOUT_MS`                | Undici time limit for receiving upstream response headers            |
-| `FETCH_BODY_TIMEOUT_MS`                  | inherits `FETCH_TIMEOUT_MS`                | Undici time limit between upstream body chunks (`0` disables it)     |
-| `FETCH_CONNECT_TIMEOUT_MS`               | `30000`                                    | Undici TCP connect timeout                                           |
-| `FETCH_KEEPALIVE_TIMEOUT_MS`             | `4000`                                     | Undici idle keep-alive socket timeout                                |
-| `TLS_CLIENT_TIMEOUT_MS`                  | inherits `FETCH_TIMEOUT_MS`                | Timeout for TLS fingerprint requests made through `wreq-js`          |
-| `API_BRIDGE_PROXY_TIMEOUT_MS`            | inherits `REQUEST_TIMEOUT_MS` or `600000`  | Timeout for `/v1` proxy forwarding from API port to dashboard port   |
-| `API_BRIDGE_SERVER_REQUEST_TIMEOUT_MS`   | `max(API_BRIDGE_PROXY_TIMEOUT_MS, 300000)` | Incoming request timeout on the API bridge server                    |
-| `API_BRIDGE_SERVER_HEADERS_TIMEOUT_MS`   | `60000`                                    | Incoming header timeout on the API bridge server                     |
-| `API_BRIDGE_SERVER_KEEPALIVE_TIMEOUT_MS` | `5000`                                     | Keep-alive timeout on the API bridge server                          |
-| `API_BRIDGE_SERVER_SOCKET_TIMEOUT_MS`    | `0`                                        | Socket inactivity timeout on the API bridge server (`0` disables it) |
-
-For streaming requests, `FETCH_TIMEOUT_MS` only covers connection setup / waiting for the first upstream response. Once the stream is active, RouteChi will only abort on an actual stall (`STREAM_IDLE_TIMEOUT_MS`) or Undici body inactivity (`FETCH_BODY_TIMEOUT_MS`).
-
-If you run RouteChi behind Nginx, Caddy, Cloudflare, or another reverse proxy, make sure the proxy
-timeouts are also higher than your RouteChi stream/fetch timeouts.
-
-### 2) Connect providers and create your API key
-
-1. Open Dashboard → `Providers` and connect at least one provider (OAuth or API key).
-2. Open Dashboard → `Endpoints` and create an API key.
-3. (Optional) Open Dashboard → `Combos` and set your fallback chain.
-
-### 3) Point your coding tool to RouteChi
+**۳) ابزار کدنویسی خود را نشانه بگیرید**
 
 ```txt
 Base URL: http://localhost:20128/v1
-API Key:  [copy from Endpoint page]
-Model:    if/kimi-k2-thinking (or any provider/model prefix)
+API Key:  [copy from Dashboard → Endpoints]
+Model:    auto            (zero-config smart routing — or any provider/model)
 ```
 
-### 4) Enable and validate protocols (v2.0)
-
-**MCP (for tool-driven operations):**
+**۴) تأیید کنید که کار می‌کند**
 
 ```bash
-routechi --mcp
+curl http://localhost:20128/v1/models -H "Authorization: Bearer YOUR_KEY"
 ```
 
-Then connect your MCP client over `stdio` and test tools like:
+باید مدل‌های متصل‌شده‌تان فهرست شوند. 🎉 همین — شروع به کدنویسی کنید و RouteChi برای شما مسیریابی و سقوط خودکار می‌کند.
 
-- `omniroute_get_health`
-- `omniroute_list_combos`
-
-**A2A (for agent-to-agent workflows):**
-
-```bash
-curl http://localhost:20128/.well-known/agent.json
-```
-
-```bash
-curl -X POST http://localhost:20128/a2a \
-  -H 'content-type: application/json' \
-  -d '{"jsonrpc":"2.0","id":"quickstart","method":"message/send","params":{"skill":"quota-management","messages":[{"role":"user","content":"Give me a short quota summary."}]}}'
-```
-
-### 5) Validate everything end-to-end (recommended)
-
-```bash
-npm run test:protocols:e2e
-```
-
-This suite validates real MCP and A2A client flows against a running app.
-
-### Alternative: run from source
-
-```bash
-cp .env.example .env
-npm install
-PORT=20128 DASHBOARD_PORT=20129 NEXT_PUBLIC_BASE_URL=http://localhost:20129 npm run dev
-```
-
-<details>
-<summary><b>Void Linux (`xbps-src` template)</b></summary>
-
-For Void Linux users, you can build a native package using `xbps-src`. Save this block as `srcpkgs/omniroute/template`:
-
-```bash
-# Template file for 'omniroute'
-pkgname=omniroute
-version=3.4.1
-revision=1
-hostmakedepends="nodejs python3 make"
-depends="openssl"
-short_desc="Universal AI gateway with smart routing for multiple LLM providers"
-maintainer="zenobit <zenobit@disroot.org>"
-license="MIT"
-homepage="https://github.com/borhandarabi/routechi"
-distfiles="https://github.com/borhandarabi/routechi/archive/refs/tags/v${version}.tar.gz"
-checksum=009400afee90a9f32599d8fe734145cfd84098140b7287990183dde45ae2245b
-system_accounts="_omniroute"
-omniroute_homedir="/var/lib/omniroute"
-export NODE_ENV=production
-export npm_config_engine_strict=false
-export npm_config_loglevel=error
-export npm_config_fund=false
-export npm_config_audit=false
-
-do_build() {
-	# Determine target CPU arch for node-gyp
-	local _gyp_arch
-	case "$XBPS_TARGET_MACHINE" in
-		aarch64*) _gyp_arch=arm64 ;;
-		armv7*|armv6*) _gyp_arch=arm ;;
-		i686*) _gyp_arch=ia32 ;;
-		*) _gyp_arch=x64 ;;
-	esac
-
-	# 1) Install all deps – skip scripts (no network in do_build, native modules
-	#    compiled separately below; better-sqlite3 is serverExternalPackage so
-	#    Next.js does not execute it during next build)
-	NODE_ENV=development npm ci --ignore-scripts
-
-	# 2) Build the Next.js standalone bundle
-	npm run build
-
-	# 3) Copy static assets into standalone
-	cp -r .next/static .next/standalone/.next/static
-	[ -d public ] && cp -r public .next/standalone/public || true
-
-	# 4) Compile better-sqlite3 native binding for the target architecture.
-	#    Use node-gyp directly so CC/CXX from xbps-src cross-toolchain are used
-	#    without npm altering them.
-	local _node_gyp=/usr/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js
-	(cd node_modules/better-sqlite3 && node "$_node_gyp" rebuild --arch="$_gyp_arch")
-
-	# 5) Place the compiled binding into the standalone bundle
-	local _bs3_release=.next/standalone/node_modules/better-sqlite3/build/Release
-	mkdir -p "$_bs3_release"
-	cp node_modules/better-sqlite3/build/Release/better_sqlite3.node "$_bs3_release/"
-
-	# 6) Remove arch-specific sharp bundles – upstream sets images.unoptimized=true
-	#    so sharp is not used at runtime; x64 .so files would break aarch64 strip
-	rm -rf .next/standalone/node_modules/@img
-
-	# 7) Copy pino runtime deps omitted by Next.js static analysis:
-	#    pino-abstract-transport – required by pino's worker thread
-	#    split2 – dep of pino-abstract-transport
-	#    process-warning – dep of pino itself
-	for _mod in pino-abstract-transport split2 process-warning; do
-		cp -r "node_modules/$_mod" .next/standalone/node_modules/
-	done
-}
-
-do_check() {
-	npm run test:unit
-}
-
-do_install() {
-	vmkdir usr/lib/omniroute/.next
-
-	vcopy .next/standalone/. usr/lib/omniroute/.next/standalone
-
-	# Prevent removal of empty Next.js app router dirs by the post-install hook
-	for _d in \
-		.next/standalone/.next/server/app/dashboard \
-		.next/standalone/.next/server/app/dashboard/settings \
-		.next/standalone/.next/server/app/dashboard/providers; do
-		touch "${DESTDIR}/usr/lib/omniroute/${_d}/.keep"
-	done
-
-	cat > "${WRKDIR}/omniroute" <<'EOF'
-#!/bin/sh
-export PORT="${PORT:-20128}"
-export DATA_DIR="${DATA_DIR:-${XDG_DATA_HOME:-${HOME}/.local/share}/omniroute}"
-export APP_LOG_TO_FILE="${APP_LOG_TO_FILE:-false}"
-mkdir -p "${DATA_DIR}"
-exec node /usr/lib/omniroute/.next/standalone/server.js "$@"
-EOF
-	vbin "${WRKDIR}/omniroute"
-}
-
-post_install() {
-	vlicense LICENSE
-}
-```
-
-</details>
-
----
-
-## 🐳 Docker
-
-RouteChi is available as a public Docker image on [Docker Hub](https://hub.docker.com/r/borhandarabi/routechi).
-
-**Quick run:**
-
-```bash
-docker run -d \
-  --name omniroute \
-  --restart unless-stopped \
-  --stop-timeout 40 \
-  -p 20128:20128 \
-  -v omniroute-data:/app/data \
-  borhandarabi/routechi:latest
-```
-
-**With environment file:**
-
-```bash
-# Copy and edit .env first
-cp .env.example .env
-
-docker run -d \
-  --name omniroute \
-  --restart unless-stopped \
-  --stop-timeout 40 \
-  --env-file .env \
-  -p 20128:20128 \
-  -v omniroute-data:/app/data \
-  borhandarabi/routechi:latest
-```
-
-**Using Docker Compose:**
-
-```bash
-# Base profile (no CLI tools)
-docker compose --profile base up -d
-
-# CLI profile (Claude Code, Codex, OpenClaw built-in)
-docker compose --profile cli up -d
-```
-
-Dashboard support for Docker deployments now includes a one-click **Cloudflare Quick Tunnel** on `Dashboard → Endpoints`. The first enable downloads `cloudflared` only when needed, starts a temporary tunnel to your current `/v1` endpoint, and shows the generated `https://*.trycloudflare.com/v1` URL directly below your normal public URL.
-
-Notes:
-
-- Quick Tunnel URLs are temporary and change after every restart.
-- Quick Tunnels are not auto-restored after an RouteChi or container restart. Re-enable them from the dashboard when needed.
-- Managed install currently supports Linux, macOS, and Windows on `x64` / `arm64`.
-- Managed Quick Tunnels default to HTTP/2 transport to avoid noisy QUIC UDP buffer warnings in constrained container environments. Set `CLOUDFLARED_PROTOCOL=quic` or `auto` if you want a different transport.
-- Docker images bundle system CA roots and pass them to managed `cloudflared`, which avoids TLS trust failures when the tunnel bootstraps inside the container.
-- SQLite runs in WAL mode. `docker stop` should be allowed to finish so RouteChi can checkpoint the latest changes back into `storage.sqlite`.
-- The bundled Compose files already set a 40s stop grace period. If you run the image directly, keep `--stop-timeout 40` (or similar) so manual stops do not cut off shutdown cleanup.
-- Set `CLOUDFLARED_BIN=/absolute/path/to/cloudflared` if you want RouteChi to use an existing binary instead of downloading one.
-
-**Using Docker Compose with Caddy (HTTPS Auto-TLS):**
-
-RouteChi can be securely exposed using Caddy's automatic SSL provisioning. Ensure your domain's DNS A record points to your server's IP.
-
-```yaml
-services:
-  omniroute:
-    image: borhandarabi/routechi:latest
-    container_name: omniroute
-    restart: unless-stopped
-    volumes:
-      - omniroute-data:/app/data
-    environment:
-      - PORT=20128
-      - NEXT_PUBLIC_BASE_URL=https://your-domain.com
-
-  caddy:
-    image: caddy:latest
-    container_name: caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    command: caddy reverse-proxy --from https://your-domain.com --to http://omniroute:20128
-
-volumes:
-  omniroute-data:
-```
-
-| Image                    | Tag      | Size   | Description           |
-| ------------------------ | -------- | ------ | --------------------- |
-| `borhandarabi/routechi` | `latest` | ~250MB | Latest stable release |
-| `borhandarabi/routechi` | `3.6.2`  | ~250MB | Current version       |
-
----
-
-## 🖥️ Desktop App — Offline & Always-On
-
-> 🆕 **NEW!** RouteChi is now available as a **native desktop application** for Windows, macOS, and Linux.
-
-Run RouteChi as a standalone desktop app — no terminal, no browser, no internet required for local models. The Electron-based app includes:
-
-- 🖥️ **Native Window** — Dedicated app window with system tray integration
-- 🔄 **Auto-Start** — Launch RouteChi on system login
-- 🔔 **Native Notifications** — Get alerts for quota exhaustion or provider issues
-- ⚡ **One-Click Install** — NSIS (Windows), DMG (macOS), AppImage (Linux)
-- 🌐 **Offline Mode** — Works fully offline with bundled server
-
-### Inicio Rápido
-
-```bash
-# Development mode
-npm run electron:dev
-
-# Build for your platform
-npm run electron:build         # Current platform
-npm run electron:build:win     # Windows (.exe)
-npm run electron:build:mac     # macOS (.dmg) — x64 & arm64
-npm run electron:build:linux   # Linux (.AppImage)
-```
-
-### System Tray
-
-When minimized, RouteChi lives in your system tray with quick actions:
-
-- Open dashboard
-- Change server port
-- Quit application
-
-📖 Full documentation: [`electron/README.md`](electron/README.md)
-
----
-
-## 💰 Pricing at a Glance
-
-| Tier                | Provider                    | Cost                      | Quota Reset      | Best For                          |
-| ------------------- | --------------------------- | ------------------------- | ---------------- | --------------------------------- |
-| **💳 SUBSCRIPTION** | Claude Code (Pro)           | $20/mo                    | 5h + weekly      | Already subscribed                |
-|                     | Codex (Plus/Pro)            | $20-200/mo                | 5h + weekly      | OpenAI users                      |
-|                     | GitHub Copilot              | $10-19/mo                 | Monthly          | GitHub users                      |
-| **🔑 API KEY**      | NVIDIA NIM                  | **FREE** (dev forever)    | ~40 RPM          | 70+ open models                   |
-|                     | Cerebras                    | **FREE** (1M tok/day)     | 60K TPM / 30 RPM | World's fastest                   |
-|                     | Groq                        | **FREE** (30 RPM)         | 14.4K RPD        | Ultra-fast Llama/Gemma            |
-|                     | DeepSeek V3.2               | $0.27/$1.10 per 1M        | None             | Best price/quality reasoning      |
-|                     | xAI Grok-4 Fast             | **$0.20/$0.50 per 1M** 🆕 | None             | Fastest + tool calling, ultralow  |
-|                     | xAI Grok-4 (standard)       | $0.20/$1.50 per 1M 🆕     | None             | Reasoning flagship from xAI       |
-|                     | Mistral                     | Free trial + paid         | Rate limited     | European AI                       |
-|                     | OpenRouter                  | Pay-per-use               | None             | 100+ models aggr.                 |
-| **💰 CHEAP**        | GLM-5 (via Z.AI) 🆕         | $0.5/1M                   | Daily 10AM       | 128K output, newest flagship      |
-|                     | GLM-4.7                     | $0.6/1M                   | Daily 10AM       | Budget backup                     |
-|                     | MiniMax M2.5 🆕             | $0.3/1M input             | 5-hour rolling   | Reasoning + agentic tasks         |
-|                     | MiniMax M2.1                | $0.2/1M                   | 5-hour rolling   | Cheapest option                   |
-|                     | Kimi K2.5 (Moonshot API) 🆕 | Pay-per-use               | None             | Direct Moonshot API access        |
-|                     | Kimi K2                     | $9/mo flat                | 10M tokens/mo    | Predictable cost                  |
-| **🆓 FREE**         | Qoder                       | **$0**                    | Unlimited        | 5 models unlimited                |
-|                     | Qwen                        | **$0**                    | Unlimited        | 4 models unlimited                |
-|                     | Kiro                        | **$0**                    | Unlimited        | Claude Sonnet/Haiku (AWS Builder) |
-|                     | LongCat Flash-Lite 🆕       | **$0** (50M tok/day 🔥)   | 1 RPS            | Largest free quota on Earth       |
-|                     | Pollinations AI 🆕          | **$0** (no key needed)    | 1 req/15s        | GPT-5, Claude, DeepSeek, Llama 4  |
-|                     | Cloudflare Workers AI 🆕    | **$0** (10K Neurons/day)  | ~150 resp/day    | 50+ models, global edge           |
-|                     | Scaleway AI 🆕              | **$0** (1M tokens total)  | Rate limited     | EU/GDPR, Qwen3 235B, Llama 70B    |
-
-> 🆕 **New models added (Mar 2026):** Grok-4 Fast family at $0.20/$0.50/M (benchmarked at 1143ms — 30% faster than Gemini 2.5 Flash), GLM-5 via Z.AI with 128K output, MiniMax M2.5 reasoning, DeepSeek V3.2 updated pricing, Kimi K2.5 via Moonshot direct API.
-
-**💡 $0 Combo Stack — The Complete Free Setup:**
-
-```
-# 🆓 Ultimate Free Stack 2026 — 11 Providers, $0 Forever
-Kiro (kr/)             → Claude Sonnet/Haiku UNLIMITED
-Qoder (if/)            → kimi-k2-thinking, qwen3-coder-plus, deepseek-r1 UNLIMITED
-LongCat Lite (lc/)     → LongCat-Flash-Lite — 50M tokens/day 🔥
-Pollinations (pol/)    → GPT-5, Claude, DeepSeek, Llama 4 — no key needed
-Qwen (qw/)             → qwen3-coder-plus, qwen3-coder-flash, qwen3-coder-next UNLIMITED
-Gemini (gemini/)       → Gemini 2.5 Flash — 1,500 req/day free API key
-Cloudflare AI (cf/)    → Llama 70B, Gemma 3, Mistral — 10K Neurons/day
-Scaleway (scw/)        → Qwen3 235B, Llama 70B — 1M free tokens (EU)
-Groq (groq/)           → Llama/Gemma ultra-fast — 14.4K req/day
-NVIDIA NIM (nvidia/)   → 70+ open models — 40 RPM forever
-Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
-```
-
-**Zero cost. Never stops coding.** Configure this as one RouteChi combo and all fallbacks happen automatically — no manual switching ever.
-
----
-
----
-
-## 🆓 Free Models — What You Actually Get
-
-> All models below are **100% free with zero credit card required**. RouteChi auto-routes between them when one quota runs out — combine them all for an unbreakable $0 combo.
-
-### 🔵 CLAUDE MODELS (via Kiro — AWS Builder ID)
-
-| Model               | Prefix | Limit         | Rate Limit            |
-| ------------------- | ------ | ------------- | --------------------- |
-| `claude-sonnet-4.5` | `kr/`  | **Unlimited** | No reported daily cap |
-| `claude-haiku-4.5`  | `kr/`  | **Unlimited** | No reported daily cap |
-| `claude-opus-4.6`   | `kr/`  | **Unlimited** | Latest Opus via Kiro  |
-
-### 🟢 QODER MODELS (Free PAT via qodercli)
-
-| Model              | Prefix | Limit         | Rate Limit      |
-| ------------------ | ------ | ------------- | --------------- |
-| `kimi-k2-thinking` | `if/`  | **Unlimited** | No reported cap |
-| `qwen3-coder-plus` | `if/`  | **Unlimited** | No reported cap |
-| `deepseek-r1`      | `if/`  | **Unlimited** | No reported cap |
-| `minimax-m2.1`     | `if/`  | **Unlimited** | No reported cap |
-| `kimi-k2`          | `if/`  | **Unlimited** | No reported cap |
-
-> Recommended connection method: **Personal Access Token + `qodercli`**. Browser OAuth is
-> experimental and disabled by default unless `QODER_OAUTH_*` environment variables are configured.
-
-### 🟡 QWEN MODELS (Device Code Auth)
-
-| Model               | Prefix | Limit         | Rate Limit          |
-| ------------------- | ------ | ------------- | ------------------- |
-| `qwen3-coder-plus`  | `qw/`  | **Unlimited** | No reported cap     |
-| `qwen3-coder-flash` | `qw/`  | **Unlimited** | No reported cap     |
-| `qwen3-coder-next`  | `qw/`  | **Unlimited** | No reported cap     |
-| `vision-model`      | `qw/`  | **Unlimited** | Multimodal (images) |
-
-### ⚫ NVIDIA NIM (Free API Key — build.nvidia.com)
-
-| Tier       | Daily Limit  | Rate Limit  | Notes                                                  |
-| ---------- | ------------ | ----------- | ------------------------------------------------------ |
-| Free (Dev) | No token cap | **~40 RPM** | 70+ models; transitioning to pure rate limits mid-2025 |
-
-Popular free models: `moonshotai/kimi-k2.5` (Kimi K2.5), `z-ai/glm4.7` (GLM 4.7), `deepseek-ai/deepseek-v3.2` (DeepSeek V3.2), `nvidia/llama-3.3-70b-instruct`, `deepseek/deepseek-r1`
-
-### ⚪ CEREBRAS (Free API Key — inference.cerebras.ai)
-
-| Tier | Daily Limit       | Rate Limit       | Notes                                       |
-| ---- | ----------------- | ---------------- | ------------------------------------------- |
-| Free | **1M tokens/day** | 60K TPM / 30 RPM | World's fastest LLM inference; resets daily |
-
-Available free: `llama-3.3-70b`, `llama-3.1-8b`, `deepseek-r1-distill-llama-70b`
-
-### 🔴 GROQ (Free API Key — console.groq.com)
-
-| Tier | Daily Limit   | Rate Limit       | Notes                                     |
-| ---- | ------------- | ---------------- | ----------------------------------------- |
-| Free | **14.4K RPD** | 30 RPM per model | No credit card; 429 on limit, not charged |
-
-Available free: `llama-3.3-70b-versatile`, `gemma2-9b-it`, `mixtral-8x7b`, `whisper-large-v3`
-
-### 🔴 LONGCAT AI (Free API Key — longcat.chat) 🆕
-
-| Model                         | Prefix | Daily Free Quota  | Notes                   |
-| ----------------------------- | ------ | ----------------- | ----------------------- |
-| `LongCat-Flash-Lite`          | `lc/`  | **50M tokens** 💥 | Largest free quota ever |
-| `LongCat-Flash-Chat`          | `lc/`  | 500K tokens       | Multi-turn chat         |
-| `LongCat-Flash-Thinking`      | `lc/`  | 500K tokens       | Reasoning / CoT         |
-| `LongCat-Flash-Thinking-2601` | `lc/`  | 500K tokens       | Jan 2026 version        |
-| `LongCat-Flash-Omni-2603`     | `lc/`  | 500K tokens       | Multimodal              |
-
-> 100% free while in public beta. Sign up at [longcat.chat](https://longcat.chat) with email or phone. Resets daily 00:00 UTC.
-
-### 🟢 POLLINATIONS AI (No API Key Required) 🆕
-
-| Model      | Prefix | Rate Limit | Provider Behind    |
-| ---------- | ------ | ---------- | ------------------ |
-| `openai`   | `pol/` | 1 req/15s  | GPT-5              |
-| `claude`   | `pol/` | 1 req/15s  | Anthropic Claude   |
-| `gemini`   | `pol/` | 1 req/15s  | Google Gemini      |
-| `deepseek` | `pol/` | 1 req/15s  | DeepSeek V3        |
-| `llama`    | `pol/` | 1 req/15s  | Meta Llama 4 Scout |
-| `mistral`  | `pol/` | 1 req/15s  | Mistral AI         |
-
-> ✨ **Zero friction:** No signup, no API key. Add the Pollinations provider with an empty key field and it works immediately.
-
-### 🟠 CLOUDFLARE WORKERS AI (Free API Key — cloudflare.com) 🆕
-
-| Tier | Daily Neurons | Equivalent Usage                        | Notes                   |
-| ---- | ------------- | --------------------------------------- | ----------------------- |
-| Free | **10,000**    | ~150 LLM resp / 500s audio / 15K embeds | Global edge, 50+ models |
-
-Popular free models: `@cf/meta/llama-3.3-70b-instruct`, `@cf/google/gemma-3-12b-it`, `@cf/openai/whisper-large-v3-turbo` (free audio!), `@cf/qwen/qwen2.5-coder-15b-instruct`
-
-> Requires API Token + Account ID from [dash.cloudflare.com](https://dash.cloudflare.com). Store Account ID in provider settings.
-
-### 🟣 SCALEWAY AI (1M Free Tokens — scaleway.com) 🆕
-
-| Tier | Free Quota    | Location     | Notes                               |
-| ---- | ------------- | ------------ | ----------------------------------- |
-| Free | **1M tokens** | 🇫🇷 Paris, EU | No credit card needed within limits |
-
-Available free: `qwen3-235b-a22b-instruct-2507` (Qwen3 235B!), `llama-3.1-70b-instruct`, `mistral-small-3.2-24b-instruct-2506`, `deepseek-v3-0324`
-
-> EU/GDPR compliant. Get API key at [console.scaleway.com](https://console.scaleway.com).
-
-> **💡 The Ultimate Free Stack (11 Providers, $0 Forever):**
->
-> ```
-> Kiro (kr/)             → Claude Sonnet/Haiku UNLIMITED
-> Qoder (if/)            → kimi-k2-thinking, qwen3-coder-plus, deepseek-r1 UNLIMITED
-> LongCat Lite (lc/)     → LongCat-Flash-Lite — 50M tokens/day 🔥
-> Pollinations (pol/)    → GPT-5, Claude, DeepSeek, Llama 4 — no key needed
-> Qwen (qw/)             → qwen3-coder models UNLIMITED
-> Gemini (gemini/)       → Gemini 2.5 Flash — 1,500 req/day free
-> Cloudflare AI (cf/)    → 50+ models — 10K Neurons/day
-> Scaleway (scw/)        → Qwen3 235B, Llama 70B — 1M free tokens (EU)
-> Groq (groq/)           → Llama/Gemma — 14.4K req/day ultra-fast
-> NVIDIA NIM (nvidia/)   → 70+ open models — 40 RPM forever
-> Cerebras (cerebras/)   → Llama/Qwen world-fastest — 1M tok/day
-> ```
-
-## 🎙️ Free Transcription Combo
-
-> Transcribe any audio/video for **$0** — Deepgram leads with $200 free, AssemblyAI $50 fallback, Groq Whisper as unlimited emergency backup.
-
-| Provider          | Free Credits           | Best Model                                   | Rate Limit                   |
-| ----------------- | ---------------------- | -------------------------------------------- | ---------------------------- |
-| 🟢 **Deepgram**   | **$200 free** (signup) | `nova-3` — best accuracy, 30+ languages      | No RPM limit on free credits |
-| 🔵 **AssemblyAI** | **$50 free** (signup)  | `universal-3-pro` — chapters, sentiment, PII | No RPM limit on free credits |
-| 🔴 **Groq**       | **Free forever**       | `whisper-large-v3` — OpenAI Whisper          | 30 RPM (rate limited)        |
-
-**Suggested combo in `/dashboard/combos`:**
-
-```
-Name: free-transcription
-Strategy: Priority
-Nodes:
-  [1] deepgram/nova-3          → uses $200 free first
-  [2] assemblyai/universal-3-pro → fallback when Deepgram credits run out
-  [3] groq/whisper-large-v3    → free forever, emergency fallback
-```
-
-Then in `/dashboard/media` → **Transcription** tab: upload any audio or video file → select your combo endpoint → get transcription in supported formats.
-
-## 💡 Key Features
-
-RouteChi v3.6 is built as an operational platform, not just a relay proxy.
-
-### 🆕 New — v3.6.x Highlights (Apr 2026)
-
-| Feature                            | What It Does                                                                                                                                      |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🌐 **V1 WebSocket Bridge**         | OpenAI-compatible WebSocket traffic upgraded and proxied via `/v1/ws` — full streaming over WS with session auth (API key or session cookie)      |
-| 🔑 **Sync Tokens & Config Bundle** | Issue/revoke sync tokens for config sync endpoints. Config bundles versioned with ETag for bandwidth-efficient polling                            |
-| 🧠 **GLM Thinking (glmt) Preset**  | GLM Thinking registered first-class: 65 536 max tokens, 24 576 thinking budget, 900s timeout, usage sync & pricing — Claude-compatible API        |
-| 🔢 **Hybrid Token Counting**       | Uses provider-side `/messages/count_tokens` when available; falls back to estimation — accurate usage tracking without guessing                   |
-| 🌱 **Model Alias Auto-Seed**       | 30+ cross-proxy dialect aliases normalised at startup — no more routing mismatches                                                                |
-| 🛡️ **Safe Outbound Fetch**         | All provider validation and model discovery go through a guarded fetch layer blocking private/local URLs with retry, timeout, and SSRF protection |
-| ⏳ **Wait For Cooldown**           | Server-side chat retries when every candidate connection is cooling down; configurable `enabled`, `maxRetries`, and `maxRetryWaitSec`             |
-| 🔍 **Runtime Env Validation**      | Startup validates all env vars with Zod schemas — clear errors for missing secrets, invalid URLs, or wrong types                                  |
-| 📋 **Compliance Audit Expansion**  | Structured audit logs with pagination, request context, auth events, provider CRUD events, and SSRF-blocked validation logging                    |
-| 🔐 **TPS Log Metric**              | Log details modal shows Tokens Per Second (TPS) — quick performance at-a-glance for every request                                                 |
-| 🗑️ **Uninstall / Full Uninstall**  | `npm run uninstall` keeps data, `npm run uninstall:full` removes everything — clean removal for all install methods                               |
-| 🔧 **OAuth Env Repair**            | One-click "Repair env" action for OAuth providers restores missing env vars and fixes broken auth state                                           |
-| 🔒 **Graceful Electron Shutdown**  | Electron `before-quit` shuts down Next.js gracefully, preventing SQLite WAL database locks on desktop close                                       |
-| 👁️ **Model Visibility Toggle**     | Per-model visibility toggle (👁 icon) with search filter and active-count badge (`N/M active`) on provider pages                                   |
-| 📧 **Email Privacy Masking**       | OAuth account emails masked (`di*****@g****.com`), full address visible on hover                                                                  |
-| 🔗 **Context Relay Strategy**      | Combo strategy preserving session continuity via structured handoff summaries when accounts rotate mid-conversation                               |
-| 🛡️ **Proxy Hardening**             | Token health check, API key validation, and undici dispatcher all honor proxy config                                                              |
-| ⚠️ **Node.js 24 Login Warning**    | Login page proactively detects incompatible Node.js versions and shows a clear warning banner                                                     |
-| 📎 **Gemini PDF Attachments**      | PDF attachments correctly routed to Gemini via `inline_data` and generic base64 detection                                                         |
-| 🔒 **CodeQL Security Hardening**   | Resolved SSRF, insecure randomness, polynomial ReDoS, and incomplete URL sanitization alerts                                                      |
-
-### 🆕 New — ClawRouter-Inspired Improvements (Mar 2026)
-
-| Feature                              | What It Does                                                                                |
-| ------------------------------------ | ------------------------------------------------------------------------------------------- |
-| ⚡ **Grok-4 Fast Family**            | xAI models at $0.20/$0.50/M — benchmarked 1143ms (30% faster than Gemini 2.5 Flash)         |
-| 🧠 **GLM-5 via Z.AI**                | 128K output context, $0.5/1M — newest flagship from the GLM family                          |
-| 🔮 **MiniMax M2.5**                  | Reasoning + agentic tasks at $0.30/1M — significant upgrade from M2.1                       |
-| 🎯 **toolCalling Flag per Model**    | Per-model `toolCalling: true/false` in registry — AutoCombo skips non-tool-capable models   |
-| 🌍 **Multilingual Intent Detection** | PT/ZH/ES/AR keywords in AutoCombo scoring — better model selection for non-English content  |
-| 📊 **Benchmark-Driven Fallbacks**    | Real p95 latency from live requests feeds combo scoring — AutoCombo learns from actual data |
-| 🔁 **Request Deduplication**         | Content-hash based dedup window — multi-agent safe, prevents duplicate charges              |
-| 🔌 **Pluggable RouterStrategy**      | Extensible `RouterStrategy` interface — add custom routing logic as plugins                 |
-
-### 🚀 Previous v2.0.9+ — Playground, CLI Fingerprints & ACP
-
-| Feature                                 | What It Does                                                                                                                                                                                                                            |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🎮 **Model Playground**                 | Dashboard page to test any model directly — provider/model/endpoint selectors, Monaco Editor, streaming, abort, timing                                                                                                                  |
-| 🔏 **CLI Fingerprint Matching**         | Per-provider header/body ordering to match native CLI signatures — toggle per provider in Settings > Security. **Your proxy IP is preserved**                                                                                           |
-| 🤖 **ACP Agents Dashboard**             | Debug › Agents page — grid of 14 agents with install status, version, custom agent form for any CLI tool. **OpenCode** users get a "Download opencode.json" button that auto-generates a ready-to-use config with all available models. |
-| 🔧 **Custom Model `apiFormat` Routing** | Custom models with `apiFormat: "responses"` now correctly route to the Responses API translator                                                                                                                                         |
-| 🏢 **Codex Workspace Isolation**        | Multiple Codex workspaces per email — OAuth correctly separates connections by workspace ID                                                                                                                                             |
-| 🔄 **Electron Auto-Update**             | Desktop app checks for updates + auto-install on restart                                                                                                                                                                                |
-
-### 🤖 Agent & Protocol Operations (v2.0)
-
-| Feature                               | What It Does                                                                                                                           |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| 🔧 **MCP Server (25 tools)**          | IDE/agent tools via 3 transports: stdio, SSE (`/api/mcp/sse`), Streamable HTTP (`/api/mcp/stream`). 18 core + 3 memory + 4 skill tools |
-| 🤝 **A2A Server (JSON-RPC + SSE)**    | Agent-to-agent task execution with sync and streaming flows                                                                            |
-| 🧭 **Consolidated Endpoints Page**    | Tabbed management page with Endpoint Proxy, MCP, A2A, and API Endpoints tabs                                                           |
-| 🎚️ **Service Enable/Disable Toggles** | ON/OFF switches for MCP and A2A with settings persistence (default: OFF)                                                               |
-| 🛰️ **MCP Runtime Heartbeat**          | Real process status (pid, uptime, heartbeat age, transport, scope mode)                                                                |
-| 📋 **MCP Audit Trail**                | Filterable audit logs with success/failure and key attribution                                                                         |
-| 🔐 **MCP Scope Enforcement**          | 10 granular scope permissions for controlled tool access                                                                               |
-| 📡 **A2A Task Lifecycle Management**  | List/filter tasks, inspect events/artifacts, cancel running tasks                                                                      |
-| 📋 **Agent Card Discovery**           | `/.well-known/agent.json` for client auto-discovery                                                                                    |
-| 🧪 **Protocol E2E Test Harness**      | Real MCP SDK + A2A client flows in `test:protocols:e2e`                                                                                |
-| ⚙️ **Operational Controls**           | Switch combos, tune resilience settings, and review breaker state from dedicated Health and Settings surfaces                          |
-
-### 🧠 Routing & Intelligence
-
-| Feature                            | What It Does                                                             |
-| ---------------------------------- | ------------------------------------------------------------------------ |
-| 🎯 **Smart 4-Tier Fallback**       | Auto-route: Subscription → API Key → Cheap → Free                        |
-| 📊 **Real-Time Quota Tracking**    | Live token count + reset countdown per provider                          |
-| 🔄 **Format Translation**          | OpenAI ↔ Claude ↔ Gemini ↔ Responses with schema-safe conversions        |
-| 👥 **Multi-Account Support**       | Multiple accounts per provider with intelligent selection                |
-| 🔄 **Auto Token Refresh**          | OAuth tokens refresh automatically with retry                            |
-| 🎨 **Custom Combos**               | 13 balancing strategies + fallback chain control                         |
-| 🔗 **Context Relay**               | Session continuity handoffs when account rotation happens mid-session    |
-| 🌐 **Wildcard Router**             | `provider/*` dynamic routing                                             |
-| 🧠 **Thinking Budget Controls**    | Passthrough, auto, custom, and adaptive reasoning limits                 |
-| 🔀 **Model Aliases**               | Built-in + custom model aliasing and migration safety                    |
-| ⚡ **Background Degradation**      | Route low-priority background tasks to cheaper models                    |
-| 🧪 **Task-Aware Smart Routing**    | Auto-select model by content type (coding/vision/analysis/summarization) |
-| 🔄 **A2A Agent Workflows**         | Deterministic FSM orchestrator for stateful multi-step agent executions  |
-| 🔀 **Adaptive Routing**            | Dynamic strategy override based on token volume and prompt complexity    |
-| 🎲 **Provider Diversity**          | Shannon entropy scoring balancing auto-combo traffic distribution        |
-| 💬 **System Prompt Injection**     | Global behavior controls applied consistently                            |
-| 📄 **Responses API Compatibility** | Full `/v1/responses` support for Codex and advanced agentic workflows    |
-
-### 🎵 Multi-Modal APIs
-
-| Feature                    | What It Does                                                                                                                                                               |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🖼️ **Image Generation**    | `/v1/images/generations` with cloud and local backends                                                                                                                     |
-| 📐 **Embeddings**          | `/v1/embeddings` for search and RAG pipelines                                                                                                                              |
-| 🎤 **Audio Transcription** | `/v1/audio/transcriptions` — 7 providers (Deepgram Nova 3, AssemblyAI, Groq Whisper, HuggingFace, ElevenLabs, OpenAI, Azure), auto-language detection, MP4/MP3/WAV support |
-| 🔊 **Text-to-Speech**      | `/v1/audio/speech` — 10 providers (ElevenLabs, OpenAI, Deepgram, Cartesia, PlayHT, HuggingFace, Nvidia NIM, Inworld, Coqui, Tortoise) with correct error messages          |
-| 🎬 **Video Generation**    | `/v1/videos/generations` (ComfyUI + SD WebUI workflows)                                                                                                                    |
-| 🎵 **Music Generation**    | `/v1/music/generations` (ComfyUI workflows)                                                                                                                                |
-| 🛡️ **Moderations**         | `/v1/moderations` safety checks                                                                                                                                            |
-| 🔀 **Reranking**           | `/v1/rerank` for relevance scoring                                                                                                                                         |
-| 🔍 **Web Search** 🆕       | `/v1/search` — 5 providers (Serper, Brave, Perplexity, Exa, Tavily), 6,500+ free/month, auto-failover, cache                                                               |
-
-### 🛡️ Resilience, Security & Governance
-
-| Feature                             | What It Does                                                                                            |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| 🔌 **Provider Circuit Breakers**    | Provider-wide trip/recover after fallback exhaustion with configurable thresholds                       |
-| 🔒 **Daily Quota Lock** 🆕          | Detects exhaustion signals and locks routing for the specific model until midnight                      |
-| 🎯 **Endpoint-Aware Models**        | Custom models declare supported endpoints + API format                                                  |
-| 🛡️ **Anti-Thundering Herd**         | Mutex + semaphore protections on retry/rate events                                                      |
-| 🧠 **Semantic + Signature Cache**   | Cost/latency reduction with two cache layers                                                            |
-| ⚡ **Request Idempotency**          | Duplicate protection window                                                                             |
-| 🔒 **TLS Fingerprint Spoofing**     | Browser-like TLS fingerprint — **reduces bot detection and account flagging**                           |
-| 🔏 **CLI Fingerprint Matching**     | Matches native CLI request signatures — **reduces ban risk while preserving proxy IP**                  |
-| 🌐 **IP Filtering**                 | Allowlist/blocklist control for exposed deployments                                                     |
-| 🚦 **Request Queue & Pacing**       | Configurable per-connection request buckets for RPM, spacing, concurrency, and max wait                 |
-| 📉 **Graceful Degradation**         | Multi-layer capability fallbacks protecting core gateway operations                                     |
-| 📜 **Config Audit Trail**           | Diff-based change tracking preventing operational drift with simple rollbacks                           |
-| ⏳ **Provider Health Sync**         | Proactive token expiration monitoring triggering alerts before authorization failures                   |
-| ❄️ **Connection Cooldown**          | Retryable 408/429/5xx failures cool down a single connection with optional upstream hints               |
-| 🚪 **Auto-Disable Banned Accounts** | Permanently blocked token accounts can be disabled automatically                                        |
-| 🔑 **API Key Management + Scoping** | Secure key issuance/rotation and model/provider controls                                                |
-| 👁️ **Scoped API Key Reveal** 🆕     | Opt-in recovery of API keys via `ALLOW_API_KEY_REVEAL`                                                  |
-| 🛡️ **Protected `/models`**          | Optional auth gating and provider hiding for model catalog                                              |
-| 🛡️ **Safe Outbound Fetch** 🆕       | Guarded fetch for provider calls — blocks private/local URLs, retries, SSRF protection                  |
-| ⏳ **Wait For Cooldown** 🆕         | Auto-retry chat after connection cooldowns; configurable `enabled`, `maxRetries`, and `maxRetryWaitSec` |
-| 🔍 **Runtime Env Validation** 🆕    | Zod-based env schema validation at startup with actionable error messages                               |
-| 📋 **Compliance Audit v2** 🆕       | Pagination, request context, auth events, provider CRUD, and SSRF-blocked logging                       |
-
-### 📊 Observability & Analytics
-
-| Feature                          | What It Does                                          |
-| -------------------------------- | ----------------------------------------------------- |
-| 📝 **Request + Proxy Logging**   | Full request/response and proxy logging               |
-| 📉 **Streamed Detailed Logs**    | Reconstructs SSE payload streams cleanly into the UI  |
-| 🏷️ **Real-Time Model Badges** 🆕 | Live model status and daily quota countdown timers    |
-| 📋 **Unified Logs Dashboard**    | Request, proxy, audit, and console views in one page  |
-| 🔍 **Request Telemetry**         | p50/p95/p99 latency and request tracing               |
-| 🏥 **Health Dashboard**          | Uptime, breaker states, lockouts, cache stats         |
-| 💰 **Cost Tracking**             | Budget controls and per-model pricing visibility      |
-| 📈 **Analytics Visualizations**  | Model/provider usage insights and trend views         |
-| 🧪 **Evaluation Framework**      | Golden set testing with configurable match strategies |
-| 📡 **Live Diagnostics** 🆕       | Semantic cache bypass for accurate combo live testing |
-| 🔐 **TPS Log Metric** 🆕         | Tokens Per Second badge in log details modal          |
-
-### ☁️ Deployment & Platform
-
-| Feature                        | What It Does                                                          |
-| ------------------------------ | --------------------------------------------------------------------- |
-| 🌐 **Deploy Anywhere**         | Localhost, VPS, Docker, Cloud environments                            |
-| 🚇 **Cloudflare Tunnel** 🆕    | One-click Quick Tunnel integration from the dashboard                 |
-| 🔑 **API Key Model Filtering** | Native /v1/models response filtered via assigned Bearer context roles |
-| ⚡ **Smart Cache Bypass**      | Configurable TTL heuristics and forced refetch controls               |
-| 🔄 **Backup/Restore**          | Export/import and disaster recovery flows                             |
-| 🧙 **Onboarding Wizard**       | First-run guided setup                                                |
-| 🔧 **CLI Tools Dashboard**     | One-click setup for popular coding tools                              |
-| 🎮 **Model Playground**        | Test any provider/model/endpoint from the dashboard                   |
-| 🔏 **CLI Fingerprint Toggle**  | Per-provider fingerprint matching in Settings > Security              |
-| 🌐 **i18n (30 languages)**     | Full dashboard + docs language support with RTL coverage              |
-| 🧹 **Clear All Models**        | One-click model list clearing in provider details                     |
-| 👁️ **Sidebar Controls** 🆕     | Hide components and integrations from Appearance Settings             |
-| 📋 **Issue Templates**         | Standardized GitHub templates for bugs and features                   |
-| 📂 **Custom Data Directory**   | `DATA_DIR` override for storage location                              |
-| 🌐 **V1 WebSocket Bridge** 🆕  | OpenAI-compatible WebSocket traffic proxied via `/v1/ws`              |
-| 🔑 **Sync Tokens & Bundle** 🆕 | Config sync tokens + versioned bundle endpoint with ETag support      |
-
-### Feature Deep Dive
-
-#### Smart fallback with practical cost control
+اگر کلاینت شما نمی‌تواند هدرهای سفارشی ارسال کند، RouteChi همچنین نام‌های مستعار سازگاری توکن‌شده را عرضه می‌کند:
 
 ```txt
-Combo: "my-coding-stack"
-  1. cc/claude-opus-4-7
-  2. nvidia/llama-3.3-70b
-  3. glm/glm-4.7
-  4. if/kimi-k2-thinking
+OpenAI catalog:   http://localhost:20128/vscode/YOUR_KEY/
+OpenAI models:    http://localhost:20128/vscode/YOUR_KEY/models
+OpenAI chat:      http://localhost:20128/vscode/YOUR_KEY/chat/completions
+OpenAI responses: http://localhost:20128/vscode/YOUR_KEY/responses
+Ollama chat:      http://localhost:20128/vscode/YOUR_KEY/api/chat
+Ollama tags:      http://localhost:20128/vscode/YOUR_KEY/api/tags
 ```
 
-When quota, rate, or health fails, RouteChi automatically moves to the next candidate without manual switching.
+این‌ها را فقط برای کلاینت‌هایی استفاده کنید که نمی‌توانند `Authorization: Bearer ...` ضمیمه کنند. احراز هویت هدر همچنان حالت ترجیحی است.
 
-#### Protocol management that is visible and operable
+<br/>
 
-- MCP + A2A are discoverable in UI and docs (not hidden)
-- Protocol status APIs expose live operational data (`/api/mcp/*`, `/api/a2a/*`)
-- Dashboards include actions for day-2 ops (combo toggles, breaker resets, task cancellation)
+## 📦 روش‌های نصب بیشتر — Docker، سورس،pnpm، Arch
 
-#### Translator + validation workflow
-
-The Translator area includes:
-
-- **Playground**: request transformation checks
-- **Chat Tester**: full request/response round-trip
-- **Test Bench**: multiple cases in one run
-- **Live Monitor**: real-time traffic view
-
-Plus protocol validation with real clients via `npm run test:protocols:e2e`.
-
-> 📖 **[MCP Server README](open-sse/mcp-server/README.md)** — Tool reference, IDE configs, and client examples
->
-> 📖 **[A2A Server README](src/lib/a2a/README.md)** — Skills, JSON-RPC methods, streaming, and task lifecycle
-
-## 🧪 Evaluations (Evals)
-
-RouteChi includes a built-in evaluation framework to test LLM response quality against a golden set. Access it via **Analytics → Evals** in the dashboard.
-
-### Built-in Golden Set
-
-The pre-loaded "RouteChi Golden Set" contains test cases for:
-
-- Greetings, math, geography, code generation
-- JSON format compliance, translation, markdown generation
-- Safety refusal (harmful content), counting, boolean logic
-
-### Evaluation Strategies
-
-| Strategy   | Description                                      | Example                          |
-| ---------- | ------------------------------------------------ | -------------------------------- |
-| `exact`    | Output must match exactly                        | `"4"`                            |
-| `contains` | Output must contain substring (case-insensitive) | `"Paris"`                        |
-| `regex`    | Output must match regex pattern                  | `"1.*2.*3"`                      |
-| `custom`   | Custom JS function returns true/false            | `(output) => output.length > 10` |
-
----
-
-## 📖 Setup Guide
-
-### Protocol Setup (MCP + A2A)
-
-<details>
-<summary><b>🧩 MCP Setup (Model Context Protocol)</b></summary>
-
-Start MCP transport in stdio mode:
+**🐳 Docker**
 
 ```bash
-routechi --mcp
+docker run -d --name omniroute --restart unless-stopped --stop-timeout 40 \
+  -p 20128:20128 -v omniroute-data:/app/data borhandarabi/routechi:latest
 ```
 
-Recommended validation flow:
-
-1. Connect your MCP client over stdio.
-2. Run `omniroute_get_health`.
-3. Run `omniroute_list_combos`.
-4. Open `/dashboard/mcp` to confirm heartbeat, activity, and audit.
-
-Useful APIs for automation:
-
-- `GET /api/mcp/status`
-- `GET /api/mcp/tools`
-- `GET /api/mcp/audit`
-- `GET /api/mcp/audit/stats`
-
-</details>
-
-<details>
-<summary><b>🤝 A2A Setup (Agent2Agent)</b></summary>
-
-Discover the agent:
+**🛠️ از سورس**
 
 ```bash
-curl http://localhost:20128/.well-known/agent.json
+cp .env.example .env && npm install
+PORT=20128 npm run dev
 ```
 
-Send a task:
+**📦 pnpm**
 
 ```bash
-curl -X POST http://localhost:20128/a2a \
-  -H 'content-type: application/json' \
-  -d '{"jsonrpc":"2.0","id":"setup-a2a","method":"message/send","params":{"skill":"quota-management","messages":[{"role":"user","content":"Summarize quota status."}]}}'
+pnpm add -g routechi@latest --allow-build=better-sqlite3 --allow-build=@swc/core && omniroute
 ```
 
-Manage lifecycle:
-
-- `GET /api/a2a/status`
-- `GET /api/a2a/tasks`
-- `GET /api/a2a/tasks/:id`
-- `POST /api/a2a/tasks/:id/cancel`
-
-Operational UI:
-
-- `/dashboard/a2a` for task/state/stream observability and smoke actions
-
-</details>
-
-<details>
-<summary><b>🧪 End-to-end protocol validation</b></summary>
-
-Validate both protocols with real clients:
+**🐧 Arch Linux (AUR)**
 
 ```bash
-npm run test:protocols:e2e
+yay -S omniroute-bin && systemctl --user enable --now omniroute.service
 ```
 
-This verifies:
-
-- MCP SDK client connect/list/call
-- A2A discovery/send/stream/get/cancel
-- Cross-check data in MCP audit and A2A task management APIs
-
-</details>
-
-<details>
-<summary><b>💳 Subscription Providers</b></summary>
-
-### Claude Code (Pro/Max)
+**🔧 Nix (Flake)**
 
 ```bash
-Dashboard → Providers → Connect Claude Code
-→ OAuth login → Auto token refresh
-→ 5-hour + weekly quota tracking
-
-Models:
-  cc/claude-opus-4-7
-  cc/claude-sonnet-4-5-20250929
-  cc/claude-haiku-4-5-20251001
-```
-
-**Pro Tip:** Use Opus for complex tasks, Sonnet for speed. RouteChi tracks quota per model!
-
-### OpenAI Codex (Plus/Pro)
-
-```bash
-Dashboard → Providers → Connect Codex
-→ OAuth login (port 1455)
-→ 5-hour + weekly reset
-
-Models:
-  cx/gpt-5.2-codex
-  cx/gpt-5.1-codex-max
-```
-
-#### Codex Account Limit Management (5h + Weekly)
-
-Each Codex account now has policy toggles in `Dashboard -> Providers`:
-
-- `5h` (ON/OFF): enforce the 5-hour window threshold policy.
-- `Weekly` (ON/OFF): enforce the weekly window threshold policy.
-- Threshold behavior: when an enabled window reaches >=90% usage, that account is skipped.
-- Rotation behavior: RouteChi routes to the next eligible Codex account automatically.
-- Reset behavior: when the provider `resetAt` time passes, the account becomes eligible again automatically.
-
-Scenarios:
-
-- `5h ON` + `Weekly ON`: account is skipped when either window reaches threshold.
-- `5h OFF` + `Weekly ON`: only weekly usage can block the account.
-- `5h ON` + `Weekly OFF`: only 5-hour usage can block the account.
-- `resetAt` passed: account re-enters rotation automatically (no manual re-enable).
-
-### GitHub Copilot
-
-```bash
-Dashboard → Providers → Connect GitHub
-→ OAuth via GitHub
-→ Monthly reset (1st of month)
-
-Models:
-  gh/gpt-5
-  gh/claude-4.5-sonnet
-  gh/gemini-3.1-pro-preview
-```
-
-</details>
-
-<details>
-<summary><b>🔑 API Key Providers</b></summary>
-
-### NVIDIA NIM (FREE developer access — 70+ models)
-
-1. Sign up: [build.nvidia.com](https://build.nvidia.com)
-2. Get free API key (1000 inference credits included)
-3. Dashboard → Add Provider → NVIDIA NIM:
-   - API Key: `nvapi-your-key`
-
-**Models:** `nvidia/llama-3.3-70b-instruct`, `nvidia/mistral-7b-instruct`, and 50+ more
-
-**Pro Tip:** OpenAI-compatible API — works seamlessly with RouteChi's format translation!
-
-### DeepSeek
-
-1. Sign up: [platform.deepseek.com](https://platform.deepseek.com)
-2. Get API key
-3. Dashboard → Add Provider → DeepSeek
-
-**Models:** `deepseek/deepseek-chat`, `deepseek/deepseek-coder`
-
-### Groq (Free Tier Available!)
-
-1. Sign up: [console.groq.com](https://console.groq.com)
-2. Get API key (free tier included)
-3. Dashboard → Add Provider → Groq
-
-**Models:** `groq/llama-3.3-70b`, `groq/mixtral-8x7b`
-
-**Pro Tip:** Ultra-fast inference — best for real-time coding!
-
-### OpenRouter (100+ Models)
-
-1. Sign up: [openrouter.ai](https://openrouter.ai)
-2. Get API key
-3. Dashboard → Add Provider → OpenRouter
-
-**Models:** Access 100+ models from all major providers through a single API key.
-
-**Dashboard behavior:** OpenRouter models are managed from **Available Models**. Manual add, import, and auto-sync all update the same list.
-
-</details>
-
-<details>
-<summary><b>💰 Cheap Providers (Backup)</b></summary>
-
-### GLM-4.7 (Daily reset, $0.6/1M)
-
-1. Sign up: [Zhipu AI](https://open.bigmodel.cn/)
-2. Get API key from Coding Plan
-3. Dashboard → Add API Key:
-   - Provider: `glm`
-   - API Key: `your-key`
-
-**Use:** `glm/glm-4.7`
-
-**Pro Tip:** Coding Plan offers 3× quota at 1/7 cost! Reset daily 10:00 AM.
-
-### MiniMax M2.1 (5h reset, $0.20/1M)
-
-1. Sign up: [MiniMax](https://www.minimax.io/)
-2. Get API key
-3. Dashboard → Add API Key
-
-**Use:** `minimax/MiniMax-M2.1`
-
-**Pro Tip:** Cheapest option for long context (1M tokens)!
-
-### Kimi K2 ($9/month flat)
-
-1. Subscribe: [Moonshot AI](https://platform.moonshot.ai/)
-2. Get API key
-3. Dashboard → Add API Key
-
-**Use:** `kimi/kimi-latest`
-
-**Pro Tip:** Fixed $9/month for 10M tokens = $0.90/1M effective cost!
-
-</details>
-
-<details>
-<summary><b>🆓 FREE Providers (Emergency Backup)</b></summary>
-
-### Qoder (5 FREE models via OAuth)
-
-```bash
-Dashboard → Connect Qoder
-→ Qoder OAuth login
-→ Unlimited usage
-
-Models:
-  if/kimi-k2-thinking
-  if/qwen3-coder-plus
-  if/glm-4.7
-  if/minimax-m2
-  if/deepseek-r1
-```
-
-### Qwen (4 FREE models via Device Code)
-
-```bash
-Dashboard → Connect Qwen
-→ Device code authorization
-→ Unlimited usage
-
-Models:
-  qw/qwen3-coder-plus
-  qw/qwen3-coder-flash
-```
-
-### Kiro (Claude FREE)
-
-```bash
-Dashboard → Connect Kiro
-→ AWS Builder ID or Google/GitHub
-→ Unlimited usage
-
-Models:
-  kr/claude-sonnet-4.5
-  kr/claude-haiku-4.5
-```
-
-</details>
-
-<details>
-<summary><b>🎨 Create Combos</b></summary>
-
-### Example 1: Maximize Subscription → Cheap Backup
-
-```
-Dashboard → Combos → Create New
-
-Name: premium-coding
-Models:
-  1. cc/claude-opus-4-7 (Subscription primary)
-  2. glm/glm-4.7 (Cheap backup, $0.6/1M)
-  3. minimax/MiniMax-M2.1 (Cheapest fallback, $0.20/1M)
-
-Use in CLI: premium-coding
-```
-
-### Example 2: Free-Only (Zero Cost)
-
-```
-Name: free-combo
-Models:
-  1. if/kimi-k2-thinking (unlimited)
-  2. qw/qwen3-coder-plus (unlimited)
-
-Cost: $0 forever!
-```
-
-</details>
-
-<details>
-<summary><b>🔧 CLI Integration</b></summary>
-
-### Cursor IDE
-
-```
-Settings → Models → Advanced:
-  OpenAI API Base URL: http://localhost:20128/v1
-  OpenAI API Key: [from RouteChi dashboard]
-  Model: cc/claude-opus-4-7
-```
-
-### Claude Code
-
-Use the **CLI Tools** page in the dashboard for one-click configuration, or edit `~/.claude/settings.json` manually.
-
-### Codex CLI
-
-```bash
-export OPENAI_BASE_URL="http://localhost:20128"
-export OPENAI_API_KEY="your-omniroute-api-key"
-
-codex "your prompt"
-```
-
-### OpenClaw
-
-**Option 1 — Dashboard (recommended):**
-
-```
-Dashboard → CLI Tools → OpenClaw → Select Model → Apply
-```
-
-**Option 2 — Manual:** Edit `~/.openclaw/openclaw.json`:
-
-```json
-{
-  "models": {
-    "providers": {
-      "omniroute": {
-        "baseUrl": "http://127.0.0.1:20128/v1",
-        "apiKey": "sk_omniroute",
-        "api": "openai-completions"
-      }
-    }
-  }
-}
-```
-
-> **Note:** OpenClaw only works with local RouteChi. Use `127.0.0.1` instead of `localhost` to avoid IPv6 resolution issues.
-
-### Cline / Continue / RooCode
-
-```
-Settings → API Configuration:
-  Provider: OpenAI Compatible
-  Base URL: http://localhost:20128/v1
-  API Key: [from RouteChi dashboard]
-  Model: if/kimi-k2-thinking
-```
-
-### OpenCode
-
-**Step 1:** Add RouteChi as a custom provider:
-
-```bash
-opencode
-/connect
-# Select "Other" → Enter ID: "omniroute" → Enter your RouteChi API key
-```
-
-**Step 2:** Create/edit `opencode.json` in your project root:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "omniroute": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "RouteChi",
-      "options": {
-        "baseURL": "http://localhost:20128/v1"
-      },
-      "models": {
-        "cc/claude-sonnet-4-20250514": { "name": "Claude Sonnet 4" },
-        "gg/gemini-2.5-pro": { "name": "Gemini 2.5 Pro" },
-        "if/kimi-k2-thinking": { "name": "Kimi K2 (Free)" }
-      }
-    }
-  }
-}
-```
-
-**Step 3:** Select the model in OpenCode:
-
-```bash
-/models
-# Select any RouteChi model from the list
-```
-
-> **Tip:** Add any model available in your RouteChi `/v1/models` endpoint to the `models` section. Use the format `provider/model-id` from your RouteChi dashboard.
-
-</details>
-
----
-
-## Solución de Problemas
-
-<details>
-<summary><b>Click to expand troubleshooting guide</b></summary>
-
-**"Language model did not provide messages"**
-
-- Provider quota exhausted → Check dashboard quota tracker
-- Solution: Use combo fallback or switch to cheaper tier
-
-**Rate limiting**
-
-- Subscription quota out → Fallback to GLM/MiniMax
-- Add combo: `cc/claude-opus-4-7 → glm/glm-4.7 → if/kimi-k2-thinking`
-
-**OAuth token expired**
-
-- Auto-refreshed by RouteChi
-- If issues persist: Dashboard → Provider → Reconnect
-
-**High costs**
-
-- Check usage stats in Dashboard → Costs
-- Switch primary model to GLM/MiniMax
-
-**Dashboard/API ports are wrong**
-
-- `PORT` is the canonical base port (and API port by default)
-- `API_PORT` overrides only OpenAI-compatible API listener
-- `DASHBOARD_PORT` overrides only dashboard/Next.js listener
-- Set `NEXT_PUBLIC_BASE_URL` to your dashboard/public URL (for OAuth callbacks)
-
-**Cloud sync errors**
-
-- Verify `BASE_URL` points to your running instance
-- Verify `CLOUD_URL` points to your expected cloud endpoint
-- Keep `NEXT_PUBLIC_*` values aligned with server-side values
-
-**First login not working**
-
-- Check `INITIAL_PASSWORD` in `.env`
-- If unset, fallback password is `123456`
-
-**No request logs**
-
-- `call_logs` in SQLite stores summary metadata for the Request Logs table and analytics views
-- Detailed request/response payloads are written to `DATA_DIR/call_logs/` as one JSON artifact per request
-- Enable pipeline capture from Dashboard → Logs → Request Logs if you need detailed per-stage payloads
-- `Export Logs` reads the artifact files on demand, while `Export All` includes the `call_logs/` directory alongside `storage.sqlite`
-- Set `APP_LOG_TO_FILE=true` if you also want application console logs in `logs/application/app.log`
-- Adjust `APP_LOG_MAX_FILE_SIZE`, `APP_LOG_RETENTION_DAYS`, `APP_LOG_MAX_FILES`, and `CALL_LOG_MAX_ENTRIES` as needed
-
-**Connection test shows "Invalid" for OpenAI-compatible providers**
-
-- Many providers don't expose a `/models` endpoint
-- RouteChi v1.0.6+ includes fallback validation via chat completions
-- Ensure base URL includes `/v1` suffix
-
-### 🔐 OAuth on a Remote Server
-
-<a name="oauth-on-a-remote-server"></a>
-<a name="oauth-em-servidor-remoto"></a>
-
-> **⚠️ Important for users running RouteChi on a VPS, Docker, or any remote server**
-
-The OAuth credentials bundled in RouteChi are registered **for `localhost` only**. When you access RouteChi on a remote server (e.g. `https://omniroute.myserver.com`), Google rejects the authentication with:
-
-```
-Error 400: redirect_uri_mismatch
-```
-
-#### Solution: Configure your own OAuth credentials
-
-You need to create an **OAuth 2.0 Client ID** in Google Cloud Console with your server's URI.
-
-#### Step-by-step
-
-**1. Open Google Cloud Console**
-
-Go to: [https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
-
-**2. Create a new OAuth 2.0 Client ID**
-
-- Click **"+ Create Credentials"** → **"OAuth client ID"**
-- Application type: **"Web application"**
-- Name: anything you like (e.g. `RouteChi Remote`)
-
-**3. Add Authorized Redirect URIs**
-
-In the **"Authorized redirect URIs"** field, add:
-
-```
-https://your-server.com/callback
-```
-
-> Replace `your-server.com` with your server's domain or IP (include the port if needed, e.g. `http://45.33.32.156:20128/callback`).
-
-**4. Save and copy the credentials**
-
-After creating, Google will show the **Client ID** and **Client Secret**.
-
-**5. Set environment variables**
-
-In your `.env` (or Docker environment variables):
-
-```bash
-# For Antigravity:
-ANTIGRAVITY_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
-ANTIGRAVITY_OAUTH_CLIENT_SECRET=GOCSPX-your-secret
-
-GEMINI_OAUTH_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GEMINI_OAUTH_CLIENT_SECRET=GOCSPX-your-secret
-```
-
-**6. Restart RouteChi**
-
-```bash
-# npm:
+# Using Nix flakes
+nix develop
 npm run dev
 
-# Docker:
-docker restart omniroute
+# Or using devbox
+devbox run npm run dev
 ```
 
-**7. Try connecting again**
+📖 [راهنمای Docker](docs/guides/DOCKER_GUIDE.md) — پروفایل‌های Compose، HTTPS با Caddy، تونل‌های Cloudflare.
 
-Google will now redirect correctly to `https://your-server.com/callback`.
+**🦭 Podman**
 
----
+```bash
+# 1. Build the image
+podman build --target runner-base -t omniroute:base .
 
-#### Temporary workaround (without custom credentials)
+# 2. Fix data directory permissions for rootless Podman
+mkdir -p data && podman unshare chown 1000:1000 ./data
 
-If you don't want to set up your own credentials right now, you can still use the **manual URL flow**:
+# 3. Set runtime in .env, then run (see contrib/podman/ for Quadlet)
+echo "CONTAINER_HOST=podman" >> .env
+podman compose --profile base up -d
+```
 
-1. RouteChi opens the Google authorization URL
-2. After authorizing, Google tries to redirect to `localhost` (which fails on the remote server)
-3. **Copy the full URL** from your browser's address bar (even if the page doesn't load)
-4. Paste that URL into the field shown in the RouteChi connection modal
-5. Click **"Connect"**
+📖 [راهنمای Podman](contrib/podman/README.md) — راه‌اندازی Quadlet، podman-compose، Quadlet.
 
-> This works because the authorization code in the URL is valid regardless of whether the redirect page loaded.
+**⚡ نصب سریع‌تر / سبک‌تر (رد شدن از بیلد بومی)**
 
----
+موتور بومی SQLite (`better-sqlite3`) یک وابستگی **اختیاری** است، بنابراین یک نصب سراسری هرگز در کامپایل از سورس متوقف نمی‌شود: هنگامی که یک باینری پیش‌ساخته با سکو/Node شما تطابق دارد از آن استفاده می‌کند، و در غیر این‌صورت به‌صورت شفاف به یک موتور خالص-JS (`node:sqlite` روی Node 22+، وگرنه `sql.js` WASM باندل‌شده) سقوط می‌کند — بدون نیاز به ابزار بیلد.
 
-## 🛠️ Tech Stack
+برای رد شدن کامل از گرم‌کردن بومی پس از نصب (CI، headless یا ماشین‌های کند):
+
+```bash
+OMNIROUTE_SKIP_POSTINSTALL=1 npm install -g routechi   # CI=1 also skips it
+```
+
+برای سریع‌ترین نصب‌ها ترجیحاً از **pnpm** استفاده کنید (انبار content-addressed + hard links — بالا را ببینید).
+برای یک زمان اجرای headless بدون داشبورد از پروفایل Docker `base` (بالا) یا
+[راهنمای Termux](docs/guides/TERMUX_GUIDE.md) استفاده کنید. CLI و داشبورد وب توسط همان فرآیند روی یک پورت سرو می‌شوند، بنابراین امروز هیچ بستهٔ فقط-CLI جداگانه‌ای وجود ندارد.
+
+<br/>
+
+<div align="center">
+
+# 🎬 RouteChi در عمل
+
+</div>
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="280">
+      <a href="https://www.youtube.com/watch?v=Rxdc36yUyOQ"><img src="https://img.youtube.com/vi/Rxdc36yUyOQ/maxresdefault.jpg" alt="Guia em Português" width="260"/></a><br/>
+      <b>🇧🇷 Português</b><br/><sub>Guia completo</sub>
+    </td>
+    <td align="center" width="280">
+      <a href="https://www.youtube.com/watch?v=CMzyOiUyEVc"><img src="https://img.youtube.com/vi/CMzyOiUyEVc/maxresdefault.jpg" alt="English Guide" width="260"/></a><br/>
+      <b>🇺🇸 English</b><br/><sub>Complete walkthrough</sub>
+    </td>
+    <td align="center" width="280">
+      <a href="https://www.youtube.com/watch?v=il_5Ii6v4-Y"><img src="https://img.youtube.com/vi/il_5Ii6v4-Y/maxresdefault.jpg" alt="Руководство" width="260"/></a><br/>
+      <b>🇷🇺 Русский</b><br/><sub>Полное руководство</sub>
+    </td>
+  </tr>
+</table>
+</div>
+
+<div align="center">
+
+> 🎬 **ویدیویی دربارهٔ RouteChi ساختید؟** یک [issue](https://github.com/borhandarabi/routechi/issues/new) یا [discussion](https://github.com/borhandarabi/routechi/discussions) با لینک باز کنید — آن را اینجا نمایش می‌دهیم.
+
+<br/>
+</div>
+
+<div align="center">
+
+# 📚 کاوش بیشتر
+
+</div>
 
 <details>
-<summary><b>Click to expand tech stack details</b></summary>
+<summary><b>💰 قیمت در یک نگاه و پشتهٔ رایگان ۰ دلاری (۱۱ ارائه‌دهنده)</b></summary>
 
-- **Runtime**: Node.js 18–22 LTS (⚠️ Node.js 24+ is **not supported** — `better-sqlite3` native binaries are incompatible)
-- **Language**: TypeScript 5.9 — **100% TypeScript** across `src/` and `open-sse/` (zero `any` in core modules since v2.0)
-- **Framework**: Next.js 16 + React 19 + Tailwind CSS 4
-- **Database**: better-sqlite3 (SQLite) + LowDB (JSON legacy) — domain state, proxy logs, MCP audit, routing decisions, memory, skills
-- **Schemas**: Zod (MCP tool I/O validation, API contracts)
-- **Protocols**: MCP (stdio/HTTP) + A2A v0.3 (JSON-RPC 2.0 + SSE)
-- **Streaming**: Server-Sent Events (SSE)
-- **Auth**: OAuth 2.0 (PKCE) + JWT + API Keys + MCP Scoped Authorization
-- **Testing**: Node.js test runner + Vitest (900+ tests including unit, integration, E2E)
-- **CI/CD**: GitHub Actions (auto npm publish + Docker Hub on release)
-- **Website**: [omniroute.online](https://omniroute.online)
-- **Package**: [npmjs.com/package/omniroute](https://www.npmjs.com/package/omniroute)
-- **Docker**: [hub.docker.com/r/borhandarabi/routechi](https://hub.docker.com/r/borhandarabi/routechi)
-- **Resilience**: Circuit breaker, exponential backoff, anti-thundering herd, TLS spoofing, auto-combo self-healing
+<br/>
+
+| سطح                        | مثال                                    | هزینه      |
+| -------------------------- | --------------------------------------- | ---------- |
+| 💳 **اشتراک**              | Claude Code Pro / Codex / Copilot       | ۱۰–۲۰۰ $/ماه |
+| 🔑 **API Key (سطوح رایگان)** | NVIDIA NIM، Cerebras، Groq              | **رایگان**  |
+| 💰 **ارزان**               | GLM-5 $0.5/1M · MiniMax M2.5 $0.3/1M    | چند سنت    |
+| 🆓 **برای همیشه رایگان**   | Kiro، Qoder، Qwen، Pollinations، LongCat | **۰ $**    |
+
+**پشتهٔ رایگان ۰ دلاری — در یک کامبو غیرقابل‌شکستن ترکیب کنید:**
+
+| ارائه‌دهنده        | پیشوند      | مدل‌های رایگان                                  | سهمیه              |
+| ------------------ | ----------- | ----------------------------------------------- | ------------------ |
+| **Kiro**           | `kr/`       | Claude Sonnet 4.5، Haiku 4.5، Opus 4.6          | ۵۰ اعتبار/ماه      |
+| **Qoder**          | `if/`       | kimi-k2-thinking، qwen3-coder-plus، deepseek-r1 | ♾️ نامحدود         |
+| **Qwen**           | `qw/`       | qwen3-coder-plus/flash/next                     | ♾️ نامحدود         |
+| **Pollinations**   | `pol/`      | GPT-5، Claude، Gemini، DeepSeek، Llama 4        | بدون نیاز به کلید  |
+| **LongCat**        | `lc/`       | LongCat-2.0                                     | ۱۰M یک‌باره (KYC)  |
+| **Cloudflare AI**  | `cf/`       | ۵۰+ مدل                                         | ۱۰K نورون/روز      |
+| **NVIDIA NIM**     | `nvidia/`   | ۱۲۹ مدل                                         | ~۴۰ RPM            |
+| **Cerebras**       | `cerebras/` | Qwen3 235B، GPT-OSS 120B                        | ۱M توکن/روز        |
+
+> 💡 «هزینه» داشبورد یک **ردیاب ذخیره‌سازی** است، نه قبض — RouteChi هرگز از شما هزینه‌ای نمی‌گیرد. یک «هزینهٔ کل ۲۹۰ دلاری» با مدل‌های رایگان یعنی **۲۹۰ دلار ذخیره‌شده**.
+
+📖 فهرست کامل رایگان ← [`docs/reference/FREE_TIERS.md`](docs/reference/FREE_TIERS.md) — ۲۵+ ارائه‌دهنده، سهمیه‌ها، URLهای پایه.
 
 </details>
 
+<details>
+<summary><b>🎯 موارد استفاده — کتابچه‌های بازی کامبو آماده</b></summary>
+
+<br/>
+
+**۰ دلار برای همیشه:**
+
+```
+1. kr/claude-sonnet-4.5   (Kiro — ~50 credits/mo per acct)
+2. if/kimi-k2-thinking    (Qoder — unlimited)
+3. pol/gpt-5              (Pollinations — no key)
+4. lc/LongCat-2.0         (10M one-time backup, KYC)
+Compression: aggressive (~50%) → double your free quota · Cost: $0/mo
+```
+
+**۲۴/۷ بدون قطع:** زنجیر ۲ اشتراک ← ارزان ← رایگان برای ۵ لایه سقوط.
+**منطقهٔ مسدود:** ارائه‌دهندگان رایگان + پراکسی سراسری/per-provider ← دسترسی به هوش مصنوعی از هر کشور.
+**بیشینه ذخیره‌سازی:** اشتراک + پشتیبان ارزان + فشرده‌سازی `ultra` (~۷۵٪) ← ~۱۵۰–۳۰۰ $/ماه ذخیره‌شده برای کاربران سنگین.
+
+</details>
+
+<details>
+<summary><b>🌍 دور زدن مسدودی جغرافیایی — پراکسی ۳ سطحی + مخفی‌کاری</b></summary>
+
+<br/>
+
+🇷🇺 🇨🇳 🇮🇷 🇨🇺 🇹🇷 در یک منطقهٔ مسدود هستید؟ **پراکسی ۳ سطحی** RouteChi (سراسری / per-provider / per-connection) درخواست‌های API، جریان‌های OAuth، آزمون اتصال، بازخوانی توکن و همگام‌سازی مدل را پراکسی می‌کند.
+
+- **پروتکل‌ها:** HTTP/HTTPS، SOCKS5، پراکسی‌های احراز هویت‌شده
+- **🆓 بازار 1proxy** — صدها پراکسی رایگان اعتبارسنجی‌شده، امتیاز کیفیت، چرخش خودکار
+- **ضد تشخیص** — جعل اثر انگشت TLS (`wreq-js`)، تطبیق اثر انگشت CLI، حفاظت IP پراکسی
+
+📖 [`docs/ops/PROXY_GUIDE.md`](docs/ops/PROXY_GUIDE.md)
+
+</details>
+
+<details>
+<summary><b>✨ فهرست کامل امکانات — ۳۰+ قابلیت (حافظه، ارزیابی‌ها، مشاهده‌پذیری)</b></summary>
+
+<br/>
+
+**مسیریابی:** ۱۸ استراتژی · مسیریابی هوشمند آگاه-از-وظیفه · کنترل‌های بودجه تفکر · مسیریابی wildcard · تزریق system prompt.
+**سازگاری:** OpenAI ↔ Claude ↔ Gemini ↔ Responses API · بازخوانی خودکار OAuth (PKCE، ۸ ارائه‌دهنده) · round-robin چندحسابی · Batch + Files API · OpenAPI 3.0 زنده.
+**پروتکل‌ها:** MCP (۹۴ ابزار، ۳ انتقال، ۳۰ حوزه) · A2A (JSON-RPC 2.0، SSE، ۶ مهارت) · ACP · عوامل ابری (Codex، Cursor، Devin، Jules).
+**پلاگین‌ها:** بازار پلاگین سفارشی (URL رجیستری پیکربندی‌شده-سیستمی با fetch محافظت‌شده-SSRF) · نصب / فعال / غیرفعال · ادغام‌های پایهٔ دانش Notion + Obsidian (سرور فایل WebDAV، جست‌وجوی vault، CRUD یادداشت).
+**سرویس‌های درون‌ساخته:** نصب یک‌کلیکی و مدیریت چرخهٔ عمر سرویس‌های sidecar محلی (CLIProxy، NineRouter).
+**کیفیت و عملیات:** **Evals** درون‌ساخته (golden-set: exact/contains/regex/custom) · حفاظت‌ها (PII، تزریق، بینایی) · داشبورد سلامت · تلهومتری p50/p95/p99 · webhooks · ممیزی تطبیق.
+**مهارت‌های عامل هوش مصنوعی:** مانیفست‌های markdown آماده — هر عاملی را به یک مانیفست `skills/*/SKILL.md` نشانه کنید. ۴۳ مهارت موجود.
+
+📖 [سرور MCP](open-sse/mcp-server/README.md) · [سرور A2A](src/lib/a2a/README.md) · [راهنمای تاب‌آوری](docs/architecture/RESILIENCE_GUIDE.md) · [گالری امکانات](docs/guides/FEATURES.md)
+
+</details>
+
+<details>
+<summary><b>📖 راه‌اندازی، متغیرهای env و پرسش‌های متداول</b></summary>
+
+<br/>
+
+| متغیر env         | پیش‌فرض       | هدف                              |
+| ----------------- | ------------- | -------------------------------- |
+| `PORT`            | `20128`       | پورت API + داشبورد               |
+| `REQUIRE_API_KEY` | `false`       | نیاز به API key برای همهٔ درخواست‌ها |
+| `DATA_DIR`        | `~/.omniroute`| ذخیره‌سازی پایگاه‌داده و پیکربندی   |
+
+**آیا توسط RouteChi هزینه‌ای از من گرفته می‌شود؟** خیر — این نرم‌افزار رایگان و متن‌باز روی ماشین شماست. شما فقط مستقیماً به ارائه‌دهندگان پولی پرداخت می‌کنید. RouteChi هیچ سیستم صورتحسابی ندارد.
+**آیا ارائه‌دهندگان رایگان واقعاً نامحدودند؟** عمدتاً — Qoder، Pollinations، LongCat و Cloudflare رایگان بدون سقف اعتبار به‌ازای حساب هستند. Kiro هم رایگان است اما با سقف ~۵۰ اعتبار در ماه به‌ازای حساب. چندین ارائه‌دهندهٔ رایگان را در یک کامبو بچینید و سقوط خودکار شما را با ۰ دلار سرویس می‌کند.
+**آیا فشرده‌سازی کیفیت را آسیب می‌زند؟** خیر — فقط **ورودی** را فشرده می‌کند؛ کد، URLها، JSON همیشه محافظت می‌شوند.
+**آیا در مناطقی که هوش مصنوعی مسدود است کار می‌کند؟** بله — پراکسی ۳ سطحی + بازار 1proxy به همهٔ ۲۵۰ ارائه‌دهنده می‌رسد.
+
+📖 [راهنمای کاربر](docs/guides/USER_GUIDE.md) · [مرجع API](docs/reference/API_REFERENCE.md) · [پیکربندی محیط](docs/reference/ENVIRONMENT.md)
+
+</details>
+
+<details>
+<summary><b>🐛 رفع اشکال</b></summary>
+
+<br/>
+
+| مشکل                                     | رفع سریع                                                       |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| «Language model did not provide messages» | سهمیهٔ ارائه‌دهنده تمام شده ← از fallback کامبو استفاده کنید     |
+| محدودیت نرخ (429)                        | افزودن fallback: `cc/claude → glm/glm-4.7 → if/kimi-k2-thinking` |
+| انقضای توکن OAuth                        | بازخوانی خودکار؛ اگر گیر کرد، در Providers حذف + احراز هویت مجدد |
+| `unsupported_country_region_territory`   | پیکربندی پراکسی در Settings ← Proxy                           |
+| قفل‌های SQLite در Docker                 | استفاده از `--stop-timeout 40` برای checkpoint تمیز WAL       |
+| خطاهای زمان اجرای Node                   | استفاده از Node `>=22.0.0 <23` یا `>=24.0.0 <27`              |
+
+🐛 **گزارش یک باگ؟** `npm run system-info` را اجرا و `system-info.txt` را ضمیمه کنید. 📖 [`docs/guides/TROUBLESHOOTING.md`](docs/guides/TROUBLESHOOTING.md)
+
+</details>
+
+<details>
+<summary><b>📸 نماهای داشبورد</b></summary>
+
+<br/>
+
+| صفحه      | نما                                                | صفحه      | نما                                          |
+| --------- | -------------------------------------------------- | --------- | -------------------------------------------- |
+| Providers | ![Providers](docs/screenshots/01-providers.png)    | Combos    | ![Combos](docs/screenshots/02-combos.png)    |
+| Analytics | ![Analytics](docs/screenshots/03-analytics.png)    | Health    | ![Health](docs/screenshots/04-health.png)    |
+| Translator| ![Translator](docs/screenshots/05-translator.png)  | Settings  | ![Settings](docs/screenshots/06-settings.png)|
+| CLI Tools | ![CLI Tools](docs/screenshots/07-cli-tools.png)    | Usage Logs| ![Usage](docs/screenshots/08-usage.png)      |
+
+</details>
+
+<br/>
+
+<div align="center">
+
+# 📧 پشتیبانی و جامعه
+
+> 💬 **با جامعه گفت‌وگو کنید** — لینک‌های Discord، Telegram و WhatsApp (🌍 / 🇧🇷) در [بالای این README](#-join-the-community) هستند.
+
+- 🌍 **وب‌سایت**: [omniroute.online](https://omniroute.online)
+- 🐙 **GitHub**: [github.com/borhandarabi/routechi](https://github.com/borhandarabi/routechi)
+- 🐛 **Issues**: [گزارش یک باگ](https://github.com/borhandarabi/routechi/issues) (خروجی `npm run system-info` را ضمیمه کنید)
+- 🤝 **مشارکت**: به [CONTRIBUTING.md](CONTRIBUTING.md) مراجعه کنید یا یک `good first issue` انتخاب کنید
+
+</div>
+
 ---
 
-## Documentación
+<br/>
+<div align="center">
 
-| Document                                                              | Description                                         |
-| --------------------------------------------------------------------- | --------------------------------------------------- |
-| [User Guide](docs/guides/USER_GUIDE.md)                               | Providers, combos, CLI integration, deployment      |
-| [API Reference](docs/reference/API_REFERENCE.md)                      | All endpoints with examples                         |
-| [MCP Server](open-sse/mcp-server/README.md)                           | 25 MCP tools, IDE configs, Python/TS/Go clients     |
-| [A2A Server](src/lib/a2a/README.md)                                   | JSON-RPC 2.0 protocol, skills, streaming, task mgmt |
-| [Auto-Combo Engine](docs/auto-combo.md)                               | 6-factor scoring, mode packs, self-healing          |
-| [Context Relay](docs/features/context-relay.md)                       | Session handoff strategy for account rotation       |
-| [Troubleshooting](docs/guides/TROUBLESHOOTING.md)                     | Common problems and solutions                       |
-| [Architecture](docs/architecture/ARCHITECTURE.md)                     | System architecture and internals                   |
-| [Codebase Documentation](docs/architecture/CODEBASE_DOCUMENTATION.md) | Beginner-friendly codebase walkthrough              |
-| [Uninstall Guide](docs/guides/UNINSTALL.md)                           | Clean removal for all install methods               |
-| [Environment Config](docs/reference/ENVIRONMENT.md)                   | Complete `.env` variables and references            |
-| [Contributing](CONTRIBUTING.md)                                       | Development setup and guidelines                    |
-| [OpenAPI Spec](docs/reference/openapi.yaml)                           | OpenAPI 3.0 specification                           |
-| [Security Policy](SECURITY.md)                                        | Vulnerability reporting and security practices      |
-| [VM Deployment](docs/ops/VM_DEPLOYMENT_GUIDE.md)                      | Complete guide: VM + nginx + Cloudflare setup       |
-| [Features Gallery](docs/guides/FEATURES.md)                           | Visual dashboard tour with screenshots              |
-| [Release Checklist](docs/ops/RELEASE_CHECKLIST.md)                    | Pre-release validation steps                        |
+## 🛠️ پشتهٔ فنی
+
+</div>
+
+- **زمان اجرا**: Node.js 22.x یا 24.x LTS (24 LTS توصیه می‌شود) — `>=22.0.0 <23 || >=24.0.0 <27`
+- **زبان**: TypeScript 6.0 — **۱۰۰٪ TypeScript** در سراسر `src/` و `open-sse/` (بدون `any` در ماژول‌های هسته از v2.0)
+- **چارچوب**: Next.js 16 + React 19 + Tailwind CSS 4
+- **پایگاه داده**: better-sqlite3 (SQLite) + LowDB (JSON میراثی) — حالت دامنه، لاگ‌های پراکسی، ممیزی MCP، تصمیمات مسیریابی، حافظه، مهارت‌ها
+- **اسکیماها**: Zod (اعتبارسنجی I/O ابزار MCP، قراردادهای API)
+- **پروتکل‌ها**: MCP (stdio/HTTP) + A2A v0.3 (JSON-RPC 2.0 + SSE)
+- **جریانی**: Server-Sent Events (SSE) + پل WebSocket (`/v1/ws`)
+- **احراز هویت**: OAuth 2.0 (PKCE) + JWT + API Keys + MCP Scoped Authorization
+- **آزمون**: Node.js test runner + Vitest (**بیش از ۲۱٬۰۰۰ آزمون** در سراسر ۲٬۵۸۶ فایل — واحد، یکپارچه، E2E، امنیت، اکوسیستم)
+- **سکوها**: دسکتاپ (Electron)، Android (Termux)، PWA (هر مرورگر)
+- **CI/CD**: GitHub Actions (انتشار خودکار npm + Docker Hub در release)
+- **وب‌سایت**: [omniroute.online](https://omniroute.online)
+- **بسته**: [npmjs.com/package/omniroute](https://www.npmjs.com/package/omniroute)
+- **Docker**: [hub.docker.com/r/borhandarabi/routechi](https://hub.docker.com/r/borhandarabi/routechi)
+- **تاب‌آوری**: قطع‌کن مدار، backoff نمایی، ضد thundering herd، جعل TLS، خود-ترمیمی auto-combo
+
+<div align="center">
+
+<br/>
+
+## 📖 مستندات
+
+</div>
+
+### 📘 شروع به کار
+
+| مستند                                                          | توضیحات                                                                     |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [راهنمای کاربر](docs/guides/USER_GUIDE.md)                     | ارائه‌دهنده‌ها، کامبوها، ادغام CLI، استقرار                                  |
+| [راهنمای راه‌اندازی](docs/guides/SETUP_GUIDE.md)               | روش‌های نصب کامل، پیکربندی‌های ابزار CLI، راه‌اندازی پروتکل، تنظیم timeout   |
+| [راهنمای ابزارهای CLI](docs/reference/CLI-TOOLS.md)            | راه‌اندازی به‌ازای ابزار برای Claude Code، Codex، Cursor، Cline، OpenClaw، Kilo، Copilot |
+| [حالت Remote](docs/guides/REMOTE-MODE.md)                      | هدایت RouteChi روی VPS از CLI لپ‌تاپ‌تان با توکن‌های دسترسی حوزه‌دار       |
+| [پیکربندی Claude Code](docs/guides/CLAUDE-CODE-CONFIGURATION.md) | نشانه‌گذاری Claude Code به RouteChi (محلی/دوردست) با `launch` + پروفایل به‌ازای مدل |
+| [شروع سریع](README.md#-quick-start)                            | نصب ۳ مرحله‌ای ← اتصال ← پیکربندی                                          |
+
+### 🔧 عملیات و استقرار
+
+| مستند                                                    | توضیحات                                                       |
+| -------------------------------------------------------- | ------------------------------------------------------------- |
+| [راهنمای Docker](docs/guides/DOCKER_GUIDE.md)            | اجرای Docker، پروفایل‌های Compose، HTTPS با Caddy، تونل‌ها، تگ‌های image |
+| [راهنمای Podman](contrib/podman/README.md)               | ادغام Quadlet systemd، podman-compose، SELinux                |
+| [استقرار VM](docs/ops/VM_DEPLOYMENT_GUIDE.md)            | راهنمای کامل: راه‌اندازی VM + nginx + Cloudflare              |
+| [استقرار Fly.io](docs/ops/FLY_IO_DEPLOYMENT_GUIDE.md)    | استقرار روی Fly.io با ذخیره‌سازی پایدار                       |
+| [راهنمای Termux](docs/guides/TERMUX_GUIDE.md)             | اجرای RouteChi روی Android از طریق Termux                    |
+| [راهنمای PWA](docs/guides/PWA_GUIDE.md)                   | نصب Progressive Web App، کش، معماری                          |
+| [راهنمای حذف](docs/guides/UNINSTALL.md)                  | حذف تمیز برای همهٔ روش‌های نصب                               |
+| [پیکربندی محیط](docs/reference/ENVIRONMENT.md)           | متغیرهای `.env` کامل و ارجاعات                               |
+
+### 🧠 امکانات و معماری
+
+| مستند                                                                        | توضیحات                                                                      |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [معماری](docs/architecture/ARCHITECTURE.md)                                  | معماری سیستم، جریان داده‌ها، و internals                                    |
+| [راهنمای فشرده‌سازی](docs/compression/COMPRESSION_GUIDE.md)                  | خط لولهٔ ۷ گزینه‌ای: off / lite / standard / aggressive / ultra / RTK / stacked |
+| [فشرده‌سازی RTK](docs/compression/RTK_COMPRESSION.md)                        | فشرده‌سازی خروجی دستور، فیلترها، اعتماد، تأیید، بازیابی raw-output          |
+| [موتورهای فشرده‌سازی](docs/compression/COMPRESSION_ENGINES.md)               | Caveman، RTK، خطوط لوله ترکیبی، سطوح داشبورد/API/MCP                         |
+| [قالب قوانین فشرده‌سازی](docs/compression/COMPRESSION_RULES_FORMAT.md)       | اسکیماهای JSON rule-pack برای Caveman و فیلترهای RTK                         |
+| [بسته‌های زبانی فشرده‌سازی](docs/compression/COMPRESSION_LANGUAGE_PACKS.md)  | تشخیص زبان و تألیف rule-pack Caveman                                         |
+| [راهنمای تاب‌آوری](docs/architecture/RESILIENCE_GUIDE.md)                    | قطع‌کن‌های مدار، خنک‌سازی، صف، ضد thundering herd، جعل TLS                  |
+| [موتور Auto-Combo](docs/routing/AUTO-COMBO.md)                              | امتیازدهی ۱۲ عاملی، بسته‌های حالت، خود-ترمیمی                                  |
+| [راهنمای پراکسی](docs/ops/PROXY_GUIDE.md)                                    | سیستم پراکسی ۳ سطحی، بازار 1proxy، CRUD رجیستری                              |
+| [سطوح رایگان](docs/reference/FREE_TIERS.md)                                  | فهرست تجمیعی ۲۵+ ارائه‌دهندهٔ API رایگان                                     |
+| [گالری امکانات](docs/guides/FEATURES.md)                                     | تور بصری داشبورد با نماها                                                    |
+| [مستندات کدبیس](docs/architecture/CODEBASE_DOCUMENTATION.md)                 | مرور دوستانهٔ کدبیس برای تازه‌کارها                                          |
+
+### 🤖 پروتکل‌ها و APIها
+
+| مستند                                          | توضیحات                                         |
+| ---------------------------------------------- | ----------------------------------------------- |
+| [مرجع API](docs/reference/API_REFERENCE.md)    | همهٔ نقاط پایانی با مثال                         |
+| [مشخصات OpenAPI](docs/openapi.yaml)            | مشخصات OpenAPI 3.0                              |
+| [سرور MCP](open-sse/mcp-server/README.md)      | ۹۵ ابزار MCP، پیکربندی‌های IDE، کلاینت‌های Python/TS/Go |
+| [راهنمای سرور MCP](docs/frameworks/MCP-SERVER.md) | نصب MCP، انتقال‌ها، و مرجع ابزار                  |
+| [سرور A2A](src/lib/a2a/README.md)              | پروتکل JSON-RPC 2.0، مهارت‌ها، جریانی، مدیریت وظیفه |
+| [راهنمای سرور A2A](docs/frameworks/A2A-SERVER.md) | کارت عامل A2A، وظایف، مهارت‌ها، و جریانی          |
+
+### 📋 پروژه و کیفیت
+
+| مستند                                            | توضیحات                                     |
+| ------------------------------------------------- | ------------------------------------------- |
+| [مشارکت](CONTRIBUTING.md)                         | راه‌اندازی توسعه و دستورالعمل‌ها            |
+| [تغییرات](CHANGELOG.md)                           | تاریخچهٔ کامل انتشار به‌ازای نسخه           |
+| [سیاست امنیتی](SECURITY.md)                       | گزارش آسیب‌پذیری و شیوه‌های امنیتی         |
+| [راهنمای i18n](docs/guides/I18N.md)               | پشتیبانی از ۴۰+ زبان، گردش‌کار ترجمه، RTL    |
+| [چک‌لیست انتشار](docs/ops/RELEASE_CHECKLIST.md)   | مراحل اعتبارسنجی پیش از انتشار             |
+| [طرح پوشش](docs/ops/COVERAGE_PLAN.md)             | استراتژی پوشش آزمون و مجموعهٔ آزمون ۲۱٬۰۰۰+ |
+
+<br/>
+
+<div align="center">
+
+# ⭐ برترین مشارکت‌کنندگان
+
+> RouteChi توسط یک جامعهٔ پرشور متن‌باز شکل می‌گیرد. این افراد مشارکت‌های استثنایی داشته‌اند که مستقیماً بر کیفیت، پایداری و گسترهٔ پروژه تأثیر گذاشته است. **ممنونیم.**
+
+<table>
+  <tr>
+    <td align="center" width="160">
+      <a href="https://github.com/oyi77">
+        <img src="https://github.com/oyi77.png" width="40" style="border-radius:50%" alt="oyi77"/><br/>
+        <b>oyi77</b>
+      </a><br/>
+      <sub>🥇 189 commits • +155K lines</sub><br/>
+      <sub>Analytics engine, SQL aggregations,<br/>proxy marketplace, test coverage</sub>
+    </td>
+    <td align="center" width="160">
+      <a href="https://github.com/christopher-s">
+        <img src="https://github.com/christopher-s.png" width="40" style="border-radius:50%" alt="Chris Staley"/><br/>
+        <b>Chris Staley</b>
+      </a><br/>
+      <sub>🥈 70 commits • +5.7K lines</sub><br/>
+      <sub>SSE stream hardening, Responses API,<br/>Gemini pagination, test regression fixes</sub>
+    </td>
+    <td align="center" width="160">
+      <a href="https://github.com/zenobit">
+        <img src="https://github.com/zenobit.png" width="40" style="border-radius:50%" alt="zenobit"/><br/>
+        <b>zenobit</b>
+      </a><br/>
+      <sub>🥉 62 commits • +24K lines</sub><br/>
+      <sub>CI/CD pipeline, i18n for 33 languages,<br/>Void Linux package, platform fixes</sub>
+    </td>
+    <td align="center" width="160">
+      <a href="https://github.com/rdself">
+        <img src="https://github.com/rdself.png" width="40" style="border-radius:50%" alt="R.D. & Randi"/><br/>
+        <b>R.D. & Randi</b>
+      </a><br/>
+      <sub>🏅 108 commits • +30K lines</sub><br/>
+      <sub>Endpoints page, tunnel integrations,<br/>Docker workflows, A2A status, compression UI</sub>
+    </td>
+    <td align="center" width="160">
+      <a href="https://github.com/benzntech">
+        <img src="https://github.com/benzntech.png" width="40" style="border-radius:50%" alt="benzntech"/><br/>
+        <b>benzntech</b>
+      </a><br/>
+      <sub>🏅 22 commits • +7.5K lines</sub><br/>
+      <sub>Electron desktop app, auto-updater,<br/>release build workflows, cross-platform CI</sub>
+    </td>
+    <td align="center" width="160">
+      <a href="https://github.com/herjarsa">
+        <img src="https://github.com/herjarsa.png" width="40" style="border-radius:50%" alt="herjarsa"/><br/>
+        <b>herjarsa</b>
+      </a><br/>
+      <sub>🏅 21 commits • +6K lines</sub><br/>
+      <sub>Zero-latency combos, vision-bridge auto-routing,<br/>catalog context-length, resilience 429 hints</sub>
+    </td>
+  </tr>
+</table>
+
+> 🙏 امکانات، رفع‌های باگ و بهبودهای زیرساختی این مشارکت‌کنندگان **بخشی هسته‌ای** از آن چیزی است که RouteChi را قابل‌اتکا و پرامکانات می‌کند. هر pull request، هر آزمون، و هر فایل ترجمهٔ i18n اهمیت دارد. متن‌باز توسط افرادی چون آن‌ها ساخته می‌شود.
+
+</div>
 
 ---
 
-## 🗺️ Roadmap
+<br/>
 
-RouteChi has **218+ features planned** across multiple development phases. Here are the key areas:
+<div align="center">
 
-| Category                      | Planned Features | Highlights                                                                                            |
-| ----------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| 🧠 **Routing & Intelligence** | 25+              | Lowest-latency routing, tag-based routing, quota preflight, quota-aware P2C, step-based combo routing |
-| 🔒 **Security & Compliance**  | 20+              | SSRF hardening, credential cloaking, rate-limit per endpoint, management key scoping                  |
-| 📊 **Observability**          | 15+              | OpenTelemetry integration, real-time quota monitoring, combo target health, cost tracking per model   |
-| 🔄 **Provider Integrations**  | 20+              | Dynamic model registry, connection cooldowns, multi-account Codex, Copilot quota parsing              |
-| ⚡ **Performance**            | 15+              | Dual cache layer, prompt cache, response cache, streaming keepalive, batch API                        |
-| 🌐 **Ecosystem**              | 10+              | WebSocket API, config hot-reload, distributed config store, commercial mode                           |
+## 👥 بیش از ۲۸۰ مشارکت‌کننده
 
-### 🔜 Coming Soon
+</div>
 
-- 🔗 **OpenCode Integration** — Native provider support for the OpenCode AI coding IDE
-- 🔗 **TRAE Integration** — Full support for the TRAE AI development framework
-- 📦 **Batch API** — Asynchronous batch processing for bulk requests
-- 🎯 **Tag-Based Routing** — Route requests based on custom tags and metadata
-- 💰 **Lowest-Cost Strategy** — Automatically select the cheapest available provider
+[![Contributors](https://contrib.rocks/image?repo=borhandarabi/routechi&max=200&columns=20&anon=1)](https://github.com/borhandarabi/routechi/graphs/contributors)
 
-> 📝 Full feature specifications available in [`docs/new-features/`](docs/new-features/) (217 detailed specs)
+### نحوهٔ مشارکت
 
----
+1. مخزن را fork کنید
+2. شاخهٔ امکان‌ساز خود را بسازید (`git checkout -b feature/amazing-feature`)
+3. تغییرات خود را commit کنید (`git commit -m 'Add amazing feature'`)
+4. به شاخه push کنید (`git push origin feature/amazing-feature`)
+5. یک Pull Request باز کنید
 
-## 👥 Contributors
+برای دستورالعمل‌های تفصیلی به [CONTRIBUTING.md](CONTRIBUTING.md) مراجعه کنید.
 
-[![Contributors](https://contrib.rocks/image?repo=borhandarabi/routechi&max=100&columns=20&anon=1)](https://github.com/borhandarabi/routechi/graphs/contributors)
-
-### How to Contribute
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
-### Releasing a New Version
+### انتشار نسخهٔ جدید
 
 ```bash
 # Create a release — npm publish happens automatically
-gh release create v2.0.0 --title "v2.0.0" --generate-notes
+gh release create v3.8.2 --title "v3.8.2" --generate-notes
 ```
 
----
+<br/>
 
-## 📊 Star History
+<div align="center">
 
-<a href="https://www.star-history.com/?repos=diegosouzapw%2Fomniroute&type=date&legend=top-left">
+## 📊 ستاره‌ها
+
+<a href="https://www.star-history.com/?repos=diegosouzapw%2FRouteChi&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=borhandarabi/routechi&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=borhandarabi/routechi&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=borhandarabi/routechi&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=borhandarabi/routechi&type=date&theme=dark&legend=top-left&sealed_token=XP_ycEjv7s31p1edvhsMOXry51OWYsUjDRWjflSG7jQKRpO9hPGg7i_EHvwhI6QtrARTMH-YGjJhi8sumRYflEJD0DPlH_MMHjizhBYCX8fbHFrHEiNvVA" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=borhandarabi/routechi&type=date&legend=top-left&sealed_token=XP_ycEjv7s31p1edvhsMOXry51OWYsUjDRWjflSG7jQKRpO9hPGg7i_EHvwhI6QtrARTMH-YGjJhi8sumRYflEJD0DPlH_MMHjizhBYCX8fbHFrHEiNvVA" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=borhandarabi/routechi&type=date&legend=top-left&sealed_token=XP_ycEjv7s31p1edvhsMOXry51OWYsUjDRWjflSG7jQKRpO9hPGg7i_EHvwhI6QtrARTMH-YGjJhi8sumRYflEJD0DPlH_MMHjizhBYCX8fbHFrHEiNvVA" />
  </picture>
 </a>
+
+<br/>
+
+<div align="center">
 
 ## 🌍 StarMapper
 
@@ -2212,22 +1172,114 @@ gh release create v2.0.0 --title "v2.0.0" --generate-notes
     <img alt="StarMapper" src="https://starmapper.bruniaux.com/api/map-image/borhandarabi/routechi" />
   </picture>
 </a>
+</div>
 
-## 🙏 Acknowledgments
+<br/>
 
-Special thanks to **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** — the original Go implementation that inspired this JavaScript port.
+<div align="center">
 
----
+## 🙏 قدردانی‌ها
 
-## Licencia
+</div>
 
-MIT License - see [LICENSE](LICENSE) for details.
+RouteChi بر شانه‌های غول‌ها ایستاده است. این پروژه به‌عنوان یک fork از **[9router](https://github.com/decolua/9router)** و یک پورت TypeScript از پروژهٔ Go **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** آغاز شد — و از آنجا، هر زیرسیستم زیر از یک پروژهٔ متن‌باز الهام گرفت که پیش‌تر به آنجا رسیده بود. هرکدام بخش مشخصی از RouteChi را شکل داد. این قدردانی ما به همهٔ آن‌هاست. 🙏
+
+> ⭐ تعداد ستاره‌ها تا ژوئن ۲۰۲۶ — به این پروژه‌ها ستاره دهید.
+
+### 🧬 نسب و گیت‌وی
+
+| پروژه                                                                         |    ⭐ | چگونه RouteChi را الهام داد                                                                                                             |
+| ------------------------------------------------------------------------------- | ----: | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **[9router](https://github.com/decolua/9router)** · decolua                     | 19.0k | پروژهٔ اصلی که این fork بر آن ساخته شده — در اینجا با APIهای چندوجهی و یک بازنویسی کامل TypeScript گسترش یافت.                       |
+| **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** · router-for-me | 38.8k | پیاده‌سازی Go که این پورت JavaScript / TypeScript را الهام بخشید.                                                                |
+| **[LiteLLM](https://github.com/BerriAI/litellm)** · BerriAI                     | 52.1k | گیت‌وی هوش مصنوعی که مجموعه‌دادهٔ قیمت‌گذاری عمومی آن همگام‌سازی cost-tracking ما را تغذیه می‌کند و مدل نرمال‌سازی ارائه‌دهنده‌اش مسیریابی ما را شکل داد. |
+
+### 🗜️ فشرده‌سازی زمینه و توکن — موتورها
+
+| پروژه                                                                       |    ⭐ | چگونه RouteChi را الهام داد                                                                                                                                                                                |
+| ----------------------------------------------------------------------------- | ----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[Caveman](https://github.com/JuliusBrussee/caveman)** · JuliusBrussee       | 78.2k | پروژهٔ وایرال «why use many token when few token do trick» — فلسفهٔ caveman-speak آن موتور فشرده‌سازی standard ما و ۳۰+ قانون filler/condensation را قدرت می‌بخشد.                                    |
+| **[RTK – Rust Token Killer](https://github.com/rtk-ai/rtk)** · rtk-ai         | 67.3k | فشرده‌سازی خروجی-دستور کارایی-بالا — موتور RTK ما، JSON filter DSL، بازیابی raw-output و خط لولهٔ ترکیبی RTK → Caveman را الهام بخشید.                                                      |
+| **[headroom](https://github.com/headroomlabs-ai/headroom)** · headroomlabs-ai | 54.5k | فشرده‌سازی زمینهٔ قابل‌بازگشت (SmartCrusher) — موتور `headroom` ما و الگوی retrieve-marker `ccr` را الهام بخشید.                                                                                    |
+| **[LLMLingua](https://github.com/microsoft/LLMLingua)** · Microsoft           |  6.4k | پژوهش فشرده‌سازی پرامپت (LLMLingua / LLMLingua-2) — موتور `llmlingua` ناهمگام، امن برای کد و fail-open ما را الهام بخشید.                                                                                     |
+| **[llmlingua-2-js](https://github.com/atjsh/llmlingua-2-js)** · atjsh         |    28 | پورت JS/ONNX (MobileBERT / XLM-RoBERTa) که به‌عنوان backend worker-thread برای موتور LLMLingua ما استفاده می‌شود.                                                                                                  |
+| **[Troglodita](https://github.com/leninejunior/troglodita)** · Lenine Júnior  |    16 | فشرده‌سازی توکن PT-BR — بستهٔ زبانی pt-BR ما را قدرت می‌بخشد: کاهش pleonasm و حذف filler تنظیم‌شده برای گرامر پرتغالی-برزیلی.                                                                  |
+| **[ponytail](https://github.com/DietrichGebert/ponytail)** · DietrichGebert   | 68.8k | مهارت YAGNI-coder «برنامه‌نویس ارشد تنبل» وایرال — Output Style **less-code** ما را الهام بخشید: هدایت کوچک‌ترین-تغییر-کاری که _کد تولیدشده_ را کاهش می‌دهد (همزاد محور خروجی برای نثر مختصر Caveman). |
+
+### 🧩 قالب‌های فشرده، پژوهش توکن و ابزار آگاه از کد
+
+| پروژه                                                                                        |    ⭐ | چگونه RouteChi را الهام داد                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------- | ----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[TOON](https://github.com/toon-format/toon)** · toon-format                                  | 24.7k | Token-Oriented Object Notation — مدل ستونی header-plus-rows آن مرحلهٔ فشرده‌سازی جدولی ما را شکل داد.                                                                                                     |
+| **[GCF – Graph Compact Format](https://github.com/blackwell-systems/gcf)** · Blackwell Systems |    14 | در ابتدا مرحلهٔ فشرده‌سازی جدولی ما را الهام بخشید؛ اکنون رمزگذار generic-profile بدون‌وابستگی، بدون‌اتلاف آن **مستقیماً درون‌بسته** به‌عنوان کدک Headroom است (MIT، SPDX-marked)، همگام با GCF spec v3.2. |
+| **[token-optimizer-mcp](https://github.com/ooples/token-optimizer-mcp)** · ooples              |   421 | کش Brotli/SQLite + context-delta به‌ازای-نشست — موتور `session-dedup` ما را الهام بخشید.                                                                                                                         |
+| **[token-savior](https://github.com/Mibayy/token-savior)** · Mibayy                            |  1.0k | فشرده‌سازی خروجی Bash + پروفایل‌های MCP — دیسیپلین bail-out فشرده‌سازی ما و کاهش tool-manifest MCP را الهام بخشید.                                                                                          |
+| **[token-saver](https://github.com/ppgranger/token-saver)** · ppgranger                        |   110 | فشرده‌سازی خروجی آگاه-از-محتوا و per-file-type با bail-out آگاه-از-شکست — ارسال per-type و skip حداقل-گین ما را اعتبارسنجی کرد.                                                                           |
+| **[token-optimizer](https://github.com/alexgreensh/token-optimizer)** · alexgreensh            |  1.5k | «Find the ghost tokens» — الگوی offload + recoverable-handle آن به تفکر offload CCR ما شکل داد.                                                                                                          |
+| **[TokenMizer](https://github.com/Shweta-Mishra-ai/tokenmizer)** · Shweta-Mishra-ai            |     2 | یک نقشهٔ session-graph + cross-turn line-dedup که طراحی session-dedup ما را شکل داد.                                                                                                                      |
+| **[OmniCompress](https://github.com/jessefreitas/OmniCompress)** · jessefreitas                |     2 | JSON ستونی Rust + retrieve محتوا-آدرس‌دهی‌شده + dedup میان‌پیام — طراحی موتور `headroom`/`ccr`/`session-dedup` و نامتغیریر «شکل فشرده‌شده موقعیت‌نابسته است» کش-پایدار را اعتبارسنجی کرد. |
+| **[mcp-compressor](https://github.com/atlassian-labs/mcp-compressor)** · Atlassian Labs        |    89 | فشرده‌سازی schema/description ابزار MCP — کاردینالیتی کاهش tool-manifest MCP ما را شکل داد.                                                                                                                |
+| **[RepoMapper](https://github.com/pdavis68/RepoMapper)** · pdavis68                            |   181 | رتبه‌بندی repo-map به سبک Aider — کاوش repo-map / retrieval-ranking ما را شکل داد.                                                                                                                          |
+| **[quiet-shell-mcp](https://github.com/mrsimpson/quiet-shell-mcp)** · mrsimpson                |     4 | کاهش اعلانی خروجی shell روی MCP — فشرده‌سازی اعلانی bash-output ما را اعتبارسنجی کرد.                                                                                                                |
+| **[ts-morph](https://github.com/dsherret/ts-morph)** · David Sherret                           |  6.1k | جعبه‌ابزار TypeScript Compiler API — حذف کامنت مبتنی‌برپارسر ما را الهام بخشید که literalهای string، template و regex را حفظ می‌کند.                                                                                |
+
+### 🧠 حافظه و RAG
+
+| پروژه                                                            |    ⭐ | چگونه RouteChi را الهام داد                                                                                           |
+| ------------------------------------------------------------------ | ----: | ------------------------------------------------------------------------------------------------------------------- |
+| **[Mem0](https://github.com/mem0ai/mem0)** · mem0ai                | 59.8k | لایهٔ حافظهٔ جهانی — مدل proxy-as-write/read-boundary آن معماری حافظهٔ ما را شکل داد.                     |
+| **[Letta (MemGPT)](https://github.com/letta-ai/letta)** · letta-ai | 23.6k | عوامل دارای state با حافظهٔ سطح‌بندی — مدل سطح‌بندی Context Control & Recovery (CCR) ما را الهام بخشید.                    |
+| **[WFGY](https://github.com/onestardao/WFGY)** · onestardao        |  1.8k | طبقه‌بندی ProblemMap از ۱۶ حالت شکست مکرر RAG/LLM — واژگان مشترک در راهنمای رفع اشکال ما. |
+
+### 🛰️ بازرسی ترافیک، MITM و پراکسی شفاف
+
+| پروژه                                                                           |   ⭐ | چگونه RouteChi را الهام داد                                                                                                                                                        |
+| --------------------------------------------------------------------------------- | ---: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[llm-interceptor](https://github.com/chouzz/llm-interceptor)** · chouzz         |   48 | ضبط/تحلیل MITM ترافیک دستیار کدنویسی ↔ LLM — Traffic Inspector ما ادغام SSE، نرمال‌سازی گفت‌وگو، host passthrough و نقاب‌گذاری secret آن را پورت می‌کند (MIT). |
+| **[ProxyBridge](https://github.com/InterceptSuite/ProxyBridge)** · InterceptSuite | 5.3k | مسیریابی پراکسی شفاف per-process — teardown crash-safe MITM، socket idle-timeouts، انتساب فرآیند `/proc` و ضبط TPROXY ما را الهام بخشید.                             |
+
+### 📚 داده‌های مدل، مشاهده‌پذیری و UI
+
+| پروژه                                                                    |    ⭐ | چگونه RouteChi را الهام داد                                                                                                  |
+| -------------------------------------------------------------------------- | ----: | -------------------------------------------------------------------------------------------------------------------------- |
+| **[models.dev](https://github.com/anomalyco/models.dev)** · SST / OpenCode |  5.6k | پایگاه‌دادهٔ باز مشخصات، قیمت‌گذاری و قابلیت‌های مدل هوش مصنوعی — به‌صورت بومی در کاتالوگ مدل ما همگام می‌شود.                        |
+| **[React Flow / xyflow](https://github.com/xyflow/xyflow)** · xyflow       | 37.4k | کتابخانهٔ گراف مبتنی‌بر-گره که Compression Studio و Combo/Routing Studio در-لحظهٔ ما را قدرت می‌بخشد.                           |
+| **[LangGraph](https://github.com/langchain-ai/langgraph)** · LangChain     | 36.1k | تصویرسازی گراف-گردش‌کار زندهٔ LangGraph Studio نمای آبشاری در-لحظهٔ Studios ما را الهام بخشید.                         |
+| **[Langfuse](https://github.com/langfuse/langfuse)** · Langfuse            | 30.1k | مدل مشاهده‌پذیری trace → span → generation آن waterfall Compression Studio ما را شکل داد.                                 |
+| **[Kiali](https://github.com/kiali/kiali)** · Kiali                        |  3.6k | مشاهده‌پذیری service-mesh Istio — نشان‌های قطع‌کن مدار و تصویرسازی‌های error-edge در Routing/Combo Studio را الهام بخشید. |
+| **[lobe-icons](https://github.com/lobehub/lobe-icons)** · LobeHub          |  2.2k | لوگوهای برند هوش مصنوعی/LLM که آیکون‌های ارائه‌دهنده را در سراسر داشبورد ما رندر می‌کنند.                                                    |
+
+### 🛡️ امنیت
+
+| پروژه                                                                                     |  ⭐ | چگونه RouteChi را الهام داد                                                                                                                        |
+| ------------------------------------------------------------------------------------------- | --: | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **[awesome-secure-defaults](https://github.com/tldrsec/awesome-secure-defaults)** · tldrsec | 708 | یک فهرست گردآوری‌شده از کتابخانه‌های secure-by-default که انتخاب‌های امنیتی ما را راهنمایی می‌کند (Helmet.js، DOMPurify، ssrf-req-filter، safe-regex، Google Tink). |
+
+### 🧭 ابزارهای مکمل
+
+| پروژه                                                                       | چگونه با RouteChi ترکیب می‌شود                                                                                                                                                                             |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[CodeWebChat](https://github.com/robertpiosik/CodeWebChat)** · robertpiosik | همراه سمت-ویرایشگر — افزونهٔ VS Code + مرورگر که ۱۵+ رابط وب چت‌بات را با زمینهٔ ویرایشگر autofill می‌کند. مالک ریل free-web-UI در کنار ریل API RouteChi؛ می‌تواند حالت API خود را به RouteChi نشانه دهد. |
+
+## ❤️ پشتیبانی
+
+RouteChi رایگان و متن‌باز است و به‌صورت باز ساخته و نگهداری می‌شود. اگر زمان یا پولی برایتان ذخیره کرد، در پشتیبانی از توسعهً بازاندیشی کنید:
+
+- ⭐ **به مخزن ستاره دهید** — واقعاً به دیده‌شدن کمک می‌کند
+- 💖 **[GitHub Sponsors](https://github.com/sponsors/diegosouzapw)** — تأمین نگهداری جاری و ارائه‌دهندگان جدید
+- 🐛 **گزارش باگ و به اشتراک‌گذاری بازخورد** در [Discussions](https://github.com/borhandarabi/routechi/discussions)
+
+## 📄 مجوز
+
+مجوز MIT - برای جزئیات به [LICENSE](LICENSE) مراجعه کنید.
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ for developers who code 24/7</sub>
-  <br/>
-  <sub><a href="https://omniroute.online">omniroute.online</a></sub>
+
+**[⬆ بازگشت به بالا](#-omniroute)** · با ❤️ برای جامعهٔ هوش مصنوعی متن‌باز ساخته شده.
+
+<sub>RouteChi v3.8.43 · Node ≥22.0.0 · MIT License · <a href="https://omniroute.online">omniroute.online</a></sub>
+
 </div>
 <!-- GitHub Discussions enabled for community Q&A -->
