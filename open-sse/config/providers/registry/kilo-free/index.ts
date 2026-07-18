@@ -23,8 +23,7 @@ export const kilo_freeProvider: RegistryEntry = {
   alias: "kilofree",
   format: "openai",
   executor: "default", // Uses DefaultExecutor — standard OpenAI-compatible
-  baseUrl: "https://api.kilo.ai/api/openrouter",
-  chatPath: "/chat/completions",
+  baseUrl: "https://api.kilo.ai/api/openrouter/chat/completions",
   modelsPath: "/models",
   authType: "none",
   authHeader: "none",

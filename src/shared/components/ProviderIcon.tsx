@@ -139,6 +139,7 @@ const KNOWN_SVGS = new Set([
   "inference",
   "inworld",
   "kenari",
+  "kilo-free",
   "kilo-gateway",
   "kilocode",
   "kimi",

@@ -143,7 +143,7 @@ export const NOAUTH_PROVIDERS = {
     id: "kilo-free",
     alias: "kilofree",
     name: "Kilo Free",
-    icon: "auto_awesome",
+    icon: "kilo-free",
     color: "#10B981",
     textIcon: "KF",
     website: "https://kilo.ai",

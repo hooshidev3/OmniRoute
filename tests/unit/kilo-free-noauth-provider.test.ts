@@ -11,7 +11,7 @@ describe("kilo-free provider", () => {
     assert.equal(entry.id, "kilo-free");
     assert.equal(entry.authType, "none");
     assert.equal(entry.authHeader, "none");
-    assert.equal(entry.baseUrl, "https://api.kilo.ai/api/openrouter");
+    assert.equal(entry.baseUrl, "https://api.kilo.ai/api/openrouter/chat/completions");
     assert.equal(entry.defaultModel, "kilo-auto/free");
     assert.equal(entry.passthroughModels, true);
     assert.ok(entry.models.length >= 10, "should have at least 10 curated models");
@@ -34,7 +34,7 @@ describe("kilo-free provider", () => {
       "../../open-sse/config/providers/index.ts"
     );
     const entry = REGISTRY["kilo-free"];
-    assert.equal(entry.chatPath, "/chat/completions");
+    assert.ok(entry.baseUrl.endsWith("/chat/completions"), "baseUrl should end with /chat/completions");
     assert.equal(entry.modelsPath, "/models");
   });
 
