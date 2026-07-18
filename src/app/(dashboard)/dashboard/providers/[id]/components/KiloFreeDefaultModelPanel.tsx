@@ -8,12 +8,13 @@ const KILO_FREE_MODELS = [
   { id: "tencent/hy3:free", name: "Tencent HY3 (Free)" },
   { id: "stepfun/step-3.7-flash:free", name: "StepFun Step 3.7 Flash (Free)" },
   { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", name: "NVIDIA Nemotron 3 Nano Omni 30B (Free, Reasoning)" },
-  { id: "deepseek/deepseek-r1:free", name: "DeepSeek R1 (Free, Reasoning)" },
-  { id: "deepseek/deepseek-chat:free", name: "DeepSeek Chat (Free)" },
-  { id: "qwen/qwen3-235b-a22b:free", name: "Qwen3 235B A22B (Free)" },
-  { id: "llama/maverick-3:free", name: "Llama Maverick 3 (Free)" },
-  { id: "google/gemini-2.0-flash-exp:free", name: "Gemini 2.0 Flash Exp (Free)" },
-  { id: "mistralai/mistral-small-3.2-24b-instruct:free", name: "Mistral Small 3.2 24B (Free)" },
+  { id: "nvidia/nemotron-3-super-120b-a12b:free", name: "NVIDIA Nemotron 3 Super 120B (Free)" },
+  { id: "nvidia/nemotron-3-ultra-550b-a55b:free", name: "NVIDIA Nemotron 3 Ultra 550B (Free)" },
+  { id: "nvidia/nemotron-3.5-content-safety:free", name: "NVIDIA Nemotron 3.5 Content Safety (Free)" },
+  { id: "cohere/north-mini-code:free", name: "Cohere North Mini Code (Free)" },
+  { id: "kwaipilot/kat-coder-pro-v2.5:free", name: "Kwai Pilot Kat Coder Pro v2.5 (Free)" },
+  { id: "poolside/laguna-m.1:free", name: "Poolside Laguna M.1 (Free)" },
+  { id: "poolside/laguna-xs-2.1:free", name: "Poolside Laguna XS 2.1 (Free)" },
 ] as const;
 
 const DEFAULT_DEFAULT_MODEL = "kilo-auto/free";

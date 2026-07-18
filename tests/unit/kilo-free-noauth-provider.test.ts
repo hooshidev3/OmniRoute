@@ -13,7 +13,7 @@ describe("kilo-free provider", () => {
     assert.equal(entry.authHeader, "none");
     assert.equal(entry.baseUrl, "https://api.kilo.ai/api/openrouter/chat/completions");
     assert.equal(entry.defaultModel, "kilo-auto/free");
-    assert.equal(entry.passthroughModels, false);
+    assert.equal(entry.passthroughModels, true);
     assert.ok(entry.models.length >= 10, "should have at least 10 curated models");
   });
 
