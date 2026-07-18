@@ -65,6 +65,7 @@ import {
 import { applyThinkMode } from "../utils/thinkModeProcessor.ts";
 import { resolveThinkMode } from "../services/thinkOutputMode.ts";
 import { isZaiWebFreeDisabled } from "./zai-web-free/feature-flag.ts";
+import { notifyRequest as notifyDaemonRequest } from "./zai-web-free/auto-refresh-daemon.ts";
 import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
 import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
 import { randomUUID } from "node:crypto";
@@ -585,6 +586,8 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           result = await captchaPromise;
         }
         dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `captcha via ${label} (pool: ${poolSize} → ${getPoolSize()})`);
+        // Notify the daemon that a request is active — wakes it from idle-suspend.
+        notifyDaemonRequest();
         return result;
       } catch (err) {
         dynLog?.warn?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `${label} failed: ${err instanceof Error ? err.message : String(err)}`);

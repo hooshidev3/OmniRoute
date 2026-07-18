@@ -18,6 +18,10 @@ const KiloFreeDefaultModelPanel = dynamic(() => import("./KiloFreeDefaultModelPa
 const ACCOUNT_PROVIDER_NAMES: Record<string, string> = {
   mimocode: "MiMoCode",
   opencode: "OpenCode",
+  "kilo-free": "Kilo Free",
+  "zai-web-free": "Z.AI Free Web",
+  "duckduckgo-web": "DuckDuckGo AI Chat",
+  theoldllm: "The Old LLM",
 };
 
 interface NoAuthProviderControlsProps {
@@ -92,16 +96,45 @@ export default function NoAuthProviderControls({
   );
 
   const accountProviderName = ACCOUNT_PROVIDER_NAMES[providerId];
+  // Build the availableModels list for providers that have multiple models.
+  // This enables the per-account modelFilter dropdown in NoAuthAccountCard.
+  const availableModels =
+    providerId === "kilo-free"
+      ? [
+          "kilo-auto/free",
+          "tencent/hy3:free",
+          "stepfun/step-3.7-flash:free",
+          "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+          "nvidia/nemotron-3-super-120b-a12b:free",
+          "nvidia/nemotron-3-ultra-550b-a55b:free",
+          "nvidia/nemotron-3.5-content-safety:free",
+          "cohere/north-mini-code:free",
+          "kwaipilot/kat-coder-pro-v2.5:free",
+          "poolside/laguna-m.1:free",
+          "poolside/laguna-xs-2.1:free",
+        ]
+      : providerId === "zai-web-free"
+        ? ["glm-4.7"]
+        : undefined;
   if (accountProviderName) {
     return (
-      <NoAuthAccountCard
-        providerId={providerId}
-        providerName={accountProviderName}
-        generateAccountId={() => crypto.randomUUID().replace(/-/g, "")}
-        enabled={enabled}
-        savingEnabled={savingEnabled}
-        onEnabledChange={handleEnabledChange}
-      />
+      <>
+        <NoAuthAccountCard
+          providerId={providerId}
+          providerName={accountProviderName}
+          generateAccountId={() => crypto.randomUUID().replace(/-/g, "")}
+          enabled={enabled}
+          savingEnabled={savingEnabled}
+          onEnabledChange={handleEnabledChange}
+          availableModels={availableModels}
+        />
+        {/* zai-web-free gets an additional Device Token Pool + Aliyun Captcha Keys
+            panel below the account card. Both panels are shown. */}
+        {providerId === "zai-web-free" && <ZaiDeviceTokenPanel />}
+        {/* kilo-free gets a Default Model picker panel so users can override
+            the curated default (kilo-auto/free) with any free model. */}
+        {providerId === "kilo-free" && <KiloFreeDefaultModelPanel />}
+      </>
     );
   }
 
