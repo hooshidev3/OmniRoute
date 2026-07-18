@@ -398,8 +398,27 @@ export async function handleChat(
   const isComboLiveTest = request.headers?.get?.("x-internal-test") === "combo-health-check";
 
   if (!modelStr) {
-    log.warn("CHAT", "Missing model");
-    return errorResponse(HTTP_STATUS.BAD_REQUEST, "Missing model");
+    // #kilo-free: if the client omitted `model`, check if the request targets
+    // a no-auth provider that has a defaultModel in the registry. This lets
+    // users call the provider without specifying a model each time.
+    // Try to extract provider from the URL path or body hints.
+    const providerHint = (body as Record<string, unknown>)?.provider as string | undefined;
+    if (providerHint) {
+      try {
+        const { getRegistryEntry } = await import("@omniroute/open-sse/config/providerRegistry.ts");
+        const entry = getRegistryEntry(providerHint);
+        if (entry?.defaultModel) {
+          modelStr = `${providerHint}/${entry.defaultModel}`;
+          log.info("CHAT", `No model specified — using ${providerHint} default: ${entry.defaultModel}`);
+        }
+      } catch {
+        // best-effort
+      }
+    }
+    if (!modelStr) {
+      log.warn("CHAT", "Missing model");
+      return errorResponse(HTTP_STATUS.BAD_REQUEST, "Missing model");
+    }
   }
 
   // Reject image-generation models routed to /v1/chat/completions (#6457).

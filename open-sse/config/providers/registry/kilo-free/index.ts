@@ -27,7 +27,7 @@ export const kilo_freeProvider: RegistryEntry = {
   modelsPath: "/models",
   authType: "none",
   authHeader: "none",
-  passthroughModels: true, // Live /models discovery is authoritative
+  passthroughModels: false, // Use curated model list only (temporarily disabled live discovery)
   defaultModel: "kilo-auto/free",
   models: [
     // ── Auto-routing ──
