@@ -13,6 +13,7 @@ import A2ADashboardPage from "./components/A2ADashboard";
 import McpDashboardPage from "./components/MCPDashboard";
 import NotionSourceCard from "./components/NotionSourceCard";
 import VscodeTokenAliasCard from "./VscodeTokenAliasCard";
+import DeployWorkerModal from "./components/DeployWorkerModal";
 
 const BUILD_TIME_CLOUD_URL = process.env.NEXT_PUBLIC_CLOUD_URL || null;
 const CLOUD_ACTION_TIMEOUT_MS = 15000;
@@ -168,6 +169,7 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
   const [cloudConfigured, setCloudConfigured] = useState(Boolean(BUILD_TIME_CLOUD_URL));
   const [cloudUrlInput, setCloudUrlInput] = useState("");
   const [savingCloudUrl, setSavingCloudUrl] = useState(false);
+  const [showDeployModal, setShowDeployModal] = useState(false);
   const [mcpStatus, setMcpStatus] = useState<any>(null);
   const [a2aStatus, setA2aStatus] = useState<any>(null);
   const [searchProviders, setSearchProviders] = useState<any[]>([]);
@@ -1460,7 +1462,7 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
                   placeholder="https://your-worker.workers.dev"
                   value={cloudUrlInput}
                   onChange={(e) => setCloudUrlInput(e.target.value)}
-                  className="w-56 rounded-md border border-border bg-bg px-2.5 py-1 text-xs text-text-main focus:border-primary focus:outline-none"
+                  className="w-48 rounded-md border border-border bg-bg px-2.5 py-1 text-xs text-text-main focus:border-primary focus:outline-none"
                 />
                 <Button
                   size="sm"
@@ -1472,9 +1474,35 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
                 >
                   {savingCloudUrl ? "..." : "Set"}
                 </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  icon="rocket_launch"
+                  onClick={() => setShowDeployModal(true)}
+                  className="shrink-0"
+                >
+                  Auto-Deploy
+                </Button>
               </div>
             )}
           </div>
+
+          {/* Auto-Deploy Modal */}
+          {showDeployModal && (
+            <DeployWorkerModal
+              onClose={() => setShowDeployModal(false)}
+              onSuccess={(url, secret) => {
+                setCloudConfigured(true);
+                setCloudBaseUrl(url);
+                setShowDeployModal(false);
+                setCloudStatus({
+                  type: "success",
+                  message: `Worker deployed: ${url}. Set OMNIROUTE_CLOUD_SYNC_SECRET=${secret} in .env for HMAC verification.`,
+                });
+                setTimeout(() => window.location.reload(), 3000);
+              }}
+            />
+          )}
 
           {/* Cloudflare Quick Tunnel */}
           {showCloudflaredTunnel && (
