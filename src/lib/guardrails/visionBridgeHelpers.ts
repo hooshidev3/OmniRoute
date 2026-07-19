@@ -342,8 +342,8 @@ async function callVisionModelSingle(
       // Build headers with optional recursion guard for self-loop calls.
       // When routing through RouteChi's own API, omit the vision-bridge
       // guardrail on the sub-request to prevent infinite recursion.
-      // Use sk_omniroute as fallback for self-loop if no API key is resolved.
-      const selfLoopApiKey = resolvedApiKey || "sk_omniroute";
+      // Use sk_routechi as fallback for self-loop if no API key is resolved.
+      const selfLoopApiKey = resolvedApiKey || "sk_routechi";
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${selfLoopApiKey}`,

@@ -165,7 +165,7 @@ export async function POST(request: Request) {
       /* No existing secrets */
     }
 
-    secrets.openAiApiKey = apiKey || "sk_omniroute";
+    secrets.openAiApiKey = apiKey || "sk_routechi";
 
     await fs.writeFile(SECRETS_PATH, JSON.stringify(secrets, null, 2));
 

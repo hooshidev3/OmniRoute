@@ -2,6 +2,21 @@ import { NextResponse } from "next/server";
 import { getApiKeys, createApiKey, pickApiKeyForInternalUse, updateSettings } from "@/lib/localDb";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
 import { syncToCloud, fetchWithTimeout, CLOUD_URL } from "@/lib/cloudSync";
+import { getSettings } from "@/lib/db/settings";
+
+/**
+ * Resolve CLOUD_URL dynamically — checks env var first, then DB settings.
+ */
+async function resolveCloudUrl(): Promise<string | null> {
+  if (CLOUD_URL) return CLOUD_URL;
+  try {
+    const settings = await getSettings();
+    const dbUrl = typeof settings.cloudUrl === "string" ? settings.cloudUrl.trim() : null;
+    return dbUrl || null;
+  } catch {
+    return null;
+  }
+}
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
@@ -28,13 +43,18 @@ export async function GET() {
     // rejected upstream when keys[0] is a restricted self:usage key.
     const apiKey = await pickApiKeyForInternalUse("cloud-sync-verify");
 
-    if (!apiKey || !CLOUD_URL) {
+    if (!apiKey) {
+      return NextResponse.json({ enabled: true, connected: false });
+    }
+
+    const cloudUrl = await resolveCloudUrl();
+    if (!cloudUrl) {
       return NextResponse.json({ enabled: true, connected: false });
     }
 
     try {
       const pingRes = await fetchWithTimeout(
-        `${CLOUD_URL}/${machineId}/v1/verify`,
+        `${cloudUrl}/${machineId}/v1/verify`,
         {
           method: "GET",
           headers: {
@@ -132,7 +152,8 @@ async function syncAndVerify(machineId: string, createdKey: any, existingKeys: a
   }
 
   // Build the cloud URL for the frontend to use
-  const cloudUrl = CLOUD_URL ? `${CLOUD_URL}/${machineId}` : null;
+  const resolvedUrl = await resolveCloudUrl();
+  const cloudUrl = resolvedUrl ? `${resolvedUrl}/${machineId}` : null;
 
   // Step 2: Verify connection by pinging the cloud (with retry)
   const apiKey = createdKey || existingKeys[0]?.key;
@@ -153,7 +174,7 @@ async function syncAndVerify(machineId: string, createdKey: any, existingKeys: a
   for (let attempt = 1; attempt <= MAX_VERIFY_ATTEMPTS; attempt++) {
     try {
       const pingResponse = await fetchWithTimeout(
-        `${CLOUD_URL}/${machineId}/v1/verify`,
+        `${resolvedUrl}/${machineId}/v1/verify`,
         {
           method: "GET",
           headers: {
@@ -195,9 +216,10 @@ async function syncAndVerify(machineId: string, createdKey: any, existingKeys: a
  * Disable Cloud - delete cache and update Claude CLI settings
  */
 async function handleDisable(machineId: string, request: any) {
+  const cloudUrl = await resolveCloudUrl();
   // If CLOUD_URL is not configured, there's nothing to delete upstream.
   // Just succeed — cloudEnabled was already set to false by the caller.
-  if (!CLOUD_URL) {
+  if (!cloudUrl) {
     return NextResponse.json({
       success: true,
       message: "Cloud disabled (CLOUD_URL not configured, nothing to delete upstream)",
@@ -206,7 +228,7 @@ async function handleDisable(machineId: string, request: any) {
 
   let response;
   try {
-    response = await fetchWithTimeout(`${CLOUD_URL}/sync/${machineId}`, {
+    response = await fetchWithTimeout(`${cloudUrl}/sync/${machineId}`, {
       method: "DELETE",
     });
   } catch (error: any) {
@@ -241,7 +263,8 @@ async function handleDisable(machineId: string, request: any) {
 async function updateClaudeSettingsToLocal(machineId: string, host: string) {
   try {
     const settingsPath = path.join(os.homedir(), ".claude", "settings.json");
-    const cloudUrl = `${CLOUD_URL}/${machineId}`;
+    const resolvedUrl = await resolveCloudUrl();
+    const cloudUrl = resolvedUrl ? `${resolvedUrl}/${machineId}` : null;
     const localUrl = `http://${host}`;
 
     // Read current settings
@@ -258,7 +281,7 @@ async function updateClaudeSettingsToLocal(machineId: string, host: string) {
 
     // Check if ANTHROPIC_BASE_URL matches cloud URL
     const currentUrl = settings.env?.ANTHROPIC_BASE_URL;
-    if (!currentUrl || currentUrl !== cloudUrl) {
+    if (!cloudUrl || !currentUrl || currentUrl !== cloudUrl) {
       return; // Not using cloud URL, don't modify
     }
 

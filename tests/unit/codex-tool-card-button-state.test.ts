@@ -30,10 +30,10 @@ test("Codex tool card — Apply / Reset disabled state", async (t) => {
   });
 
   await t.test(
-    "Apply is ENABLED with model + no key when cloud is disabled (default sk_omniroute path)",
+    "Apply is ENABLED with model + no key when cloud is disabled (default sk_routechi path)",
     () => {
       // This is the central case the upstream port fixes: in local-mode the
-      // sk_omniroute default kicks in, so an empty selectedApiKey must not
+      // sk_routechi default kicks in, so an empty selectedApiKey must not
       // disable Apply.
       assert.equal(
         isApplyDisabled({

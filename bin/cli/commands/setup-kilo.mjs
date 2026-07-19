@@ -51,7 +51,7 @@ export function buildKiloAuth(existing, { apiKey, baseUrl, model }) {
   const auth = { ...(existing || {}) };
   auth["openai-compatible"] = {
     ...(auth["openai-compatible"] || {}),
-    apiKey: apiKey || "sk_omniroute",
+    apiKey: apiKey || "sk_routechi",
     baseUrl,
     model,
   };
@@ -61,7 +61,7 @@ export function buildKiloAuth(existing, { apiKey, baseUrl, model }) {
 /** Merge the kilocode.* keys into VS Code settings.json (extension surface). */
 export function buildKiloVscodeSettings(existing, { apiKey, baseUrl, model }) {
   const s = { ...(existing || {}) };
-  s["kilocode.customProvider"] = { name: "RouteChi", baseURL: baseUrl, apiKey: apiKey || "sk_omniroute" };
+  s["kilocode.customProvider"] = { name: "RouteChi", baseURL: baseUrl, apiKey: apiKey || "sk_routechi" };
   s["kilocode.defaultModel"] = model;
   return s;
 }
@@ -132,7 +132,7 @@ export async function runSetupKiloCommand(opts = {}) {
     console.log(`\n── [dry-run] ${authPath} ──`);
     console.log(
       JSON.stringify(
-        { "openai-compatible": { ...auth["openai-compatible"], apiKey: apiKey ? "set" : "sk_omniroute" } },
+        { "openai-compatible": { ...auth["openai-compatible"], apiKey: apiKey ? "set" : "sk_routechi" } },
         null,
         2
       )

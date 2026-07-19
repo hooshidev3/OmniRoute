@@ -166,6 +166,8 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
   const [selectedProvider, setSelectedProvider] = useState(null); // for provider models popup
   const [cloudBaseUrl, setCloudBaseUrl] = useState(BUILD_TIME_CLOUD_URL); // dynamic cloud URL from API response
   const [cloudConfigured, setCloudConfigured] = useState(Boolean(BUILD_TIME_CLOUD_URL));
+  const [cloudUrlInput, setCloudUrlInput] = useState("");
+  const [savingCloudUrl, setSavingCloudUrl] = useState(false);
   const [mcpStatus, setMcpStatus] = useState<any>(null);
   const [a2aStatus, setA2aStatus] = useState<any>(null);
   const [searchProviders, setSearchProviders] = useState<any[]>([]);
@@ -554,6 +556,34 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
       setShowCloudModal(true);
     } else {
       setShowDisableModal(true);
+    }
+  };
+
+  // Save CLOUD_URL to settings DB so users can configure it from the dashboard
+  // without editing .env.
+  const handleSaveCloudUrl = async () => {
+    const trimmed = cloudUrlInput.trim().replace(/\/+$/, "");
+    if (!trimmed) return;
+    setSavingCloudUrl(true);
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cloudUrl: trimmed }),
+      });
+      if (!res.ok) throw new Error("Failed to save cloud URL");
+      setCloudConfigured(true);
+      setCloudBaseUrl(trimmed);
+      setCloudUrlInput("");
+      // Refresh settings to pick up the new cloudUrl
+      window.location.reload();
+    } catch (err) {
+      setCloudStatus({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to save",
+      });
+    } finally {
+      setSavingCloudUrl(false);
     }
   };
 
@@ -1424,9 +1454,25 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
                 {t("enableCloud")}
               </Button>
             ) : (
-              <span className="text-xs text-text-muted shrink-0 px-2 py-1 rounded border border-border/70 bg-surface">
-                Not configured
-              </span>
+              <div className="flex items-center gap-2 shrink-0">
+                <input
+                  type="text"
+                  placeholder="https://your-worker.workers.dev"
+                  value={cloudUrlInput}
+                  onChange={(e) => setCloudUrlInput(e.target.value)}
+                  className="w-56 rounded-md border border-border bg-bg px-2.5 py-1 text-xs text-text-main focus:border-primary focus:outline-none"
+                />
+                <Button
+                  size="sm"
+                  variant="primary"
+                  icon="save"
+                  onClick={handleSaveCloudUrl}
+                  disabled={!cloudUrlInput.trim() || savingCloudUrl}
+                  className="shrink-0"
+                >
+                  {savingCloudUrl ? "..." : "Set"}
+                </Button>
+              </div>
             )}
           </div>
 

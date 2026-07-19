@@ -51,7 +51,7 @@ export default function DefaultToolCard({
   const selectedKeyObj = apiKeys?.find((k) => k.id === selectedApiKeyId);
 
   const resolveApiKeyValue = useCallback(
-    () => selectedKeyObj?.rawKey || (!cloudEnabled ? "sk_omniroute" : t("yourApiKeyPlaceholder")),
+    () => selectedKeyObj?.rawKey || (!cloudEnabled ? "sk_routechi" : t("yourApiKeyPlaceholder")),
     [cloudEnabled, selectedKeyObj?.rawKey, t]
   );
 
@@ -270,7 +270,7 @@ export default function DefaultToolCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           baseUrl: baseUrlWithV1,
-          apiKey: !cloudEnabled ? "sk_omniroute" : null,
+          apiKey: !cloudEnabled ? "sk_routechi" : null,
           keyId: selectedKeyId,
           model: modelValue,
           models: isMultiModelTool ? getSelectedModels() : undefined,
@@ -327,7 +327,7 @@ export default function DefaultToolCard({
           </>
         ) : (
           <span className="text-sm text-text-muted">
-            {cloudEnabled ? t("noApiKeysCreateOne") : "sk_omniroute"}
+            {cloudEnabled ? t("noApiKeysCreateOne") : "sk_routechi"}
           </span>
         )}
       </div>

@@ -69,7 +69,7 @@ export async function POST(request) {
     const { apiKey: rawApiKey, keyId: rawKeyId, sudoPassword } = validation.data;
     const apiKeyId = rawKeyId ?? null;
     const apiKey = await resolveApiKey(apiKeyId, rawApiKey);
-    if (!apiKey || apiKey === "sk_omniroute") {
+    if (!apiKey || apiKey === "sk_routechi") {
       return NextResponse.json(
         { error: "Missing apiKey: provide a valid apiKey or a resolvable keyId" },
         { status: 400 }

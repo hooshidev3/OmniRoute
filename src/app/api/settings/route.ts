@@ -161,7 +161,11 @@ export async function GET(request: Request) {
     const { password, ...safeSettings } = settings;
 
     const runtimePorts = getRuntimePorts();
-    const cloudUrl = process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL || null;
+    // CLOUD_URL can be set via env var OR via dashboard settings (key_value table).
+    // Dashboard setting takes priority over env var so users can configure it
+    // without editing .env.
+    const dbCloudUrl = typeof settings.cloudUrl === "string" ? settings.cloudUrl.trim() : null;
+    const cloudUrl = dbCloudUrl || process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL || null;
     const machineId = await getConsistentMachineId();
 
     // Include cliproxyapi_model_mapping from upstream_proxy_config table

@@ -2,9 +2,33 @@ import crypto from "crypto";
 import { getProviderConnections, updateProviderConnection } from "@/lib/localDb";
 import { buildConfigSyncEnvelope, toLegacyCloudSyncPayload } from "@/lib/sync/bundle";
 
-const CLOUD_URL = process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL;
+const ENV_CLOUD_URL = process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL;
 const CLOUD_SYNC_TIMEOUT_MS = Number(process.env.CLOUD_SYNC_TIMEOUT_MS || 12000);
 const CLOUD_SYNC_SECRET = process.env.OMNIROUTE_CLOUD_SYNC_SECRET || "";
+
+/**
+ * Resolve CLOUD_URL dynamically — checks env var first, then DB settings.
+ * The DB setting (set via dashboard) takes priority over env var so users
+ * can configure it without editing .env.
+ */
+async function getCloudUrl(): Promise<string | null> {
+  if (ENV_CLOUD_URL) return ENV_CLOUD_URL;
+  try {
+    const { getSettings } = await import("@/lib/db/settings");
+    const settings = await getSettings();
+    const dbUrl = typeof settings.cloudUrl === "string" ? settings.cloudUrl.trim() : null;
+    return dbUrl || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Backward-compat: CLOUD_URL is still exported for code that reads it
+ * synchronously (e.g. cloudSyncScheduler). It reflects the env var only.
+ * For the dynamic DB-backed URL, use getCloudUrl().
+ */
+const CLOUD_URL = ENV_CLOUD_URL;
 
 // Opt-in: only when explicitly set to "true" will updateLocalTokens overwrite
 // accessToken/refreshToken/providerSpecificData from the Cloud response. Default
@@ -86,8 +110,9 @@ export async function fetchWithTimeout(url, options = {}, timeoutMs = CLOUD_SYNC
  * @param {string|null} createdKey - Key created during enable (also used as Bearer token for auth)
  */
 export async function syncToCloud(machineId, createdKey = null) {
-  if (!CLOUD_URL) {
-    return { error: "NEXT_PUBLIC_CLOUD_URL is not configured" };
+  const cloudUrl = await getCloudUrl();
+  if (!cloudUrl) {
+    return { error: "CLOUD_URL is not configured. Set it in the dashboard Endpoint page or via env var." };
   }
 
   // Keep legacy field names for upstream compatibility, but derive them
@@ -117,7 +142,7 @@ export async function syncToCloud(machineId, createdKey = null) {
   let response;
   try {
     // Send to Cloud
-    response = await fetchWithTimeout(`${CLOUD_URL}/sync/${machineId}`, {
+    response = await fetchWithTimeout(`${cloudUrl}/sync/${machineId}`, {
       method: "POST",
       headers,
       body: JSON.stringify({

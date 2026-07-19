@@ -75,7 +75,7 @@ test("claude: returns 'not_configured' when ANTHROPIC_BASE_URL is absent", async
 test("codex: returns 'configured' when TOML has RouteChi URL + valid auth key", async () => {
   const configPath = await writeCodexConfig({
     hasRouteChi: true,
-    authApiKey: "sk_omniroute_testkey_1234567890abcdef",
+    authApiKey: "sk_routechi_testkey_1234567890abcdef",
   });
   const result = await checkToolConfigStatus("codex", configPath);
   assert.equal(result, "configured");
@@ -137,10 +137,10 @@ test("hermes: returns 'not_configured' when config points elsewhere", async () =
 
 // ── Droid / Openclaw / Kilo ───────────────────────────────────────────────────
 
-test("droid: returns 'configured' when JSON config contains sk_omniroute marker", async () => {
+test("droid: returns 'configured' when JSON config contains sk_routechi marker", async () => {
   const configPath = await writeTempFile(
     "droid.json",
-    JSON.stringify({ apiKey: "sk_omniroute_somekey", baseUrl: "http://localhost:20128/v1" })
+    JSON.stringify({ apiKey: "sk_routechi_somekey", baseUrl: "http://localhost:20128/v1" })
   );
   const result = await checkToolConfigStatus("droid", configPath);
   assert.equal(result, "configured");

@@ -153,7 +153,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const resolvedApiKey = apiKey || "sk_omniroute";
+    const resolvedApiKey = apiKey || "sk_routechi";
     const resolvedModel = model || "coder-model";
     const normalizedBaseUrl = String(baseUrl || "")
       .trim()

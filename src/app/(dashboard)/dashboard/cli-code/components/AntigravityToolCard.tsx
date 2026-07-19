@@ -127,7 +127,7 @@ export default function AntigravityToolCard({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          apiKey: !cloudEnabled ? "sk_omniroute" : null,
+          apiKey: !cloudEnabled ? "sk_routechi" : null,
           keyId: selectedKeyId,
           sudoPassword: password,
         }),
