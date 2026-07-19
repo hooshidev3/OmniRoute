@@ -127,7 +127,7 @@ async function checkAndRefresh(): Promise<void> {
   try {
     // Use conservative defaults for auto-refresh (not unsafe mode)
     const result = await refreshDeviceTokens({
-      tokens: 750,
+      tokens: 850,
       batches: 1, // Just 1 batch for auto-refresh (quick)
       parallel: 1,
       headed: false,

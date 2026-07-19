@@ -419,33 +419,57 @@ function zaiErrorToStatus(errDetail: string): number {
  * Resolve the feature map for a model. Z.AI's web endpoint accepts a
  * `features` object that toggles web_search, thinking, etc.
  *
- * Per-request overrides (from the OpenAI body's `web_search` /
- * `reasoning_effort` fields) take precedence over the model's defaults.
+ * Updated to match GLM-Free-API commit 8ca41f7 (Fix featuresPayload):
+ *   - 'think' is NEVER included — only 'enable_thinking' reaches the request
+ *   - enable_thinking defaults to true for all models
+ *   - web_search/auto_web_search default to false
+ *   - Supports: reasoning (bool), thinking ({type:'enabled'|'disabled'}),
+ *     reasoning_effort (string), deepThink (bool), webSearch (bool)
+ *   - image_generation is ALWAYS forced to false
  */
 function resolveFeatures(bodyObj: Record<string, unknown>): Record<string, unknown> {
   const features: Record<string, unknown> = {
+    // 'think' is intentionally omitted — only enable_thinking reaches Z.AI
+    enable_thinking: true, // default: true (matches Go commit 8ca41f7)
     web_search: false,
     auto_web_search: false,
-    think: false,
-    enable_thinking: false,
     preview_mode: false,
-    image_generation: false, // ALWAYS false ?�� Z.AI rejects image gen on web
+    image_generation: false, // ALWAYS false — Z.AI rejects image gen on web
     flags: [],
   };
 
-  // Per-request overrides
+  // ── Web search overrides ──
   if (bodyObj.web_search === true || bodyObj.webSearch === true) {
-    features.web_search = true;
     features.auto_web_search = true;
+    features.web_search = true;
+  } else if (bodyObj.web_search === false || bodyObj.webSearch === false) {
+    // Explicit disable — remove from features entirely
+    delete features.auto_web_search;
+    delete features.web_search;
   }
-  if (bodyObj.reasoning_effort && bodyObj.reasoning_effort !== "none") {
-    features.think = true;
+
+  // ── Thinking/reasoning overrides ──
+  // Priority: reasoning (bool) > thinking ({type:...}) > reasoning_effort (string) > deepThink (bool)
+  if (typeof bodyObj.reasoning === "boolean") {
+    features.enable_thinking = bodyObj.reasoning;
+  } else if (bodyObj.thinking && typeof bodyObj.thinking === "object") {
+    const thinkCfg = bodyObj.thinking as Record<string, unknown>;
+    if (typeof thinkCfg.type === "string") {
+      features.enable_thinking = thinkCfg.type === "enabled";
+    }
+  } else if (typeof bodyObj.thinking === "boolean") {
+    features.enable_thinking = bodyObj.thinking;
+  } else if (bodyObj.reasoning_effort && bodyObj.reasoning_effort !== "none") {
+    features.enable_thinking = true;
+  } else if (bodyObj.deepThink === true) {
     features.enable_thinking = true;
   }
-  if (bodyObj.deepThink === true) {
-    features.think = true;
-    features.enable_thinking = true;
-  }
+
+  // ── ALWAYS remove 'think' — only enable_thinking reaches Z.AI ──
+  delete features.think;
+
+  // ── ALWAYS force image_generation to false ──
+  features.image_generation = false;
 
   return features;
 }
@@ -829,6 +853,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
           let fullContent = "";
           let sentContent = "";
+          let sentReasoning = "";
           let buffer = "";
           const reader = sourceStream.getReader();
           const decoder = new TextDecoder();
@@ -958,16 +983,66 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
                 if (chunk) {
                   if (j.data?.phase === "thinking") {
-                    // Reasoning content — apply thinkMode (strip = skip, separate = reasoning_content, passthrough = content)
+                    // Phase-based reasoning (original Z.AI SSE format)
                     if (thinkMode !== "strip") {
                       emit({ reasoning_content: chunk });
                     }
                   } else {
+                    // Check for <details> tags (Go commit 1655e13: Z.AI wraps
+                    // reasoning in <details>...</details> within content).
+                    // Split into reasoning vs content.
                     fullContent += chunk;
+                    const raw = fullContent;
+                    let reasoning = "";
+                    let content = raw;
+
+                    const detailsIdx = raw.indexOf("<details");
+                    if (detailsIdx >= 0) {
+                      const tagEnd = raw.indexOf(">", detailsIdx);
+                      if (tagEnd >= 0) {
+                        const afterTag = raw.slice(tagEnd + 1);
+                        const closeIdx = afterTag.indexOf("</details>");
+                        if (closeIdx >= 0) {
+                          reasoning = afterTag.slice(0, closeIdx);
+                          content = raw.slice(0, detailsIdx) + afterTag.slice(closeIdx + "</details>".length);
+                        } else {
+                          // <details> opened but not yet closed — treat as reasoning
+                          reasoning = afterTag;
+                          content = raw.slice(0, detailsIdx);
+                        }
+                      }
+                    }
+
+                    // Strip <details> tags and "> " prefixes from reasoning
+                    if (reasoning) {
+                      reasoning = reasoning
+                        .replace(/<details[^>]*>/g, "")
+                        .replace(/<\/details>/g, "");
+                      // Strip leading "> " from each line
+                      reasoning = reasoning
+                        .split("\n")
+                        .map((l) => l.replace(/^> /, ""))
+                        .join("\n")
+                        .trim();
+                    }
+
+                    // Update fullContent to the cleaned content
+                    fullContent = content;
+
+                    // Emit content delta
                     if (fullContent.length > sentContent.length) {
                       const delta = fullContent.slice(sentContent.length);
                       sentContent = fullContent;
                       emit({ content: delta });
+                    }
+
+                    // Emit reasoning delta (if any and not stripped)
+                    if (reasoning && reasoning.length > (sentReasoning || "").length) {
+                      if (thinkMode !== "strip") {
+                        const reasoningDelta = reasoning.slice((sentReasoning || "").length);
+                        emit({ reasoning_content: reasoningDelta });
+                      }
+                      sentReasoning = reasoning;
                     }
                   }
                 }
@@ -1081,7 +1156,32 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
         if (buffer === "") break;
       }
     } catch {
-      /* best-effort ?�� return what we have */
+      /* best-effort — return what we have */
+    }
+
+    // Parse <details> tags from non-streaming content (Go commit 1655e13)
+    // Z.AI wraps reasoning in <details>...</details> within content.
+    {
+      const detailsIdx = fullContent.indexOf("<details");
+      if (detailsIdx >= 0) {
+        const tagEnd = fullContent.indexOf(">", detailsIdx);
+        if (tagEnd >= 0) {
+          const afterTag = fullContent.slice(tagEnd + 1);
+          const closeIdx = afterTag.indexOf("</details>");
+          if (closeIdx >= 0) {
+            let detailsReasoning = afterTag.slice(0, closeIdx);
+            detailsReasoning = detailsReasoning
+              .replace(/<details[^>]*>/g, "")
+              .replace(/<\/details>/g, "")
+              .split("\n")
+              .map((l) => l.replace(/^> /, ""))
+              .join("\n")
+              .trim();
+            reasoningContent += (reasoningContent ? "\n" : "") + detailsReasoning;
+            fullContent = fullContent.slice(0, detailsIdx) + afterTag.slice(closeIdx + "</details>".length);
+          }
+        }
+      }
     }
 
     // Check for completed tool calls

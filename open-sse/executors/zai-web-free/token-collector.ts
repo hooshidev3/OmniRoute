@@ -13,14 +13,14 @@
 
 const ZAI_URL = "https://chat.z.ai";
 
-// Normal mode limits (matching GLM-Free-API init.go)
-const MAX_TOKENS = 1250;
+// Normal mode limits (matching GLM-Free-API captcha.go commits 7dc4ded + 1d0d4b5)
+const MAX_TOKENS = 1500;
 const UNSAFE_MAX_TOKENS = 1500;
-const DEFAULT_TOKENS = 750;
-const DEFAULT_BATCH = 3;
+const DEFAULT_TOKENS = 850;
+const DEFAULT_BATCH = 5;
 const MAX_BATCH = 9;
 const UNSAFE_MAX_BATCH = 25;
-const SEND_WAIT_MS = 7000;
+const SEND_WAIT_MS = 15000;
 const MAX_RETRIES = 3;
 const TOKEN_COLLECTION_TIMEOUT_MS = 90_000;
 const MAX_PARALLEL = 3;
