@@ -1098,11 +1098,11 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
   }
 
   // Use new format endpoint (machineId embedded in key)
-  const currentEndpoint = cloudEnabled && cloudEndpointNew ? cloudEndpointNew : baseUrl;
+  const currentEndpoint = cloudEnabled && cloudConfigured && cloudEndpointNew ? cloudEndpointNew : baseUrl;
 
   const activeUrls = [
     { label: "Local", url: baseUrl, key: "active_local" },
-    ...(cloudEnabled && cloudEndpointNew
+    ...(cloudEnabled && cloudConfigured && cloudEndpointNew
       ? [{ label: "Cloud", url: cloudEndpointNew, key: "active_cloud" }]
       : []),
     ...(cloudflaredStatus?.running && cloudflaredStatus.apiUrl
@@ -1391,17 +1391,17 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
             </div>
             <span
               className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border shrink-0 ${
-                cloudEnabled
+                cloudEnabled && cloudConfigured
                   ? "bg-green-500/10 border-green-500/30 text-green-400"
                   : "bg-surface border-border/70 text-text-muted"
               }`}
             >
               <span
-                className={`w-1.5 h-1.5 rounded-full shrink-0 ${cloudEnabled ? "bg-green-400 animate-pulse" : "bg-text-muted"}`}
+                className={`w-1.5 h-1.5 rounded-full shrink-0 ${cloudEnabled && cloudConfigured ? "bg-green-400 animate-pulse" : "bg-text-muted"}`}
               />
-              {cloudEnabled ? "Active" : "Disabled"}
+              {cloudEnabled && cloudConfigured ? "Active" : "Disabled"}
             </span>
-            {cloudEnabled ? (
+            {cloudEnabled && cloudConfigured ? (
               <Button
                 size="sm"
                 variant="secondary"

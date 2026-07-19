@@ -195,8 +195,13 @@ async function syncAndVerify(machineId: string, createdKey: any, existingKeys: a
  * Disable Cloud - delete cache and update Claude CLI settings
  */
 async function handleDisable(machineId: string, request: any) {
+  // If CLOUD_URL is not configured, there's nothing to delete upstream.
+  // Just succeed — cloudEnabled was already set to false by the caller.
   if (!CLOUD_URL) {
-    return NextResponse.json({ error: "NEXT_PUBLIC_CLOUD_URL is not configured" }, { status: 500 });
+    return NextResponse.json({
+      success: true,
+      message: "Cloud disabled (CLOUD_URL not configured, nothing to delete upstream)",
+    });
   }
 
   let response;
