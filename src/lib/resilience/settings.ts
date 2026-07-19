@@ -72,9 +72,9 @@ export const DEFAULT_RESILIENCE_SETTINGS: ResilienceSettings = {
   },
   waitForCooldown: {
     enabled: true,
-    maxRetries: 3,
-    maxRetryWaitSec: 30,
-    maxRetryWaitMs: 30000,
+    maxRetries: 10,
+    maxRetryWaitSec: 5,
+    maxRetryWaitMs: 5000,
   },
   // Conservative defaults: wait at most 5s for a single short transient
   // cooldown, at most 2 redispatch cycles, never more than 8s total. Active only
