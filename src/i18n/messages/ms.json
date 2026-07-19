@@ -1700,7 +1700,7 @@
     "sharedAccountQuotaVisibility": "Kuota akaun kongsi",
     "sharedAccountQuotaVisibilityDesc": "Benarkan kunci ini melihat kuota akaun upstream kongsi apabila satu sambungan eksplisit dikonfigurasi.",
     "localUsageCommand": "__MISSING__:Allow local usage command",
-    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@om-usage to retrieve cached usage and quota information without calling an upstream provider.",
+    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@rc-usage to retrieve cached usage and quota information without calling an upstream provider.",
     "localUsageCommandBadge": "__MISSING__:Usage cmd",
     "keyCreated": "Kunci API Dicipta",
     "keyCreatedSuccess": "Kunci berjaya dibuat!",

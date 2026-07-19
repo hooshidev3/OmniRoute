@@ -12,14 +12,14 @@ import {
 const NOW = Date.parse("2026-06-16T12:00:00.000Z");
 
 test("internal usage command only matches the exact trimmed user message", () => {
-  assert.equal(isInternalUsageCommand("@@om-usage"), true);
-  assert.equal(isInternalUsageCommand("   @@om-usage   "), true);
-  assert.equal(isInternalUsageCommand("me mostra @@om-usage"), false);
-  assert.equal(isInternalUsageCommand("@@om-usage agora"), false);
-  assert.equal(isInternalUsageCommand("/@@om-usage"), false);
-  assert.equal(isInternalUsageCommand("@@om-usage."), false);
-  assert.equal(isInternalUsageCommand("@@om-usage\nabc"), false);
-  assert.equal(isInternalUsageCommand("```@@om-usage```"), false);
+  assert.equal(isInternalUsageCommand("@@rc-usage"), true);
+  assert.equal(isInternalUsageCommand("   @@rc-usage   "), true);
+  assert.equal(isInternalUsageCommand("me mostra @@rc-usage"), false);
+  assert.equal(isInternalUsageCommand("@@rc-usage agora"), false);
+  assert.equal(isInternalUsageCommand("/@@rc-usage"), false);
+  assert.equal(isInternalUsageCommand("@@rc-usage."), false);
+  assert.equal(isInternalUsageCommand("@@rc-usage\nabc"), false);
+  assert.equal(isInternalUsageCommand("```@@rc-usage```"), false);
   assert.equal(isInternalUsageCommand(null), false);
 });
 
@@ -29,10 +29,10 @@ test("extractLastUserText supports OpenAI and Anthropic text content", () => {
       messages: [
         { role: "user", content: "first" },
         { role: "assistant", content: "middle" },
-        { role: "user", content: [{ type: "text", text: "@@om-usage" }] },
+        { role: "user", content: [{ type: "text", text: "@@rc-usage" }] },
       ],
     }),
-    "@@om-usage"
+    "@@rc-usage"
   );
 
   assert.equal(
@@ -232,7 +232,7 @@ test("buildUsageCommandText scales provider quota remaining by configured cutoff
 
 test("handleInternalUsageCommandHttpRequest returns terminal text for an allowed API key", async () => {
   const response = await handleInternalUsageCommandHttpRequest(
-    new Request("http://localhost/api/usage/om-usage?provider=claude", {
+    new Request("http://localhost/api/usage/rc-usage?provider=claude", {
       headers: { Authorization: "Bearer sk-allowed" },
     }),
     {
@@ -314,7 +314,7 @@ test("handleInternalUsageCommandHttpRequest returns terminal text for an allowed
 
 test("handleInternalUsageCommandHttpRequest sanitizes internal errors and never leaks stack traces", async () => {
   const response = await handleInternalUsageCommandHttpRequest(
-    new Request("http://localhost/api/usage/om-usage", {
+    new Request("http://localhost/api/usage/rc-usage", {
       headers: { Authorization: "Bearer sk-boom" },
     }),
     {
@@ -346,7 +346,7 @@ test("handleInternalUsageCommandHttpRequest sanitizes internal errors and never 
 
 test("handleInternalUsageCommandHttpRequest rejects invalid API keys as plain text", async () => {
   const response = await handleInternalUsageCommandHttpRequest(
-    new Request("http://localhost/api/usage/om-usage", {
+    new Request("http://localhost/api/usage/rc-usage", {
       headers: { Authorization: "Bearer sk-invalid" },
     }),
     {
@@ -371,7 +371,7 @@ test("handleInternalUsageCommandHttpRequest rejects invalid API keys as plain te
 
 test("handleInternalUsageCommandHttpRequest rejects API keys without usage command access", async () => {
   const response = await handleInternalUsageCommandHttpRequest(
-    new Request("http://localhost/api/usage/om-usage", {
+    new Request("http://localhost/api/usage/rc-usage", {
       headers: { Authorization: "Bearer sk-disabled" },
     }),
     {
@@ -403,7 +403,7 @@ test("handleInternalUsageCommand returns disabled response locally without provi
     }),
     {
       model: "claude-opus-4-8",
-      messages: [{ role: "user", content: "@@om-usage" }],
+      messages: [{ role: "user", content: "@@rc-usage" }],
     },
     {
       isValidApiKey: async () => true,
@@ -444,7 +444,7 @@ test("handleInternalUsageCommand returns enabled usage snapshot locally", async 
     }),
     {
       model: "claude-opus-4-8",
-      messages: [{ role: "user", content: "  @@om-usage  " }],
+      messages: [{ role: "user", content: "  @@rc-usage  " }],
     },
     {
       isValidApiKey: async () => true,
@@ -507,7 +507,7 @@ test("handleInternalUsageCommand ignores normal prompts", async () => {
     }),
     {
       model: "claude-opus-4-8",
-      messages: [{ role: "user", content: "me mostra @@om-usage" }],
+      messages: [{ role: "user", content: "me mostra @@rc-usage" }],
     },
     {
       isValidApiKey: async () => {

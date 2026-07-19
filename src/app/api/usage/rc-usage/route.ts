@@ -6,9 +6,9 @@ export async function OPTIONS() {
 }
 
 /**
- * GET /api/usage/om-usage
+ * GET /api/usage/rc-usage
  *
- * Terminal-friendly equivalent of @@om-usage. Authenticates with the same
+ * Terminal-friendly equivalent of @@rc-usage. Authenticates with the same
  * RouteChi API key used by Claude Code/Codex and requires allowUsageCommand.
  */
 export async function GET(request: Request) {

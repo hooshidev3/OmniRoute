@@ -5,7 +5,7 @@ import {
 } from "@/lib/usage/apiKeyUsageLimits";
 import { buildErrorBody } from "@omniroute/open-sse/utils/error";
 
-export const INTERNAL_USAGE_COMMAND = "@@om-usage";
+export const INTERNAL_USAGE_COMMAND = "@@rc-usage";
 export const USAGE_COMMAND_DISABLED_MESSAGE = "Usage command is disabled for this API key.";
 const USAGE_COMMAND_AUTH_REQUIRED_MESSAGE = "Usage command requires an authenticated API key.";
 const LOCAL_USAGE_MODEL = "omniroute/local-usage";

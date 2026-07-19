@@ -1706,7 +1706,7 @@
     "sharedAccountQuotaVisibility": "Shared Account Quota",
     "sharedAccountQuotaVisibilityDesc": "Allow this key to see shared upstream account quota when one explicit connection is configured.",
     "localUsageCommand": "Allow local usage command",
-    "localUsageCommandDesc": "Allows this API key to use @@om-usage to retrieve cached usage and quota information without calling an upstream provider.",
+    "localUsageCommandDesc": "Allows this API key to use @@rc-usage to retrieve cached usage and quota information without calling an upstream provider.",
     "localUsageCommandBadge": "Usage cmd",
     "keyCreated": "API Key Created",
     "keyCreatedSuccess": "Key created successfully!",

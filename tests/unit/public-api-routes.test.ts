@@ -41,8 +41,8 @@ test("isPublicApiRoute rejects non-public management routes", () => {
   assert.equal(isPublicApiRoute("/api/providers"), false);
 });
 
-test("isPublicApiRoute allows /api/usage/om-usage (handler enforces its own API key auth)", () => {
-  assert.equal(isPublicApiRoute("/api/usage/om-usage"), true);
-  assert.equal(isPublicApiRoute("/api/usage/om-usage", "GET"), true);
-  assert.equal(isPublicApiRoute("/api/usage/om-usage", "OPTIONS"), true);
+test("isPublicApiRoute allows /api/usage/rc-usage (handler enforces its own API key auth)", () => {
+  assert.equal(isPublicApiRoute("/api/usage/rc-usage"), true);
+  assert.equal(isPublicApiRoute("/api/usage/rc-usage", "GET"), true);
+  assert.equal(isPublicApiRoute("/api/usage/rc-usage", "OPTIONS"), true);
 });

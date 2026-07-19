@@ -1700,7 +1700,7 @@
     "sharedAccountQuotaVisibility": "공유 계정 할당량",
     "sharedAccountQuotaVisibilityDesc": "명시적 연결이 하나 구성된 경우 이 키가 공유 upstream 계정 할당량을 볼 수 있도록 허용합니다.",
     "localUsageCommand": "__MISSING__:Allow local usage command",
-    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@om-usage to retrieve cached usage and quota information without calling an upstream provider.",
+    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@rc-usage to retrieve cached usage and quota information without calling an upstream provider.",
     "localUsageCommandBadge": "__MISSING__:Usage cmd",
     "keyCreated": "API 키가 생성되었습니다.",
     "keyCreatedSuccess": "키가 생성되었습니다!",

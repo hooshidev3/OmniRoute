@@ -1706,7 +1706,7 @@
     "sharedAccountQuotaVisibility": "Cota de conta compartilhada",
     "sharedAccountQuotaVisibilityDesc": "Permitir que esta chave veja a cota da conta upstream compartilhada quando uma conexão explícita estiver configurada.",
     "localUsageCommand": "Permitir comando local de uso",
-    "localUsageCommandDesc": "Permite que esta API key use @@om-usage para consultar consumo e limites em cache, sem chamar provider externo.",
+    "localUsageCommandDesc": "Permite que esta API key use @@rc-usage para consultar consumo e limites em cache, sem chamar provider externo.",
     "localUsageCommandBadge": "Cmd uso",
     "keyCreated": "Chave de API Criada",
     "keyCreatedSuccess": "Chave criada com sucesso!",

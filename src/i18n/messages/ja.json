@@ -1700,7 +1700,7 @@
     "sharedAccountQuotaVisibility": "共有アカウントクォータ",
     "sharedAccountQuotaVisibilityDesc": "明示的な接続が 1 つ設定されている場合、このキーに共有 upstream アカウントクォータの表示を許可します。",
     "localUsageCommand": "__MISSING__:Allow local usage command",
-    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@om-usage to retrieve cached usage and quota information without calling an upstream provider.",
+    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@rc-usage to retrieve cached usage and quota information without calling an upstream provider.",
     "localUsageCommandBadge": "__MISSING__:Usage cmd",
     "keyCreated": "APIキーが作成されました",
     "keyCreatedSuccess": "キーが正常に作成されました。",

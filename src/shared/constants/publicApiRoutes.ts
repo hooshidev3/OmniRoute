@@ -13,10 +13,10 @@ const PUBLIC_API_ROUTE_PREFIXES = [
   // access token. The handler enforces its own password check + lockout — there
   // is no token yet at this point, so it cannot require management auth.
   "/api/cli/connect",
-  // Terminal-friendly @@om-usage equivalent for CLI clients (Claude Code/Codex).
+  // Terminal-friendly @@rc-usage equivalent for CLI clients (Claude Code/Codex).
   // The handler enforces its own auth via extractUsageCommandApiKey/isValidApiKey
   // and the allowUsageCommand flag — it must not be gated by management auth.
-  "/api/usage/om-usage",
+  "/api/usage/rc-usage",
   // Chaos Mode external dispatch endpoint (POST /api/skills/collect/chaos).
   // This entry only bypasses the dashboard requireLogin (cookie) gate — the
   // handler enforces its own Bearer-token auth (validateApiKey +

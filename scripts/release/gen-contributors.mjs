@@ -26,7 +26,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".
 export const NOISE_HANDLES = new Set([
   "toon-format",
   "dnd-kit",
-  "om-usage",
+  "rc-usage",
+  "om-usage", // historical — keep for old CHANGELOG parsing
   "anthropic-ai",
   "huggingface",
   "oven",

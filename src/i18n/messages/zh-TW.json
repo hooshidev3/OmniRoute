@@ -1702,7 +1702,7 @@
     "sharedAccountQuotaVisibility": "共享帳號配額",
     "sharedAccountQuotaVisibilityDesc": "當配置了一個明確連線時，允許此金鑰檢視共享上游帳號配額。",
     "localUsageCommand": "__MISSING__:Allow local usage command",
-    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@om-usage to retrieve cached usage and quota information without calling an upstream provider.",
+    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@rc-usage to retrieve cached usage and quota information without calling an upstream provider.",
     "localUsageCommandBadge": "__MISSING__:Usage cmd",
     "keyCreated": "API 金鑰已建立",
     "keyCreatedSuccess": "金鑰建立成功！",

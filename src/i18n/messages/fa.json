@@ -1706,7 +1706,7 @@
     "sharedAccountQuotaVisibility": "سهمیه حساب مشترک",
     "sharedAccountQuotaVisibilityDesc": "به این کلید اجازه دهید وقتی یک اتصال صریح پیکربندی شده است، سهمیه حساب بالادست مشترک را ببیند.",
     "localUsageCommand": "اجازه دستور مصرف محلی",
-    "localUsageCommandDesc": "به این کلید API اجازه می‌دهد از @@om-usage برای بازیابی اطلاعات مصرف و سهمیه ذخیره شده بدون فراخوانی ارائه‌دهنده بالادست استفاده کند.",
+    "localUsageCommandDesc": "به این کلید API اجازه می‌دهد از @@rc-usage برای بازیابی اطلاعات مصرف و سهمیه ذخیره شده بدون فراخوانی ارائه‌دهنده بالادست استفاده کند.",
     "localUsageCommandBadge": "دستور مصرف",
     "keyCreated": "کلید API ایجاد شد",
     "keyCreatedSuccess": "کلید با موفقیت ایجاد شد!",

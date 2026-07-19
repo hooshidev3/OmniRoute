@@ -1700,7 +1700,7 @@
     "sharedAccountQuotaVisibility": "Cotă de cont partajată",
     "sharedAccountQuotaVisibilityDesc": "Permite acestei chei să vadă cota contului upstream partajat când este configurată o conexiune explicită.",
     "localUsageCommand": "__MISSING__:Allow local usage command",
-    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@om-usage to retrieve cached usage and quota information without calling an upstream provider.",
+    "localUsageCommandDesc": "__MISSING__:Allows this API key to use @@rc-usage to retrieve cached usage and quota information without calling an upstream provider.",
     "localUsageCommandBadge": "__MISSING__:Usage cmd",
     "keyCreated": "Cheia API creată",
     "keyCreatedSuccess": "Cheie creată cu succes!",
