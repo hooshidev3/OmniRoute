@@ -296,6 +296,11 @@ export const WEB_COOKIE_PROVIDERS = {
       "Paste access_token from www.kimi.com DevTools → Application → Local Storage. A legacy kimi-auth cookie is also accepted.",
     subscriptionRisk: true,
     riskNoticeVariant: "webCookie",
+    // RouteChi addition: our kimi-web executor implements a managed-XML
+    // <|CHAT2API|tool_calls> protocol (ported from Chat2API-web) that lets
+    // agentic clients use tools[] — marked "emulated" so combo routing and
+    // model-capability detection treat it as tool-capable.
+    toolCalling: "emulated",
   },
   "doubao-web": {
     id: "doubao-web",
@@ -368,6 +373,9 @@ export const WEB_COOKIE_PROVIDERS = {
     subscriptionRisk: true,
     riskNoticeVariant: "webCookie",
     authHint: "Paste the full Cookie header from chat.z.ai (must include the token=<JWT> cookie)",
+    // RouteChi addition: zai-web-free (which backs this registry entry) emits
+    // tool_calls via an inline protocol parsed by parseZaiToolCallDelta.
+    toolCalling: "emulated",
   },
   "notion-web": {
     id: "notion-web",
@@ -403,6 +411,9 @@ export const WEB_COOKIE_PROVIDERS = {
       'Open chat.z.ai, log in, then open DevTools → Application → Local Storage → copy the "token" value (JWT). Unlocks all models (GLM-5.2, GLM-5.1, etc.).',
     subscriptionRisk: true,
     riskNoticeVariant: "webCookie",
+    // Shares the same executor as zai-web-free, so the same inline tool-call
+    // protocol applies. Marked emulated so agentic clients can use tools[].
+    toolCalling: "emulated",
   },
   "xiaomimimo-web": {
     id: "xiaomimimo-web",
@@ -416,6 +427,11 @@ export const WEB_COOKIE_PROVIDERS = {
       "Open aistudio.xiaomimimo.com, log in, then open DevTools → Application → Cookies → copy the full Cookie header (must contain serviceToken, userId, xiaomichatbot_ph).",
     subscriptionRisk: true,
     riskNoticeVariant: "webCookie",
+    // RouteChi addition: xiaomimimo-web executor implements its own inline
+    // tool-call protocol (assistant tool_calls → managed XML in the prompt,
+    // response tool_calls parsed back out). Marked emulated so combo routing
+    // treats it as tool-capable.
+    toolCalling: "emulated",
   },
 };
 
