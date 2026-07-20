@@ -28,6 +28,8 @@ import { refreshKiroToken } from "./tokenRefresh/providers/kiro.ts";
 import { refreshQoderToken } from "./tokenRefresh/providers/qoder.ts";
 import { refreshGitHubToken } from "./tokenRefresh/providers/github.ts";
 import { refreshCopilotToken } from "./tokenRefresh/providers/copilot.ts";
+import { refreshZaiWebFreeToken } from "./tokenRefresh/providers/zaiWebFree.ts";
+import { refreshZaiWebTokenToken } from "./tokenRefresh/providers/zaiWebToken.ts";
 
 export {
   refreshWindsurfToken,
@@ -42,6 +44,8 @@ export {
   refreshQoderToken,
   refreshGitHubToken,
   refreshCopilotToken,
+  refreshZaiWebFreeToken,
+  refreshZaiWebTokenToken,
   extractOAuthErrorCode,
 };
 
