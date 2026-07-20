@@ -68,6 +68,7 @@ import { isZaiWebFreeDisabled } from "./zai-web-free/feature-flag.ts";
 import { notifyRequest as notifyDaemonRequest } from "./zai-web-free/auto-refresh-daemon.ts";
 import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
 import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
+import { createDetailsParser } from "./zai-web-free/detailsParser.ts";
 import { randomUUID } from "node:crypto";
 
 const log = logger("ZAI-WEB-FREE");
@@ -153,9 +154,7 @@ function buildZaiToolRegistry(body: Record<string, unknown>): ZaiToolRegistry {
  * Parse a tool_calls delta from a Z.AI SSE chunk.
  * Returns null if the chunk doesn't contain tool call data.
  */
-function parseZaiToolCallDelta(
-  chunk: Record<string, unknown>
-): Array<{
+function parseZaiToolCallDelta(chunk: Record<string, unknown>): Array<{
   index: number;
   id?: string;
   type?: string;
@@ -514,7 +513,9 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // This makes log output distinguishable between the two providers even
     // though they share the same executor.
     const psd0 = credentials?.providerSpecificData as { token?: string } | undefined;
-    const hasUserToken = !!(psd0?.token || (credentials?.apiKey ? String(credentials.apiKey).trim() : ""));
+    const hasUserToken = !!(
+      psd0?.token || (credentials?.apiKey ? String(credentials.apiKey).trim() : "")
+    );
     const dynLog = logger(hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE");
 
     // Feature flag — default ENABLED. Operator can disable via
@@ -599,7 +600,10 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // Helper: run Method A (server-side crypto with device tokens from pool)
     const runMethodA = async (label: string): Promise<string> => {
       if (getPoolSize() === 0) {
-        dynLog?.warn?.(hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE", `${label}: pool empty, skipping`);
+        dynLog?.warn?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `${label}: pool empty, skipping`
+        );
         return "";
       }
       try {
@@ -608,49 +612,79 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
         let result: string;
         if (timeoutMs > 0) {
           const timeoutPromise = new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error(`Captcha generation timeout after ${timeoutMs / 1000}s`)), timeoutMs)
+            setTimeout(
+              () => reject(new Error(`Captcha generation timeout after ${timeoutMs / 1000}s`)),
+              timeoutMs
+            )
           );
           result = await Promise.race([captchaPromise, timeoutPromise]);
         } else {
           result = await captchaPromise;
         }
-        dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `captcha via ${label} (pool: ${poolSize} → ${getPoolSize()})`);
+        dynLog?.debug?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `captcha via ${label} (pool: ${poolSize} → ${getPoolSize()})`
+        );
         return result;
       } catch (err) {
-        dynLog?.warn?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `${label} failed: ${err instanceof Error ? err.message : String(err)}`);
+        dynLog?.warn?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `${label} failed: ${err instanceof Error ? err.message : String(err)}`
+        );
         return "";
       }
     };
 
     // Helper: run Method B (get fresh device token via Playwright, then Method A)
     const runMethodB = async (): Promise<string> => {
-      dynLog?.info?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), "Getting fresh device token via Playwright (Method B)...");
+      dynLog?.info?.(
+        hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+        "Getting fresh device token via Playwright (Method B)..."
+      );
       try {
         const freshToken = await getFreshDeviceTokenViaBrowser();
         addDeviceTokens([freshToken]);
-        dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), "Fresh token obtained, retrying server-side captcha...");
+        dynLog?.debug?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          "Fresh token obtained, retrying server-side captcha..."
+        );
         return await runMethodA("Method B (fresh token)");
       } catch (freshErr) {
-        dynLog?.warn?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `Method B failed: ${freshErr instanceof Error ? freshErr.message : String(freshErr)}`);
+        dynLog?.warn?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `Method B failed: ${freshErr instanceof Error ? freshErr.message : String(freshErr)}`
+        );
         return "";
       }
     };
 
     // Helper: run Method C (full Playwright browser captcha)
     const runMethodC = async (): Promise<string> => {
-      dynLog?.info?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), "Using browser captcha fallback (Method C)...");
+      dynLog?.info?.(
+        hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+        "Using browser captcha fallback (Method C)..."
+      );
       try {
         const result = await getCaptchaParamViaBrowser();
-        dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), "captcha via Method C (browser)");
+        dynLog?.debug?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          "captcha via Method C (browser)"
+        );
         return result;
       } catch (browserErr) {
-        dynLog?.warn?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `Method C failed: ${browserErr instanceof Error ? browserErr.message : String(browserErr)}`);
+        dynLog?.warn?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `Method C failed: ${browserErr instanceof Error ? browserErr.message : String(browserErr)}`
+        );
         return "";
       }
     };
 
     // Execute strategy
-    dynLog?.info?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `captcha strategy=${strategy} retries=${retries} timeout=${timeoutMs}ms pool=${poolSize}`);
+    dynLog?.info?.(
+      hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+      `captcha strategy=${strategy} retries=${retries} timeout=${timeoutMs}ms pool=${poolSize}`
+    );
 
     switch (strategy) {
       case "a_only":
@@ -715,7 +749,10 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     //   - Generate a new UUID per request (no registry), send the FULL
     //     messages array (zai-web pattern — client-side context).
     const connectionId = (credentials as { connectionId?: string })?.connectionId || "default";
-    const agentChatId = getAgentChatId(bodyObj, input.clientHeaders as Record<string, unknown> | undefined);
+    const agentChatId = getAgentChatId(
+      bodyObj,
+      input.clientHeaders as Record<string, unknown> | undefined
+    );
 
     // Registry provider key: use "zai-web-token" or "zai-web-free" (NOT "zai")
     // to avoid collision with the `zai` apikey provider which may add registry
@@ -727,14 +764,22 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       const existing = getMapping({ connectionId, agentChatId, provider: registryProvider });
       if (existing?.providerConversationId) {
         chatId = existing.providerConversationId;
-        dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (reused)`);
+        dynLog?.debug?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (reused)`
+        );
       } else {
         chatId = randomUUID();
         saveMapping({
-          connectionId, agentChatId, provider: registryProvider,
+          connectionId,
+          agentChatId,
+          provider: registryProvider,
           providerConversationId: chatId,
         });
-        dynLog?.debug?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (new)`);
+        dynLog?.debug?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `registry: agentChatId=${agentChatId.slice(0, 16)} -> chatId=${chatId.slice(0, 16)} (new)`
+        );
       }
     } else {
       // No agentChatId — generate a fresh UUID per request (stateless).
@@ -797,7 +842,10 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
       if (upstream.status === 401 && attempt === 0) {
         // Session expired — re-init and retry once
-        dynLog?.info?.((hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"), "401 from Z.AI, re-initializing session");
+        dynLog?.info?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          "401 from Z.AI, re-initializing session"
+        );
         resetSession();
         try {
           const newSession = await getSession();
@@ -858,6 +906,11 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           const reader = sourceStream.getReader();
           const decoder = new TextDecoder();
           const toolAccumulator = new ToolCallAccumulator();
+          // Stateful <details> parser — one instance per stream. Survives
+          // tag splits across chunks (the original buggy parser leaked
+          // `true">` and reasoning text into content when Z.AI split the
+          // opening tag across multiple SSE frames).
+          const detailsParser = createDetailsParser();
 
           // Keep-alive ticker ?�� Z.AI streams can have long pauses; send a
           // heartbeat every 5s so the client doesn't time out.
@@ -988,61 +1041,17 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
                       emit({ reasoning_content: chunk });
                     }
                   } else {
-                    // Check for <details> tags (Go commit 1655e13: Z.AI wraps
-                    // reasoning in <details>...</details> within content).
-                    // Split into reasoning vs content.
-                    fullContent += chunk;
-                    const raw = fullContent;
-                    let reasoning = "";
-                    let content = raw;
-
-                    const detailsIdx = raw.indexOf("<details");
-                    if (detailsIdx >= 0) {
-                      const tagEnd = raw.indexOf(">", detailsIdx);
-                      if (tagEnd >= 0) {
-                        const afterTag = raw.slice(tagEnd + 1);
-                        const closeIdx = afterTag.indexOf("</details>");
-                        if (closeIdx >= 0) {
-                          reasoning = afterTag.slice(0, closeIdx);
-                          content = raw.slice(0, detailsIdx) + afterTag.slice(closeIdx + "</details>".length);
-                        } else {
-                          // <details> opened but not yet closed — treat as reasoning
-                          reasoning = afterTag;
-                          content = raw.slice(0, detailsIdx);
-                        }
-                      }
+                    // Z.AI wraps reasoning in <details>...</details> HTML tags
+                    // inside the content stream (Go commit 1655e13). The
+                    // stateful parser handles tag splits across chunks.
+                    const { contentDelta, reasoningDelta } = detailsParser.push(chunk, thinkMode);
+                    if (contentDelta) {
+                      fullContent += contentDelta;
+                      emit({ content: contentDelta });
                     }
-
-                    // Strip <details> tags and "> " prefixes from reasoning
-                    if (reasoning) {
-                      reasoning = reasoning
-                        .replace(/<details[^>]*>/g, "")
-                        .replace(/<\/details>/g, "");
-                      // Strip leading "> " from each line
-                      reasoning = reasoning
-                        .split("\n")
-                        .map((l) => l.replace(/^> /, ""))
-                        .join("\n")
-                        .trim();
-                    }
-
-                    // Update fullContent to the cleaned content
-                    fullContent = content;
-
-                    // Emit content delta
-                    if (fullContent.length > sentContent.length) {
-                      const delta = fullContent.slice(sentContent.length);
-                      sentContent = fullContent;
-                      emit({ content: delta });
-                    }
-
-                    // Emit reasoning delta (if any and not stripped)
-                    if (reasoning && reasoning.length > (sentReasoning || "").length) {
-                      if (thinkMode !== "strip") {
-                        const reasoningDelta = reasoning.slice((sentReasoning || "").length);
-                        emit({ reasoning_content: reasoningDelta });
-                      }
-                      sentReasoning = reasoning;
+                    if (reasoningDelta) {
+                      sentReasoning += reasoningDelta;
+                      emit({ reasoning_content: reasoningDelta });
                     }
                   }
                 }
@@ -1055,7 +1064,16 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
               }
             }
 
-            // Stream ended without [DONE] or phase "done" ?�� flush a stop
+            // Stream ended without [DONE] or phase "done" — flush any
+            // pending <details> state and emit a stop.
+            const flushResult = detailsParser.flush(thinkMode);
+            if (flushResult.contentDelta) {
+              fullContent += flushResult.contentDelta;
+              emit({ content: flushResult.contentDelta });
+            }
+            if (flushResult.reasoningDelta) {
+              emit({ reasoning_content: flushResult.reasoningDelta });
+            }
             emit({}, "stop");
             controller.enqueue(encoder.encode("data: [DONE]\n\n"));
             controller.close();
@@ -1159,28 +1177,25 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       /* best-effort — return what we have */
     }
 
-    // Parse <details> tags from non-streaming content (Go commit 1655e13)
-    // Z.AI wraps reasoning in <details>...</details> within content.
+    // Parse <details> tags from non-streaming content (Go commit 1655e13).
+    // Z.AI wraps reasoning in <details>...</details> within content. The
+    // stateful parser handles this for both streaming and non-streaming
+    // paths — for non-streaming we feed the whole content at once and then
+    // flush to capture any trailing reasoning when </details> is missing.
     {
-      const detailsIdx = fullContent.indexOf("<details");
-      if (detailsIdx >= 0) {
-        const tagEnd = fullContent.indexOf(">", detailsIdx);
-        if (tagEnd >= 0) {
-          const afterTag = fullContent.slice(tagEnd + 1);
-          const closeIdx = afterTag.indexOf("</details>");
-          if (closeIdx >= 0) {
-            let detailsReasoning = afterTag.slice(0, closeIdx);
-            detailsReasoning = detailsReasoning
-              .replace(/<details[^>]*>/g, "")
-              .replace(/<\/details>/g, "")
-              .split("\n")
-              .map((l) => l.replace(/^> /, ""))
-              .join("\n")
-              .trim();
-            reasoningContent += (reasoningContent ? "\n" : "") + detailsReasoning;
-            fullContent = fullContent.slice(0, detailsIdx) + afterTag.slice(closeIdx + "</details>".length);
-          }
-        }
+      const detailsParser = createDetailsParser();
+      const { contentDelta, reasoningDelta } = detailsParser.push(fullContent, thinkMode);
+      const flush = detailsParser.flush(thinkMode);
+      // For non-streaming we replace fullContent with the cleaned content
+      // (the parser returns deltas; concatenating them gives the full
+      // cleaned content since we started from empty).
+      const cleanedContent = contentDelta + flush.contentDelta;
+      const cleanedReasoning = reasoningDelta + flush.reasoningDelta;
+      if (cleanedReasoning) {
+        reasoningContent += (reasoningContent ? "\n" : "") + cleanedReasoning;
+      }
+      if (cleanedContent !== fullContent) {
+        fullContent = cleanedContent;
       }
     }
 
@@ -1231,7 +1246,7 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     };
 
     dynLog?.debug?.(
-      (hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE"),
+      hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
       `completed model=${requestedModel} contentLen=${fullContent.length}`
     );
 
