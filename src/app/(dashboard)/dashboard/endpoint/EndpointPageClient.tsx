@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import A2ADashboardPage from "./components/A2ADashboard";
 import McpDashboardPage from "./components/MCPDashboard";
 import NotionSourceCard from "./components/NotionSourceCard";
+import DeployWorkerModal from "./components/DeployWorkerModal";
 import ObsidianSourceCard from "./components/ObsidianSourceCard";
 import VscodeTokenAliasCard from "./VscodeTokenAliasCard";
 
@@ -143,6 +144,7 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
   // Cloud sync state
   const [cloudEnabled, setCloudEnabled] = useState(false);
   const [showCloudModal, setShowCloudModal] = useState(false);
+  const [showDeployWorkerModal, setShowDeployWorkerModal] = useState(false);
   const [showDisableModal, setShowDisableModal] = useState(false);
   const [cloudSyncing, setCloudSyncing] = useState(false);
   const [cloudStatus, setCloudStatus] = useState(null);
@@ -2605,6 +2607,21 @@ function EndpointSection({
             </div>
           )}
         </div>
+      )}
+
+      {/* Deploy Cloudflare Worker Modal — auto-deploys the OmniRoute Cloud Worker */}
+      {showDeployWorkerModal && (
+        <DeployWorkerModal
+          onClose={() => setShowDeployWorkerModal(false)}
+          onSuccess={(workerUrl, _secret) => {
+            // After successful deploy, pre-fill the cloud URL field and close modal
+            if (workerUrl) {
+              setCloudBaseUrl(workerUrl);
+            }
+            setShowDeployWorkerModal(false);
+            setShowCloudModal(true);
+          }}
+        />
       )}
     </div>
   );
