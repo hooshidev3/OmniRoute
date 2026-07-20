@@ -1135,3 +1135,100 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 </div>
 <!-- GitHub Discussions enabled for community Q&A -->
+
+---
+
+## 🇮🇷 راهنمای فارسی (Persian Guide)
+
+این نسخه از OmniRoute، نسخه‌ی ادغام‌شده‌ی فورک [hooshidev3/OmniRoute](https://github.com/hooshidev3/OmniRoute) با upstream [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) (release/v3.8.49) است. تمام مستندات به فارسی ترجمه شده و فونت Vazirmatn به‌عنوان فونت پیش‌فرض رابط کاربری فعال است.
+
+### ✨ امکانات اضافه‌شده در این فورک
+
+- **ارائه‌دهنده‌های جدید (Providers)**:
+  - `zai-web-free` — دسترسی رایگان به GLM-4.7 از طریق chat.z.ai با احراز هویت Captcha (بدون نیاز به API key)
+  - `zai-web-token` — همانند بالا ولی با JWT شخصی کاربر (باز کردن تمام مدل‌های GLM)
+  - `xiaomimimo-web` — Xiaomi MiMo AI Studio (cookie-based، با thinking mode و multi-turn memory)
+  - `kilo-free` — Kilo's OpenRouter endpoint بدون نیاز به احراز هویت (مدل‌های free با پسوند `:free`)
+- **Cloud Worker مستقل** — Cloudflare Worker برای Cloud Sync (deploy از داشبورد)
+- **ترجمه فارسی کامل** — تمام مستندات `docs/` در `docs/i18n/fa/` به فارسی در دسترس است
+- **فونت Vazirmatn** — به‌صورت self-hosted در `/public/fonts/` (بدون وابستگی به CDN)
+- **Migration 121** — `provider_session_mappings` برای multi-turn conversation continuity
+
+### 📦 نصب سریع
+
+```bash
+# کلون کردن مخزن
+git clone https://github.com/hooshidev3/OmniRoute.git
+cd OmniRoute
+git checkout feature/merge-v3.8.49
+
+# نصب وابستگی‌ها
+npm install
+
+# اجرای حالت توسعه
+npm run dev
+```
+
+### 🚀 شروع کار با zai-web-free (رایگان)
+
+1. در داشبورد به **Settings → Providers → Add Provider** بروید
+2. `zai-web-free` را انتخاب کنید
+3. نیازی به API key نیست — فقط **Save** بزنید
+4. اولین درخواست: یک Guest JWT به‌صورت خودکار دریافت می‌شود، captcha با Aliyun CaptchaV3 حل می‌شود، و device token از pool مصرف می‌گردد
+5. برای refresh کردن device tokens، از دکمه **Refresh Device Tokens** در پنل تنظیمات provider استفاده کنید
+
+> **نکته**: اگر می‌خواهید به تمام مدل‌های GLM (نه فقط glm-4.7) دسترسی داشته باشید، از `zai-web-token` استفاده کنید و JWT شخصی خود را از chat.z.ai → DevTools → Application → Cookies → token کپی کنید.
+
+### 🔧 تنظیم Cloud Worker (اختیاری)
+
+برای فعال‌سازی Cloud Sync از طریق Cloudflare Worker:
+
+1. در داشبورد به **Endpoint** بروید
+2. روی **Deploy Cloud Worker** کلیک کنید
+3. Cloudflare Account ID و API Token را وارد کنید
+4. Worker به‌صورت خودکار deploy می‌شود و URL آن به‌عنوان Cloud URL تنظیم می‌گردد
+
+برای راهنمای کامل فارسی، به [`cloud-worker/README.md`](cloud-worker/README.md) مراجعه کنید.
+
+### 🛡️ امنیت
+
+این نسخه شامل تمام بهبودهای امنیتی upstream است:
+
+- **CredentialMaskerGuardrail** — redact خودکار ۱۳+ نوع credential (OpenAI، Anthropic، GitHub، Slack، Google و ...) در request و response. فعال‌سازی: `CREDENTIAL_REDACTION_ENABLED=true`
+- **MITM Root CA** — تولید local CA با per-host leaf certs برای AgentBridge. فعال‌سازی: `MITM_ROOT_CA_ENABLED=true`
+- **OIDC Admin Login** — ورود به داشبورد از طریق OIDC (با password fallback). فعال‌سازی از تنظیمات داشبورد
+
+### 📚 مستندات فارسی
+
+تمام مستندات در `docs/i18n/fa/` به فارسی در دسترس است:
+
+- [`docs/i18n/fa/docs/getting-started/`](docs/i18n/fa/docs/getting-started/) — شروع سریع، راهنمای provider ها، عیب‌یابی
+- [`docs/i18n/fa/docs/architecture/`](docs/i18n/fa/docs/architecture/) — معماری، AUTHZ، design system، monitoring
+- [`docs/i18n/fa/docs/frameworks/`](docs/i18n/fa/docs/frameworks/) — ACP، AgentBridge، Agent Skills، MCP، Notion Context
+- [`docs/i18n/fa/docs/compression/`](docs/i18n/fa/docs/compression/) — موتورهای RTK و Caveman، قوانین compression
+- [`docs/i18n/fa/docs/guides/`](docs/i18n/fa/docs/guides/) — پیکربندی Claude Code، Codex CLI، Docker، Electron، PWA
+- [`docs/i18n/fa/docs/reference/`](docs/i18n/fa/docs/reference/) — مرجع provider ها، free tiers، feature flags
+- [`docs/i18n/fa/docs/ops/`](docs/i18n/fa/docs/ops/) — deployment guides، release checklist
+
+### 🌐 RTL و فونت Vazirmatn
+
+وقتی زبان رابط کاربری روی فارسی تنظیم شود (`<html lang="fa">`)، فونت به‌طور خودکار به Vazirmatn تغییر می‌کند. این کار به‌صورت خودکار توسط CSS انجام می‌شود:
+
+```css
+:lang(fa),
+[dir="rtl"] {
+  font-family: var(--font-persian);
+}
+```
+
+برای زبان‌های LTR (انگلیسی، اسپانیایی، چینی و ...) فونت سیستم پیش‌فرض باقی می‌ماند تا هزینه load فونت اضافه نشود.
+
+### 🤝 مشارکت و گزارش باگ
+
+- مخزن فورک: [hooshidev3/OmniRoute](https://github.com/hooshidev3/OmniRoute)
+- مخزن upstream: [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute)
+- برای گزارش باگ یا درخواست feature، از [GitHub Issues](https://github.com/hooshidev3/OmniRoute/issues) استفاده کنید
+
+### 📄 لایسنس
+
+MIT License — همانند upstream.
