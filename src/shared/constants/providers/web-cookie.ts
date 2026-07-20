@@ -369,6 +369,38 @@ export const WEB_COOKIE_PROVIDERS = {
     riskNoticeVariant: "webCookie",
     authHint: "Paste the full Cookie header from chat.z.ai (must include the token=<JWT> cookie)",
   },
+  "zai-web-token": {
+    id: "zai-web-token",
+    alias: "zaitoken",
+    name: "Z.ai Web (Personal JWT)",
+    icon: "auto_awesome",
+    color: "#1E40AF",
+    textIcon: "ZT",
+    website: "https://chat.z.ai",
+    hasFree: true,
+    freeNote:
+      "Personal Z.AI JWT — unlocks all GLM models via the captcha-gated chat.z.ai web endpoint. Distinct from zai-web (cookie-based) and zai-web-free (guest JWT).",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste your personal Z.AI JWT (from chat.z.ai → DevTools → Application → Cookies → token). Captcha verification still runs on every request; the JWT only authenticates the user identity.",
+  },
+  "xiaomimimo-web": {
+    id: "xiaomimimo-web",
+    alias: "mmw",
+    name: "Xiaomi MiMo Web",
+    icon: "auto_awesome",
+    color: "#FF6900",
+    textIcon: "MM",
+    website: "https://www.miokou.com",
+    hasFree: true,
+    freeNote:
+      "Free Xiaomi MiMo chat — multi-turn memory + thinking mode via the OpenCode <tool>{json}</tool> prompt protocol.",
+    subscriptionRisk: true,
+    riskNoticeVariant: "webCookie",
+    authHint:
+      "Paste the full Cookie header from miokou.com (must include the session cookie). URL-encoded values and quoted strings are auto-stripped.",
+  },
   "notion-web": {
     id: "notion-web",
     alias: "nw",

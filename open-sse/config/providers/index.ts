@@ -87,6 +87,10 @@ import { qwen_webProvider } from "./registry/qwen/web/index.ts";
 import { qwen_cloudProvider } from "./registry/qwen-cloud/index.ts";
 import { qwen_cloud_token_planProvider } from "./registry/qwen-cloud-token-plan/index.ts";
 import { zai_webProvider } from "./registry/zai-web/index.ts";
+import { zai_web_freeProvider } from "./registry/zai-web-free/index.ts";
+import { zai_web_tokenProvider } from "./registry/zai-web-token/index.ts";
+import { xiaomimimo_webProvider } from "./registry/xiaomimimo-web/index.ts";
+import { kilo_freeProvider } from "./registry/kilo-free/index.ts";
 import { modalProvider } from "./registry/modal/index.ts";
 import { zenmuxProvider } from "./registry/zenmux/index.ts";
 import { leonardoProvider } from "./registry/leonardo/index.ts";
@@ -289,6 +293,10 @@ export const REGISTRY: Record<string, RegistryEntry> = {
   "qwen-cloud": qwen_cloudProvider,
   "qwen-cloud-token-plan": qwen_cloud_token_planProvider,
   "zai-web": zai_webProvider,
+  "zai-web-free": zai_web_freeProvider,
+  "zai-web-token": zai_web_tokenProvider,
+  "xiaomimimo-web": xiaomimimo_webProvider,
+  "kilo-free": kilo_freeProvider,
   modal: modalProvider,
   zenmux: zenmuxProvider,
   leonardo: leonardoProvider,

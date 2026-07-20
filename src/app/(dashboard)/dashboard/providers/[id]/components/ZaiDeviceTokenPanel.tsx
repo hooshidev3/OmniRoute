@@ -1,0 +1,676 @@
+"use client";
+
+/**
+ * Z.AI Device Token Pool Panel ?�� shown on the zai-web-free provider page.
+ *
+ * Contains:
+ *   - Device token pool status badge
+ *   - "Refresh Device Tokens" button (Playwright collector)
+ *   - "Clear Pool" button
+ *   - "Extract AccessKey" button (browser-based key extraction)
+ *   - Advanced options (unsafe mode, batch settings, proxy info)
+ *   - Aliyun Captcha Keys editor (AccessKey + SecretKey)
+ *   - Auto-Refresh settings (minPoolSize, interval, enable/disable)
+ *
+ * Extracted from NoAuthProviderControls.tsx to minimize diff with upstream.
+ */
+
+import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useNotificationStore } from "@/store/notificationStore";
+import { ZaiPrerequisiteBanner } from "./ZaiPrerequisiteBanner";
+
+export default function ZaiDeviceTokenPanel() {
+  const notify = useNotificationStore();
+  const t = useTranslations("zaiWebFree");
+  const [poolSize, setPoolSize] = useState<number | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [extractingKey, setExtractingKey] = useState(false);
+  const [savingKeys, setSavingKeys] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showKeySettings, setShowKeySettings] = useState(false);
+  const [refreshOptions, setRefreshOptions] = useState({
+    tokens: 750,
+    batches: 3,
+    parallel: 1,
+    headed: false,
+    unsafe: false,
+  });
+  const [keySettings, setKeySettings] = useState({
+    accessKey: "",
+    secretKey: "",
+    minPoolSize: 10,
+    autoRefreshEnabled: true,
+    autoRefreshIntervalMs: 300000,
+    captchaStrategy: "auto" as string,
+    captchaRetries: 2,
+    captchaTimeoutMs: 90000,
+  });
+  const [accessKeySource, setAccessKeySource] = useState<string>("");
+  const [secretKeySource, setSecretKeySource] = useState<string>("");
+
+  const fetchPoolSize = useCallback(async () => {
+    try {
+      const resp = await fetch("/api/providers/zai-web-free/pool-status", { cache: "no-store" });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      setPoolSize(typeof data.poolSize === "number" ? data.poolSize : 0);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const fetchKeySettings = useCallback(async () => {
+    try {
+      const resp = await fetch("/api/providers/zai-web-free/keys", { cache: "no-store" });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      setKeySettings({
+        accessKey: data.accessKey || "",
+        secretKey: data.secretKey || "",
+        minPoolSize: data.minPoolSize ?? 10,
+        autoRefreshEnabled: data.autoRefreshEnabled ?? true,
+        autoRefreshIntervalMs: data.autoRefreshIntervalMs ?? 300000,
+        captchaStrategy: data.captchaStrategy || "auto",
+        captchaRetries: data.captchaRetries ?? 2,
+        captchaTimeoutMs: data.captchaTimeoutMs ?? 90000,
+      });
+      setAccessKeySource(data.accessKeySource || "");
+      setSecretKeySource(data.secretKeySource || "");
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchPoolSize();
+    void fetchKeySettings();
+  }, [fetchPoolSize, fetchKeySettings]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const resp = await fetch("/api/providers/zai-web-free/refresh-tokens", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tokens: refreshOptions.tokens,
+          batches: refreshOptions.batches,
+          parallel: refreshOptions.parallel,
+          headed: refreshOptions.headed,
+          unsafe: refreshOptions.unsafe,
+        }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        throw new Error(data?.error || `HTTP ${resp.status}`);
+      }
+      notify.success(
+        `Device tokens refreshed: ${data.collected} collected, ${data.poolSize} in pool`
+      );
+      setPoolSize(data.poolSize);
+    } catch (error) {
+      notify.error(error instanceof Error ? error.message : "Failed to refresh device tokens");
+    } finally {
+      setRefreshing(false);
+    }
+  }, [notify, refreshOptions]);
+
+  const handleClear = useCallback(async () => {
+    if (!confirm("Clear all device tokens from the pool?")) return;
+    setClearing(true);
+    try {
+      const resp = await fetch("/api/providers/zai-web-free/clear-tokens", {
+        method: "POST",
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      notify.success(t("poolCleared"));
+      setPoolSize(0);
+    } catch (error) {
+      notify.error(error instanceof Error ? error.message : "Failed to clear tokens");
+    } finally {
+      setClearing(false);
+    }
+  }, [notify, t]);
+
+  const handleExtractKey = useCallback(async () => {
+    setExtractingKey(true);
+    try {
+      const resp = await fetch("/api/providers/zai-web-free/extract-key", {
+        method: "POST",
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        throw new Error(data?.error || `HTTP ${resp.status}`);
+      }
+      if (data.accessKey) {
+        setKeySettings((prev) => ({
+          ...prev,
+          accessKey: data.accessKey,
+          secretKey: data.secretKey || prev.secretKey,
+        }));
+        notify.success(
+          `AccessKey extracted${data.verified ? " and verified" : ""}: ${data.accessKey.slice(0, 12)}...`
+        );
+      } else {
+        notify.error(t("extractFailed"));
+      }
+    } catch (error) {
+      notify.error(error instanceof Error ? error.message : "Failed to extract key");
+    } finally {
+      setExtractingKey(false);
+    }
+  }, [notify, t]);
+
+  const handleSaveKeys = useCallback(async () => {
+    setSavingKeys(true);
+    try {
+      const resp = await fetch("/api/providers/zai-web-free/keys", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(keySettings),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        throw new Error(data?.error || `HTTP ${resp.status}`);
+      }
+      notify.success(t("settingsSaved"));
+    } catch (error) {
+      notify.error(error instanceof Error ? error.message : "Failed to save settings");
+    } finally {
+      setSavingKeys(false);
+    }
+  }, [notify, keySettings, t]);
+
+  const needsRefresh = poolSize !== null && poolSize < keySettings.minPoolSize;
+
+  return (
+    <div className="space-y-4">
+      <ZaiPrerequisiteBanner providerId="zai-web-free" showPoolWarning />
+      <div className="rounded-lg border border-blue-500/25 bg-blue-500/5 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="material-symbols-outlined text-[20px] text-blue-500">key</span>
+          <h3 className="text-sm font-medium text-text-main">{t("deviceTokenPool")}</h3>
+          {poolSize !== null && (
+            <span
+              className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                needsRefresh
+                  ? "bg-amber-500/20 text-amber-600"
+                  : "bg-emerald-500/20 text-emerald-600"
+              }`}
+            >
+              {poolSize} tokens{needsRefresh ? " (low)" : ""}
+            </span>
+          )}
+        </div>
+
+        <p className="text-xs text-text-muted mb-4">
+          {t("poolDescription")}
+          session. Click &quot;Refresh Device Tokens&quot; to launch a headless Chromium browser
+          that visits chat.z.ai and extracts fresh tokens. Each chat request consumes 1?��2 tokens.
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span className="material-symbols-outlined text-[16px]">
+              {refreshing ? "progress_activity" : "refresh"}
+            </span>
+            {refreshing ? t("collecting") : t("refreshDeviceTokens")}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowAdvanced((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-text-main transition hover:bg-surface-hover"
+          >
+            <span className="material-symbols-outlined text-[16px]">tune</span>
+            Options
+          </button>
+
+          {poolSize !== null && poolSize > 0 && (
+            <button
+              type="button"
+              onClick={handleClear}
+              disabled={clearing}
+              className="inline-flex items-center gap-1.5 rounded-md border border-red-500/30 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-500/10 disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined text-[16px]">
+                {clearing ? "progress_activity" : "delete"}
+              </span>
+              {clearing ? t("clearing") : t("clearPool")}
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleExtractKey}
+            disabled={extractingKey}
+            className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 px-3 py-1.5 text-xs font-medium text-purple-600 transition hover:bg-purple-500/10 disabled:opacity-50"
+            title="Extract Aliyun AccessKey from AliyunCaptcha.js (maintenance tool for when keys rotate)"
+          >
+            <span className="material-symbols-outlined text-[16px]">
+              {extractingKey ? "progress_activity" : "key"}
+            </span>
+            {extractingKey ? t("extracting") : t("extractAccessKey")}
+          </button>
+        </div>
+
+        {/* Aliyun Captcha Keys — always visible (no longer hidden behind Options toggle) */}
+        <div className="mt-4 space-y-2 rounded-md border border-purple-500/20 bg-purple-500/5 p-3">
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-purple-500">key</span>
+            <span className="text-xs font-semibold text-purple-700 dark:text-purple-400">
+              Aliyun Captcha Keys
+            </span>
+            {accessKeySource && (
+              <span
+                className={`ml-2 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
+                  accessKeySource === "env"
+                    ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                    : "bg-surface text-text-muted"
+                }`}
+                title={
+                  accessKeySource === "env"
+                    ? "Key is overridden by OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY env var"
+                    : "Key from DB-stored value or built-in default"
+                }
+              >
+                {accessKeySource === "env" ? "env override" : accessKeySource}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowKeySettings((v) => !v)}
+              className="ml-auto text-xs text-purple-600 hover:underline"
+            >
+              {showKeySettings ? "Hide" : "Edit"}
+            </button>
+          </div>
+
+          {showKeySettings ? (
+            <div className="space-y-2">
+              <label className="block">
+                <span className="text-xs font-medium text-text-muted">{t("accessKey")}</span>
+                <input
+                  type="text"
+                  value={keySettings.accessKey}
+                  onChange={(e) =>
+                    setKeySettings((prev) => ({ ...prev, accessKey: e.target.value }))
+                  }
+                  placeholder="LTAI..."
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm font-mono"
+                />
+              </label>
+              <label className="block">
+                <span className="text-xs font-medium text-text-muted">{t("secretKey")}</span>
+                <input
+                  type="text"
+                  value={keySettings.secretKey}
+                  onChange={(e) =>
+                    setKeySettings((prev) => ({ ...prev, secretKey: e.target.value }))
+                  }
+                  placeholder="YSKfst7..."
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm font-mono"
+                />
+              </label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleSaveKeys}
+                  disabled={savingKeys}
+                  className="inline-flex items-center gap-1 rounded-md bg-purple-600 px-3 py-1 text-xs font-medium text-white hover:bg-purple-700 disabled:opacity-50"
+                >
+                  {savingKeys ? t("saving") : t("saveKeys")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleExtractKey}
+                  disabled={extractingKey}
+                  className="inline-flex items-center gap-1 rounded-md border border-purple-500/30 px-3 py-1 text-xs font-medium text-purple-600 hover:bg-purple-500/10 disabled:opacity-50"
+                >
+                  {extractingKey ? t("extracting") : t("extractViaBrowser")}
+                </button>
+              </div>
+              {accessKeySource === "env" && (
+                <p className="rounded-md bg-amber-500/10 px-2 py-1 text-xs text-amber-700 dark:text-amber-300">
+                  <span className="font-semibold">Note:</span> An env var (
+                  <code className="font-mono">OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY</code>) is overriding
+                  the DB value. To use the DB-stored key instead, unset the env var.
+                </p>
+              )}
+              <p className="text-xs text-text-subtle">
+                {t("ifAliyunRotatesKeys")}
+                GLM-Free-API Go source.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-1 text-xs text-text-muted">
+              <div className="flex items-center gap-2">
+                <span className="text-text-subtle">AccessKey:</span>
+                <code className="font-mono">
+                  {keySettings.accessKey ? keySettings.accessKey.slice(0, 12) + "..." : "not set"}
+                </code>
+                {accessKeySource === "env" && (
+                  <span className="text-[10px] text-emerald-600">(env override)</span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-text-subtle">SecretKey:</span>
+                <code className="font-mono">
+                  {keySettings.secretKey ? keySettings.secretKey.slice(0, 8) + "..." : "not set"}
+                </code>
+                {secretKeySource === "env" && (
+                  <span className="text-[10px] text-emerald-600">(env override)</span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {showAdvanced && (
+          <div className="mt-4 space-y-3 rounded-md border border-border bg-surface p-3">
+            {/* Captcha Strategy settings */}
+            <div className="space-y-2 rounded-md border border-amber-500/20 bg-amber-500/5 p-3">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px] text-amber-500">shield</span>
+                <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                  Captcha Strategy
+                </span>
+              </div>
+              <label className="block">
+                <span className="text-xs font-medium text-text-muted">{t("strategy")}</span>
+                <select
+                  value={keySettings.captchaStrategy}
+                  onChange={(e) =>
+                    setKeySettings((prev) => ({ ...prev, captchaStrategy: e.target.value }))
+                  }
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                >
+                  <option value="auto">{t("strategyAuto")}</option>
+                  <option value="a_only">{t("strategyAOnly")}</option>
+                  <option value="b_only">{t("strategyBOnly")}</option>
+                  <option value="c_only">{t("strategyCOnly")}</option>
+                  <option value="a_then_c">{t("strategyAThenC")}</option>
+                  <option value="a_then_b">{t("strategyAThenB")}</option>
+                </select>
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="block">
+                  <span className="text-xs font-medium text-text-muted">Retries per method</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={10}
+                    value={keySettings.captchaRetries}
+                    onChange={(e) =>
+                      setKeySettings((prev) => ({
+                        ...prev,
+                        captchaRetries: Math.max(1, Math.min(10, Number(e.target.value) || 2)),
+                      }))
+                    }
+                    className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs font-medium text-text-muted">
+                    Timeout (seconds, 0 = no timeout)
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    max={300}
+                    value={Math.round(keySettings.captchaTimeoutMs / 1000)}
+                    onChange={(e) =>
+                      setKeySettings((prev) => ({
+                        ...prev,
+                        captchaTimeoutMs:
+                          Math.max(0, Math.min(300, Number(e.target.value) || 90)) * 1000,
+                      }))
+                    }
+                    className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  />
+                </label>
+              </div>
+              <p className="text-xs text-text-subtle">
+                <strong>A:</strong> Server-side crypto with pool tokens (~2s). <strong>B:</strong>{" "}
+                Fresh token via Playwright + A (~5s). <strong>C:</strong> Full browser captcha
+                (~10s, most reliable).
+              </p>
+            </div>
+
+            {/* Auto-refresh settings */}
+            <div className="space-y-2 rounded-md border border-blue-500/20 bg-blue-500/5 p-3">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px] text-blue-500">
+                  autorenew
+                </span>
+                <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+                  Auto-Refresh Settings
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="block">
+                  <span className="text-xs font-medium text-text-muted">{t("minPoolSize")}</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={1000}
+                    value={keySettings.minPoolSize}
+                    onChange={(e) =>
+                      setKeySettings((prev) => ({
+                        ...prev,
+                        minPoolSize: Math.max(1, Math.min(1000, Number(e.target.value) || 10)),
+                      }))
+                    }
+                    className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-xs font-medium text-text-muted">
+                    Check Interval (minutes)
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={60}
+                    value={Math.round(keySettings.autoRefreshIntervalMs / 60000)}
+                    onChange={(e) =>
+                      setKeySettings((prev) => ({
+                        ...prev,
+                        autoRefreshIntervalMs:
+                          Math.max(1, Math.min(60, Number(e.target.value) || 5)) * 60000,
+                      }))
+                    }
+                    className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  />
+                </label>
+              </div>
+              <label className="flex items-center gap-2 text-xs text-text-muted">
+                <input
+                  type="checkbox"
+                  checked={keySettings.autoRefreshEnabled}
+                  onChange={(e) =>
+                    setKeySettings((prev) => ({ ...prev, autoRefreshEnabled: e.target.checked }))
+                  }
+                  className="rounded"
+                />
+                {t("autoRefreshWhenLow")}
+              </label>
+              <p className="text-xs text-text-subtle">
+                {t("autoRefreshDescription", {
+                  interval: Math.round(keySettings.autoRefreshIntervalMs / 60000),
+                  minPoolSize: keySettings.minPoolSize,
+                })}{" "}
+                {Math.round(keySettings.autoRefreshIntervalMs / 60000)} min. If pool &lt;{" "}
+                {keySettings.minPoolSize}, it automatically collects fresh tokens via Playwright.
+              </p>
+            </div>
+
+            {/* Unsafe mode toggle */}
+            <label className="flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2.5">
+              <input
+                type="checkbox"
+                checked={refreshOptions.unsafe}
+                onChange={(e) =>
+                  setRefreshOptions((prev) => ({ ...prev, unsafe: e.target.checked }))
+                }
+                className="mt-0.5 rounded"
+              />
+              <div className="flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                    Unsafe Mode
+                  </span>
+                  <span className="material-symbols-outlined text-[14px] text-amber-600">
+                    warning
+                  </span>
+                </div>
+                <p className="mt-0.5 text-xs text-text-muted">
+                  Raises limits to <strong>1500 tokens/batch</strong>, <strong>25 batches</strong>,{" "}
+                  <strong>5 parallel workers</strong> (max 37,500 tokens per run).{" "}
+                  <strong>WARNING:</strong> increases risk of Z.AI flagging the browser fingerprint
+                  and temporarily banning your IP. Only use when the pool is critically low and you
+                  need a large replenishment in one shot.
+                </p>
+              </div>
+            </label>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <label className="block">
+                <span className="text-xs font-medium text-text-muted">
+                  Tokens per batch{" "}
+                  <span className="text-text-subtle">
+                    (max {refreshOptions.unsafe ? 1500 : 1250})
+                  </span>
+                </span>
+                <input
+                  type="number"
+                  min={50}
+                  max={refreshOptions.unsafe ? 1500 : 1250}
+                  value={refreshOptions.tokens}
+                  onChange={(e) =>
+                    setRefreshOptions((prev) => ({
+                      ...prev,
+                      tokens: Math.min(
+                        refreshOptions.unsafe ? 1500 : 1250,
+                        Math.max(50, Number(e.target.value) || 750)
+                      ),
+                    }))
+                  }
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                />
+              </label>
+              <label className="block">
+                <span className="text-xs font-medium text-text-muted">
+                  Batches{" "}
+                  <span className="text-text-subtle">(max {refreshOptions.unsafe ? 25 : 9})</span>
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  max={refreshOptions.unsafe ? 25 : 9}
+                  value={refreshOptions.batches}
+                  onChange={(e) =>
+                    setRefreshOptions((prev) => ({
+                      ...prev,
+                      batches: Math.min(
+                        refreshOptions.unsafe ? 25 : 9,
+                        Math.max(1, Number(e.target.value) || 3)
+                      ),
+                    }))
+                  }
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                />
+              </label>
+              <label className="block">
+                <span className="text-xs font-medium text-text-muted">
+                  Parallel workers{" "}
+                  <span className="text-text-subtle">(max {refreshOptions.unsafe ? 5 : 3})</span>
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  max={refreshOptions.unsafe ? 5 : 3}
+                  value={refreshOptions.parallel}
+                  onChange={(e) =>
+                    setRefreshOptions((prev) => ({
+                      ...prev,
+                      parallel: Math.min(
+                        refreshOptions.unsafe ? 5 : 3,
+                        Math.max(1, Number(e.target.value) || 1)
+                      ),
+                    }))
+                  }
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                />
+              </label>
+            </div>
+            <label className="flex items-center gap-2 text-xs text-text-muted">
+              <input
+                type="checkbox"
+                checked={refreshOptions.headed}
+                onChange={(e) =>
+                  setRefreshOptions((prev) => ({ ...prev, headed: e.target.checked }))
+                }
+                className="rounded"
+              />
+              {t("showBrowserWindow")}
+            </label>
+
+            {/* Proxy info */}
+            <div className="rounded-md border border-blue-500/20 bg-blue-500/5 px-3 py-2 text-xs text-text-muted">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[14px] text-blue-500">shield</span>
+                <span className="font-medium text-text-main">{t("proxy")}</span>
+                <span className="ml-auto text-text-subtle">{t("proxyUsesGlobal")}</span>
+              </div>
+              <p className="mt-1">
+                {t("proxyDescription")}
+                RouteChi&apos;s Proxies ?�� Global settings. No separate proxy configuration needed
+                ?�� if a global proxy is set, it&apos;s used; otherwise the browser connects
+                directly.
+              </p>
+            </div>
+
+            <p className="text-xs text-text-muted">
+              <strong>Note:</strong> {t("playwrightNote")} (
+              <code className="rounded bg-surface px-1">npx playwright install chromium</code>).
+              Each batch takes ~30s. Total: ~{refreshOptions.batches * 30}s
+              {refreshOptions.parallel > 1
+                ? ` (parallel ?�${Math.min(refreshOptions.parallel, refreshOptions.batches)})`
+                : ""}
+              .{" "}
+              {refreshOptions.unsafe && (
+                <span className="font-semibold text-amber-600">
+                  Max tokens this run: {refreshOptions.tokens * refreshOptions.batches}
+                </span>
+              )}
+            </p>
+
+            {/* Save button for Captcha Strategy + Auto-Refresh settings */}
+            <div className="flex items-center gap-2 border-t border-border pt-3">
+              <button
+                type="button"
+                onClick={handleSaveKeys}
+                disabled={savingKeys}
+                className="inline-flex items-center gap-1.5 rounded-md bg-amber-600 px-4 py-2 text-xs font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  {savingKeys ? "progress_activity" : "save"}
+                </span>
+                {savingKeys ? t("saving") : t("saveSettings")}
+              </button>
+              <span className="text-xs text-text-subtle">{t("saveSettingsDescription")}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -159,6 +159,44 @@ export const NOAUTH_PROVIDERS = {
       text: "AI Horde routes to volunteer-run workers, so responses can take minutes and tool calling is unavailable. Model availability changes as workers come and go.",
     },
   },
+  "kilo-free": {
+    id: "kilo-free",
+    alias: "kilofree",
+    name: "Kilo Free (OpenRouter)",
+    icon: "terminal",
+    color: "#10B981",
+    textIcon: "KF",
+    website: "https://api.kilo.ai",
+    noAuth: true,
+    hasFree: true,
+    passthroughModels: true,
+    serviceKinds: ["llm"],
+    authHint:
+      "No API key required — uses Kilo's public OpenRouter endpoint with `Authorization: Bearer anonymous` for free models (suffixed `:free`).",
+    freeNote:
+      "Free models are auto-discovered from /models. The default `kilo-auto/free` model auto-routes to the best available free backend per request.",
+  },
+  "zai-web-free": {
+    id: "zai-web-free",
+    alias: "zaifree",
+    name: "Z.AI Web Free (Captcha)",
+    icon: "auto_awesome",
+    color: "#2563EB",
+    textIcon: "ZF",
+    website: "https://chat.z.ai",
+    noAuth: true,
+    hasFree: true,
+    serviceKinds: ["llm"],
+    authHint:
+      "No API key required — uses Z.AI's free guest JWT (chat.z.ai/api/v2/chat/completions) with Aliyun CaptchaV3 verification. Optional: paste a Z.AI JWT to unlock all models (zai-web-token).",
+    freeNote:
+      "Free guest access to GLM-4.7 via chat.z.ai web endpoint. Requires Aliyun AccessKey/SecretKey (defaults ship with the public values embedded in chat.z.ai's AliyunCaptcha.js). Device tokens are auto-collected via Playwright.",
+    notice: {
+      text:
+        "Captcha-based provider — every request consumes a device token from the pool. " +
+        "Refresh tokens periodically via the dashboard. Tool calling is not supported by the web endpoint.",
+    },
+  },
 };
 
 // Provider-level proxy controls are exposed only for transports whose complete
