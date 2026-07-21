@@ -98,7 +98,7 @@ export type ProviderModelsConfigEntry = {
   buildHeaders?: (
     token: string,
     connection?: ProviderModelsHeaderContext
-  ) => Record<string, string>;
+  ) => Record<string, string> | Promise<Record<string, string>>;
   parseResponse: (data: any) => any;
 };
 
@@ -322,6 +322,145 @@ const KIMI_CODING_MODELS_CONFIG: ProviderModelsConfigEntry = {
   parseResponse: parseKimiCodingModels,
 };
 
+// ── Z.AI web free / token: shared parser + Guest JWT minting ─────────────────
+// Used by both zai-web-free (Guest JWT) and zai-web-token (user JWT) providers.
+// Parses chat.z.ai/api/models response shape {data: {data: [...]}} or {data: [...]}
+// and preserves supportedThinkingEfforts + defaultThinkingEffort across multiple
+// upstream shapes (flat, nested reasoning.supported_efforts #7694, etc.).
+function makeZaiWebDiscoveryParser(defaultOwnedBy: string) {
+  return function parseZaiWebDiscoveryResponse(data: any): any[] {
+    const innerData = data?.data?.data || data?.data || [];
+    return (Array.isArray(innerData) ? innerData : [])
+      .map((item: any) => {
+        const out: Record<string, unknown> = {
+          id: item.id || item.name,
+          name: item.name || item.id,
+          owned_by: item.owned_by || defaultOwnedBy,
+        };
+        // Z.AI may expose effort tiers in several shapes; pass through whatever
+        // is present so modelDiscovery.ts (#7694) can normalize them onto the
+        // canonical vocabulary.
+        if (Array.isArray(item.supportedThinkingEfforts)) {
+          out.supportedThinkingEfforts = item.supportedThinkingEfforts.filter(
+            (e: unknown): e is string => typeof e === "string" && e.length > 0
+          );
+        }
+        if (Array.isArray(item.thinking_efforts)) {
+          out.supportedThinkingEfforts = item.thinking_efforts.filter(
+            (e: unknown): e is string => typeof e === "string" && e.length > 0
+          );
+        }
+        if (typeof item.defaultThinkingEffort === "string") {
+          out.defaultThinkingEffort = item.defaultThinkingEffort;
+        }
+        // Nested reasoning.supported_efforts (#7694 shape)
+        if (item.reasoning && typeof item.reasoning === "object") {
+          const r = item.reasoning as { supported_efforts?: unknown; default_effort?: unknown };
+          if (Array.isArray(r.supported_efforts)) {
+            out.supportedThinkingEfforts = r.supported_efforts.filter(
+              (e: unknown): e is string => typeof e === "string" && e.length > 0
+            );
+          }
+          if (typeof r.default_effort === "string") {
+            out.defaultThinkingEffort = r.default_effort;
+          }
+        }
+        return out;
+      })
+      .filter((m: any) => m.id);
+  };
+}
+
+const parseZaiWebFreeDiscoveryResponse = makeZaiWebDiscoveryParser("zai-web-free");
+const parseZaiWebTokenDiscoveryResponse = makeZaiWebDiscoveryParser("zai-web-token");
+
+// In-process cache for the Guest JWT (avoids re-minting on every discovery call).
+let _cachedGuestJwt: string | null = null;
+let _cachedGuestJwtExpiresAt = 0;
+const GUEST_JWT_TTL_MS = 23 * 60 * 60 * 1000; // 23h (Z.AI Guest JWTs last ~24h)
+
+/**
+ * Mint (or return cached) Z.AI Guest JWT via /api/v1/auths/.
+ *
+ * The Guest JWT is auto-minted by the executor for zai-web-free (authType: "none").
+ * For model discovery, we need a JWT too; this helper mints one on-the-fly and
+ * caches it for 23h to avoid re-minting on every discovery call.
+ *
+ * Flow (matches open-sse/executors/zai-web-free/session.ts):
+ *   1. GET /api/v1/auths/ — returns { token: "<jwt>" } if a guest session exists
+ *   2. If no token, POST /api/v1/auths/guest (init) then retry GET /api/v1/auths/
+ *
+ * Returns null on failure (caller falls back to static models).
+ */
+async function getOrCreateGuestJwt(): Promise<string | null> {
+  // Return cached JWT if still valid
+  if (_cachedGuestJwt && Date.now() < _cachedGuestJwtExpiresAt) {
+    return _cachedGuestJwt;
+  }
+
+  const ZAI_BASE = "https://chat.z.ai";
+  const UA =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36";
+
+  try {
+    // Step 1: try GET /api/v1/auths/ (returns existing guest JWT if any)
+    let resp = await fetch(`${ZAI_BASE}/api/v1/auths/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": UA,
+        Origin: ZAI_BASE,
+        "x-region": "overseas",
+      },
+    });
+    let jwt: string | null = null;
+    if (resp.ok) {
+      const data = (await resp.json().catch(() => ({}))) as { token?: string };
+      jwt = data.token || null;
+    }
+
+    // Step 2: if no JWT, fire-and-forget POST /api/v1/auths/guest then retry GET
+    if (!jwt) {
+      try {
+        await fetch(`${ZAI_BASE}/api/v1/auths/guest`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "User-Agent": UA,
+            Origin: ZAI_BASE,
+            "x-region": "overseas",
+          },
+          body: JSON.stringify({}),
+        }).catch(() => {}); // fire-and-forget
+      } catch {
+        // ignore — best effort
+      }
+      resp = await fetch(`${ZAI_BASE}/api/v1/auths/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": UA,
+          Origin: ZAI_BASE,
+          "x-region": "overseas",
+        },
+      });
+      if (resp.ok) {
+        const data = (await resp.json().catch(() => ({}))) as { token?: string };
+        jwt = data.token || null;
+      }
+    }
+
+    if (jwt) {
+      _cachedGuestJwt = jwt;
+      _cachedGuestJwtExpiresAt = Date.now() + GUEST_JWT_TTL_MS;
+      return jwt;
+    }
+    return null;
+  } catch {
+    return null; // caller falls back to static models
+  }
+}
+
 // Provider models endpoints configuration
 export const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> = {
   alibaba: ALIBABA_MODEL_STUDIO_MODELS_CONFIG,
@@ -417,50 +556,36 @@ export const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> =
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     }),
-    parseResponse: (data) => {
-      const innerData = data?.data?.data || data?.data || [];
-      return (Array.isArray(innerData) ? innerData : [])
-        .map((item: any) => {
-          // Preserve supportedThinkingEfforts + defaultThinkingEffort if upstream
-          // exposes them — the catalog builder + syncedEffortVariants.ts will
-          // surface them as capabilities.effort_tiers and per-tier catalog entries.
-          const out: Record<string, unknown> = {
-            id: item.id || item.name,
-            name: item.name || item.id,
-            owned_by: item.owned_by || "zai-web-token",
-          };
-          // Z.AI may expose effort tiers in several shapes; pass through whatever
-          // is present so modelDiscovery.ts (#7694) can normalize them onto the
-          // canonical vocabulary.
-          if (Array.isArray(item.supportedThinkingEfforts)) {
-            out.supportedThinkingEfforts = item.supportedThinkingEfforts.filter(
-              (e: unknown): e is string => typeof e === "string" && e.length > 0
-            );
-          }
-          if (Array.isArray(item.thinking_efforts)) {
-            out.supportedThinkingEfforts = item.thinking_efforts.filter(
-              (e: unknown): e is string => typeof e === "string" && e.length > 0
-            );
-          }
-          if (typeof item.defaultThinkingEffort === "string") {
-            out.defaultThinkingEffort = item.defaultThinkingEffort;
-          }
-          // Nested reasoning.supported_efforts (#7694 shape)
-          if (item.reasoning && typeof item.reasoning === "object") {
-            const r = item.reasoning as { supported_efforts?: unknown; default_effort?: unknown };
-            if (Array.isArray(r.supported_efforts)) {
-              out.supportedThinkingEfforts = r.supported_efforts.filter(
-                (e: unknown): e is string => typeof e === "string" && e.length > 0
-              );
-            }
-            if (typeof r.default_effort === "string") {
-              out.defaultThinkingEffort = r.default_effort;
-            }
-          }
-          return out;
-        })
-        .filter((m: any) => m.id);
+    parseResponse: parseZaiWebTokenDiscoveryResponse,
+  },
+  // zai-web-free: same endpoint as zai-web-token, but the credential field is
+  // empty (authType: "none") — the Guest JWT is auto-minted by the executor
+  // via /api/v1/auths/. For discovery, we need a JWT too; since the user
+  // hasn't supplied one, we mint a fresh Guest JWT on-the-fly here.
+  //
+  // IMPORTANT: Guest JWT sessions only allow the `glm-4.7` model. Discovery
+  // may return additional models (glm-5.2, GLM-5.1, etc.) but chat requests
+  // to them will fail with 403/405. Users who want all models must use the
+  // `zai-web-token` sibling provider with their personal Z.AI JWT.
+  //
+  // Live tests (2026-07-21) confirmed all 5 effort levels work on glm-4.7
+  // with Guest JWT — see all-providers-thinking-efforts-report.json.
+  "zai-web-free": {
+    url: "https://chat.z.ai/api/models",
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    // buildHeaders is invoked with the connection's credential token, which
+    // is empty for zai-web-free (authType: "none"). We mint a Guest JWT
+    // on-the-fly via /api/v1/auths/. The Guest JWT is cached per-process
+    // (TTL ~24h) to avoid re-minting on every discovery call.
+    buildHeaders: async (_token: string) => {
+      const jwt = await getOrCreateGuestJwt();
+      return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      };
     },
+    parseResponse: parseZaiWebFreeDiscoveryResponse,
   },
   antigravity: {
     url: getAntigravityModelsDiscoveryUrls()[0],

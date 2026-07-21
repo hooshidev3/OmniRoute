@@ -2072,9 +2072,9 @@ export async function GET(
       url += `${url.includes("?") ? "&" : "?"}${config.authQuery}=${token}`;
     }
 
-    // Build headers
+    // Build headers (may be async — e.g. zai-web-free mints a Guest JWT on-the-fly)
     const headers = config.buildHeaders
-      ? config.buildHeaders(token, connection)
+      ? await config.buildHeaders(token, connection)
       : { ...config.headers };
     if (!config.buildHeaders && config.authHeader && !config.authQuery) {
       headers[config.authHeader] = (config.authPrefix || "") + token;
