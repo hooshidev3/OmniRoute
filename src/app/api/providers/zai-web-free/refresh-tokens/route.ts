@@ -13,7 +13,7 @@ import { resolveProxyForScopeFromRegistry } from "@/lib/localDb";
 const log = logger("ZAI-WEB-FREE-ADMIN");
 
 /**
- * Convert an RouteChi proxy config object to a URL string that Playwright
+ * Convert an OmniRoute proxy config object to a URL string that Playwright
  * can consume. Supports HTTP, HTTPS, and SOCKS5 proxies with optional auth.
  *
  * The proxy config shape (from `resolveProxyForScopeFromRegistry`):
@@ -77,11 +77,12 @@ function proxyConfigToUrl(
  *
  * Body (all optional):
  *   {
- *     "tokens": 750,     // tokens per batch (default 750, max 1250 or 1500 if unsafe)
- *     "batches": 3,      // number of batches (default 3, max 9 or 25 if unsafe)
- *     "parallel": 1,     // parallel browser pages (default 1, max 3 or 5 if unsafe)
- *     "headed": false,   // show browser window (default false)
- *     "unsafe": false    // raise limits to 1500/25/5 (default false, use with caution)
+ *     "tokens": 750,         // tokens per batch (default 750, max 1250 or 1500 if unsafe)
+ *     "batches": 3,          // number of batches (default 3, max 9 or 25 if unsafe)
+ *     "parallel": 1,         // parallel browser pages (default 1, max 3 or 5 if unsafe)
+ *     "headed": false,       // show browser window (default false)
+ *     "unsafe": false,       // raise limits to 1500/25/5 (default false, use with caution)
+ *     "blockTrackers": true  // apply network allowlist (default true; disable if CDN changes)
  *   }
  *
  * Returns:
@@ -111,6 +112,7 @@ export async function POST(request: Request) {
     parallel?: number;
     headed?: boolean;
     unsafe?: boolean;
+    blockTrackers?: boolean;
   } = {};
   try {
     const text = await request.text();
@@ -156,6 +158,7 @@ export async function POST(request: Request) {
     parallel: body.parallel,
     headed: body.headed,
     unsafe: body.unsafe,
+    blockTrackers: body.blockTrackers ?? true,
     proxy: proxyUrl ? "configured" : "direct",
   });
 
@@ -166,6 +169,7 @@ export async function POST(request: Request) {
       parallel: body.parallel,
       headed: body.headed,
       unsafe: body.unsafe,
+      blockTrackers: body.blockTrackers ?? true, // default: on
       proxyUrl,
       addTokens: addDeviceTokens,
       getPoolSize,

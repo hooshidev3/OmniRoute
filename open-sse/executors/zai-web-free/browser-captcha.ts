@@ -24,6 +24,7 @@
  */
 
 import { logger } from "../../utils/logger.ts";
+import { urlAllowed } from "./token-collector.ts";
 
 const log = logger("ZAI-WEB-FREE-BROWSER");
 
@@ -59,6 +60,37 @@ const chromiumPerfArgs: string[] = [
   "--use-mock-keychain",
 ];
 
+// ── Network allowlist helper (ported from GLM-Free-API captcha.go commit b100b28)
+// Applied by default to every Playwright context used for browser-captcha.
+// Blocks trackers/analytics/ads during page load to reduce load time by ~50-60%.
+//
+// Errors during route setup are non-fatal — captcha collection continues
+// without the filter rather than failing the whole request.
+async function applyAllowlistToContext(
+  context: {
+    route(pattern: string, handler: (route: unknown) => Promise<void>): Promise<unknown>;
+  },
+  blockTrackers: boolean
+): Promise<void> {
+  if (!blockTrackers) return;
+  try {
+    await context.route("**/*", async (route: unknown) => {
+      const r = route as {
+        request(): { url(): string };
+        continue(): Promise<void>;
+        abort(): Promise<void>;
+      };
+      if (urlAllowed(r.request().url())) {
+        await r.continue();
+      } else {
+        await r.abort();
+      }
+    });
+  } catch {
+    // Non-fatal: continue without filter if route setup fails
+  }
+}
+
 // ── Single-slot semaphore ────────────────────────────────────────────────────
 // Ensures only one Playwright browser launches at a time. Prevents OOM under
 // burst load (e.g. 10 concurrent requests all hitting Method B/C fallback).
@@ -93,7 +125,7 @@ async function withBrowserLock<T>(fn: () => Promise<T>): Promise<T> {
  * @throws If Playwright is not installed, the page fails to load, or
  *   the captcha param cannot be extracted within 30s.
  */
-export async function getCaptchaParamViaBrowser(): Promise<string> {
+export async function getCaptchaParamViaBrowser(blockTrackers: boolean = true): Promise<string> {
   return withBrowserLock(async () => {
     // Dynamic import — playwright is a heavy dependency
     const { chromium } = await import("playwright");
@@ -105,6 +137,14 @@ export async function getCaptchaParamViaBrowser(): Promise<string> {
     const page = await context.newPage();
 
     try {
+      // Apply network allowlist (default: on) — blocks trackers/analytics/ads
+      await applyAllowlistToContext(
+        context as unknown as {
+          route(p: string, h: (r: unknown) => Promise<void>): Promise<unknown>;
+        },
+        blockTrackers
+      );
+
       // Intercept the chat completions request to extract captcha_verify_param
       let captchaParam: string | null = null;
 
@@ -169,7 +209,9 @@ export async function getCaptchaParamViaBrowser(): Promise<string> {
  * @returns {Promise<string>} A fresh device token.
  * @throws If Playwright is not installed or the page fails to load.
  */
-export async function getFreshDeviceTokenViaBrowser(): Promise<string> {
+export async function getFreshDeviceTokenViaBrowser(
+  blockTrackers: boolean = true
+): Promise<string> {
   return withBrowserLock(async () => {
     const { chromium } = await import("playwright");
 
@@ -179,6 +221,28 @@ export async function getFreshDeviceTokenViaBrowser(): Promise<string> {
     const page = await browser.newPage();
 
     try {
+      // Apply network allowlist (default: on) — blocks trackers/analytics/ads
+      try {
+        if (blockTrackers) {
+          await (
+            page as unknown as { route(p: string, h: (r: unknown) => Promise<void>): Promise<void> }
+          ).route("**/*", async (route: unknown) => {
+            const r = route as {
+              request(): { url(): string };
+              continue(): Promise<void>;
+              abort(): Promise<void>;
+            };
+            if (urlAllowed(r.request().url())) {
+              await r.continue();
+            } else {
+              await r.abort();
+            }
+          });
+        }
+      } catch {
+        // Non-fatal
+      }
+
       await page.goto(ZAI_URL, {
         waitUntil: "domcontentloaded",
         timeout: 60000,

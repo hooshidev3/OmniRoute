@@ -1,12 +1,25 @@
 /**
- * Z.AI device-token collector ?�� Playwright-based token farm.
+ * Z.AI device-token collector - Playwright-based token farm.
  *
  * Ported from GLM-Free-API's init.go. Visits https://chat.z.ai in a headless
  * Chromium browser, fills the chat input with a placeholder, waits for the
  * token endpoint to initialize, then extracts `window.z_um.getToken()` values.
  *
  * `playwright` is imported dynamically so it doesn't add to server startup
- * time ?�� only loaded when the refresh endpoint is actually called.
+ * time - only loaded when the refresh endpoint is actually called.
+ *
+ * ## Network Allowlist (ported from GLM-Free-API captcha.go commit b100b28)
+ *
+ * By default, a surgical URL filter is applied to the Playwright page: only
+ * requests to chat.z.ai itself, the Aliyun Captcha script, and a small set
+ * of captcha-related CDN endpoints are allowed. All other requests
+ * (analytics, trackers, ads, fonts, images) are aborted. This reduces page
+ * load time by ~50-60% and cuts bandwidth by ~80%.
+ *
+ * The filter is **on by default**. Operators can disable it from the dashboard
+ * by passing `blockTrackers: false` to `refreshDeviceTokens()` (e.g. if a CDN
+ * changes and the allowlist becomes too strict, the dashboard toggle lets
+ * operators fall back to unfiltered browsing without a code change).
  *
  * @module zai-web-free/token-collector
  */
@@ -25,6 +38,85 @@ const MAX_RETRIES = 3;
 const TOKEN_COLLECTION_TIMEOUT_MS = 90_000;
 const MAX_PARALLEL = 3;
 const UNSAFE_MAX_PARALLEL = 5;
+
+// ── Network allowlist (ported from GLM-Free-API captcha.go commit b100b28) ───
+// Surgical URL filter - blocks trackers/analytics/ads during token collection
+// to reduce page-load time and bandwidth.
+//
+// Pre-compiled regex patterns for wildcard rules only. Simple prefix/exact
+// rules use string startsWith / === (no regex overhead).
+const RE_Z_CDN =
+  /^https:\/\/z-cdn\.chatglm\.cn\/z-ai\/frontend\/prod-fe-[^/]+\/assets\/index-[^/]+\.js$/;
+const RE_CLOUD_AUTH = /^https:\/\/cloudauth-device-dualstack\.[^/]*aliyuncs\.com\//;
+const RE_FEILIN =
+  /^https:\/\/g\.alicdn\.com\/captcha-frontend\/FeiLin\/[^/]+\/feilin[^/]*\.[^/]*\.js$/;
+
+/**
+ * Check a URL against the network allowlist.
+ *
+ * Five URL categories are allowed (matches the Go reference implementation):
+ *   1. https://chat.z.ai/ (and wss:// for WebSocket upgrades)
+ *   2. https://z-cdn.chatglm.cn/z-ai/frontend/prod-fe-X/assets/index-Y.js
+ *      (X and Y are wildcards matched by RE_Z_CDN)
+ *   3. https://o.alicdn.com/captcha-frontend/aliyunCaptcha/AliyunCaptcha.js
+ *      (exact match, no regex)
+ *   4. https://cloudauth-device-dualstack.REGION.aliyuncs.com/
+ *      (REGION is a wildcard matched by RE_CLOUD_AUTH)
+ *   5. https://g.alicdn.com/captcha-frontend/FeiLin/VERSION/feilinNAME.EXT.js
+ *      (VERSION, NAME, EXT are wildcards matched by RE_FEILIN)
+ *
+ * Fast path: prefix checks via `startsWith` (~5 ns each).
+ * Slow path: regex only for wildcard patterns (3 of 5 rules).
+ * Switch short-circuits on first match - most requests are decided in
+ * O(prefix_length) without ever touching the regex engine.
+ *
+ * Pure and unit-testable. Exported for testing.
+ */
+export function urlAllowed(u: string): boolean {
+  // 1. Entire chat.z.ai domain - also allow wss:// for WebSocket upgrades
+  if (u.startsWith("https://chat.z.ai/") || u.startsWith("wss://chat.z.ai/")) return true;
+  // 2. z-cdn build assets (prefix filter -> regex confirm)
+  if (u.startsWith("https://z-cdn.chatglm.cn/z-ai/frontend/prod-fe-") && RE_Z_CDN.test(u))
+    return true;
+  // 3. Exact Aliyun captcha script (string equality, no regex)
+  if (u === "https://o.alicdn.com/captcha-frontend/aliyunCaptcha/AliyunCaptcha.js") return true;
+  // 4. cloudauth-device-dualstack.*.aliyuncs.com (prefix filter -> regex confirm)
+  if (u.startsWith("https://cloudauth-device-dualstack.") && RE_CLOUD_AUTH.test(u)) return true;
+  // 5. FeiLin captcha assets (prefix filter -> regex confirm)
+  if (u.startsWith("https://g.alicdn.com/captcha-frontend/FeiLin/") && RE_FEILIN.test(u))
+    return true;
+  return false;
+}
+
+type PlaywrightRoute = {
+  request(): { url(): string };
+  continue(): Promise<void>;
+  abort(): Promise<void>;
+};
+
+/**
+ * Apply the network allowlist to a Playwright page.
+ *
+ * When `blockTrackers` is true (default), every request not on the allowlist
+ * is aborted. When false, the page is left unfiltered.
+ *
+ * Errors during route setup are non-fatal - token collection continues
+ * without the filter rather than failing the whole refresh.
+ */
+async function applyNetworkAllowlist(page: PlaywrightPage, blockTrackers: boolean): Promise<void> {
+  if (!blockTrackers) return;
+  try {
+    await page.route("**/*", async (route: PlaywrightRoute) => {
+      if (urlAllowed(route.request().url())) {
+        await route.continue();
+      } else {
+        await route.abort();
+      }
+    });
+  } catch {
+    // Non-fatal: continue without filter if route setup fails
+  }
+}
 
 /** Resolved limits based on the `unsafe` flag. */
 interface CollectionLimits {
@@ -53,6 +145,7 @@ type PlaywrightPage = {
   evaluate<T>(fn: (args: unknown) => T | Promise<T>, arg?: unknown): Promise<T>;
   waitForTimeout(ms: number): Promise<void>;
   close(): Promise<void>;
+  route(pattern: string, handler: (route: PlaywrightRoute) => Promise<void>): Promise<void>;
 };
 type PlaywrightBrowser = {
   newPage(): Promise<PlaywrightPage>;
@@ -62,7 +155,14 @@ type PlaywrightBrowser = {
 /**
  * Collect `total` device tokens from a single browser page.
  */
-async function collectTokensOnPage(page: PlaywrightPage, total: number): Promise<string[]> {
+async function collectTokensOnPage(
+  page: PlaywrightPage,
+  total: number,
+  blockTrackers: boolean = true
+): Promise<string[]> {
+  // Apply network allowlist before navigation (default: on)
+  await applyNetworkAllowlist(page, blockTrackers);
+
   await page.goto(ZAI_URL, {
     waitUntil: "domcontentloaded",
     timeout: 60000,
@@ -124,13 +224,14 @@ async function collectTokensOnPage(page: PlaywrightPage, total: number): Promise
 async function runBatch(
   browser: PlaywrightBrowser,
   total: number,
-  batchNum: number
+  batchNum: number,
+  blockTrackers: boolean = true
 ): Promise<string[]> {
   let lastErr: unknown;
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     const page = await browser.newPage();
     try {
-      const tokens = await collectTokensOnPage(page, total);
+      const tokens = await collectTokensOnPage(page, total, blockTrackers);
       await page.close();
       return tokens;
     } catch (err) {
@@ -169,6 +270,15 @@ export interface RefreshOptions {
    * has its own network stack and needs an explicit `--proxy-server` flag.
    */
   proxyUrl?: string;
+  /**
+   * When true (default), apply the network allowlist to block trackers,
+   * analytics, and ads during Playwright token collection. This reduces
+   * page-load time by ~50-60% and bandwidth by ~80%.
+   *
+   * Operators can disable it from the dashboard if a CDN changes and the
+   * allowlist becomes too strict (rare).
+   */
+  blockTrackers?: boolean;
   addTokens: (tokens: string[]) => void;
   getPoolSize: () => number;
 }
@@ -201,6 +311,7 @@ export async function refreshDeviceTokens(options: RefreshOptions): Promise<Refr
   const parallel = Math.min(options.parallel ?? 1, limits.maxParallel);
   const headed = options.headed ?? false;
   const proxyUrl = options.proxyUrl;
+  const blockTrackers = options.blockTrackers ?? true; // default: on
   const addTokens = options.addTokens;
   const getPoolSize = options.getPoolSize;
 
@@ -242,7 +353,7 @@ export async function refreshDeviceTokens(options: RefreshOptions): Promise<Refr
             while (batchQueue.length > 0) {
               const batchNum = batchQueue.shift();
               if (batchNum === undefined) break;
-              const tokens = await runBatch(browser, tokenCount, batchNum);
+              const tokens = await runBatch(browser, tokenCount, batchNum, blockTrackers);
               addTokens(tokens);
               allTokens.push(...tokens);
             }
@@ -252,7 +363,7 @@ export async function refreshDeviceTokens(options: RefreshOptions): Promise<Refr
       await Promise.all(workers);
     } else {
       for (let b = 1; b <= batchCount; b++) {
-        const tokens = await runBatch(browser, tokenCount, b);
+        const tokens = await runBatch(browser, tokenCount, b, blockTrackers);
         addTokens(tokens);
         allTokens.push(...tokens);
       }
