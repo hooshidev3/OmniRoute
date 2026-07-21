@@ -56,6 +56,14 @@ import EmptyConnectionsPlaceholder from "./components/EmptyConnectionsPlaceholde
 import UpstreamProxyCard from "./components/UpstreamProxyCard";
 import SearchProviderCard from "./components/SearchProviderCard";
 import NoAuthProviderControls from "./components/NoAuthProviderControls";
+import dynamic from "next/dynamic";
+
+// Lazy-load ZaiWebTokenKeyPanel only on the zai-web-token provider page.
+// Same reasoning as ZaiDeviceTokenPanel — avoids the pool-status/keys fetch
+// overhead on every provider page that doesn't need it.
+const ZaiWebTokenKeyPanel = dynamic(() => import("./components/ZaiWebTokenKeyPanel"), {
+  ssr: false,
+});
 // providerText used by UpstreamProxyCard (Phase 1t.7)
 
 export default function ProviderDetailPageClient() {
@@ -487,6 +495,9 @@ export default function ProviderDetailPageClient() {
           }
         />
       )}
+      {/* zai-web-token gets an additional Aliyun Captcha Keys panel below the
+          zai-web-free (same Aliyun keys power both providers' captcha). */}
+      {providerId === "zai-web-token" && <ZaiWebTokenKeyPanel />}
       {!isUpstreamProxyProvider && !isFreeNoAuth && (
         <Card>
           <ProviderAccountRoutingCard

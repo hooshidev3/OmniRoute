@@ -177,6 +177,11 @@ const EMBEDDED_DEFAULTS = {
     13, 92, 15, 89, 66, 91, 76, 70, 72, 29, 71, 70, 3, 65, 93, 84, 72, 23, 28, 87, 92, 88, 15, 95,
     91, 22, 71, 87, 20, 66, 67, 86, 13, 81, 81, 21,
   ],
+  // Qwen (chat.qwen.ai) — public oauth client id (device-code flow)
+  qwen_id: [
+    9, 93, 93, 89, 70, 92, 66, 71, 7, 26, 68, 20, 86, 88, 13, 81, 79, 67, 9, 91, 12, 93, 15, 16, 88,
+    69, 23, 4, 20, 21, 64, 84,
+  ],
   // Trae Cloud IDE — public oauth client id
   trae_id: [10, 3, 95, 6, 10, 22, 66, 3, 11, 90, 72, 31, 91, 2],
   // Microsoft Designer web app — public ClientId header sent by the

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, type ReactNode } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Card from "./Card";
 import Button from "./Button";
 import DistributeProxiesButton from "./DistributeProxiesButton";
@@ -10,14 +10,16 @@ interface NoAuthAccountCardProps {
   providerId: string;
   providerName: string;
   generateAccountId: () => string;
-  generateApiKey?: () => Promise<string>;
   dataKey?: string;
   description?: string;
   addLabel?: string;
   enabled?: boolean;
   savingEnabled?: boolean;
   onEnabledChange?: (enabled: boolean) => void;
-  providerProxyControl?: ReactNode;
+  /** Optional list of model IDs for the modelFilter dropdown.
+   *  When provided, each account card shows a dropdown to optionally
+   *  restrict the account to a specific model. */
+  availableModels?: string[];
 }
 
 interface Connection {
@@ -39,10 +41,14 @@ interface InlineProxy {
 // #5217 (Gap 1): an account proxy is now stored as EITHER a Proxy Pool reference
 // (`proxyId`, resolved server-side so a pool edit propagates to every account) OR
 // a one-off inline `proxy` (the "custom" escape hatch / legacy entries).
+// #kilo-free: `modelFilter` is an optional per-account model restriction.
+// When set, this account is only used for requests targeting that model.
+// When null/empty, the account is used for all models (default behavior).
 interface AccountProxyConfig {
   fingerprint: string;
   proxy?: InlineProxy | null;
   proxyId?: string | null;
+  modelFilter?: string | null;
 }
 
 interface SavedProxy {
@@ -90,14 +96,13 @@ export default function NoAuthAccountCard({
   providerId,
   providerName,
   generateAccountId,
-  generateApiKey,
   dataKey = "fingerprints",
   description = "Ready to use — no signup needed. Add accounts for rate-limit rotation.",
   addLabel = "Add Account",
   enabled = true,
   savingEnabled = false,
   onEnabledChange,
-  providerProxyControl,
+  availableModels,
 }: NoAuthAccountCardProps) {
   const [connections, setConnections] = useState<Connection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -169,7 +174,6 @@ export default function NoAuthAccountCard({
     setAdding(true);
     try {
       const accountId = generateAccountId();
-      const apiKey = generateApiKey ? await generateApiKey() : undefined;
       if (connections.length === 0) {
         const res = await fetch("/api/providers", {
           method: "POST",
@@ -177,14 +181,10 @@ export default function NoAuthAccountCard({
           body: JSON.stringify({
             provider: providerId,
             name: `${providerName} Account 1`,
-            ...(apiKey ? { apiKey } : {}),
             providerSpecificData: { [dataKey]: [accountId] },
           }),
         });
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData?.error || `Failed to create connection (${res.status})`);
-        }
+        if (!res.ok) throw new Error("Failed to create connection");
       } else {
         const updated = [...allAccountIds, accountId];
         const res = await fetch(`/api/providers/${conn.id}`, {
@@ -222,6 +222,34 @@ export default function NoAuthAccountCard({
       if (res.ok) await fetchConnections();
     } catch (err) {
       console.error("Failed to remove account:", err);
+    }
+  };
+
+  // #kilo-free: update the modelFilter for a specific account.
+  // When set, the account is only used for requests targeting that model.
+  // When cleared (empty string), the account is used for all models.
+  const handleModelFilterChange = async (accountId: string, modelFilter: string) => {
+    if (!conn) return;
+    const others = accountProxies.filter((p) => p.fingerprint !== accountId);
+    const existing = getEntryForFingerprint(accountProxies, accountId);
+    const updatedEntry: AccountProxyConfig = {
+      fingerprint: accountId,
+      ...(existing?.proxy ? { proxy: existing.proxy } : {}),
+      ...(existing?.proxyId ? { proxyId: existing.proxyId } : {}),
+      modelFilter: modelFilter || null,
+    };
+    const updatedProxies = [...others, updatedEntry];
+    try {
+      const res = await fetch(`/api/providers/${conn.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          providerSpecificData: { accountProxies: updatedProxies },
+        }),
+      });
+      if (res.ok) await fetchConnections();
+    } catch (err) {
+      console.error("Failed to update model filter:", err);
     }
   };
 
@@ -340,15 +368,12 @@ export default function NoAuthAccountCard({
             <p className="text-xs text-text-muted">{description}</p>
           </div>
         </div>
-        <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:flex-nowrap">
-          {providerProxyControl}
-          <NoAuthProviderToggle
-            className="w-full justify-end sm:w-auto"
-            enabled={enabled}
-            saving={savingEnabled}
-            onEnabledChange={onEnabledChange}
-          />
-        </div>
+        <NoAuthProviderToggle
+          className="w-full justify-end sm:w-auto"
+          enabled={enabled}
+          saving={savingEnabled}
+          onEnabledChange={onEnabledChange}
+        />
       </div>
 
       <div className="border-t border-border pt-3 mt-3">
@@ -386,44 +411,63 @@ export default function NoAuthAccountCard({
                 getEntryForFingerprint(accountProxies, id),
                 savedProxies
               );
+              const entry = getEntryForFingerprint(accountProxies, id);
+              const modelFilter = entry?.modelFilter || "";
               return (
                 <div
                   key={id}
                   data-account-id={id}
-                  className="group flex items-center gap-2 rounded-lg border border-border bg-bg/40 px-2.5 py-2 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
+                  className="group flex flex-col gap-1.5 rounded-lg border border-border bg-bg/40 px-2.5 py-2 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
                 >
-                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-bg text-[10px] font-medium text-text-muted">
-                    {i + 1}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate font-mono text-xs text-text-muted">
-                    {id.slice(0, 10)}…
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => openProxyConfig(id)}
-                    className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${proxy ? "text-blue-400" : "text-text-muted"}`}
-                    title={
-                      proxy
-                        ? `Proxy: ${proxy.type}://${proxy.host}:${proxy.port}`
-                        : "Configure proxy"
-                    }
-                    aria-label={proxy ? `Proxy configured: ${proxy.host}` : "Configure proxy"}
-                  >
-                    <span
-                      className="material-symbols-outlined text-[16px]"
-                      style={proxy ? { fontVariationSettings: "'FILL' 1" } : undefined}
-                    >
-                      shield
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-bg text-[10px] font-medium text-text-muted">
+                      {i + 1}
                     </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveAccount(id)}
-                    className="shrink-0 rounded p-1 text-text-muted opacity-0 transition-colors hover:bg-red-500/10 hover:text-red-500 group-hover:opacity-100"
-                    aria-label="Remove account"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">delete</span>
-                  </button>
+                    <span className="min-w-0 flex-1 truncate font-mono text-xs text-text-muted">
+                      {id.slice(0, 10)}…
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => openProxyConfig(id)}
+                      className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${proxy ? "text-blue-400" : "text-text-muted"}`}
+                      title={
+                        proxy
+                          ? `Proxy: ${proxy.type}://${proxy.host}:${proxy.port}`
+                          : "Configure proxy"
+                      }
+                      aria-label={proxy ? `Proxy configured: ${proxy.host}` : "Configure proxy"}
+                    >
+                      <span
+                        className="material-symbols-outlined text-[16px]"
+                        style={proxy ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                      >
+                        shield
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAccount(id)}
+                      className="shrink-0 rounded p-1 text-text-muted opacity-0 transition-colors hover:bg-red-500/10 hover:text-red-500 group-hover:opacity-100"
+                      aria-label="Remove account"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                    </button>
+                  </div>
+                  {availableModels && availableModels.length > 0 && (
+                    <select
+                      value={modelFilter}
+                      onChange={(e) => handleModelFilterChange(id, e.target.value)}
+                      className="w-full rounded border border-border bg-bg px-1.5 py-0.5 text-[10px] text-text-muted focus:border-primary focus:outline-none"
+                      title="Restrict this account to a specific model (optional)"
+                    >
+                      <option value="">All models</option>
+                      {availableModels.map((m) => (
+                        <option key={m} value={m}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
               );
             })}

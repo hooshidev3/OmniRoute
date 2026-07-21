@@ -30,6 +30,7 @@ import { xaiOauth } from "./xai-oauth";
 import { codebuddyCn } from "./codebuddy-cn";
 import { zed } from "./zed";
 import { zedHosted } from "./zed-hosted";
+import { qwen } from "./qwen";
 
 export const PROVIDERS = {
   claude,
@@ -60,6 +61,8 @@ export const PROVIDERS = {
   // Zed IDE credential bridge — uses keychain import, not standard OAuth
   zed,
   "zed-hosted": zedHosted,
+  // Qwen (chat.qwen.ai) — OAuth device-code flow, distinct from qwen-web (cookie)
+  qwen,
 };
 
 export default PROVIDERS;

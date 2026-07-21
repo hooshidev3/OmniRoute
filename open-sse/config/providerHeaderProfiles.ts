@@ -13,6 +13,11 @@ export const GITHUB_COPILOT_USER_AGENT_LIBRARY = "electron-fetch";
 
 export const QWEN_CLI_VERSION = "0.19.3";
 export const QWEN_STAINLESS_LANG = "js";
+export const QWEN_STAINLESS_PACKAGE_VERSION = "5.11.0";
+export const QWEN_STAINLESS_RETRY_COUNT = "1";
+export const QWEN_STAINLESS_RUNTIME = "node";
+export const QWEN_ACCEPT_LANGUAGE = "*";
+export const QWEN_SEC_FETCH_MODE = "cors";
 
 export const QODER_DEFAULT_USER_AGENT = "Qoder-Cli";
 
@@ -159,5 +164,32 @@ export function getCursorRegistryHeaders(
     "connect-protocol-version": "1",
     "Content-Type": "application/connect+proto",
     "User-Agent": getCursorUserAgent(version),
+  };
+}
+
+/**
+ * Qwen OAuth headers — matches the official Qwen CLI client's fingerprint.
+ * Sent on every request to chat.qwen.ai/api/v1/services/aigc/text-generation/generation
+ * so the server accepts the request as a legitimate CLI client.
+ *
+ * Ported from hooshidev3 fork (commit fa8bfb0d6).
+ */
+export function getQwenOauthHeaders(): Record<string, string> {
+  const userAgent = getQwenCliUserAgent();
+  return {
+    "User-Agent": userAgent,
+    "X-Dashscope-AuthType": "qwen-oauth",
+    "X-Dashscope-CacheControl": "enable",
+    "X-Dashscope-UserAgent": userAgent,
+    "X-Stainless-Arch": normalizeStainlessArch(),
+    "X-Stainless-Lang": QWEN_STAINLESS_LANG,
+    "X-Stainless-Os": normalizeStainlessPlatform(),
+    "X-Stainless-Package-Version": QWEN_STAINLESS_PACKAGE_VERSION,
+    "X-Stainless-Retry-Count": QWEN_STAINLESS_RETRY_COUNT,
+    "X-Stainless-Runtime": QWEN_STAINLESS_RUNTIME,
+    "X-Stainless-Runtime-Version": getRuntimeVersion(),
+    Connection: "keep-alive",
+    "Accept-Language": QWEN_ACCEPT_LANGUAGE,
+    "Sec-Fetch-Mode": QWEN_SEC_FETCH_MODE,
   };
 }

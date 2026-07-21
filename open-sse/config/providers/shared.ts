@@ -33,6 +33,7 @@ import {
   getGitHubCopilotChatHeaders,
   getKiroServiceHeaders,
   getQoderDefaultHeaders,
+  getQwenOauthHeaders,
   getRuntimePlatform,
   getRuntimeArch,
 } from "../providerHeaderProfiles.ts";
@@ -675,6 +676,7 @@ export {
   getGitHubCopilotChatHeaders,
   getKiroServiceHeaders,
   getQoderDefaultHeaders,
+  getQwenOauthHeaders,
   getRuntimePlatform,
   getRuntimeArch,
   resolvePublicCred,

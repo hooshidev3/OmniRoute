@@ -106,6 +106,16 @@ export const QODER_CONFIG = {
 // CodeBuddy CN (Tencent — copilot.tencent.com) OAuth Configuration
 // (Custom Device-Auth Flow: POST stateUrl → open authUrl → GET pollUrl?state=).
 // No client_id/secret — the upstream CLI ships none.
+// Qwen (chat.qwen.ai) OAuth Configuration — Device Code flow.
+// Public client_id resolved through resolvePublicCred so it is never a literal.
+export const QWEN_CONFIG = {
+  clientId: resolvePublicCred("qwen_id", "QWEN_OAUTH_CLIENT_ID"),
+  deviceCodeUrl: "https://qwen.ai/api/v1/oauth2/device/code",
+  tokenUrl: "https://qwen.ai/api/v1/oauth2/token",
+  scope: "openid profile email model.completion",
+  codeChallengeMethod: "S256",
+};
+
 export const CODEBUDDY_CN_CONFIG = {
   baseUrl: "https://copilot.tencent.com",
   stateUrl: "https://copilot.tencent.com/v2/plugin/auth/state",

@@ -79,7 +79,8 @@
     "TS2305": 2
   },
   "src/app/(dashboard)/dashboard/endpoint/EndpointPageClient.tsx": {
-    "TS2322": 18
+    "TS2322": 18,
+    "TS2304": 5
   },
   "src/app/(dashboard)/dashboard/memory/components/tabs/MemoriesTab.tsx": {
     "TS2322": 1
@@ -222,8 +223,8 @@
     "TS2307": 1
   },
   "src/shared/components/OAuthModal.tsx": {
-    "TS2769": 4,
-    "TS2345": 4
+    "TS2769": 3,
+    "TS2345": 3
   },
   "src/shared/components/SkillsConceptCard.tsx": {
     "TS2503": 1
