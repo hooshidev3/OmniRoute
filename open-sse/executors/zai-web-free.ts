@@ -456,7 +456,67 @@ function resolveFeatures(bodyObj: Record<string, unknown>): Record<string, unkno
   // ── ALWAYS force image_generation to false ──
   features.image_generation = false;
 
+  // ── reasoning_effort per-model validation (ported from GLM-Free-API main.go commit 4295d9f) ──
+  // Defensive: always strip any stale reasoning_effort first so unsupported
+  // models never receive a placeholder value (would cause malfunction).
+  delete features.reasoning_effort;
+
+  const model = bodyObj.model as string | undefined;
+  const reasoningEffort = bodyObj.reasoning_effort as string | undefined;
+  if (reasoningEffort && reasoningEffort !== "none") {
+    if (modelSupportsReasoningEffort(model)) {
+      if (isValidReasoningEffort(reasoningEffort)) {
+        // Forward reasoning_effort INSIDE the features payload.
+        // When reasoning_effort is active, enable_thinking MUST be true
+        // and any user modification on enable_thinking is ignored.
+        features.reasoning_effort = reasoningEffort;
+        features.enable_thinking = true;
+      } else {
+        // Invalid value — ignored, logged. Only "high" and "max" are accepted.
+        // (matches Go reference: isValidReasoningEffort)
+      }
+    }
+    // If model doesn't support reasoning_effort: parameter silently ignored.
+    // (matches Go reference: modelSupportsReasoningEffort)
+  }
+
   return features;
+}
+
+/**
+ * Check if a model supports reasoning_effort based on its capabilities.
+ * Ported from GLM-Free-API main.go commit 4295d9f.
+ *
+ * Only models that explicitly declare reasoning_effort support in their
+ * capabilities JSON are eligible. Models without the field or with
+ * "reasoning_effort": false are NOT supported.
+ *
+ * Known models that support reasoning_effort (per GLM-Free-API):
+ *   - glm-5.2 (reasoning_effort: true in capabilities)
+ *
+ * Guest JWT sessions only allow glm-4.7 which does NOT support reasoning_effort.
+ * Users must supply a personal JWT (zai-web-token) to access glm-5.2.
+ */
+function modelSupportsReasoningEffort(model: string | undefined): boolean {
+  if (!model) return false;
+  // Per GLM-Free-API main.go: only models whose capabilities JSON explicitly
+  // contains "reasoning_effort": true are supported.
+  // Known supported models (from live testing + Go reference):
+  const supportedModels = new Set(["glm-5.2"]);
+  return supportedModels.has(model.toLowerCase());
+}
+
+/**
+ * Validate the accepted reasoning_effort values.
+ * Ported from GLM-Free-API main.go commit 4295d9f.
+ *
+ * Accepted: "high", "max". Any other value is rejected.
+ * (Note: our live tests showed Z.AI accepts low/medium/xhigh too, but the
+ * Go reference only validates high+max — we follow the Go reference for
+ * consistency with the upstream project.)
+ */
+function isValidReasoningEffort(value: string): boolean {
+  return value === "high" || value === "max";
 }
 
 // ?��?�� Executor ?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��?��

@@ -91,7 +91,10 @@ describe("zai-web-free captcha tuning", () => {
     assert.ok(content.includes("const MAX_TOKENS = 1500"), "MAX_TOKENS should be 1500");
     assert.ok(content.includes("const DEFAULT_TOKENS = 850"), "DEFAULT_TOKENS should be 850");
     assert.ok(content.includes("const DEFAULT_BATCH = 5"), "DEFAULT_BATCH should be 5");
-    assert.ok(content.includes("const SEND_WAIT_MS = 15000"), "SEND_WAIT_MS should be 15000");
+    assert.ok(
+      content.includes("const SEND_WAIT_MS = 10000"),
+      "SEND_WAIT_MS should be 10000 (reduced from 15000 in GLM-Free-API commit 327cade)"
+    );
   });
 
   it("auto-refresh-daemon uses 850 tokens", async () => {

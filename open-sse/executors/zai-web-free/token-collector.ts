@@ -33,7 +33,7 @@ const DEFAULT_TOKENS = 850;
 const DEFAULT_BATCH = 5;
 const MAX_BATCH = 9;
 const UNSAFE_MAX_BATCH = 25;
-const SEND_WAIT_MS = 15000;
+const SEND_WAIT_MS = 10000;
 const MAX_RETRIES = 3;
 const TOKEN_COLLECTION_TIMEOUT_MS = 90_000;
 const MAX_PARALLEL = 3;
@@ -153,7 +153,25 @@ type PlaywrightBrowser = {
 };
 
 /**
+ * Create a worker page with optional route allowlist.
+ * Route handlers persist across reloads on the same page, so the allowlist is
+ * installed exactly once at page creation rather than per batch.
+ * Ported from GLM-Free-API captcha.go commit 6223816.
+ */
+async function newWorkerPage(
+  browser: PlaywrightBrowser,
+  blockTrackers: boolean = true
+): Promise<PlaywrightPage> {
+  const page = await browser.newPage();
+  await applyNetworkAllowlist(page, blockTrackers);
+  return page;
+}
+
+/**
  * Collect `total` device tokens from a single browser page.
+ * The page is reused across batches; route handlers (if any) were installed
+ * once at page creation in newWorkerPage. Each call here force-reloads
+ * the page by re-navigating to URL.
  */
 async function collectTokensOnPage(
   page: PlaywrightPage,
@@ -161,6 +179,7 @@ async function collectTokensOnPage(
   blockTrackers: boolean = true
 ): Promise<string[]> {
   // Apply network allowlist before navigation (default: on)
+  // Only applies if not already installed on the page (newWorkerPage does this once).
   await applyNetworkAllowlist(page, blockTrackers);
 
   await page.goto(ZAI_URL, {
@@ -221,22 +240,25 @@ async function collectTokensOnPage(
   return (tokens || []).filter((t: unknown) => typeof t === "string" && (t as string).length > 0);
 }
 
+/**
+ * Run a single batch with retries.
+ * Reuses the given page across batches; collectTokensOnPage force-reloads it
+ * on every call (and on every retry) by re-navigating to URL.
+ * Ported from GLM-Free-API captcha.go commit 6223816.
+ */
 async function runBatch(
-  browser: PlaywrightBrowser,
+  page: PlaywrightPage,
   total: number,
   batchNum: number,
   blockTrackers: boolean = true
 ): Promise<string[]> {
   let lastErr: unknown;
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-    const page = await browser.newPage();
     try {
       const tokens = await collectTokensOnPage(page, total, blockTrackers);
-      await page.close();
       return tokens;
     } catch (err) {
       lastErr = err;
-      await page.close().catch(() => {});
     }
   }
   throw new Error(
@@ -344,28 +366,42 @@ export async function refreshDeviceTokens(options: RefreshOptions): Promise<Refr
     const allTokens: string[] = [];
 
     if (parallel > 1 && batchCount > 1) {
+      // Each worker keeps ONE page open for all its batches; every batch
+      // force-reloads the page instead of opening a new one and closing
+      // the old one. Ported from GLM-Free-API captcha.go commit 6223816.
       const batchQueue: number[] = [];
       for (let b = 1; b <= batchCount; b++) batchQueue.push(b);
       const workers: Promise<void>[] = [];
       for (let w = 0; w < parallel; w++) {
         workers.push(
           (async () => {
-            while (batchQueue.length > 0) {
-              const batchNum = batchQueue.shift();
-              if (batchNum === undefined) break;
-              const tokens = await runBatch(browser, tokenCount, batchNum, blockTrackers);
-              addTokens(tokens);
-              allTokens.push(...tokens);
+            const page = await newWorkerPage(browser, blockTrackers);
+            try {
+              while (batchQueue.length > 0) {
+                const batchNum = batchQueue.shift();
+                if (batchNum === undefined) break;
+                const tokens = await runBatch(page, tokenCount, batchNum, blockTrackers);
+                addTokens(tokens);
+                allTokens.push(...tokens);
+              }
+            } finally {
+              await page.close().catch(() => {});
             }
           })()
         );
       }
       await Promise.all(workers);
     } else {
-      for (let b = 1; b <= batchCount; b++) {
-        const tokens = await runBatch(browser, tokenCount, b, blockTrackers);
-        addTokens(tokens);
-        allTokens.push(...tokens);
+      // Sequential: keep ONE page open across all batches.
+      const page = await newWorkerPage(browser, blockTrackers);
+      try {
+        for (let b = 1; b <= batchCount; b++) {
+          const tokens = await runBatch(page, tokenCount, b, blockTrackers);
+          addTokens(tokens);
+          allTokens.push(...tokens);
+        }
+      } finally {
+        await page.close().catch(() => {});
       }
     }
 
