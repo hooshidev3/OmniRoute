@@ -18,6 +18,7 @@ import {
   createFinishOnceGuard,
   createFinishedDrainScheduler,
 } from "./deepseek-web-done-terminator.ts";
+import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
 
 export const DEEPSEEK_WEB_BASE = "https://chat.deepseek.com";
 const DEEPSEEK_API_BASE = `${DEEPSEEK_WEB_BASE}/api`;
@@ -842,7 +843,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
     }
   }
 
-  async execute({ model, body, stream, credentials, signal, log }: ExecuteInput) {
+  async execute({ model, body, stream, credentials, signal, log, clientHeaders }: ExecuteInput) {
     const bodyObj = (body || {}) as Record<string, unknown>;
 
     // chat.deepseek.com's web API only accepts {prompt, ref_file_ids,
@@ -896,10 +897,23 @@ export class DeepSeekWebExecutor extends BaseExecutor {
 
       // Tool (agentic) requests replay the whole trajectory — prior tool calls and their
       // results — so the model keeps context across turns instead of restarting each time.
-      // Plain chat keeps the legacy last-user-message / rolling-window behavior.
+      // Plain chat: Phase 3 (multi-turn fix ported from hooshidev3 commit 2e700a8c1) —
+      // when there's no agentChatId (standard OpenAI client) AND historyWindow=0 AND
+      // messages.length > 1, send the FULL conversation history in the prompt (like
+      // zai-web) so multi-turn works without registry/server-side chaining. When
+      // agentChatId IS present, we rely on registry + parent_message_id chaining
+      // (like qwen-web) and send only the latest user message (server-side context).
+      const agentChatId = getAgentChatId(
+        bodyObj,
+        clientHeaders as Record<string, unknown> | null | undefined
+      );
+      const effectiveHistoryWindow =
+        !agentChatId && promptMessages.length > 1 && historyWindow === 0
+          ? promptMessages.length // send full history when no agentChatId
+          : historyWindow;
       const prompt = hasTools
         ? buildToolConversationPrompt(messages, toolSystemPrompt)
-        : messagesToPrompt(promptMessages, historyWindow);
+        : messagesToPrompt(promptMessages, effectiveHistoryWindow);
       const refFileIds = Array.isArray(bodyObj.ref_file_ids) ? bodyObj.ref_file_ids : [];
       log?.info?.(
         "DEEPSEEK-WEB",
@@ -917,6 +931,10 @@ export class DeepSeekWebExecutor extends BaseExecutor {
           "X-Ds-Pow-Response": powAnswer,
           "X-Client-Timezone-Offset": String(new Date().getTimezoneOffset() * -60),
           Cookie: generateFakeCookie(),
+          // Phase 2 (multi-turn fix ported from hooshidev3 commit 2e700a8c1):
+          // Real DeepSeek web client sends Referer with the chat_session_id in
+          // the URL path. Server may use this to validate session ownership.
+          Referer: `${DEEPSEEK_WEB_BASE}/a/chat/s/${sid}`,
         };
         const requestPayload = {
           chat_session_id: sid,
@@ -926,6 +944,9 @@ export class DeepSeekWebExecutor extends BaseExecutor {
           ref_file_ids: refFileIds,
           thinking_enabled: thinkingEnabled,
           search_enabled: searchEnabled,
+          // Phase 2: Real DeepSeek web client sends "action": null.
+          // Without this field the server may misinterpret the request.
+          action: null,
           preempt: false,
         };
         const resp = await fetch(COMPLETION_URL, {
