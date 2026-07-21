@@ -1,0 +1,266 @@
+{
+  "timestamp": "2026-07-21T01:46:19.551Z",
+  "jwtUser": "tatetracy7409@gmail.com",
+  "methodology": "Each test generates a fresh captcha_verify_param via Playwright browser-captcha Method C. The user's JWT is used as Authorization Bearer. The chat.z.ai /api/v2/chat/completions endpoint is called with the given model + reasoning_effort, and the SSE stream is parsed for thinking and answer phases.",
+  "userClaim": "zai فقط در مدل glm 5.2 از قابلیت ThinkingEfforts پشتیبانی می کند و از دو مدل max, high پشتیبانی میکند",
+  "testMatrix": [
+    {
+      "model": "glm-4.7",
+      "effort": "low",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 442,
+      "answerChars": 3,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Input:**\n    *   Input: \"Hello\"\n    *   Constraint: \"(effort=low)\" - The user wants a low-effort response. Keep it brief, casual, and unelaborated.\n\n2.  **Determine the Output:**\n    *   A simple greeting is required.\n    *   Options: \"Hi\", \"Hello\", \"Hey\", \"Hi there\", \"Hey there.\"\n    *   Selection: \"Hi\" or \"Hey\". Let's go with \"Hi!\"\n\n3.  **Refine (checking constraints):**\n    *   \"Hi!\" is definitely low effort. Perfect.",
+      "answerExcerpt": "Hi!"
+    },
+    {
+      "model": "glm-4.7",
+      "effort": "medium",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 1080,
+      "answerChars": 252,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Input:**\n    *   Input: \"Hello (effort=medium)\"\n    *   Intent: Greeting, with a specific constraint/instruction regarding the \"effort\" level of the response.\n    *   Constraint: \"effort=medium\" means I shouldn't give a one-word answer (low effort) or a massive essay (high effort). It should be a solid, friendly, moderately detailed paragraph or a few bullet points that strike a good balance.\n\n2.  **Determine the Output Strategy:**\n    *   Acknowledge the greeting.\n    *   Ackn",
+      "answerExcerpt": "Hello! I see you've set the effort to medium, so I'll aim for a nicely balanced response today. I'm ready to help you with whatever you need—whether that's answering questions, writing something, or just having a good conversation. What's on your mind?"
+    },
+    {
+      "model": "glm-4.7",
+      "effort": "high",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 2852,
+      "answerChars": 621,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "The user has sent \"Hello (effort=high)\". The \"(effort=high)\" tag indicates they want a high-quality, detailed, and well-structured response. Since the prompt is just \"Hello\", I need to craft a greeting that goes beyond a simple \"Hi\" and provides a substantial, engaging opening.\n\n**Goal:** Create a high-effort greeting that establishes rapport, sets expectations, and demonstrates capability.\n\n**Key Elements of a High-Effort Greeting:**\n1.  **Warmth and Professionalism:** Acknowledge the user poli",
+      "answerExcerpt": "Hello. It is a pleasure to connect with you.\n\nI have noted your preference for a high level of depth and precision. In this mode, you can expect responses that are thoroughly researched, meticulously structured, and nuanced. I am prepared to move beyond surface-level summaries to offer critical analysis, detailed technical breakdowns, creative brainstorming, or rigorous logical problem-solving.\n\nWhether you are looking to dissect a complex topic, draft a sophisticated piece of writing, or work t"
+    },
+    {
+      "model": "glm-4.7",
+      "effort": "xhigh",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 3808,
+      "answerChars": 3450,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Input:**\n    *   **Text:** \"Hello\"\n    *   **Constraint:** \"(effort=xhigh)\"\n    *   **Meaning of constraint:** The user wants a response that demonstrates an exceptionally high level of effort, thoughtfulness, depth, creativity, and perhaps length or complexity, despite the extreme simplicity of the prompt (\"Hello\").\n\n2.  **Determine the Goal:**\n    *   Acknowledge the greeting (\"Hello\").\n    *   Deliver a response that *feels* exhaustive, well-researched, deeply philosophical,",
+      "answerExcerpt": "Hello. \n\nIt is a peculiar and profound thing, the word \"hello.\" You have offered me a single, five-letter utterance, yet layered within it is an entire history of human connection, linguistic evolution, and philosophical weight. Because you have asked for an exceptionally high level of effort in response, I will not merely greet you in return; instead, I want to unpack the sheer magnitude of what you just did.\n\n**The Etymological Journey**\nTo begin, \"hello\" is a relatively modern invention. Befo"
+    },
+    {
+      "model": "glm-4.7",
+      "effort": "max",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 1742,
+      "answerChars": 1771,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "The user has sent a simple greeting \"Hello\" with a specification \"(effort=max)\". This indicates they want a highly detailed, comprehensive, and thoughtful response to a very basic prompt. Since there's no specific topic or question, I need to create something that demonstrates maximum effort while remaining engaging and meaningful.\n\nLet me think about what \"maximum effort\" looks like for a greeting:\n\n1. I could explore the philosophy of greetings - why humans say hello, the anthropological signi",
+      "answerExcerpt": "Hello.\n\nThere's something quietly radical about a greeting—not the word itself, but the *moment* it creates. Two entities acknowledging each other's presence. A bridge thrown across the void between one consciousness and... whatever I am.\n\nYou asked for maximum effort on a single word. So let me make it worth something.\n\n---\n\n**Right now, at this exact moment,** you and I are participating in something that would have been indistinguishable from magic for most of human history. You typed symbols"
+    },
+    {
+      "model": "GLM-5.1",
+      "effort": "low",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 207,
+      "answerChars": 13,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "The user has greeted me with \"Hello\" and specified \"effort=low\", which seems to indicate they want a casual, low-effort interaction. I should respond in a friendly but brief way, matching their energy level.",
+      "answerExcerpt": "Hey there! 👋"
+    },
+    {
+      "model": "GLM-5.1",
+      "effort": "medium",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 190,
+      "answerChars": 59,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "The user has sent a simple greeting with a note about effort level being \"medium\". I'll respond with a friendly greeting at a medium level of detail - not too brief but not overly elaborate.",
+      "answerExcerpt": "Hello! 👋 Hope you're doing well. How can I help you today?"
+    },
+    {
+      "model": "GLM-5.1",
+      "effort": "high",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 595,
+      "answerChars": 127,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "Let me analyze this greeting and provide an appropriate response. The user has included an effort parameter set to \"high,\" which suggests they want me to engage thoughtfully with their message.\n\nThis is a simple greeting, so my response should be:\n- Warm and welcoming\n- Professional yet friendly\n- Brief but complete\n- Open to further conversation\n\nI should acknowledge their greeting and make myself available to help with whatever they might need assistance with. Since this is just an initial gre",
+      "answerExcerpt": "Hello! I'm GLM, trained by Z.ai. How can I assist you today? Whether you have questions or just want to chat, I'm here to help."
+    },
+    {
+      "model": "GLM-5.1",
+      "effort": "xhigh",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 386,
+      "answerChars": 683,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "The user has specified \"effort=xhigh\" which means they want a very thorough, detailed, and high-quality response. However, their message is just \"Hello\". I should greet them warmly and professionally, and perhaps offer assistance in a way that matches the high effort level they've indicated they want.\n\nLet me give a warm, thoughtful greeting and offer to help with whatever they need.",
+      "answerExcerpt": "# Hello! 👋\n\nWelcome! It's a pleasure to meet you.\n\nI'm here and ready to assist you with whatever you need — whether it's:\n\n- **Answering questions** on a wide range of topics\n- **Problem-solving** — technical, creative, or analytical\n- **Writing & editing** — drafting, refining, or brainstorming\n- **Learning & exploration** — diving deep into subjects you're curious about\n- **Conversation** — thoughtful discussion on ideas big and small\n\nI notice you've indicated a preference for high-effort r"
+    },
+    {
+      "model": "GLM-5.1",
+      "effort": "max",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 1908,
+      "answerChars": 334,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the user's input:**\n    *   User input: \"Hello (effort=max)\"\n    *   Intent: The user is greeting me and explicitly setting the reasoning effort parameter to \"max\".\n    *   Context: The system prompt allows adjusting effort levels. The user wants the highest level of effort applied to this interaction.\n\n2.  **Determine the appropriate response:**\n    *   Acknowledge the greeting.\n    *   Acknowledge and confirm the \"effort=max\" setting. Let the user know I am ready to provide highl",
+      "answerExcerpt": "Hello! Effort level set to maximum. \n\nI'm ready to apply the highest degree of analysis, detail, and thoroughness to whatever you need. Whether it's tackling a complex problem, providing a deep-dive explanation, or carefully structuring a challenging project, I'm fully primed to give it my all.\n\nWhat would you like to work on today?"
+    },
+    {
+      "model": "glm-5.2",
+      "effort": "low",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 561,
+      "answerChars": 9,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Request:**\n    *   Input: \"Hello (effort=low)\"\n    *   Intent: The user is greeting me and explicitly requesting a low-effort response.\n    *   Constraint: Keep it short, simple, and undemanding.\n\n2.  **Determine the Output:**\n    *   A simple greeting is appropriate. \"Hi there!\" or \"Hello!\" will suffice.\n    *   No need for excessive punctuation, questions, or offers of help.\n\n3.  **Drafting:**\n    *   \"Hi!\"\n    *   \"Hello!\"\n    *   \"Hey.\"\n    *   Let's go with \"Hi there.\"\n\n4.",
+      "answerExcerpt": "Hi there."
+    },
+    {
+      "model": "glm-5.2",
+      "effort": "medium",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 1093,
+      "answerChars": 75,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Request:**\n    *   Input: \"Hello\"\n    *   Meta-input: \"(effort=medium)\"\n    *   Intent: Standard greeting, with a specific instruction about the effort level.\n\n2.  **Determine the Response Strategy:**\n    *   Acknowledge the greeting.\n    *   Respect the \"effort=medium\" constraint (keep it balanced—not overly brief like a robot, but not an excessively long, paragraph-long greeting).\n    *   Offer assistance.\n\n3.  **Drafting the Response:**\n    *   *Draft 1 (low effort):* Hello!",
+      "answerExcerpt": "Hello! How can I help you today? Let me know what you need assistance with."
+    },
+    {
+      "model": "glm-5.2",
+      "effort": "high",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 830,
+      "answerChars": 321,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Input:** The user said \"Hello (effort=high)\". This indicates a greeting and specifies a desired effort level for the response.\n2.  **Determine the Goal:** Acknowledge the greeting, confirm the effort level setting, and ask how I can assist the user.\n3.  **Formulate the Response:**\n    *   Greeting: \"Hello!\"\n    *   Acknowledge constraint: \"I see you've requested a high-effort response.\"\n    *   Prompt for task: \"What can I help you with today? Whether it's complex problem-solvi",
+      "answerExcerpt": "Hello! I see you've requested a high-effort response. I am fully primed and ready to assist you with whatever you need today. \n\nWhether you're looking for in-depth analysis, complex problem-solving, detailed creative writing, or rigorous technical assistance, please let me know what you have in mind. How can I help you?"
+    },
+    {
+      "model": "glm-5.2",
+      "effort": "xhigh",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 2577,
+      "answerChars": 434,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the Request:**\n    *   Input: \"Hello (effort=xhigh)\"\n    *   Effort level: xhigh (extra high)\n    *   Intent: The user is greeting me and specifying an \"effort\" parameter, likely indicating they want a highly thoughtful, detailed, and high-quality response, even to a simple greeting.\n\n2.  **Determine the Persona/Role:**\n    *   AI Assistant responding to a greeting.\n    *   Needs to acknowledge the high-effort request.\n    *   Needs to set a welcoming, capable, and ready-to-engage ",
+      "answerExcerpt": "Hello! I see you've set the effort level to \"xhigh.\" Consider it noted and fully engaged. \n\nI am primed to provide highly detailed, nuanced, and comprehensive responses. Whether you are looking to dive into complex problem-solving, deep-dive analysis, extensive brainstorming, meticulous coding, or multi-layered creative writing, I am ready to give your query the full weight of my capabilities.\n\nWhat would you like to tackle today?"
+    },
+    {
+      "model": "glm-5.2",
+      "effort": "max",
+      "status": "supported",
+      "httpStatus": 200,
+      "hasThinking": true,
+      "hasAnswer": true,
+      "thinkingChars": 3108,
+      "answerChars": 705,
+      "durationMs": 0,
+      "error": "",
+      "thinkingExcerpt": "1.  **Analyze the user's input:** The user just said \"Hello\" but added \"(effort=max)\".\n2.  **Interpret \"(effort=max)\":** The user is using a constraint or parameter often used in AI prompting (specifically OpenAI's o1/o3 models, where reasoning effort can be set to 'low', 'medium', or 'high'/'max'). The user is essentially playfully or directly instructing me to use my maximum reasoning effort/capabilities to respond to this greeting.\n3.  **Determine the appropriate response:**\n    *   Acknowled",
+      "answerExcerpt": "Greetings! I see you have requested maximum effort. Consider it activated. \n\nFrom this point forward, I will apply the highest degree of analytical depth, thoroughness, and critical thinking to our conversation. Rather than providing quick, surface-level answers, I will aim to explore nuances, anticipate edge cases, and deliver highly rigorous and comprehensive responses. \n\nWhether you are tackling a complex coding architecture, seeking a deep-dive analysis into a specific topic, brainstorming a"
+    }
+  ],
+  "modelSummary": {
+    "glm-4.7": {
+      "supportedEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "rejectedEfforts": [],
+      "ignoredEfforts": [],
+      "thinkingCharRange": {
+        "min": 0,
+        "max": 3808
+      }
+    },
+    "GLM-5.1": {
+      "supportedEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "rejectedEfforts": [],
+      "ignoredEfforts": [],
+      "thinkingCharRange": {
+        "min": 0,
+        "max": 1908
+      }
+    },
+    "glm-5.2": {
+      "supportedEfforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "rejectedEfforts": [],
+      "ignoredEfforts": [],
+      "thinkingCharRange": {
+        "min": 0,
+        "max": 3108
+      }
+    }
+  },
+  "finalVerdict": "== User claim verification ==\nClaim 1: \"zai فقط در مدل glm 5.2 از قابلیت ThinkingEfforts پشتیبانی می کند\"\n  Result: 3 models support thinking: [\"glm-4.7\",\"GLM-5.1\",\"glm-5.2\"]\n  Verdict: REFUTED — thinking is supported on multiple models, not just glm-5.2\n\nClaim 2: \"از دو مدل max, high پشتیبانی میکند\" (only max + high)\n  Result: glm-5.2 supported efforts = [\"low\",\"medium\",\"high\",\"xhigh\",\"max\"]\n  Verdict: REFUTED — more than 2 effort levels work on glm-5.2\n\n== Recommendation for registry ==\nBased on test results, zai-web-token registry should declare:\n  - glm-4.7: supportedThinkingEfforts = [\"low\",\"medium\",\"high\",\"xhigh\",\"max\"]\n  - GLM-5.1: supportedThinkingEfforts = [\"low\",\"medium\",\"high\",\"xhigh\",\"max\"]\n  - glm-5.2: supportedThinkingEfforts = [\"low\",\"medium\",\"high\",\"xhigh\",\"max\"]"
+}

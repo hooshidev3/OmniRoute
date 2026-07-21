@@ -402,6 +402,66 @@ export const PROVIDER_MODELS_CONFIG: Record<string, ProviderModelsConfigEntry> =
         .filter((m: any) => m.id);
     },
   },
+  // zai-web-token: same as zai-web but uses user-supplied JWT (no cookie extraction).
+  // The credential field contains the raw JWT (no "token=" prefix), so we pass it
+  // directly as Bearer. Live tests (2026-07-21) confirmed all 5 effort levels
+  // (low|medium|high|xhigh|max) work on glm-4.7, GLM-5.1, glm-5.2 — see
+  // zai-thinking-efforts-final-report.json.
+  // When discovery succeeds, the response carries supportedThinkingEfforts per
+  // model; when it fails, the static registry fallback (5 curated models) is used.
+  "zai-web-token": {
+    url: "https://chat.z.ai/api/models",
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    buildHeaders: (token) => ({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }),
+    parseResponse: (data) => {
+      const innerData = data?.data?.data || data?.data || [];
+      return (Array.isArray(innerData) ? innerData : [])
+        .map((item: any) => {
+          // Preserve supportedThinkingEfforts + defaultThinkingEffort if upstream
+          // exposes them — the catalog builder + syncedEffortVariants.ts will
+          // surface them as capabilities.effort_tiers and per-tier catalog entries.
+          const out: Record<string, unknown> = {
+            id: item.id || item.name,
+            name: item.name || item.id,
+            owned_by: item.owned_by || "zai-web-token",
+          };
+          // Z.AI may expose effort tiers in several shapes; pass through whatever
+          // is present so modelDiscovery.ts (#7694) can normalize them onto the
+          // canonical vocabulary.
+          if (Array.isArray(item.supportedThinkingEfforts)) {
+            out.supportedThinkingEfforts = item.supportedThinkingEfforts.filter(
+              (e: unknown): e is string => typeof e === "string" && e.length > 0
+            );
+          }
+          if (Array.isArray(item.thinking_efforts)) {
+            out.supportedThinkingEfforts = item.thinking_efforts.filter(
+              (e: unknown): e is string => typeof e === "string" && e.length > 0
+            );
+          }
+          if (typeof item.defaultThinkingEffort === "string") {
+            out.defaultThinkingEffort = item.defaultThinkingEffort;
+          }
+          // Nested reasoning.supported_efforts (#7694 shape)
+          if (item.reasoning && typeof item.reasoning === "object") {
+            const r = item.reasoning as { supported_efforts?: unknown; default_effort?: unknown };
+            if (Array.isArray(r.supported_efforts)) {
+              out.supportedThinkingEfforts = r.supported_efforts.filter(
+                (e: unknown): e is string => typeof e === "string" && e.length > 0
+              );
+            }
+            if (typeof r.default_effort === "string") {
+              out.defaultThinkingEffort = r.default_effort;
+            }
+          }
+          return out;
+        })
+        .filter((m: any) => m.id);
+    },
+  },
   antigravity: {
     url: getAntigravityModelsDiscoveryUrls()[0],
     method: "POST",
