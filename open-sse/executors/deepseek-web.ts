@@ -19,6 +19,7 @@ import {
   createFinishedDrainScheduler,
 } from "./deepseek-web-done-terminator.ts";
 import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
+import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
 
 export const DEEPSEEK_WEB_BASE = "https://chat.deepseek.com";
 const DEEPSEEK_API_BASE = `${DEEPSEEK_WEB_BASE}/api`;
@@ -165,7 +166,11 @@ async function solvePow(challenge: PowChallenge): Promise<string> {
 
 // ── SSE Transform (DeepSeek → OpenAI) ───────────────────────────────────
 
-function transformSSE(deepseekStream: ReadableStream, model: string): ReadableStream {
+function transformSSE(
+  deepseekStream: ReadableStream,
+  model: string,
+  onMessageIdCaptured?: (responseMessageId: number) => void
+): ReadableStream {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
   const streamModel = model || "deepseek-web";
@@ -285,10 +290,21 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
               if (v && typeof v === "object" && v.response) {
                 if (v.response.thinking_enabled === true) currentPath = "thinking";
                 else if (v.response.thinking_enabled === false) currentPath = "content";
+                // Phase 1: Capture message_id IMMEDIATELY (not at stream end) to
+                // eliminate the race condition where turn 2 arrives before the
+                // stream is fully consumed.
+                if (v.response.message_id != null) {
+                  onMessageIdCaptured?.(Number(v.response.message_id));
+                }
                 const fragments = v.response.fragments;
                 if (Array.isArray(fragments)) {
                   for (const frag of fragments) handleFragment(frag, false);
                 }
+              }
+
+              // Phase 1: Capture response_message_id from the first frame
+              if (data?.response_message_id != null) {
+                onMessageIdCaptured?.(Number(data.response_message_id));
               }
 
               if (p === "response/fragments") {
@@ -369,7 +385,8 @@ function transformSSE(deepseekStream: ReadableStream, model: string): ReadableSt
 
 async function collectSSEContent(
   deepseekStream: ReadableStream,
-  model: string
+  model: string,
+  onMessageIdCaptured?: (responseMessageId: number) => void
 ): Promise<{ content: string; reasoningContent: string }> {
   const decoder = new TextDecoder();
   const reader = deepseekStream.getReader();
@@ -426,9 +443,18 @@ async function collectSSEContent(
         if (v && typeof v === "object" && v.response) {
           if (v.response.thinking_enabled === true) currentPath = "thinking";
           else if (v.response.thinking_enabled === false) currentPath = "content";
+          // Phase 1: Capture message_id IMMEDIATELY to eliminate race condition.
+          if (v.response.message_id != null) {
+            onMessageIdCaptured?.(Number(v.response.message_id));
+          }
           if (Array.isArray(v.response.fragments)) {
             for (const frag of v.response.fragments) handleFragment(frag, false);
           }
+        }
+
+        // Phase 1: Capture response_message_id from the first frame
+        if (data?.response_message_id != null) {
+          onMessageIdCaptured?.(Number(data.response_message_id));
         }
 
         if (p === "response/fragments") {
@@ -921,6 +947,24 @@ export class DeepSeekWebExecutor extends BaseExecutor {
       );
 
       // One completion attempt against a given session id (fresh PoW per attempt).
+      // Phase 4: Registry lifecycle — retrieve parentMessageId from prior turn
+      const connectionId = (rawCreds as { connectionId?: string })?.connectionId || "default";
+      let parentMessageId: number | null = null;
+      if (agentChatId) {
+        const existing = getMapping({
+          connectionId,
+          agentChatId,
+          provider: "deepseek",
+        });
+        if (existing?.metadata?.parentMessageId) {
+          parentMessageId = Number(existing.metadata.parentMessageId);
+          log?.debug?.(
+            "DEEPSEEK-WEB",
+            `registry: retrieved parentMessageId=${parentMessageId} for agentChatId=${agentChatId}`
+          );
+        }
+      }
+
       const performCompletion = async (sid: string) => {
         const powChallenge = await getPowChallenge(accessToken, signal);
         const powAnswer = await solvePow(powChallenge);
@@ -938,7 +982,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         };
         const requestPayload = {
           chat_session_id: sid,
-          parent_message_id: null,
+          parent_message_id: parentMessageId ?? null,
           model_type: modelType,
           prompt,
           ref_file_ids: refFileIds,
@@ -980,6 +1024,39 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         "DEEPSEEK-WEB",
         `Session ${reusedSession ? "reused" : "created"} in ${Date.now() - t0}ms`
       );
+
+      // Phase 4: Save sessionId to registry immediately after creation
+      if (agentChatId) {
+        saveMapping({
+          connectionId,
+          agentChatId,
+          provider: "deepseek",
+          providerConversationId: sessionId,
+        });
+        log?.debug?.(
+          "DEEPSEEK-WEB",
+          `registry: saved sessionId=${sessionId} for agentChatId=${agentChatId}`
+        );
+      }
+
+      // Phase 1 callback: fires IMMEDIATELY when message_id is captured from
+      // the first SSE frame (not at stream end). This eliminates the race
+      // condition where turn 2 arrives before the stream is fully consumed.
+      const onMessageIdCaptured = agentChatId
+        ? (respMsgId: number) => {
+            saveMapping({
+              connectionId,
+              agentChatId,
+              provider: "deepseek",
+              providerConversationId: sessionId,
+              metadata: { parentMessageId: respMsgId },
+            });
+            log?.debug?.(
+              "DEEPSEEK-WEB",
+              `registry: EARLY parentMessageId=${respMsgId} saved (race-condition fix)`
+            );
+          }
+        : undefined;
 
       t0 = Date.now();
       log?.info?.("DEEPSEEK-WEB", `POST ${COMPLETION_URL}`);
@@ -1080,7 +1157,11 @@ export class DeepSeekWebExecutor extends BaseExecutor {
       // OpenAI tool_calls. Buffering (even for stream clients) is acceptable because
       // tool invocations are short and need the complete block to parse. (#2820)
       if (hasTools) {
-        const { content, reasoningContent } = await collectSSEContent(resp.body!, clientModel);
+        const { content, reasoningContent } = await collectSSEContent(
+          resp.body!,
+          clientModel,
+          onMessageIdCaptured
+        );
         await cleanupFn();
         const { content: cleanedContent, toolCalls } = parseDeepSeekToolCalls(
           content,
@@ -1099,7 +1180,7 @@ export class DeepSeekWebExecutor extends BaseExecutor {
       }
 
       if (stream !== false) {
-        const openaiStream = transformSSE(resp.body!, clientModel);
+        const openaiStream = transformSSE(resp.body!, clientModel, onMessageIdCaptured);
         const wrappedStream = wrapStreamWithCleanup(openaiStream, cleanupFn);
         return {
           response: new Response(wrappedStream, {
@@ -1112,7 +1193,11 @@ export class DeepSeekWebExecutor extends BaseExecutor {
         };
       }
 
-      const { content, reasoningContent } = await collectSSEContent(resp.body!, clientModel);
+      const { content, reasoningContent } = await collectSSEContent(
+        resp.body!,
+        clientModel,
+        onMessageIdCaptured
+      );
       await cleanupFn();
       const message: Record<string, string> = { role: "assistant", content };
       if (reasoningContent) message.reasoning_content = reasoningContent;
