@@ -31,6 +31,15 @@ const log = logger("ZAI-WEB-FREE-DAEMON");
 let _interval: ReturnType<typeof setInterval> | null = null;
 let _isRefreshing = false;
 
+// ── Failure tracking ───────────────────────────────────────────────────────
+// When Playwright browsers are not installed, the daemon would otherwise retry
+// every 5 minutes with the same fatal error, spamming the logs. Instead, we
+// detect this specific error and suspend the daemon until the next chat request
+// arrives (notifyRequest() restarts it, giving the user time to run
+// `npx playwright install chromium`).
+let _consecutiveFailures = 0;
+let _playwrightMissing = false;
+
 // ── Idle-suspend tracking ──────────────────────────────────────────────────
 // Timestamp of the last request that consumed a token. When the daemon
 // tick fires and (now - lastRequestAt) > IDLE_SUSPEND_MS, the daemon
@@ -48,7 +57,17 @@ export function notifyRequest(): void {
   _lastRequestAt = Date.now();
   if (_suspended) {
     _suspended = false;
-    log.info?.("daemon.resumed_after_idle");
+    // Reset Playwright-missing flag — the user may have installed browsers
+    // since the last failure. The next refresh attempt will re-detect if
+    // still missing.
+    if (_playwrightMissing) {
+      _playwrightMissing = false;
+      log.info?.("daemon.resumed_after_playwright_error", {
+        hint: "Retrying — if Playwright is still not installed, daemon will suspend again.",
+      });
+    } else {
+      log.info?.("daemon.resumed_after_idle");
+    }
     // Restart the interval — it was cleared when the daemon suspended.
     const settings = getSettings();
     if (settings.autoRefreshEnabled) {
@@ -136,14 +155,56 @@ async function checkAndRefresh(): Promise<void> {
       getPoolSize,
     });
 
+    // Reset consecutive failure counter on success
+    _consecutiveFailures = 0;
+    _playwrightMissing = false;
+
     log.info?.("daemon.refresh_complete", {
       collected: result.collected,
       poolSize: result.poolSize,
     });
   } catch (err) {
-    log.error?.("daemon.refresh_failed", {
-      error: err instanceof Error ? err.message : String(err),
-    });
+    const errorMsg = err instanceof Error ? err.message : String(err);
+
+    // Detect Playwright browser-not-installed errors and suspend the daemon
+    // to avoid retrying every 5 minutes with the same fatal error.
+    if (
+      errorMsg.includes("Executable doesn't exist") ||
+      errorMsg.includes("playwright install") ||
+      errorMsg.includes("browserType.launch") ||
+      errorMsg.includes("chrome-headless-shell") ||
+      errorMsg.includes("chromium")
+    ) {
+      _playwrightMissing = true;
+      _consecutiveFailures++;
+      log.error?.("daemon.refresh_failed_playwright_missing", {
+        error: errorMsg.slice(0, 200),
+        hint: "Run 'npx playwright install chromium' to install the browser. Daemon will retry on next request.",
+      });
+      // Suspend the daemon — it will be restarted by notifyRequest() when
+      // the next chat request arrives (gives the user time to install Playwright).
+      _suspended = true;
+      if (_interval) {
+        clearInterval(_interval);
+        _interval = null;
+      }
+    } else {
+      _consecutiveFailures++;
+      // Exponential backoff: after 3 consecutive failures, increase the
+      // interval to avoid hammering a broken endpoint.
+      if (_consecutiveFailures >= 3) {
+        log.warn?.("daemon.refresh_failed_backoff", {
+          error: errorMsg.slice(0, 200),
+          consecutiveFailures: _consecutiveFailures,
+          hint: "3+ consecutive failures — consider checking network/Aliyun credentials. Daemon continues with normal interval.",
+        });
+      } else {
+        log.error?.("daemon.refresh_failed", {
+          error: errorMsg.slice(0, 200),
+          consecutiveFailures: _consecutiveFailures,
+        });
+      }
+    }
   } finally {
     _isRefreshing = false;
   }
@@ -213,6 +274,8 @@ export function getDaemonStatus(): {
   autoRefreshEnabled: boolean;
   suspended: boolean;
   idleMinutes: number;
+  playwrightMissing: boolean;
+  consecutiveFailures: number;
 } {
   const settings = getSettings();
   return {
@@ -224,5 +287,7 @@ export function getDaemonStatus(): {
     autoRefreshEnabled: settings.autoRefreshEnabled,
     suspended: _suspended,
     idleMinutes: Math.floor((Date.now() - _lastRequestAt) / 60000),
+    playwrightMissing: _playwrightMissing,
+    consecutiveFailures: _consecutiveFailures,
   };
 }
