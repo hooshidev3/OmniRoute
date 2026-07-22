@@ -54,6 +54,8 @@ import { KimiWebExecutor } from "./kimi-web.ts";
 import { DoubaoWebExecutor } from "./doubao-web.ts";
 import { QwenWebExecutor } from "./qwen-web.ts";
 import { ZaiWebExecutor } from "./zai-web.ts";
+import { ZaiWebFreeExecutor } from "./zai-web-free.ts";
+import { XiaomimimoWebExecutor } from "./xiaomimimo-web.ts";
 import { KimiExecutor } from "./kimi.ts";
 import { MoonshotExecutor } from "./moonshot.ts";
 import { TheOldLlmExecutor } from "./theoldllm.ts";
@@ -163,6 +165,19 @@ const executors = {
   "qwen-web": new QwenWebExecutor(),
   "zai-web": new ZaiWebExecutor(),
   zw: new ZaiWebExecutor(), // Alias
+  // zai-web-free: chat.z.ai free-tier web bridge (guest JWT + Aliyun CaptchaV3).
+  // The SAME executor instance serves both "zai-web-free" (guest JWT) and
+  // "zai-web-token" (user-supplied JWT) — the executor checks for a hardcoded
+  // token at runtime to decide which mode to run in. Without this registration,
+  // getExecutor("zai-web-free") falls through to DefaultExecutor which does NOT
+  // compute the captcha_verify_param and Z.AI's nginx rejects the request with 405.
+  "zai-web-free": new ZaiWebFreeExecutor(),
+  "zai-web-token": new ZaiWebFreeExecutor(), // Same executor, different auth mode
+  zaifree: new ZaiWebFreeExecutor(), // Alias for zai-web-free
+  zwt: new ZaiWebFreeExecutor(), // Alias for zai-web-token
+  // xiaomimimo-web: cookie-based Xiaomi MiMo AI Studio web chat.
+  "xiaomimimo-web": new XiaomimimoWebExecutor(),
+  "mimo-web": new XiaomimimoWebExecutor(), // Alias
   theoldllm: new TheOldLlmExecutor(),
   tllm: new TheOldLlmExecutor(), // Alias
   chipotle: new ChipotleExecutor(),
