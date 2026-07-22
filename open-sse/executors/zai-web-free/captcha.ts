@@ -415,15 +415,7 @@ async function verifyCaptcha(
   params.Signature = generateAliyunSignature(params, getSecretKey());
 
   const body = buildQueryString(params);
-  console.log(`[Captcha-Debug] verifyCaptcha request URL=${VERIFY_CAPTCHA_URL}`);
-  console.log(`[Captcha-Debug] verifyCaptcha body length=${body.length}`);
-  console.log(
-    `[Captcha-Debug] verifyCaptcha CaptchaVerifyParam=${cvpJson.slice(0, 200)}${cvpJson.length > 200 ? "..." : ""}`
-  );
   const resp = await httpPost(VERIFY_CAPTCHA_URL, body, { Referer: "" });
-  console.log(
-    `[Captcha-Debug] verifyCaptcha raw response=${resp.slice(0, 500)}${resp.length > 500 ? "..." : ""}`
-  );
 
   const respJson = JSON.parse(resp) as {
     Success?: boolean;
@@ -465,11 +457,7 @@ async function tryCompute(
   consumeToken: (token: string) => void
 ): Promise<string> {
   const certifyId = await initCaptcha();
-  console.log(
-    `[Captcha-Debug] certifyId=${certifyId.slice(0, 24)}... deviceToken=${deviceToken.slice(0, 24)}...`
-  );
   const argValue = generateArg(certifyId);
-  console.log(`[Captcha-Debug] argValue=${argValue.slice(0, 40)}... (length=${argValue.length})`);
   const ct = Date.now();
 
   const track: Track = {
@@ -489,26 +477,20 @@ async function tryCompute(
     arg: argValue,
   };
   const jsonBytes = Buffer.from(JSON.stringify(track), "utf-8");
-  console.log(`[Captcha-Debug] trackJSON=${jsonBytes.toString("utf-8")}`);
 
   const h = aliHash(jsonBytes.toString("utf-8"), "0000");
-  console.log(`[Captcha-Debug] aliHash=${h} (length=${h.length})`);
   const combined = Buffer.from(h + jsonBytes.toString("utf-8"), "utf-8");
-  console.log(`[Captcha-Debug] combined length=${combined.length}`);
   const compressed = zlibCompress(combined);
-  console.log(
-    `[Captcha-Debug] compressed length=${compressed.length}, first 4 bytes=${compressed.slice(0, 4).toString("hex")}`
-  );
   const fb64 = base64Encode(compressed);
-  console.log(`[Captcha-Debug] fb64 length=${fb64.length}`);
   const finalVal = encrypt(Buffer.from(fb64, "utf-8"));
-  console.log(`[Captcha-Debug] finalVal length=${finalVal.length}`);
 
   // Always consume the token after use (whether verify succeeds or fails).
   consumeToken(deviceToken);
 
   const payload = await verifyCaptcha(certifyId, finalVal, deviceToken);
-  console.log(`[Captcha-Debug] verifyCaptcha payload length=${payload ? payload.length : 0}`);
+  console.log(
+    `[Captcha] tryCompute certifyId=${certifyId} deviceTokenLen=${deviceToken.length} payloadLen=${payload ? payload.length : 0}`
+  );
   return payload;
 }
 

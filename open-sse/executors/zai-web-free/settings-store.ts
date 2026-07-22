@@ -67,8 +67,13 @@ export const DEFAULT_AUTO_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 //   "c_only"    → C only (full browser captcha) — slowest but most reliable
 //   "a_then_c"  → A (retries) → C (skip B) — avoids the extra Playwright token fetch
 //   "a_then_b"  → A (retries) → B (no browser fallback) — no Method C
-// Default is "a_only" to match the GLM-Free-API Go reference behavior.
-export const DEFAULT_CAPTCHA_STRATEGY = "a_only" as const;
+// Default is "auto" (A→B→C fallback chain). Method A uses pooled device tokens
+// which may be stale; "auto" falls back to Method B (fresh token via Playwright)
+// and Method C (full browser captcha) when A fails. The Go reference uses A-only
+// but its tokens are always fresh because it collects them synchronously per
+// request — our daemon-collected pool tokens can expire between collection and
+// use, so the fallback chain is essential for reliability.
+export const DEFAULT_CAPTCHA_STRATEGY = "auto" as const;
 // Default retries matches Go's maxTokenRetries = 2.
 export const DEFAULT_CAPTCHA_RETRIES = 2;
 // Default timeout: 90000ms (90 seconds) — matches Go reference:
