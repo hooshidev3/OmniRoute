@@ -20,7 +20,7 @@ describe("kilo-free provider", () => {
     assert.ok(entry, "kilo-free should be in NOAUTH_PROVIDERS");
     assert.equal(entry.noAuth, true);
     assert.equal(entry.hasFree, true);
-    assert.equal(entry.website, "https://api.kilo.ai");
+    assert.equal(entry.website, "https://kilo.ai");
   });
 
   it("registry entry has correct chat path and models URL", async () => {

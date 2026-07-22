@@ -24,6 +24,16 @@ export const BASE_URL = "https://chat.z.ai";
 export const DEFAULT_FE_VERSION = "prod-fe-1.1.77";
 const FE_VERSION_REGEX = /prod-fe-\d+\.\d+\.\d+/;
 
+// ── Cached fe-version with periodic refresh ──────────────────────────────────
+// Z.AI's nginx returns 405 for stale fe-versions. The Go reference (GLM-Free-API)
+// scrapes the version on every session init. We cache it and refresh every 5
+// minutes to avoid hitting chat.z.ai homepage on every chat request, while
+// still staying current when Z.AI bumps the version.
+let _cachedFeVersion: string | null = null;
+let _cachedFeVersionAt = 0;
+const FE_VERSION_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+let _feVersionRefreshTimer: ReturnType<typeof setInterval> | null = null;
+
 export interface ZaiSession {
   token: string;
   userId: string;
@@ -66,8 +76,18 @@ export function decodeJwt(token: string): { id: string; name: string } {
 /**
  * Scrape the `prod-fe-x.y.z` version string from the Z.AI homepage.
  * Falls back to `DEFAULT_FE_VERSION` if the scrape fails.
+ *
+ * Results are cached for `FE_VERSION_CACHE_TTL_MS` (5 minutes) to avoid
+ * hitting chat.z.ai on every chat request. A periodic background refresh
+ * ensures the cached version stays current even when no new sessions are
+ * being initialized.
  */
 export async function scrapeFeVersion(): Promise<string> {
+  // Return cached version if still fresh
+  if (_cachedFeVersion && Date.now() - _cachedFeVersionAt < FE_VERSION_CACHE_TTL_MS) {
+    return _cachedFeVersion;
+  }
+
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10_000);
@@ -75,14 +95,55 @@ export async function scrapeFeVersion(): Promise<string> {
       const resp = await fetch(BASE_URL, { signal: controller.signal });
       const html = await resp.text();
       const match = FE_VERSION_REGEX.exec(html);
-      if (match) return match[0];
+      if (match) {
+        _cachedFeVersion = match[0];
+        _cachedFeVersionAt = Date.now();
+        return _cachedFeVersion;
+      }
     } finally {
       clearTimeout(timer);
     }
   } catch {
-    // fall through to default
+    // fall through to default or stale cache
+  }
+
+  // If we have a stale cached version, prefer it over the hardcoded default
+  // (it was scraped at some point, so it's likely closer to the current version)
+  if (_cachedFeVersion) {
+    return _cachedFeVersion;
   }
   return DEFAULT_FE_VERSION;
+}
+
+/**
+ * Start a periodic background refresh of the fe-version.
+ * Called once at server startup. Every 5 minutes, scrapes the Z.AI homepage
+ * and updates the cached version. Non-fatal if the scrape fails — the cached
+ * or default version is used until the next successful scrape.
+ *
+ * This mirrors the Go reference behavior where the version is always fresh.
+ */
+export function startFeVersionRefresh(): void {
+  if (_feVersionRefreshTimer) return; // already started
+
+  // Do an immediate refresh
+  void scrapeFeVersion().catch(() => {});
+
+  // Then refresh every 5 minutes
+  _feVersionRefreshTimer = setInterval(() => {
+    void scrapeFeVersion().catch(() => {});
+  }, FE_VERSION_CACHE_TTL_MS);
+}
+
+/**
+ * Stop the periodic fe-version refresh.
+ * Called on server shutdown.
+ */
+export function stopFeVersionRefresh(): void {
+  if (_feVersionRefreshTimer) {
+    clearInterval(_feVersionRefreshTimer);
+    _feVersionRefreshTimer = null;
+  }
 }
 
 /**

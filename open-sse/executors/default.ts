@@ -626,7 +626,13 @@ export class DefaultExecutor extends BaseExecutor {
         const defaultsRecord = withDefaults as Record<string, unknown>;
         const bodyDisablesStreamOptions =
           defaultsRecord.stream !== undefined && defaultsRecord.stream !== true;
-        if (bodyDisablesStreamOptions) {
+        // #663 port: Qwen rejects stream_options when thinking mode is active.
+        // When thinking or enable_thinking is set, Qwen returns a 400 error if
+        // stream_options is present. Strip it in that case.
+        const qwenBlocksStreamOptions =
+          this.provider === "qwen" &&
+          (Boolean(defaultsRecord.thinking) || Boolean(defaultsRecord.enable_thinking));
+        if (bodyDisablesStreamOptions || qwenBlocksStreamOptions) {
           if (Object.prototype.hasOwnProperty.call(defaultsRecord, "stream_options")) {
             const withoutStreamOptions = { ...defaultsRecord };
             delete withoutStreamOptions.stream_options;

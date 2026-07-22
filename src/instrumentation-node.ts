@@ -504,6 +504,19 @@ export async function registerNodejs(): Promise<void> {
       console.warn("[STARTUP] Z.AI Free Web daemon failed to start (non-fatal):", msg);
     }
 
+    // Z.AI fe-version periodic refresh — scrapes chat.z.ai homepage every 5
+    // minutes to keep the x-fe-Version header current. Z.AI's nginx returns
+    // 405 for stale versions. Non-fatal if the scrape fails.
+    try {
+      const { startFeVersionRefresh } =
+        await import("@omniroute/open-sse/executors/zai-web-free/session.ts");
+      startFeVersionRefresh();
+      console.log("[STARTUP] Z.AI fe-version periodic refresh started (5 min interval)");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn("[STARTUP] Z.AI fe-version refresh failed to start (non-fatal):", msg);
+    }
+
     // Proactive connection-cooldown recovery (#8): re-validate connections whose
     // transient `rate_limited_until` window has elapsed OUTSIDE the request hot
     // path, so the first request after a cooldown does not pay the probe latency.

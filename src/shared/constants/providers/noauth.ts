@@ -162,39 +162,40 @@ export const NOAUTH_PROVIDERS = {
   "kilo-free": {
     id: "kilo-free",
     alias: "kilofree",
-    name: "Kilo Free (OpenRouter)",
-    icon: "terminal",
+    name: "Kilo Free",
+    icon: "kilo-free",
     color: "#10B981",
     textIcon: "KF",
-    website: "https://api.kilo.ai",
+    website: "https://kilo.ai",
     noAuth: true,
     hasFree: true,
-    passthroughModels: true,
     serviceKinds: ["llm"],
+    supportsDefaultModel: true,
     authHint:
-      "No API key required — uses Kilo's public OpenRouter endpoint with `Authorization: Bearer anonymous` for free models (suffixed `:free`).",
+      "No API key required — uses Kilo's public OpenRouter endpoint with 10+ free models including auto-routing.",
     freeNote:
-      "Free models are auto-discovered from /models. The default `kilo-auto/free` model auto-routes to the best available free backend per request.",
+      "Free Kilo OpenRouter endpoint (api.kilo.ai/api/openrouter) with 10+ free models. Default model is kilo-auto/free (auto-routing). No signup or captcha needed.",
+    notice: {
+      text: "Kilo Free uses api.kilo.ai/api/openrouter — a public no-auth endpoint with 10+ free models (:free suffix). Default model kilo-auto/free auto-routes to the best available free backend. Multi-turn works via standard messages array (upstream is stateless).",
+    },
   },
   "zai-web-free": {
     id: "zai-web-free",
     alias: "zaifree",
-    name: "Z.AI Web Free (Captcha)",
+    name: "Z.AI Free Web",
     icon: "auto_awesome",
-    color: "#2563EB",
+    color: "#7C3AED",
     textIcon: "ZF",
     website: "https://chat.z.ai",
     noAuth: true,
     hasFree: true,
     serviceKinds: ["llm"],
     authHint:
-      "No API key required — uses Z.AI's free guest JWT (chat.z.ai/api/v2/chat/completions) with Aliyun CaptchaV3 verification. Optional: paste a Z.AI JWT to unlock all models (zai-web-token).",
+      "No API key required — uses Z.AI's free guest session with Aliyun captcha verification. Device tokens must be refreshed periodically via the dashboard.",
     freeNote:
-      "Free guest access to GLM-4.7 via chat.z.ai web endpoint. Requires Aliyun AccessKey/SecretKey (defaults ship with the public values embedded in chat.z.ai's AliyunCaptcha.js). Device tokens are auto-collected via Playwright.",
+      "Free Z.AI web chat (chat.z.ai) with in-memory captcha. Guest sessions allow glm-4.7 only. For all models, use zai-web-token with your JWT.",
     notice: {
-      text:
-        "Captcha-based provider — every request consumes a device token from the pool. " +
-        "Refresh tokens periodically via the dashboard. Tool calling is not supported by the web endpoint.",
+      text: "Z.AI Free Web uses chat.z.ai's consumer web endpoint with Aliyun CaptchaV3 verification. Device tokens are collected via Playwright and consumed FIFO. Rate limits may apply.",
     },
   },
 };
