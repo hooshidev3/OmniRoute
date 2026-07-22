@@ -150,6 +150,16 @@ function readSetting(key: string): string | null {
 }
 
 /**
+ * Public helper: read a raw setting value from the DB (without env/default
+ * fallback). Used by the dashboard GET /keys route to report the ACTUAL
+ * source of the key (db / env / default / not-configured) rather than just
+ * whether the resolved value is non-empty.
+ */
+export function readSettingRaw(key: string): string | null {
+  return readSetting(key);
+}
+
+/**
  * Write a setting value to the `key_value` table.
  */
 function writeSetting(key: string, value: string): void {
@@ -170,18 +180,19 @@ function writeSetting(key: string, value: string): void {
 
 /**
  * Resolve the Aliyun AccessKey at runtime. Priority (highest wins):
- *   1. `OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY` env var — set by operators who want
+ *   1. `key_value` table row (set by the dashboard's "Extract AccessKey"
+ *      button or manual entry) — takes precedence because the auto-extract
+ *      flow updates this value automatically when Aliyun rotates keys.
+ *   2. `OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY` env var — set by operators who want
  *      to rotate keys without touching the dashboard, or who deploy via
  *      Docker/K8s secrets.
- *   2. `key_value` table row (set by the dashboard's "Extract AccessKey"
- *      button or manual entry).
  *   3. `DEFAULT_ACCESS_KEY` constant (matches the GLM-Free-API Go binary).
  */
 function resolveAccessKey(): string {
-  const env = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY;
-  if (env && env.trim()) return env.trim();
   const stored = readSetting("accessKey");
   if (stored && stored.trim()) return stored.trim();
+  const env = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY;
+  if (env && env.trim()) return env.trim();
   return DEFAULT_ACCESS_KEY;
 }
 
@@ -190,10 +201,10 @@ function resolveAccessKey(): string {
  * `resolveAccessKey()` but reads `OMNIROUTE_ZAI_ALIYUN_SECRET_KEY`.
  */
 function resolveSecretKey(): string {
-  const env = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY;
-  if (env && env.trim()) return env.trim();
   const stored = readSetting("secretKey");
   if (stored && stored.trim()) return stored.trim();
+  const env = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY;
+  if (env && env.trim()) return env.trim();
   return DEFAULT_SECRET_KEY;
 }
 
@@ -268,12 +279,14 @@ export function updateSettings(updates: Partial<ZaiWebFreeSettings>): ZaiWebFree
 
   if (updates.accessKey !== undefined) {
     writeSetting("accessKey", updates.accessKey);
-    // If env var is set, it wins — reflect that in the returned settings.
-    current.accessKey = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY?.trim() || updates.accessKey;
+    // DB value takes precedence (highest priority in resolveAccessKey).
+    // Reflect the just-saved value so the caller sees what the captcha
+    // module will actually use.
+    current.accessKey = updates.accessKey;
   }
   if (updates.secretKey !== undefined) {
     writeSetting("secretKey", updates.secretKey);
-    current.secretKey = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY?.trim() || updates.secretKey;
+    current.secretKey = updates.secretKey;
   }
   if (updates.minPoolSize !== undefined) {
     writeSetting("minPoolSize", String(updates.minPoolSize));

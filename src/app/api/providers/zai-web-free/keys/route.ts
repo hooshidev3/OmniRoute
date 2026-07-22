@@ -5,6 +5,7 @@ import {
   getSettings,
   updateSettings,
   initSettingsStore,
+  readSettingRaw,
 } from "@omniroute/open-sse/executors/zai-web-free/settings-store.ts";
 import { getDaemonStatus } from "@omniroute/open-sse/executors/zai-web-free/auto-refresh-daemon.ts";
 
@@ -28,11 +29,29 @@ export async function GET(request: Request) {
   const daemonStatus = getDaemonStatus();
 
   // Surface which source the AccessKey/SecretKey came from so the dashboard
-  // can show "env override active" / "DB-stored" / "not configured".
+  // can show "DB-stored" / "env override" / "hardcoded default" / "not configured".
+  // Priority: DB → env → hardcoded default.
+  // We need to re-check the DB here (not just trust settings.accessKey) because
+  // resolveAccessKey() falls through to env/default when DB is empty — we want
+  // to report the ACTUAL source, not just "non-empty".
+  const dbAccessKey = readSettingRaw("accessKey");
+  const dbSecretKey = readSettingRaw("secretKey");
   const hasEnvAccessKey = !!process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY;
   const hasEnvSecretKey = !!process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY;
-  const accessKeySource = hasEnvAccessKey ? "env" : settings.accessKey ? "db" : "not-configured";
-  const secretKeySource = hasEnvSecretKey ? "env" : settings.secretKey ? "db" : "not-configured";
+  const accessKeySource = dbAccessKey
+    ? "db"
+    : hasEnvAccessKey
+      ? "env"
+      : settings.accessKey
+        ? "default"
+        : "not-configured";
+  const secretKeySource = dbSecretKey
+    ? "db"
+    : hasEnvSecretKey
+      ? "env"
+      : settings.secretKey
+        ? "default"
+        : "not-configured";
 
   return NextResponse.json({
     accessKey: settings.accessKey || "",
