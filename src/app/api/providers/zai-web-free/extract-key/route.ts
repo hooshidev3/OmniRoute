@@ -5,6 +5,10 @@ import {
   extractAliyunKeys,
   verifyKeys,
 } from "@omniroute/open-sse/executors/zai-web-free/key-extractor.ts";
+import {
+  updateSettings,
+  initSettingsStore,
+} from "@omniroute/open-sse/executors/zai-web-free/settings-store.ts";
 
 const log = logger("ZAI-WEB-FREE-ADMIN");
 
@@ -12,28 +16,35 @@ const log = logger("ZAI-WEB-FREE-ADMIN");
  * POST /api/providers/zai-web-free/extract-key
  *
  * Automatically extracts the Aliyun AccessKey and SecretKey from the
- * AliyunCaptcha.js bundle served by alicdn. This is a maintenance tool
- * for when Aliyun rotates the keys and the hardcoded values stop working.
+ * AliyunCaptcha.js bundle served by alicdn, then SAVES them to the
+ * RouteChi SQLite database (key_value table, namespace='zai_web_free').
+ *
+ * After extraction, the keys are immediately available for captcha
+ * verification — no manual "Save" button click required.
  *
  * Flow:
- *   1. Downloads AliyunCaptcha.js from o.alicdn.com
- *   2. Finds all base64-encoded ciphertexts
- *   3. Tries AES-128-CBC decryption (key="FqJB6iRNVYdEGpwb", IV=WordArray)
- *   4. Identifies AccessKey (starts with "LTAI") and SecretKey (30 chars)
- *   5. Verifies the keys by calling Aliyun's InitCaptchaV3 API
+ *   1. Launch headless Chromium, load chat.z.ai
+ *   2. Intercept InitCaptchaV3/VerifyCaptchaV3 requests
+ *   3. Extract AccessKeyId from the POST body
+ *   4. Verify the SecretKey by checking the HMAC-SHA1 signature
+ *   5. SAVE both keys to the DB via updateSettings()
  *
  * Returns:
- *   200: { success: true, accessKey, secretKey, verified, source, candidates, timestamp }
+ *   200: { success: true, accessKey, secretKey, verified, saved, source, timestamp }
  *   500: { error: "Extraction failed: <message>" }
  */
 export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
 
+  const dataDir =
+    process.env.OMNIROUTE_DATA_DIR || (process.env.HOME ? `${process.env.HOME}/.omniroute` : ".");
+  initSettingsStore(`${dataDir}/omniroute.db`);
+
   log.info?.("extract_key.start");
 
   try {
-    // Step 1: Extract keys from AliyunCaptcha.js
+    // Step 1: Extract keys via browser interception
     const result = await extractAliyunKeys();
 
     if (!result.accessKey) {
@@ -58,10 +69,29 @@ export async function POST(request: Request) {
       log.info?.("extract_key.verified", { verified });
     }
 
+    // Step 3: Auto-save the extracted keys to the database.
+    // Only save if verification succeeded OR if we have no secretKey (still
+    // save the accessKey — the user can manually set the secretKey later).
+    // We always save the accessKey; secretKey is saved only if present.
+    const updates: { accessKey: string; secretKey?: string } = {
+      accessKey: result.accessKey,
+    };
+    if (result.secretKey) {
+      updates.secretKey = result.secretKey;
+    }
+
+    const saved = updateSettings(updates);
+    log.info?.("extract_key.saved", {
+      accessKey: saved.accessKey.slice(0, 8) + "...",
+      secretKey: saved.secretKey ? saved.secretKey.slice(0, 8) + "..." : "not set",
+      verified,
+    });
+
     log.info?.("extract_key.complete", {
       accessKey: result.accessKey.slice(0, 8) + "...",
       secretKey: result.secretKey ? result.secretKey.slice(0, 8) + "..." : "not found",
       verified,
+      saved: true,
     });
 
     return NextResponse.json({
@@ -69,8 +99,8 @@ export async function POST(request: Request) {
       accessKey: result.accessKey,
       secretKey: result.secretKey,
       verified,
+      saved: true,
       source: result.source,
-      candidates: result.candidates,
       timestamp: result.timestamp,
     });
   } catch (err) {
