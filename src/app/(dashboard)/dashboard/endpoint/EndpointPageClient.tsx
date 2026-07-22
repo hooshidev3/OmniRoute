@@ -145,6 +145,8 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
   const [cloudEnabled, setCloudEnabled] = useState(false);
   const [showCloudModal, setShowCloudModal] = useState(false);
   const [showDeployWorkerModal, setShowDeployWorkerModal] = useState(false);
+  const [cloudUrlInput, setCloudUrlInput] = useState("");
+  const [savingCloudUrl, setSavingCloudUrl] = useState(false);
   const [showDisableModal, setShowDisableModal] = useState(false);
   const [cloudSyncing, setCloudSyncing] = useState(false);
   const [cloudStatus, setCloudStatus] = useState(null);
@@ -529,6 +531,34 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ customSystemPrompt: value }),
     });
+  };
+
+  const handleSaveCloudUrl = async () => {
+    const url = cloudUrlInput.trim();
+    if (!url) return;
+    setSavingCloudUrl(true);
+    try {
+      const resp = await fetch("/api/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cloudUrl: url }),
+      });
+      if (!resp.ok) throw new Error("Failed to save cloud URL");
+      setCloudConfigured(true);
+      setCloudBaseUrl(url);
+      setCloudStatus({
+        type: "success",
+        message: `Cloud URL set to ${url}. You can now enable cloud sync.`,
+      });
+      setTimeout(() => window.location.reload(), 2000);
+    } catch (err) {
+      setCloudStatus({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to save cloud URL",
+      });
+    } finally {
+      setSavingCloudUrl(false);
+    }
   };
 
   const handleCloudToggle = (checked) => {
@@ -1393,17 +1423,17 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
             </div>
             <span
               className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border shrink-0 ${
-                cloudEnabled
+                cloudEnabled && cloudConfigured
                   ? "bg-green-500/10 border-green-500/30 text-green-400"
                   : "bg-surface border-border/70 text-text-muted"
               }`}
             >
               <span
-                className={`w-1.5 h-1.5 rounded-full shrink-0 ${cloudEnabled ? "bg-green-400 animate-pulse" : "bg-text-muted"}`}
+                className={`w-1.5 h-1.5 rounded-full shrink-0 ${cloudEnabled && cloudConfigured ? "bg-green-400 animate-pulse" : "bg-text-muted"}`}
               />
-              {cloudEnabled ? "Active" : "Disabled"}
+              {cloudEnabled && cloudConfigured ? "Active" : "Disabled"}
             </span>
-            {cloudEnabled ? (
+            {cloudEnabled && cloudConfigured ? (
               <Button
                 size="sm"
                 variant="secondary"
@@ -1426,11 +1456,53 @@ export default function APIPageClient({ machineId }: Readonly<APIPageClientProps
                 {t("enableCloud")}
               </Button>
             ) : (
-              <span className="text-xs text-text-muted shrink-0 px-2 py-1 rounded border border-border/70 bg-surface">
-                Not configured
-              </span>
+              <div className="flex items-center gap-2 shrink-0">
+                <input
+                  type="text"
+                  placeholder="https://your-worker.workers.dev"
+                  value={cloudUrlInput}
+                  onChange={(e) => setCloudUrlInput(e.target.value)}
+                  className="w-48 rounded-md border border-border bg-bg px-2.5 py-1 text-xs text-text-main focus:border-primary focus:outline-none"
+                />
+                <Button
+                  size="sm"
+                  variant="primary"
+                  icon="save"
+                  onClick={handleSaveCloudUrl}
+                  disabled={!cloudUrlInput.trim() || savingCloudUrl}
+                  className="shrink-0"
+                >
+                  {savingCloudUrl ? "..." : "Set"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  icon="rocket_launch"
+                  onClick={() => setShowDeployWorkerModal(true)}
+                  className="shrink-0"
+                >
+                  Auto-Deploy
+                </Button>
+              </div>
             )}
           </div>
+
+          {/* Deploy Worker Modal — shown when user clicks Auto-Deploy */}
+          {showDeployWorkerModal && (
+            <DeployWorkerModal
+              onClose={() => setShowDeployWorkerModal(false)}
+              onSuccess={(workerUrl, secret) => {
+                setCloudConfigured(true);
+                setCloudBaseUrl(workerUrl);
+                setShowDeployWorkerModal(false);
+                setCloudStatus({
+                  type: "success",
+                  message: `Worker deployed: ${workerUrl}. Set OMNIROUTE_CLOUD_SYNC_SECRET=${secret} in .env for HMAC verification.`,
+                });
+                setTimeout(() => window.location.reload(), 3000);
+              }}
+            />
+          )}
 
           {/* Cloudflare Quick Tunnel */}
           {showCloudflaredTunnel && (
@@ -2607,21 +2679,6 @@ function EndpointSection({
             </div>
           )}
         </div>
-      )}
-
-      {/* Deploy Cloudflare Worker Modal — auto-deploys the OmniRoute Cloud Worker */}
-      {showDeployWorkerModal && (
-        <DeployWorkerModal
-          onClose={() => setShowDeployWorkerModal(false)}
-          onSuccess={(workerUrl, _secret) => {
-            // After successful deploy, pre-fill the cloud URL field and close modal
-            if (workerUrl) {
-              setCloudBaseUrl(workerUrl);
-            }
-            setShowDeployWorkerModal(false);
-            setShowCloudModal(true);
-          }}
-        />
       )}
     </div>
   );
