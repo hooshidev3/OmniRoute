@@ -37,18 +37,24 @@ const log = logger("ZAI-WEB-FREE-SETTINGS");
 //
 // The accessKey is redacted in the Go source ([REDACTED:aliyun_access_key])
 // but is extractable at runtime from AliyunCaptcha.js via the "Extract via
-// Browser" button in the dashboard. The secretKey is a literal in the Go source.
+// Browser" button in the dashboard. The secretKey is a literal in the Go source
+// (main.go:54: secretKey = "YSKfst7GaVkXwZYvVihJsKF9r89koz") and is shipped as
+// a hardcoded fallback here so captcha verification works out of the box.
 //
 // Operators can override at three levels (highest priority first):
 //   1. env vars: OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY / OMNIROUTE_ZAI_ALIYUN_SECRET_KEY
 //   2. dashboard-stored values (key_value table, namespace='zai_web_free')
-//   3. the DEFAULT_* constants below (empty — must be extracted or set)
+//   3. the DEFAULT_* constants below
+//      - DEFAULT_ACCESS_KEY  = "" (must be extracted or set — redacted upstream)
+//      - DEFAULT_SECRET_KEY  = "YSKfst7GaVkXwZYvVihJsKF9r89koz" (Go literal)
 //
-// If no key is available (env unset + DB empty + default empty), the captcha
-// verification will fail and the executor will return an error. The dashboard
-// shows a "Extract AccessKey" button to extract the keys from AliyunCaptcha.js.
+// If no accessKey is available (env unset + DB empty + default empty), the
+// captcha verification will fail and the executor will return an error. The
+// dashboard shows a "Extract AccessKey" button to extract the keys from
+// AliyunCaptcha.js.
 export const DEFAULT_ACCESS_KEY = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY || "";
-export const DEFAULT_SECRET_KEY = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY || "";
+export const DEFAULT_SECRET_KEY =
+  process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY || "YSKfst7GaVkXwZYvVihJsKF9r89koz";
 export const DEFAULT_MIN_POOL_SIZE = 10;
 export const DEFAULT_AUTO_REFRESH_ENABLED = true;
 export const DEFAULT_AUTO_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes

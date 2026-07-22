@@ -855,7 +855,13 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
       requestBody.tool_choice = bodyObj.tool_choice;
     }
 
-    const requestUrl = `${CHAT_COMPLETIONS_URL}?${sig.urlParams}`;
+    // Note: GLM-Free-API Go reference discards urlParams (signature, _, _ := ...)
+    // and POSTs to the bare /api/v2/chat/completions URL with NO query string.
+    // Z.AI's nginx returns 405 Not Allowed when the chat completions endpoint
+    // receives any query parameters — only the signature is sent, via the
+    // x-signature header. The urlParams field is still computed (it is part
+    // of the signature payload) but must NOT be appended to the URL.
+    const requestUrl = CHAT_COMPLETIONS_URL;
     const reqHeaders: Record<string, string> = {
       Authorization: `Bearer ${session.token}`,
       "Content-Type": "application/json",
