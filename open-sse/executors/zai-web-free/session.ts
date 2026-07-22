@@ -21,7 +21,7 @@
 import { Buffer } from "node:buffer";
 
 export const BASE_URL = "https://chat.z.ai";
-export const DEFAULT_FE_VERSION = "prod-fe-1.1.75";
+export const DEFAULT_FE_VERSION = "prod-fe-1.1.77";
 const FE_VERSION_REGEX = /prod-fe-\d+\.\d+\.\d+/;
 
 export interface ZaiSession {
