@@ -1085,24 +1085,24 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
                 else if (j.choices?.[0]?.delta?.content) chunk = j.choices[0].delta.content;
 
                 if (chunk) {
-                  if (j.data?.phase === "thinking") {
-                    // Phase-based reasoning (original Z.AI SSE format)
-                    if (thinkMode !== "strip") {
-                      emit({ reasoning_content: chunk });
-                    }
-                  } else {
-                    // Z.AI wraps reasoning in <details>...</details> HTML tags
-                    // inside the content stream (Go commit 1655e13). The
-                    // stateful parser handles tag splits across chunks.
-                    const { contentDelta, reasoningDelta } = detailsParser.push(chunk, thinkMode);
-                    if (contentDelta) {
-                      fullContent += contentDelta;
-                      emit({ content: contentDelta });
-                    }
-                    if (reasoningDelta) {
-                      sentReasoning += reasoningDelta;
-                      emit({ reasoning_content: reasoningDelta });
-                    }
+                  // ALWAYS route through detailsParser regardless of phase.
+                  // Z.AI sends <details> tags split across phase=thinking and
+                  // phase=answer chunks: the opening <details type="reasoning"
+                  // done="false"> arrives in phase=thinking, and the continuation
+                  // (e.g. `true">`, reasoning text, `</details>`) arrives in
+                  // phase=answer. If we bypass detailsParser for phase=thinking,
+                  // the opening tag leaks into reasoning_content AND the
+                  // continuation leaks into content (the user sees `true">` and
+                  // `</details>` as raw content). The stateful detailsParser
+                  // correctly tracks the <details> state across phase transitions.
+                  const { contentDelta, reasoningDelta } = detailsParser.push(chunk, thinkMode);
+                  if (contentDelta) {
+                    fullContent += contentDelta;
+                    emit({ content: contentDelta });
+                  }
+                  if (reasoningDelta) {
+                    sentReasoning += reasoningDelta;
+                    emit({ reasoning_content: reasoningDelta });
                   }
                 }
               }
@@ -1214,11 +1214,10 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           else if (j.choices?.[0]?.delta?.content) chunk = j.choices[0].delta.content;
 
           if (chunk) {
-            if (j.data?.phase === "thinking") {
-              reasoningContent += chunk;
-            } else {
-              fullContent += chunk;
-            }
+            // Accumulate ALL content regardless of phase — the <details> tag
+            // can be split across phase=thinking and phase=answer chunks.
+            // We'll parse <details> tags from the combined content below.
+            fullContent += chunk;
           }
         }
         if (buffer === "") break;
