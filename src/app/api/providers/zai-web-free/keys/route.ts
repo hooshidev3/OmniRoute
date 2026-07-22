@@ -28,13 +28,15 @@ export async function GET(request: Request) {
   const daemonStatus = getDaemonStatus();
 
   // Surface which source the AccessKey/SecretKey came from so the dashboard
-  // can show "env override active" / "DB-stored" / "default constant".
-  const accessKeySource = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY ? "env" : "db-or-default";
-  const secretKeySource = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY ? "env" : "db-or-default";
+  // can show "env override active" / "DB-stored" / "not configured".
+  const hasEnvAccessKey = !!process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY;
+  const hasEnvSecretKey = !!process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY;
+  const accessKeySource = hasEnvAccessKey ? "env" : settings.accessKey ? "db" : "not-configured";
+  const secretKeySource = hasEnvSecretKey ? "env" : settings.secretKey ? "db" : "not-configured";
 
   return NextResponse.json({
-    accessKey: settings.accessKey,
-    secretKey: settings.secretKey,
+    accessKey: settings.accessKey || "",
+    secretKey: settings.secretKey || "",
     accessKeySource,
     secretKeySource,
     minPoolSize: settings.minPoolSize,

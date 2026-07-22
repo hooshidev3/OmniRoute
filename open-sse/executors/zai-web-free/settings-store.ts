@@ -28,6 +28,25 @@ const log = logger("ZAI-WEB-FREE-SETTINGS");
 // If Aliyun rotates the keys, run `POST /api/providers/zai-web-free/extract-key`
 // (intercepts AliyunCaptcha.js and AES-decrypts the new keys), or set the
 // new values via env vars.
+// Default Aliyun CaptchaV3 credentials. These match the values embedded in
+// the GLM-Free-API Go binary (chat.z.ai's free-tier captcha verification).
+// They are PUBLIC in the sense that they ship in the AliyunCaptcha.js bundle
+// served by alicdn to every browser that loads chat.z.ai — they are NOT user
+// secrets. They are scoped to the `didk33e0` SceneId and only authorize
+// InitCaptchaV3/VerifyCaptchaV3 calls.
+//
+// The accessKey is redacted in the Go source ([REDACTED:aliyun_access_key])
+// but is extractable at runtime from AliyunCaptcha.js via the "Extract via
+// Browser" button in the dashboard. The secretKey is a literal in the Go source.
+//
+// Operators can override at three levels (highest priority first):
+//   1. env vars: OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY / OMNIROUTE_ZAI_ALIYUN_SECRET_KEY
+//   2. dashboard-stored values (key_value table, namespace='zai_web_free')
+//   3. the DEFAULT_* constants below (empty — must be extracted or set)
+//
+// If no key is available (env unset + DB empty + default empty), the captcha
+// verification will fail and the executor will return an error. The dashboard
+// shows a "Extract AccessKey" button to extract the keys from AliyunCaptcha.js.
 export const DEFAULT_ACCESS_KEY = process.env.OMNIROUTE_ZAI_ALIYUN_ACCESS_KEY || "";
 export const DEFAULT_SECRET_KEY = process.env.OMNIROUTE_ZAI_ALIYUN_SECRET_KEY || "";
 export const DEFAULT_MIN_POOL_SIZE = 10;

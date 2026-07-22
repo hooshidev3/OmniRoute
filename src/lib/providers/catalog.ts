@@ -88,8 +88,7 @@ export interface ResolvedCompatibleProviderCatalogEntry extends ProviderCatalogM
 }
 
 export type ResolvedProviderCatalogEntry =
-  | ResolvedStaticProviderCatalogEntry
-  | ResolvedCompatibleProviderCatalogEntry;
+  ResolvedStaticProviderCatalogEntry | ResolvedCompatibleProviderCatalogEntry;
 
 export const STATIC_PROVIDER_CATALOG_GROUPS: Record<
   StaticProviderCatalogCategory,
@@ -170,6 +169,7 @@ const MANAGED_PROVIDER_CONNECTION_CATEGORIES = new Set<StaticProviderCatalogCate
   "search",
   "audio",
   "cloud-agent",
+  "no-auth", // #kilo-free: allow no-auth providers to create connection rows for per-account proxy management
 ]);
 
 export function getStaticProviderCatalogGroup(
