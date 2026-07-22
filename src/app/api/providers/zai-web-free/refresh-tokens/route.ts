@@ -158,8 +158,7 @@ export async function POST(request: Request) {
     parallel: body.parallel,
     headed: body.headed,
     unsafe: body.unsafe,
-    blockTrackers: body.blockTrackers ?? true,
-    proxy: proxyUrl ? "configured" : "direct",
+    blockTrackers: body.blockTrackers ?? false, // default: off (matches Go reference + main)
   });
 
   try {
@@ -169,7 +168,7 @@ export async function POST(request: Request) {
       parallel: body.parallel,
       headed: body.headed,
       unsafe: body.unsafe,
-      blockTrackers: body.blockTrackers ?? true, // default: on
+      blockTrackers: body.blockTrackers ?? false, // default: off (matches Go reference + main)
       proxyUrl,
       addTokens: addDeviceTokens,
       getPoolSize,
