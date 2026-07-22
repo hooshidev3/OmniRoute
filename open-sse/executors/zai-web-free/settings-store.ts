@@ -224,7 +224,21 @@ export function getSettings(): ZaiWebFreeSettings {
       (dbAutoRefreshInterval && parseInt(dbAutoRefreshInterval, 10)) ||
       _settings?.autoRefreshIntervalMs ||
       DEFAULT_AUTO_REFRESH_INTERVAL_MS,
-    captchaStrategy: dbStrategy || _settings?.captchaStrategy || DEFAULT_CAPTCHA_STRATEGY,
+    // One-time migration: if the DB-stored strategy is the old default "a_only",
+    // and the user never explicitly changed it after the migration, upgrade to
+    // the new default "auto". This ensures existing installs get the new
+    // fallback chain without requiring manual dashboard action. The user can
+    // still explicitly set "a_only" via the dashboard after this migration
+    // runs, and it will stick (because the migration flag is then set).
+    captchaStrategy: (() => {
+      const migrationDone = readSetting("_strategyMigratedToAuto");
+      if (dbStrategy === "a_only" && !migrationDone) {
+        writeSetting("_strategyMigratedToAuto", "true");
+        log.info?.("strategy.migrated", { from: "a_only", to: DEFAULT_CAPTCHA_STRATEGY });
+        return DEFAULT_CAPTCHA_STRATEGY;
+      }
+      return dbStrategy || _settings?.captchaStrategy || DEFAULT_CAPTCHA_STRATEGY;
+    })(),
     captchaRetries:
       (dbRetries && parseInt(dbRetries, 10)) ||
       _settings?.captchaRetries ||

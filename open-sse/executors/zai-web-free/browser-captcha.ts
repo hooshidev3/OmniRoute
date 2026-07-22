@@ -178,19 +178,24 @@ export async function getCaptchaParamViaBrowser(blockTrackers: boolean = true): 
       ]);
 
       // Send a message to trigger the captcha + chat flow
+      console.log("[ZAI-WEB-FREE-BROWSER] filling input + clicking send...");
       await page.locator("#chat-input").fill("_");
       await page.locator("#send-message-button").waitFor({ timeout: 5000 });
       await page.locator("#send-message-button").click();
 
-      // Wait for the captcha to be generated and the chat request to fire
-      // (max 30s — the captcha SDK auto-resolves for popup mode with no
-      // user interaction needed)
-      for (let i = 0; i < 30 && !captchaParam; i++) {
+      // Wait for the captcha to be generated and the chat request to fire.
+      // 60s timeout (increased from 30s) — on slow connections or when the
+      // captcha SDK needs to fetch additional resources, 30s is not enough.
+      // The captcha SDK auto-resolves for popup mode with no user interaction.
+      for (let i = 0; i < 60 && !captchaParam; i++) {
         await page.waitForTimeout(1000);
+        if (i > 0 && i % 10 === 0) {
+          console.log(`[ZAI-WEB-FREE-BROWSER] still waiting for captcha param... (${i}s)`);
+        }
       }
 
       if (!captchaParam) {
-        throw new Error("Browser captcha: could not capture captcha_verify_param within 30s");
+        throw new Error("Browser captcha: could not capture captcha_verify_param within 60s");
       }
 
       log.info?.("browser_captcha.success", { paramLength: captchaParam.length });
