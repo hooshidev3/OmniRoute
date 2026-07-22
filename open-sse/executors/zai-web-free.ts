@@ -729,8 +729,9 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // Execute strategy
     dynLog?.info?.(
       hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
-      `captcha strategy=${strategy} retries=${retries} timeout=${timeoutMs}ms pool=${poolSize}`
+      `captcha strategy=${strategy} retries=${retries} timeout=${timeoutMs}ms pool=${poolSize} accessKey=${getSettings().accessKey ? "set" : "EMPTY"} secretKey=${getSettings().secretKey ? "set" : "EMPTY"}`
     );
+    const captchaStartMs = Date.now();
 
     switch (strategy) {
       case "a_only":
@@ -767,6 +768,11 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
         CHAT_COMPLETIONS_URL
       );
     }
+
+    dynLog?.info?.(
+      hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+      `captcha.ok length=${captchaParam.length} elapsed=${Date.now() - captchaStartMs}ms`
+    );
 
     // 4. Compute the X-Signature header
     const sig = generateZaSignature(prompt, session.token, session.userId);
@@ -862,18 +868,33 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
     // x-signature header. The urlParams field is still computed (it is part
     // of the signature payload) but must NOT be appended to the URL.
     const requestUrl = CHAT_COMPLETIONS_URL;
+    // Match the Go reference headers EXACTLY (5 headers, no Accept, no extras).
+    // Node's undici fetch defaults inject Sec-Fetch-Mode/User-Agent=node which
+    // Z.AI's nginx rejects with 405. We pin a browser User-Agent and force
+    // Sec-Fetch-Mode to navigate (matches a real browser top-level request).
     const reqHeaders: Record<string, string> = {
       Authorization: `Bearer ${session.token}`,
       "Content-Type": "application/json",
-      Accept: "text/event-stream",
       "x-fe-Version": session.feVersion,
       "x-region": "overseas",
       "x-signature": sig.signature,
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      Origin: "https://chat.z.ai",
+      Referer: "https://chat.z.ai/",
     };
 
     // 6. Send the request (with one 401 retry that re-inits the session)
     let upstream: Response;
     const bodyStr = JSON.stringify(requestBody);
+
+    // Emit a verbose pre-flight log so we can verify the request shape from
+    // dev console — matches the [DEBUG] Z.AI url / headers / body pattern in
+    // GLM-Free-API main.go (config.Logging.Level == "debug").
+    dynLog?.info?.(
+      hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+      `chat.request url=${requestUrl} model=${requestedModel} msgs=${messagesToSend.length} captcha=${captchaParam.slice(0, 24)}... sig=x-${sig.signature.slice(0, 12)}... fe=${session.feVersion} userId=${session.userId.slice(0, 12)}...`
+    );
 
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -883,7 +904,15 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
           body: bodyStr,
           signal,
         });
+        dynLog?.info?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `chat.response status=${upstream.status} attempt=${attempt + 1}/2`
+        );
       } catch (err) {
+        dynLog?.error?.(
+          hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+          `chat.fetch_error: ${err instanceof Error ? err.message : String(err)}`
+        );
         return makeErrorResult(
           502,
           `Z.AI fetch failed: ${err instanceof Error ? err.message : String(err)}`,
@@ -918,6 +947,14 @@ export class ZaiWebFreeExecutor extends BaseExecutor {
 
     if (!upstream!.ok) {
       const errText = await upstream!.text().catch(() => "");
+      // Verbose log so we can see exactly what Z.AI rejected — captures the
+      // URL, the response status, and the first 200 chars of the body. This
+      // matches the Go reference's [DEBUG] Z.AI response status/headers
+      // pattern when config.Logging.Level == "debug".
+      dynLog?.error?.(
+        hasUserToken ? "ZAI-WEB-TOKEN" : "ZAI-WEB-FREE",
+        `chat.failed status=${upstream!.status} url=${requestUrl} body=${errText.slice(0, 200).replace(/\s+/g, " ")}`
+      );
       return makeErrorResult(
         upstream!.status,
         `Z.AI error: ${sanitizeErrorMessage(errText)}`,
