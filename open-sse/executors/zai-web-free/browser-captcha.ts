@@ -125,7 +125,7 @@ async function withBrowserLock<T>(fn: () => Promise<T>): Promise<T> {
  * @throws If Playwright is not installed, the page fails to load, or
  *   the captcha param cannot be extracted within 30s.
  */
-export async function getCaptchaParamViaBrowser(blockTrackers: boolean = true): Promise<string> {
+export async function getCaptchaParamViaBrowser(blockTrackers: boolean = false): Promise<string> {
   return withBrowserLock(async () => {
     // Dynamic import — playwright is a heavy dependency
     const { chromium } = await import("playwright");
@@ -215,7 +215,7 @@ export async function getCaptchaParamViaBrowser(blockTrackers: boolean = true): 
  * @throws If Playwright is not installed or the page fails to load.
  */
 export async function getFreshDeviceTokenViaBrowser(
-  blockTrackers: boolean = true
+  blockTrackers: boolean = false
 ): Promise<string> {
   return withBrowserLock(async () => {
     const { chromium } = await import("playwright");

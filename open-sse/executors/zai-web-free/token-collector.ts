@@ -333,7 +333,7 @@ export async function refreshDeviceTokens(options: RefreshOptions): Promise<Refr
   const parallel = Math.min(options.parallel ?? 1, limits.maxParallel);
   const headed = options.headed ?? false;
   const proxyUrl = options.proxyUrl;
-  const blockTrackers = options.blockTrackers ?? true; // default: on
+  const blockTrackers = options.blockTrackers ?? false; // default: off (matches Go reference + main)
   const addTokens = options.addTokens;
   const getPoolSize = options.getPoolSize;
 
