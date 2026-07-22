@@ -67,7 +67,6 @@ function isBuildProcess(): boolean {
   return typeof process !== "undefined" && process.env.NEXT_PHASE === "phase-production-build";
 }
 
-
 function isCredentialHealthCheckDisabled(): boolean {
   if (isBuildProcess() || isAutomatedTestProcess()) return true;
   const val = process.env.OMNIROUTE_DISABLE_CREDENTIAL_HEALTH_CHECK;
@@ -210,7 +209,14 @@ export async function sweep(): Promise<void> {
     try {
       const raw = await getProviderConnections({});
       connections = (Array.isArray(raw) ? raw : []).filter(
-        (conn: any) => conn && conn.id && (conn.authType === "apikey" || conn.authType === "oauth")
+        (conn: any) =>
+          conn &&
+          conn.id &&
+          (conn.authType === "apikey" || conn.authType === "oauth") &&
+          // Skip no-auth providers (zai-web-free, kilo-free, etc.) — they have
+          // no credentials to test and the health check would always fail.
+          conn.authType !== "none" &&
+          conn.authType !== "noauth"
       ) as Array<{
         id: string;
         provider: string;

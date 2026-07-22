@@ -665,6 +665,16 @@ export async function testSingleConnection(connectionId: string, validationModel
       refreshed: false,
       diagnosis: (runtime as any).diagnosis,
     };
+  } else if (connection.authType === "none" || connection.authType === "noauth") {
+    // No-auth providers (zai-web-free, kilo-free, etc.) don't have credentials
+    // to test. Mark as valid — the executor handles its own validation (captcha,
+    // guest JWT, etc.) at request time.
+    result = {
+      valid: true,
+      error: null,
+      refreshed: false,
+      diagnosis: makeDiagnosis("ok", "local", null, "No-auth provider — no credential to test"),
+    };
   } else if (connection.authType === "apikey") {
     const enrichedConnection = validationModelId
       ? {

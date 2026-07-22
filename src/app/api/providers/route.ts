@@ -170,11 +170,18 @@ export async function POST(request: Request) {
 
     providerSpecificData = normalizeProviderSpecificData(provider, providerSpecificData) || null;
 
+    // Determine authType from the provider's registry entry.
+    // No-auth providers (zai-web-free, kilo-free, etc.) get authType="none"
+    // so that credential health checks skip them (they have no API key to test).
+    const { REGISTRY } = await import("@omniroute/open-sse/config/providers/index.ts");
+    const registryEntry = REGISTRY[provider];
+    const connectionAuthType = registryEntry?.authType === "none" ? "none" : "apikey";
+
     const newConnection = await createProviderConnection({
       provider,
-      authType: "apikey",
+      authType: connectionAuthType,
       name,
-      apiKey,
+      apiKey: connectionAuthType === "none" ? undefined : apiKey,
       priority: priority || 1,
       globalPriority: globalPriority || null,
       defaultModel: defaultModel || null,
