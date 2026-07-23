@@ -41,6 +41,7 @@ import {
   redactPassthroughThinkingSignatures,
   isClaudeCodeSemanticPassthroughRequest,
 } from "./chatCore/passthroughHelpers.ts";
+import { recoverAnthropicThinkingSignature } from "./chatCore/thinkingSignatureRecovery.ts";
 import {
   buildStreamingResponseHeaders,
   materializeDeduplicatedExecutionResult,
@@ -74,6 +75,7 @@ import { defaultClaudeToolType } from "./chatCore/claudeToolDefaults.ts";
 import { injectSystemPrompt, injectCustomSystemPrompt } from "../services/systemPrompt.ts";
 import { translateRequest, needsTranslation } from "../translator/index.ts";
 import { FORMATS } from "../translator/formats.ts";
+import { collectCustomToolNamesForSourceFormat } from "../translator/request/openai-responses/additionalTools.ts";
 import { sanitizeKiroTools } from "../utils/kiroSanitizer.ts";
 import { splitMisplacedToolResults } from "../translator/helpers/claudeHelper.ts";
 import {
@@ -108,6 +110,10 @@ import {
 } from "../services/modelStrip.ts";
 import { resolveModelAlias } from "../services/modelDeprecation.ts";
 import { normalizeMimoThinking } from "../services/mimoThinking.ts";
+import {
+  isOpencodeGoProvider,
+  stripBooleanReasoning,
+} from "../services/opencodeReasoningSanitizer.ts";
 import { normalizeClaudeAdaptiveThinking } from "../services/claudeAdaptiveThinking.ts";
 import { normalizeClaudeHaikuConstraints } from "../services/claudeHaikuConstraints.ts";
 import { applyDefaultReasoningEffort } from "../services/defaultReasoningEffort.ts";
@@ -203,6 +209,7 @@ import {
   mergeResponseToolNameMap,
 } from "./chatCore/passthroughToolNames.ts";
 import { resolveCompressionSettings } from "./chatCore/compressionSettings.ts";
+import { isCompressionExcluded } from "../services/compression/exclusions.ts";
 import {
   isBuiltinStackedPipeline,
   isStackedCompressionCombo,
@@ -316,6 +323,7 @@ import {
   stripMarkdownCodeFence,
 } from "../utils/aiSdkCompat.ts";
 import { generateRequestId } from "@/shared/utils/requestId";
+import { isLocalStreamLifecycleError } from "@/shared/utils/circuitBreaker";
 import { extractFacts } from "@/lib/memory/extraction";
 import { handleToolCallExecution } from "@/lib/skills/interception";
 import { OMNIROUTE_RESPONSE_HEADERS } from "@/shared/constants/headers";
@@ -614,6 +622,13 @@ export async function handleChatCore({
     copilotCompatibleReasoning,
     clientResponseFormat,
   } = resolveChatCoreRequestFormat({ clientRawRequest, body, provider, userAgent });
+  const responsesInputItems = Array.isArray(body?.input) ? body.input : [];
+  const customToolNames = collectCustomToolNamesForSourceFormat(
+    sourceFormat,
+    FORMATS.OPENAI_RESPONSES,
+    body?.tools,
+    responsesInputItems
+  );
 
   // Check for bypass patterns (warmup, skip) - return fake response
   const bypassResponse = handleBypassRequest(body, model, userAgent);
@@ -1058,8 +1073,39 @@ export async function handleChatCore({
     let estimatedTokens = estimateTokens(allMessages);
     const compressionSettingsResult = await resolveCompressionSettings(log);
     const compressionSettings: CompressionConfig | null = compressionSettingsResult.settings;
-    const promptCompressionEnabled = compressionSettingsResult.enabled;
+    // #8034 — operator-named model/endpoint exclusions bypass the whole pipeline, exactly
+    // like compression being globally disabled, so the body is provably byte-identical.
+    const compressionExcluded = isCompressionExcluded(
+      { provider, model: effectiveModel },
+      compressionSettings?.exclusions
+    );
+    let promptCompressionEnabled = compressionSettingsResult.enabled && !compressionExcluded;
     contextEditingEnabled = compressionSettingsResult.contextEditingEnabled;
+    if (compressionExcluded) {
+      void writeCompressionSkip(
+        {
+          stats: {
+            originalTokens: estimatedTokens,
+            compressedTokens: estimatedTokens,
+            savingsPercent: 0,
+            techniquesUsed: [],
+            mode: "off",
+            timestamp: Date.now(),
+          },
+          provider,
+          effectiveModel,
+          effectiveServiceTier,
+          comboName,
+          mode: "off",
+          compressionComboId: null,
+          skillRequestId,
+          cavemanOutputModeApplied: false,
+          cavemanOutputModeIntensity: null,
+          log,
+        },
+        "excluded"
+      );
+    }
 
     // --- Modular Compression Pipeline (Phase 1 Lite + Phase 2 Standard/Caveman + Phase 3 Aggressive) ---
     // Runs BEFORE the existing reactive compressContext() to proactively reduce tokens.
@@ -1084,6 +1130,7 @@ export async function handleChatCore({
         preserveSystemPrompt: true,
         comboOverrides: {},
       };
+      if (compressionExcluded) config = { ...config, enabled: false };
       if (!promptCompressionEnabled || !compressionSettings) {
         log?.debug?.("COMPRESSION", "Prompt compression disabled or unavailable");
       }
@@ -2107,6 +2154,14 @@ export async function handleChatCore({
 
   trace("post_translation");
 
+  // Keep the request translator's namespace identities separate from toolNameMap:
+  // the latter is a Kiro/Claude passthrough alias channel with string values,
+  // while namespace identities carry `{namespace, name}` for the #7936 response
+  // seam. Extract first because Kiro merge may reuse `_toolNameMap` below.
+  const requestToolIdentityMap =
+    translatedBody._toolNameMap instanceof Map ? translatedBody._toolNameMap : null;
+  delete translatedBody._toolNameMap;
+
   // Kiro: sanitize tool schemas before dispatch. Kiro returns 400 "Improperly
   // formed request" for unsupported JSON-Schema keywords (anyOf/$ref/if-then,
   // etc.) and tool names >64 chars. Strip those keys and hash-truncate long
@@ -2211,6 +2266,16 @@ export async function handleChatCore({
   // `{type}` and drop `reasoning_effort`/`reasoning`. See services/mimoThinking.ts.
   if (provider === "xiaomi-mimo") {
     translatedBody = normalizeMimoThinking(translatedBody);
+  }
+
+  // opencode-go backed providers (ollama-cloud, opencode-go, opencode,
+  // opencode-zen) use a Go ChatCompletionRequest struct where `reasoning`
+  // is typed as openai.Reasoning (a structured type). A boolean
+  // `reasoning: true/false` — valid per the OpenAI API — causes a 400
+  // "json: cannot unmarshal bool into Go struct field" on the Go side.
+  // Strip the boolean before forwarding. See opencodeReasoningSanitizer.ts.
+  if (isOpencodeGoProvider(provider)) {
+    translatedBody = stripBooleanReasoning(translatedBody);
   }
 
   const previousResponseIdPolicy = applyResponsesPreviousResponseIdPolicy(translatedBody, {
@@ -3092,18 +3157,21 @@ export async function handleChatCore({
         errorCode: error.code,
       };
     }
-    const failureStatus =
-      error.name === "AbortError"
-        ? 499
-        : error.name === "TimeoutError" || error.name === "BodyTimeoutError"
-          ? HTTP_STATUS.GATEWAY_TIMEOUT
-          : error.status && typeof error.status === "number"
-            ? error.status
-            : HTTP_STATUS.BAD_GATEWAY;
-    const failureMessage =
-      error.name === "AbortError"
-        ? "Request aborted"
-        : formatProviderError(error, provider, model, failureStatus);
+    // abort(reason) can reject the upstream fetch with a raw string reason
+    // (e.g. "request_signal_aborted") that has no `name`/`status`; classify
+    // via isLocalStreamLifecycleError so those map to 499 instead of falling
+    // through to the 502 provider-failure default.
+    const isRequestAborted = isLocalStreamLifecycleError(error);
+    const failureStatus = isRequestAborted
+      ? 499
+      : error.name === "TimeoutError" || error.name === "BodyTimeoutError"
+        ? HTTP_STATUS.GATEWAY_TIMEOUT
+        : error.status && typeof error.status === "number"
+          ? error.status
+          : HTTP_STATUS.BAD_GATEWAY;
+    const failureMessage = isRequestAborted
+      ? "Request aborted"
+      : formatProviderError(error, provider, model, failureStatus);
     const upstreamErrorCode = getUpstreamErrorIdentifier(error);
     // Tag our own deadline timeouts (fetch-start TimeoutError / body BodyTimeoutError,
     // both surfaced as a 504) as "upstream_timeout" so the cooldown layer can tell a
@@ -3132,7 +3200,7 @@ export async function handleChatCore({
       claudeCacheMeta: claudePromptCacheLogMeta,
       cacheSource: "upstream",
     });
-    if (error.name === "AbortError") {
+    if (isRequestAborted) {
       streamController.handleError(error);
       return createErrorResult(499, "Request aborted");
     }
@@ -3332,7 +3400,7 @@ export async function handleChatCore({
   await persistCodexQuotaState(normalizeHeaders(providerResponse.headers), providerResponse.status);
 
   // Check provider response - return error info for fallback handling
-  if (!providerResponse.ok) {
+  providerFailure: if (!providerResponse.ok) {
     trackPendingRequest(model, provider, connectionId, false);
 
     let statusCode = providerResponse.status;
@@ -3354,6 +3422,45 @@ export async function handleChatCore({
       upstreamErrorCode = details.errorCode as string | undefined;
       upstreamErrorType = details.errorType as string | undefined;
     }
+
+    const signatureRecovery = await recoverAnthropicThinkingSignature({
+      provider,
+      statusCode,
+      message,
+      body: translatedBody,
+      execute: async (recoveryBody) => {
+        translatedBody = recoveryBody as typeof translatedBody;
+        return executeProviderRequest(currentModel, false);
+      },
+      parseError: (response) => parseUpstreamError(response, provider),
+    });
+    if (signatureRecovery.attempted && signatureRecovery.execution) {
+      providerResponse = signatureRecovery.execution.response;
+      if (signatureRecovery.succeeded) {
+        providerUrl = signatureRecovery.execution.url;
+        providerHeaders = signatureRecovery.execution.headers;
+        finalBody = providerRequestCapture.body(signatureRecovery.execution.transformedBody);
+        reqLogger.logTargetRequest(providerUrl, providerHeaders, finalBody);
+        updatePendingScope(pendingScope, {
+          providerRequest: finalBody,
+          providerUrl,
+          stage: "provider_response_started",
+        });
+        log?.info?.(
+          "THINKING_SIGNATURE",
+          `Recovered ${provider}/${currentModel} after one historical-thinking retry`
+        );
+      } else if (signatureRecovery.error) {
+        statusCode = signatureRecovery.error.statusCode;
+        message = signatureRecovery.error.message;
+        retryAfterMs = signatureRecovery.error.retryAfterMs;
+        upstreamErrorBody = signatureRecovery.error.responseBody;
+        upstreamErrorCode = signatureRecovery.error.errorCode as string | undefined;
+        upstreamErrorType = signatureRecovery.error.errorType as string | undefined;
+      }
+    }
+
+    if (signatureRecovery.succeeded) break providerFailure;
 
     // T06/T10/T36: classify provider errors and persist terminal account states.
     let errorType = classifyProviderError(statusCode, message, provider);
@@ -4038,6 +4145,20 @@ export async function handleChatCore({
     // Source format determines output shape. If we are outputting OpenAI shape or pseudo-OpenAI shape, sanitize.
     if (clientResponseFormat === FORMATS.OPENAI_RESPONSES) {
       translatedResponse = sanitizeResponsesApiResponse(translatedResponse);
+      // Responses-API non-stream path: restore `{namespace, name}` on every
+      // `function_call` item that was flattened from a namespace sub-tool on
+      // the request side (#7936 round-trip closure).
+      const responseOutput = translatedResponse?.output;
+      if (requestToolIdentityMap && Array.isArray(responseOutput)) {
+        for (const item of responseOutput) {
+          if (item?.type !== "function_call") continue;
+          const identity = requestToolIdentityMap.get(item.name);
+          if (identity) {
+            item.namespace = identity.namespace;
+            item.name = identity.name;
+          }
+        }
+      }
     } else if (clientResponseFormat === FORMATS.OPENAI) {
       // Port of decolua/9router#517: opt-in `x-omniroute-strip-reasoning` header
       // unconditionally drops `reasoning_content` from the final non-streaming
@@ -4590,7 +4711,11 @@ export async function handleChatCore({
       onStreamComplete,
       apiKeyInfo,
       handleStreamFailure,
-      copilotCompatibleReasoning
+      copilotCompatibleReasoning,
+      // openai-responses → openai translation still wants the namespace identity
+      // map for #7936-style round-trip closure when the client also speaks
+      // Responses (Codex CLI).
+      requestToolIdentityMap
     );
   } else if (needsTranslation(targetFormat, clientResponseFormat)) {
     // Standard translation for other providers
@@ -4618,7 +4743,9 @@ export async function handleChatCore({
         userAgent: streamUserAgent,
         thinkingMarkerHeader,
         clientResponseFormat,
-      })
+      }),
+      customToolNames,
+      requestToolIdentityMap
     );
   } else {
     log?.debug?.("STREAM", `Standard passthrough mode`);
@@ -4632,7 +4759,8 @@ export async function handleChatCore({
       onStreamComplete,
       apiKeyInfo,
       handleStreamFailure,
-      clientResponseFormat
+      clientResponseFormat,
+      requestToolIdentityMap
     );
   }
 

@@ -117,6 +117,7 @@ export default function ProviderDetailPageClient() {
     batchDeleteConfirmOpen,
     healthFilter,
     page,
+    accountSearch,
     distributingProxies,
     proxyConfig,
     connProxyMap,
@@ -124,6 +125,7 @@ export default function ProviderDetailPageClient() {
     refreshingId,
     setPage,
     setHealthFilter,
+    setAccountSearch,
     setSelectedIds,
     setBatchDeleteConfirmOpen,
     setBatchTestResults,
@@ -588,6 +590,7 @@ export default function ProviderDetailPageClient() {
                 distributingProxies={distributingProxies}
                 healthFilter={healthFilter}
                 page={page}
+                accountSearch={accountSearch}
                 PAGE_SIZE={PAGE_SIZE}
                 connProxyMap={connProxyMap}
                 proxyConfig={proxyConfig}
@@ -599,6 +602,7 @@ export default function ProviderDetailPageClient() {
                 setSelectedIds={setSelectedIds}
                 setPage={setPage}
                 setHealthFilter={setHealthFilter}
+                setAccountSearch={setAccountSearch}
                 deleteConfirm={deleteConfirm}
                 handleUpdateConnectionStatus={handleUpdateConnectionStatus}
                 handleToggleRateLimit={handleToggleRateLimit}

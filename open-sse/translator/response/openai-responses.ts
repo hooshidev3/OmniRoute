@@ -8,6 +8,10 @@ import { appendToolCallArgumentDelta } from "../../utils/toolCallArguments.ts";
 import { fallbackToolCallId } from "../helpers/toolCallHelper.ts";
 import { shouldParseTextualReasoningTags } from "../../handlers/responseSanitizer.ts";
 import {
+  isInternalReasoningPlaceholder,
+  stripInternalReasoningPlaceholder,
+} from "../../utils/reasoningPlaceholder.ts";
+import {
   normalizeToolName,
   stripEmptyOptionalToolArgs,
   normalizeOutputIndex,
@@ -15,6 +19,8 @@ import {
   getVisibleResponsesReasoningSummaryText,
 } from "./openai-responses/pureHelpers.ts";
 import { createEventEmitter } from "./openai-responses/eventEmitter.ts";
+import { buildResponsesToolCallItem } from "./responsesToolItem.ts";
+import { resolveRequestToolIdentity } from "./openai-responses/requestToolIdentity.ts";
 import {
   synthesizeCompletedToolCalls,
   computeFinishReason,
@@ -161,47 +167,56 @@ export function openaiToOpenAIResponsesResponse(chunk, state) {
     });
   }
 
-  if (delta.reasoning_content) {
+  if (delta.reasoning_content && !isInternalReasoningPlaceholder(delta.reasoning_content)) {
     startReasoning(state, emit, idx);
     emitReasoningDelta(state, emit, delta.reasoning_content);
   }
+  // Strip the internal reasoning placeholder if the model echoed it
+  // through ordinary content (#8081). Only the text-content emission is
+  // skipped when nothing meaningful remains; tool_calls / finish_reason
+  // handling below must still run for this same chunk.
   if (delta.content) {
-    if (
-      state.reasoningId &&
-      !state.reasoningDone &&
-      (!parseTextualReasoningTags || !state.inThinking)
-    ) {
-      closeReasoning(state, emit);
-    }
-
-    let content = delta.content;
-
-    if (parseTextualReasoningTags) {
-      if (content.includes("<think>")) {
-        state.inThinking = true;
-        content = content.replaceAll("<think>", "");
-        startReasoning(state, emit, idx);
-      }
-
-      if (content.includes("</think>")) {
-        const parts = content.split("</think>");
-        const thinkPart = parts[0];
-        const textPart = parts.slice(1).join("</think>");
-        if (thinkPart) emitReasoningDelta(state, emit, thinkPart);
+    const strippedContent = stripInternalReasoningPlaceholder(delta.content);
+    if (strippedContent) {
+      if (
+        state.reasoningId &&
+        !state.reasoningDone &&
+        (!parseTextualReasoningTags || !state.inThinking)
+      ) {
         closeReasoning(state, emit);
-        state.inThinking = false;
-        content = textPart;
       }
 
-      if (state.inThinking && content) {
-        emitReasoningDelta(state, emit, content);
-        return events;
-      }
-    }
+      let content = strippedContent;
 
-    if (content) {
-      const msgIdx = state.reasoningId ? state.reasoningIndex + 1 : idx;
-      emitTextContent(state, emit, msgIdx, content);
+      if (parseTextualReasoningTags) {
+        if (content.includes("<think>")) {
+          state.inThinking = true;
+          content = content.replaceAll("<think>", "");
+          startReasoning(state, emit, idx);
+        }
+
+        if (content.includes("</think>")) {
+          const parts = content.split("</think>");
+          const thinkPart = parts[0];
+          const textPart = parts.slice(1).join("</think>");
+          if (thinkPart) emitReasoningDelta(state, emit, thinkPart);
+          closeReasoning(state, emit);
+          state.inThinking = false;
+          content = textPart;
+        }
+
+        if (state.inThinking && content) {
+          emitReasoningDelta(state, emit, content);
+          // Pre-existing behaviour (unrelated to #8081): a still-open
+          // textual <think> block ends this chunk's handling early.
+          return events;
+        }
+      }
+
+      if (content) {
+        const msgIdx = state.reasoningId ? state.reasoningIndex + 1 : idx;
+        emitTextContent(state, emit, msgIdx, content);
+      }
     }
   }
 
@@ -428,40 +443,47 @@ function emitToolCall(state, emit, tc) {
     delete state.funcNames[tcIdx];
     delete state.funcArgsBuf[tcIdx];
     delete state.funcArgsDone[tcIdx];
+    delete state.funcItemAdded[tcIdx];
     delete state.funcItemDone[tcIdx];
   }
 
   if (funcName) state.funcNames[tcIdx] = funcName;
 
-  // Codex custom tools (apply_patch) are surfaced to the client as custom_tool_call items
-  // and stream their raw patch via custom_tool_call_input.* events instead of the
+  // Custom tools are surfaced as custom_tool_call items and stream raw input instead of the
   // function_call_arguments.* events used for regular function tools. (#1007)
-  const isCustomTool = (state.funcNames[tcIdx] || funcName) === "apply_patch";
+  const toolName = state.funcNames[tcIdx] || funcName || "";
+  const isCustomTool =
+    toolName === "apply_patch" || state.customToolNames?.has?.(toolName) === true;
 
-  if (!state.funcCallIds[tcIdx] && newCallId) {
-    state.funcCallIds[tcIdx] = newCallId;
+  if (!state.funcCallIds[tcIdx] && newCallId) state.funcCallIds[tcIdx] = newCallId;
+  const callId = state.funcCallIds[tcIdx];
 
+  if (callId && toolName && !state.funcItemAdded[tcIdx]) {
+    // #7936 — restore the codex-side `{namespace, name}` pair when the bare
+    // leaf on the Chat wire was flattened from a Responses namespace sub-tool.
+    // Codex dispatches from `namespace` independently of `name` (no `__` split).
+    const identity = resolveRequestToolIdentity(state.requestToolIdentityMap, toolName);
     emit("response.output_item.added", {
       type: "response.output_item.added",
       output_index: outputIndex,
-      item: isCustomTool
-        ? {
-            id: `fc_${newCallId}`,
-            type: "custom_tool_call",
-            input: "",
-            call_id: newCallId,
-            name: state.funcNames[tcIdx] || "",
-            status: "in_progress",
-          }
-        : {
-            id: `fc_${newCallId}`,
-            type: "function_call",
-            arguments: "",
-            call_id: newCallId,
-            name: state.funcNames[tcIdx] || "",
-            status: "in_progress",
-          },
+      item: buildResponsesToolCallItem({
+        callId,
+        toolName: identity ? identity.name : toolName,
+        custom: isCustomTool,
+        namespace: identity ? identity.namespace : null,
+      }),
     });
+    state.funcItemAdded[tcIdx] = true;
+
+    const bufferedArgs = state.funcArgsBuf[tcIdx] || "";
+    if (bufferedArgs && !isCustomTool) {
+      emit("response.function_call_arguments.delta", {
+        type: "response.function_call_arguments.delta",
+        item_id: `fc_${callId}`,
+        output_index: outputIndex,
+        delta: bufferedArgs,
+      });
+    }
   }
 
   if (!state.funcArgsBuf[tcIdx]) state.funcArgsBuf[tcIdx] = "";
@@ -474,12 +496,9 @@ function emitToolCall(state, emit, tc) {
     const emittedDelta = nextArgs.slice(existingArgs.length);
     state.funcArgsBuf[tcIdx] = nextArgs;
 
-    if (refCallId && emittedDelta) {
-      const deltaEvent = isCustomTool
-        ? "response.custom_tool_call_input.delta"
-        : "response.function_call_arguments.delta";
-      emit(deltaEvent, {
-        type: deltaEvent,
+    if (refCallId && emittedDelta && !isCustomTool && state.funcItemAdded[tcIdx]) {
+      emit("response.function_call_arguments.delta", {
+        type: "response.function_call_arguments.delta",
         item_id: `fc_${refCallId}`,
         output_index: outputIndex,
         delta: emittedDelta,
@@ -495,7 +514,9 @@ function closeToolCall(state, emit, idx, recordAsCompleted = true) {
       ? normalizeOutputIndex(state.reasoningIndex) + 1 + normalizeOutputIndex(idx)
       : normalizeOutputIndex(idx);
     const args = state.funcArgsBuf[idx] || "{}";
-    const isCustomTool = (state.funcNames[idx] || "") === "apply_patch";
+    const toolName = state.funcNames[idx] || "";
+    const isCustomTool =
+      toolName === "apply_patch" || state.customToolNames?.has?.(toolName) === true;
 
     let funcItem;
     if (isCustomTool) {
@@ -508,6 +529,13 @@ function closeToolCall(state, emit, idx, recordAsCompleted = true) {
       } catch {
         // Not JSON — fall back to the raw buffered arguments.
       }
+
+      emit("response.custom_tool_call_input.delta", {
+        type: "response.custom_tool_call_input.delta",
+        item_id: `fc_${callId}`,
+        output_index: normalizedIndex,
+        delta: rawInput,
+      });
 
       emit("response.custom_tool_call_input.done", {
         type: "response.custom_tool_call_input.done",
@@ -524,6 +552,17 @@ function closeToolCall(state, emit, idx, recordAsCompleted = true) {
         name: state.funcNames[idx] || "",
         status: "completed",
       };
+
+      // #7936 identity closure for custom_tool_call items (apply_patch stays
+      // bare; namespace sub-tools get back their `namespace` + `name`).
+      const customIdentity = resolveRequestToolIdentity(
+        state.requestToolIdentityMap,
+        state.funcNames[idx] || ""
+      );
+      if (customIdentity) {
+        funcItem.namespace = customIdentity.namespace;
+        funcItem.name = customIdentity.name;
+      }
 
       emit("response.output_item.done", {
         type: "response.output_item.done",
@@ -546,6 +585,19 @@ function closeToolCall(state, emit, idx, recordAsCompleted = true) {
         name: state.funcNames[idx] || "",
         status: "completed",
       };
+
+      // #7936 identity closure: rewrite the function_call item's `name` back to
+      // its bare leaf and stamp the original `namespace` alongside it, matching
+      // the codex ResponseItem::FunctionCall schema (independent `namespace`
+      // field, NOT a `__` split on `name`).
+      const fnIdentity = resolveRequestToolIdentity(
+        state.requestToolIdentityMap,
+        state.funcNames[idx] || ""
+      );
+      if (fnIdentity) {
+        funcItem.namespace = fnIdentity.namespace;
+        funcItem.name = fnIdentity.name;
+      }
 
       emit("response.output_item.done", {
         type: "response.output_item.done",
@@ -641,6 +693,7 @@ function markResponsesReasoningDeltaEmitted(state, itemId) {
 // its thinking panel (`reasoning_content`, or `reasoning_text` for Copilot-compatible
 // clients). Mirrors the `response.reasoning_summary_text.delta` branch.
 function buildResponsesReasoningDeltaChunk(state, text) {
+  if (isInternalReasoningPlaceholder(text)) return null;
   const delta = state.copilotCompatibleReasoning
     ? { reasoning_text: text }
     : { reasoning_content: text };

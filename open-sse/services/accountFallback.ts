@@ -36,7 +36,11 @@ import { getCodexModelScope } from "../config/codexQuotaScopes.ts";
 import { getQuotaScopedModelForProvider } from "./antigravityQuotaFamily.ts";
 import { isRpdExhausted, isRpmExhausted } from "./geminiRateLimitTracker.ts";
 import { setConnectionRateLimitUntil } from "@/lib/db/providers";
-import { parseRetryHintFromJsonBody } from "./retryAfterJson.ts";
+import {
+  parseRetryHintFromJsonBody,
+  parseDelayString,
+  MAX_SHORT_RETRY_HINT_MS,
+} from "./retryAfterJson.ts";
 import {
   isSubscriptionQuotaText,
   buildSubscriptionQuotaFallback,
@@ -406,12 +410,20 @@ function getCanonicalLockProvider(provider: string): string {
   return canonical;
 }
 
-function getModelLockKey(provider: string, connectionId: string, model: string) {
+function getModelLockKey(
+  provider: string,
+  connectionId: string,
+  model: string,
+  reason?: string | null,
+  status?: number | null
+) {
   const canonicalProvider = getCanonicalLockProvider(provider);
   const lockModel =
-    canonicalProvider === "codex"
-      ? getCodexModelScope(model)
-      : getQuotaScopedModelForProvider(canonicalProvider, model) || model;
+    reason === "not_found" || status === 404
+      ? model
+      : canonicalProvider === "codex"
+        ? getCodexModelScope(model)
+        : getQuotaScopedModelForProvider(canonicalProvider, model) || model;
   return `${canonicalProvider}:${connectionId}:${lockModel}`;
 }
 
@@ -505,7 +517,7 @@ export function lockModel(
 ): void {
   if (!model) return; // No model → skip model-level locking
   ensureCleanupTimer();
-  const key = getModelLockKey(provider, connectionId, model);
+  const key = getModelLockKey(provider, connectionId, model, reason);
   cleanupModelLockKey(key);
   const newUntil = Date.now() + cooldownMs;
   // Preserve the longer cooldown if an existing lock has more time remaining.
@@ -564,7 +576,7 @@ export function recordModelLockoutFailure(
   options: { exactCooldownMs?: number | null; maxCooldownMs?: number } = {}
 ) {
   ensureCleanupTimer();
-  const key = getModelLockKey(provider, connectionId, model);
+  const key = getModelLockKey(provider, connectionId, model, reason, status);
   const now = Date.now();
   cleanupModelLockKey(key, now);
 
@@ -584,22 +596,24 @@ export function recordModelLockoutFailure(
   const failureCount = withinWindow ? previous.failureCount + 1 : 1;
 
   const baseCooldownMs = getModelLockBaseCooldown(status, fallbackCooldownMs, profile);
-  // Cap exponential backoff so repeated failures cannot produce absurdly long
-  // lockouts; exact cooldowns (e.g. daily-quota until-midnight) are not capped.
+  // Cap both exponential backoff and exact cooldowns (e.g. daily-quota
+  // until-midnight) against maxCooldownMs so user-configured caps are honored.
   const maxCooldownMs =
     typeof options.maxCooldownMs === "number" && options.maxCooldownMs > 0
       ? options.maxCooldownMs
-      : BACKOFF_CONFIG.max;
+      : null;
   const cooldownMs =
     typeof options.exactCooldownMs === "number" && options.exactCooldownMs > 0
-      ? options.exactCooldownMs
+      ? maxCooldownMs !== null
+        ? Math.min(options.exactCooldownMs, maxCooldownMs)
+        : options.exactCooldownMs
       : Math.min(
           getScaledCooldown(
             baseCooldownMs,
             failureCount,
             profile?.maxBackoffSteps ?? BACKOFF_CONFIG.maxLevel
           ),
-          maxCooldownMs
+          maxCooldownMs ?? BACKOFF_CONFIG.max
         );
 
   modelFailureState.set(key, {
@@ -628,10 +642,16 @@ export function clearModelLock(
   model: string | null | undefined
 ): boolean {
   if (!model) return false;
-  const key = getModelLockKey(provider, connectionId, model);
-  const hadLock = modelLockouts.delete(key);
-  const hadFailureState = modelFailureState.delete(key);
-  return hadLock || hadFailureState;
+  const familyKey = getModelLockKey(provider, connectionId, model);
+  const exactKey = `${getCanonicalLockProvider(provider)}:${connectionId}:${model}`;
+
+  const hadLock1 = modelLockouts.delete(familyKey);
+  const hadFailure1 = modelFailureState.delete(familyKey);
+
+  const hadLock2 = modelLockouts.delete(exactKey);
+  const hadFailure2 = modelFailureState.delete(exactKey);
+
+  return hadLock1 || hadFailure1 || hadLock2 || hadFailure2;
 }
 
 /**
@@ -747,10 +767,14 @@ export function isModelLocked(
   model: string | null | undefined
 ): boolean {
   if (!model) return false;
-  const key = getModelLockKey(provider, connectionId, model);
-  cleanupModelLockKey(key);
-  const entry = modelLockouts.get(key);
-  return Boolean(entry);
+
+  const exactKey = `${getCanonicalLockProvider(provider)}:${connectionId}:${model}`;
+  cleanupModelLockKey(exactKey);
+  if (modelLockouts.has(exactKey)) return true;
+
+  const familyKey = getModelLockKey(provider, connectionId, model);
+  cleanupModelLockKey(familyKey);
+  return modelLockouts.has(familyKey);
 }
 
 /**
@@ -762,16 +786,32 @@ export function getModelLockoutInfo(
   model: string | null | undefined
 ) {
   if (!model) return null;
-  const key = getModelLockKey(provider, connectionId, model);
-  cleanupModelLockKey(key);
-  const entry = modelLockouts.get(key);
-  if (!entry) return null;
-  return {
-    reason: entry.reason,
-    remainingMs: entry.until - Date.now(),
-    lockedAt: new Date(entry.lockedAt).toISOString(),
-    failureCount: entry.failureCount,
-  };
+
+  const exactKey = `${getCanonicalLockProvider(provider)}:${connectionId}:${model}`;
+  cleanupModelLockKey(exactKey);
+  const exactEntry = modelLockouts.get(exactKey);
+  if (exactEntry) {
+    return {
+      reason: exactEntry.reason,
+      remainingMs: exactEntry.until - Date.now(),
+      lockedAt: new Date(exactEntry.lockedAt).toISOString(),
+      failureCount: exactEntry.failureCount,
+    };
+  }
+
+  const familyKey = getModelLockKey(provider, connectionId, model);
+  cleanupModelLockKey(familyKey);
+  const familyEntry = modelLockouts.get(familyKey);
+  if (familyEntry) {
+    return {
+      reason: familyEntry.reason,
+      remainingMs: familyEntry.until - Date.now(),
+      lockedAt: new Date(familyEntry.lockedAt).toISOString(),
+      failureCount: familyEntry.failureCount,
+    };
+  }
+
+  return null;
 }
 
 export type ModelLockoutInfo = {
@@ -1036,24 +1076,8 @@ export function parseRetryAfterFromBody(responseBody: unknown): {
   return { retryAfterMs: null, reason };
 }
 
-/**
- * Parse delay strings like "33s", "2m", "1h", "1500ms"
- */
-function parseDelayString(value: unknown): number | null {
-  if (!value) return null;
-  const str = String(value).trim();
-  const msMatch = /^(\d+)\s*ms$/i.exec(str);
-  if (msMatch) return Number.parseInt(msMatch[1], 10);
-  const secMatch = /^(\d+)\s*s$/i.exec(str);
-  if (secMatch) return Number.parseInt(secMatch[1], 10) * 1000;
-  const minMatch = /^(\d+)\s*m$/i.exec(str);
-  if (minMatch) return Number.parseInt(minMatch[1], 10) * 60 * 1000;
-  const hrMatch = /^(\d+)\s*h$/i.exec(str);
-  if (hrMatch) return Number.parseInt(hrMatch[1], 10) * 3600 * 1000;
-  // Bare number → seconds
-  const num = Number.parseInt(str, 10);
-  return Number.isNaN(num) ? null : num * 1000;
-}
+// parseDelayString now lives in ./retryAfterJson.ts (shared with parseRetryHintFromJsonBody's
+// Gemini RetryInfo.retryDelay parsing, #7940) — see the import at the top of this file.
 
 // T07: parse retry time from error text body with combined "XhYmZs" format.
 export function parseRetryFromErrorText(errorText: unknown): number | null {
@@ -1062,6 +1086,14 @@ export function parseRetryFromErrorText(errorText: unknown): number | null {
 
   const bodyHintMs = parseRetryHintFromJsonBody(msg, MAX_PROVIDER_COOLDOWN_MS);
   if (bodyHintMs !== null) return bodyHintMs;
+
+  // Gemini free-tier text fallback (no parseable JSON details present):
+  // "Please retry in 26.660853464s." Short throttle hint — capped independently of
+  // MAX_PROVIDER_COOLDOWN_MS, mirroring the JSON RetryInfo.retryDelay cap (#7940).
+  const pleaseRetryMs = parseDelayString(/please retry in\s+([\d.]+\s*s)/i.exec(msg)?.[1]);
+  if (pleaseRetryMs !== null && pleaseRetryMs > 0) {
+    return Math.min(pleaseRetryMs, MAX_SHORT_RETRY_HINT_MS);
+  }
 
   // Issue #2321: parse embedded absolute ISO retry timestamps.
   const isoMatch =
