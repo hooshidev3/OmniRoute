@@ -14,18 +14,21 @@
  *   1. Resolve conversationId via providerSessionRegistry (maps agent chat_id
  *      to MiMo conversationId for multi-turn continuity).
  *   2. Save conversation: POST /open-apis/chat/conversation/save
- *   3. Prepare messages (tool calling is NOT supported by this web endpoint;
- *      any tools[] in the request body are silently ignored).
+ *   3. Prepare messages with tool support (RouteChi native webTools.ts).
  *   4. POST /open-apis/bot/chat - SSE response.
  *   5. Think mode processing via shared thinkModeProcessor.ts
  *      (passthrough / strip / separate modes).
- *   6. Best-effort genTitle (for new conversations) + optional delete.
+ *   6. Tool call parsing via shared webTools.ts (<tool>{json}</tool> protocol).
+ *   7. Best-effort genTitle (for new conversations) + optional delete.
  *
  * Session persistence (aligned with deepseek-web #2942):
  *   - persistSession=false (default): delete chat after response — fresh session
  *     per request (legacy behavior, avoids chat accumulation on platform).
  *   - persistSession=true: keep chat on platform for reuse (rolling-window
  *     memory across requests with same agentChatId).
+ *
+ * Tool calling: RouteChi native <tool>{json}</tool> protocol
+ * (via webTools.ts + chatgptWebTools.ts).
  *
  * Headers: default headers are used as-is. Users can override via
  * providerSpecificData.customHeaders from the dashboard.
@@ -36,6 +39,8 @@ import {
   sanitizeErrorMessage,
 } from "../utils/error.ts";
 import { randomUUID } from "node:crypto";
+import { prepareToolMessages, buildToolAwareResult } from "../translator/webTools.ts";
+import { buildToolModeResponse } from "./chatgptWebTools.ts";
 import { getAgentChatId } from "../utils/agentChatIdExtractor.ts";
 import { getMapping, saveMapping } from "../services/providerSessionRegistry.ts";
 import {
@@ -123,7 +128,10 @@ function parseCookieHeader(header: string): Record<string, string> {
     let val = part.slice(eq + 1).trim();
     // Strip surrounding quotes (some cookie exporters quote values that
     // contain special characters like + or =).
-    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+    if (
+      (val.startsWith('"') && val.endsWith('"')) ||
+      (val.startsWith("'") && val.endsWith("'"))
+    ) {
       val = val.slice(1, -1);
     }
     // URL-decode (browsers may encode + as %2B and = as %3D in cookie values).
@@ -601,10 +609,10 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
       }
     }
 
-    // 4. Prepare messages (tool calling is NOT supported by MiMo web endpoint;
-    //    any tools[] in the request body is ignored).
+    // 4. Prepare messages with tool support (RouteChi native webTools.ts)
     const messages = (bodyObj.messages as OpenAIMessage[]) || [];
-    const query = buildMimoQuery(messages);
+    const { hasTools, requestedTools, effectiveMessages } = prepareToolMessages(bodyObj, messages);
+    const query = buildMimoQuery(effectiveMessages as OpenAIMessage[]);
 
     // 5. Resolve think mode
     const thinkMode = resolveThinkMode({
@@ -733,7 +741,77 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
     };
 
     if (wantStream) {
-      // Normal streaming with thinkModeProcessor (tool calling is NOT supported).
+      // Tool mode: buffer full response, then emit as synthetic SSE
+      if (hasTools) {
+        let totalContent = "";
+        let totalReasoning = "";
+        let buffer = "";
+        let currentEvent = "";
+        const reader = sourceStream.getReader();
+        const decoder = new TextDecoder();
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            if (!value) continue;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (trimmed.startsWith("event:")) {
+                currentEvent = trimmed.slice(6).trim();
+              } else if (trimmed.startsWith("data:")) {
+                const dataStr = trimmed.slice(5).trim();
+                if (!dataStr || dataStr === "[DONE]") continue;
+                try {
+                  const data = JSON.parse(dataStr) as Record<string, unknown>;
+                  if (
+                    (currentEvent === "message" || currentEvent === "text") &&
+                    typeof data.content === "string"
+                  ) {
+                    totalContent += (data.content as string).replace(/\u0000/g, "");
+                  }
+                } catch {
+                  continue;
+                }
+              }
+            }
+          }
+        } catch {
+          /* best-effort */
+        }
+
+        const { content: cleanedContent, reasoning } = applyThinkMode(totalContent, thinkMode);
+        const finalContent = stripCitations(cleanedContent);
+
+        const message: Record<string, unknown> = { role: "assistant", content: finalContent };
+        if (reasoning) message.reasoning_content = reasoning;
+
+        const completion = {
+          id,
+          object: "chat.completion",
+          created,
+          model,
+          choices: [{ index: 0, message, finish_reason: "stop" }],
+        };
+        const bufferedResponse = new Response(JSON.stringify(completion), {
+          headers: { "Content-Type": "application/json" },
+        });
+        const toolResponse = await buildToolModeResponse(bufferedResponse, requestedTools, true, {
+          cid: id,
+          created,
+          model,
+          idSeed: "mimo",
+        });
+
+        // Await genTitle for new conversations so the title is set before returning
+        await doCleanup(finalContent.slice(0, 500)).catch(() => {});
+        return { response: toolResponse, url, headers, transformedBody: requestBody };
+      }
+
+      // Normal streaming (no tools): live stream with thinkModeProcessor
       const outStream = new ReadableStream({
         async start(controller) {
           const encoder = new TextEncoder();
@@ -930,19 +1008,28 @@ export class XiaomimimoWebExecutor extends BaseExecutor {
     const finalContent = stripCitations(contentAfterThink);
     const finalThinking = reasoning ? stripCitations(reasoning) : null;
 
-    // Tool calling is NOT supported by the MiMo web endpoint.
+    // Parse tool calls using RouteChi native webTools.ts
+    let toolCalls: ReturnType<typeof buildToolAwareResult>["toolCalls"] = null;
+    let finishReason = "stop";
+    if (hasTools) {
+      const result = buildToolAwareResult(finalContent, requestedTools, "mimo");
+      toolCalls = result.toolCalls;
+      finishReason = result.finishReason;
+    }
+
     const message: Record<string, unknown> = {
       role: "assistant",
-      content: finalContent,
+      content: toolCalls ? null : finalContent,
     };
     if (finalThinking) message.reasoning_content = finalThinking;
+    if (toolCalls) message.tool_calls = toolCalls;
 
     const completion = {
       id,
       object: "chat.completion",
       created,
       model,
-      choices: [{ index: 0, message, finish_reason: "stop" }],
+      choices: [{ index: 0, message, finish_reason: finishReason }],
       ...(usage ? { usage: mimoUsageToOpenAI(usage) } : {}),
     };
 
