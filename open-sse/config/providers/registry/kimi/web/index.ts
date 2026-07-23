@@ -1,10 +1,5 @@
 import type { RegistryEntry } from "../../../shared.ts";
 
-export const KIMI_WEB_STATIC_MODELS = [
-  { id: "k3", name: "K3", supportsReasoning: true },
-  { id: "k2d6", name: "K2.6", supportsReasoning: true },
-];
-
 export const kimi_webProvider: RegistryEntry = {
   id: "kimi-web",
   // Distinct alias: the primary "kimi" provider (dedicated KimiExecutor) keeps
@@ -17,8 +12,15 @@ export const kimi_webProvider: RegistryEntry = {
   // Connect-RPC API. See `open-sse/executors/kimi-web.ts` for the wire format.
   baseUrl: "https://www.kimi.com",
   authType: "apikey",
-  authHeader: "Authorization",
-  // Curated-only catalog. Agent Swarm is excluded because it requires Kimi's
-  // parallel-agent tool protocol rather than ordinary chat routing.
-  models: KIMI_WEB_STATIC_MODELS,
+  authHeader: "cookie",
+  models: [
+    // Model ids are the `key` field from www.kimi.com's
+    // `/apiv2/kimi.gateway.config.v1.ConfigService/GetAvailableModels` response.
+    { id: "k2d6", name: "K2.6 Instant" },
+    { id: "k2d6-thinking", name: "K2.6 Thinking", supportsReasoning: true },
+    // Agent variants (k2d6-agent, k2d6-agent-ultra) use SCENARIO_OK_COMPUTER
+    // + kimiPlusId:"ok-computer" + agentMode fields that this executor does
+    // NOT shape yet. They are intentionally omitted from the catalog — users
+    // who need agentic Kimi should use the `kimi-coding` (api.kimi.com) provider.
+  ],
 };
