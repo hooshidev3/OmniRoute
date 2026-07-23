@@ -2,17 +2,25 @@
  * POST /:machineId/v1/chat/completions — OpenAI-compatible chat proxy.
  *
  * Reads the synced bundle from KV, resolves which provider to use based
- * on the requested model, forwards the request to the upstream provider
- * with the stored credentials, and streams the response back.
+ * on the requested model, applies reasoning routing rules + API key ACL,
+ * forwards the request to the upstream provider with the stored credentials,
+ * and streams the response back.
  *
- * Supports both streaming (SSE) and non-streaming responses.
- * Signs every response with X-Cloud-Sig (HMAC-SHA256).
+ * Features:
+ *   - API key ACL (allowedModels/Combos/Connections + schedule)
+ *   - Reasoning routing rules (effort mapping, model redirect)
+ *   - Provider fallback (try next provider on failure)
+ *   - Combo routing (resolve combo name → first model in combo)
+ *   - Streaming (SSE) and non-streaming responses
+ *   - HMAC-SHA256 response signing (non-streaming only)
  */
 
-import type { Env, SyncBundle } from "../types.ts";
+import type { Env, SyncBundle, BundleProvider, BundleApiKey, BundleCombo } from "../types.ts";
 import { getBundle } from "../lib/storage.ts";
-import { verifyApiKey, signResponse } from "../lib/hmac.ts";
-import { resolveProviderForModel } from "../lib/models.ts";
+import { signResponse } from "../lib/hmac.ts";
+import { findApiKey, checkAcl, checkConnectionAcl } from "../lib/acl.ts";
+import { matchReasoningRule, applyReasoningRule } from "../lib/reasoning.ts";
+import { resolveProvidersForModel } from "../lib/models.ts";
 
 export async function handleChat(request: Request, env: Env, machineId: string): Promise<Response> {
   const bundle = await getBundle(env, machineId);
@@ -20,13 +28,14 @@ export async function handleChat(request: Request, env: Env, machineId: string):
     return jsonError(404, "Bundle not found — sync first");
   }
 
-  // Verify Bearer token
+  // ── Verify Bearer token + find matching API key ──
   const authHeader = request.headers.get("Authorization");
-  if (!verifyApiKey(authHeader, bundle)) {
+  const apiKey = findApiKey(authHeader, bundle);
+  if (!apiKey) {
     return jsonError(401, "Invalid API key");
   }
 
-  // Parse request body
+  // ── Parse request body ──
   let body: Record<string, unknown>;
   try {
     body = await request.json();
@@ -39,70 +48,151 @@ export async function handleChat(request: Request, env: Env, machineId: string):
     return jsonError(400, "Missing 'model' field");
   }
 
+  // ── API key ACL check ──
+  const aclResult = checkAcl(apiKey, bundle, model);
+  if (!aclResult.ok) {
+    return jsonError(aclResult.status || 403, aclResult.error || "Access denied");
+  }
+
+  // ── Check if model is a combo name ──
+  const combo = bundle.combos.find((c) => c.name === model) || null;
+
+  // ── Reasoning routing ──
+  const sourceEffort =
+    typeof body.reasoning_effort === "string" ? body.reasoning_effort : undefined;
+  const tagsHeader = request.headers.get("x-omniroute-tags");
+  const requestTags = tagsHeader
+    ? tagsHeader
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+    : undefined;
+
+  const reasoningCtx = {
+    apiKey,
+    combo,
+    model,
+    sourceEffort,
+    requestTags,
+  };
+
+  const matchedRule = matchReasoningRule(bundle, reasoningCtx);
+  const { body: routedBody, result: reasoningResult } = applyReasoningRule(body, matchedRule);
+  body = routedBody;
+
+  // If reasoning rule redirected to a combo, resolve the combo's first model
+  let effectiveModel = model;
+  if (reasoningResult.targetKind === "combo" && reasoningResult.targetComboId) {
+    const targetCombo = bundle.combos.find((c) => c.id === reasoningResult.targetComboId);
+    if (targetCombo) {
+      // Use the first model in the combo's models array
+      const comboModels = Array.isArray(targetCombo.models) ? targetCombo.models : [];
+      if (comboModels.length > 0) {
+        const firstModel = comboModels[0] as Record<string, unknown>;
+        if (typeof firstModel === "string") {
+          effectiveModel = firstModel;
+          body = { ...body, model: effectiveModel };
+        } else if (firstModel && typeof firstModel.model === "string") {
+          effectiveModel = firstModel.model;
+          body = { ...body, model: effectiveModel };
+        }
+      }
+    }
+  } else if (reasoningResult.targetModel) {
+    effectiveModel = reasoningResult.targetModel;
+  }
+
   const stream = body.stream === true;
 
-  // Resolve which provider to use
-  const provider = resolveProviderForModel(bundle, model);
-  if (!provider) {
+  // ── Resolve providers (with fallback chain) ──
+  const providers = resolveProvidersForModel(bundle, effectiveModel);
+  if (providers.length === 0) {
     return jsonError(503, "No active provider available");
   }
 
-  // Build upstream URL and headers
-  const upstream = buildUpstreamRequest(provider, body, stream);
-  if (!upstream) {
-    return jsonError(502, `Cannot build upstream request for provider: ${provider.provider}`);
+  // ── Filter providers by allowedConnections ACL ──
+  const allowedProviders = providers.filter((p) => checkConnectionAcl(apiKey, p.id));
+  if (allowedProviders.length === 0) {
+    return jsonError(403, "API key not allowed for any available provider connection");
   }
 
-  // Forward to upstream
-  try {
-    const upstreamResponse = await fetch(upstream.url, {
-      method: "POST",
-      headers: upstream.headers,
-      body: JSON.stringify(upstream.body),
-    });
-
-    if (!upstreamResponse.ok) {
-      const errorText = await upstreamResponse.text();
-      return jsonError(upstreamResponse.status, `Upstream error: ${errorText.slice(0, 500)}`);
+  // ── Try each provider in order (fallback) ──
+  let lastError: { status: number; message: string } | null = null;
+  for (let i = 0; i < allowedProviders.length; i++) {
+    const provider = allowedProviders[i];
+    const upstream = buildUpstreamRequest(provider, body, stream);
+    if (!upstream) {
+      lastError = {
+        status: 502,
+        message: `Cannot build upstream request for provider: ${provider.provider}`,
+      };
+      continue;
     }
 
-    // If streaming, pass through the SSE stream directly
-    if (stream && upstreamResponse.body) {
-      // For streaming responses, we can't sign the body (it's a stream).
-      // The client verifies the connection is alive via SSE keep-alive.
-      // Non-streaming responses are signed below.
-      return new Response(upstreamResponse.body, {
-        status: upstreamResponse.status,
+    try {
+      const upstreamResponse = await fetch(upstream.url, {
+        method: "POST",
+        headers: upstream.headers,
+        body: JSON.stringify(upstream.body),
+      });
+
+      if (!upstreamResponse.ok) {
+        const errorText = await upstreamResponse.text();
+        lastError = {
+          status: upstreamResponse.status,
+          message: `Upstream error (${provider.provider}): ${errorText.slice(0, 300)}`,
+        };
+        // If this is a 4xx error (client error), don't try next provider
+        // — the request itself is bad, retrying won't help.
+        if (upstreamResponse.status >= 400 && upstreamResponse.status < 500) {
+          return jsonError(upstreamResponse.status, lastError.message);
+        }
+        // 5xx → try next provider
+        continue;
+      }
+
+      // ── Success — stream or sign+return ──
+      if (stream && upstreamResponse.body) {
+        return new Response(upstreamResponse.body, {
+          status: upstreamResponse.status,
+          headers: {
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            Connection: "keep-alive",
+          },
+        });
+      }
+
+      const responseText = await upstreamResponse.text();
+      const sig = signResponse(env, responseText);
+
+      return new Response(responseText, {
+        status: 200,
         headers: {
-          "Content-Type": "text/event-stream",
-          "Cache-Control": "no-cache",
-          Connection: "keep-alive",
+          "Content-Type": "application/json",
+          ...(sig ? { "X-Cloud-Sig": sig } : {}),
         },
       });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      lastError = {
+        status: 502,
+        message: `Upstream fetch failed (${provider.provider}): ${message}`,
+      };
+      // Network error → try next provider
+      continue;
     }
-
-    // Non-streaming: read, sign, and return
-    const responseText = await upstreamResponse.text();
-    const sig = signResponse(env, responseText);
-
-    return new Response(responseText, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...(sig ? { "X-Cloud-Sig": sig } : {}),
-      },
-    });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return jsonError(502, `Upstream fetch failed: ${message}`);
   }
+
+  // All providers failed
+  return jsonError(lastError?.status || 502, lastError?.message || "All providers failed");
 }
 
 /**
  * Build the upstream request URL, headers, and body for a given provider.
  */
 function buildUpstreamRequest(
-  provider: SyncBundle["providers"][0],
+  provider: BundleProvider,
   body: Record<string, unknown>,
   stream: boolean
 ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } | null {

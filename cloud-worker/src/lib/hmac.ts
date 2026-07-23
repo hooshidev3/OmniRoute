@@ -19,7 +19,12 @@ export function signResponse(env: Env, body: string): string | null {
 
 /**
  * Verify a Bearer token against the sync bundle's API keys.
- * Returns the matching API key record, or null if no match.
+ * Returns true if the token matches an active API key.
+ *
+ * @deprecated Use findApiKey() from acl.ts instead — it returns the full
+ * API key record which is needed for ACL checks (allowedModels, schedule, etc).
+ * This function is kept for backward compatibility with verify.ts and models.ts
+ * which don't need ACL checks.
  */
 export function verifyApiKey(
   bearerToken: string | null,

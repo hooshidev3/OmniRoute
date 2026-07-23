@@ -47,6 +47,9 @@ async function handleSyncPost(request: Request, env: Env, machineId: string): Pr
       ? (body.modelAliases as Record<string, unknown>)
       : {};
   const providerNodes = Array.isArray(body.providerNodes) ? body.providerNodes : [];
+  const reasoningRoutingRules = Array.isArray(body.reasoningRoutingRules)
+    ? body.reasoningRoutingRules
+    : [];
 
   // ── Security: verify Bearer token ──
   // On first sync (no stored bundle), accept without auth (bootstrap).
@@ -73,6 +76,7 @@ async function handleSyncPost(request: Request, env: Env, machineId: string): Pr
     settings,
     modelAliases,
     providerNodes,
+    reasoningRoutingRules,
   };
 
   await storeBundle(env, machineId, bundle);

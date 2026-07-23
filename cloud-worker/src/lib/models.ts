@@ -76,32 +76,63 @@ export function buildModelsResponse(bundle: SyncBundle): {
 
 /**
  * Resolve which provider to use for a given model.
- * Strategy: find the first active provider whose defaultModel matches,
- * or whose providerSpecificData indicates support for that model.
+ * Returns a single provider (the first match) or null if none available.
  *
- * This is a simplified resolver — the local OmniRoute instance handles
- * full combo routing. The worker just needs to find a provider that
- * can serve the request.
+ * Kept for backward compatibility — prefer resolveProvidersForModel()
+ * which returns a fallback chain.
  */
 export function resolveProviderForModel(
   bundle: SyncBundle,
   model: string
 ): SyncBundle["providers"][0] | null {
+  const chain = resolveProvidersForModel(bundle, model);
+  return chain.length > 0 ? chain[0] : null;
+}
+
+/**
+ * Resolve an ordered list of providers that can serve the given model.
+ * The first provider in the list is the primary; subsequent providers
+ * are fallbacks (tried in order if the primary fails with 5xx or network
+ * error).
+ *
+ * Ordering:
+ *   1. Exact match on defaultModel (sorted by priority, then globalPriority)
+ *   2. Provider prefix match (model "openai/gpt-4" → provider "openai")
+ *   3. All other active providers (sorted by priority) as last-resort fallback
+ */
+export function resolveProvidersForModel(
+  bundle: SyncBundle,
+  model: string
+): SyncBundle["providers"][0][] {
   const activeProviders = bundle.providers.filter((p) => p.isActive !== false);
-  if (activeProviders.length === 0) return null;
+  if (activeProviders.length === 0) return [];
+
+  // Sort by priority (ascending — lower number = higher priority)
+  const sortByPriority = (a: SyncBundle["providers"][0], b: SyncBundle["providers"][0]) => {
+    const pa = a.priority ?? a.globalPriority ?? 9999;
+    const pb = b.priority ?? b.globalPriority ?? 9999;
+    return pa - pb;
+  };
 
   // 1. Exact match on defaultModel
-  const exactMatch = activeProviders.find((p) => p.defaultModel === model);
-  if (exactMatch) return exactMatch;
+  const exactMatches = activeProviders.filter((p) => p.defaultModel === model).sort(sortByPriority);
+  if (exactMatches.length > 0) {
+    // Exact matches first, then other active providers as fallback
+    const fallbacks = activeProviders.filter((p) => p.defaultModel !== model).sort(sortByPriority);
+    return [...exactMatches, ...fallbacks];
+  }
 
   // 2. Provider prefix match (e.g. model "openai/gpt-4" → provider "openai")
   const slashIdx = model.indexOf("/");
   if (slashIdx > 0) {
     const prefix = model.slice(0, slashIdx);
-    const prefixMatch = activeProviders.find((p) => p.provider === prefix);
-    if (prefixMatch) return prefixMatch;
+    const prefixMatches = activeProviders.filter((p) => p.provider === prefix).sort(sortByPriority);
+    if (prefixMatches.length > 0) {
+      const fallbacks = activeProviders.filter((p) => p.provider !== prefix).sort(sortByPriority);
+      return [...prefixMatches, ...fallbacks];
+    }
   }
 
-  // 3. First active provider (fallback — let the upstream decide)
-  return activeProviders[0];
+  // 3. All active providers sorted by priority (let the upstream decide)
+  return [...activeProviders].sort(sortByPriority);
 }

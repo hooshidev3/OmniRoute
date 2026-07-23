@@ -29,6 +29,23 @@ export interface BundleApiKey {
   allowedModels?: string[];
   allowedCombos?: string[];
   allowedConnections?: string[];
+  /** Whether this is a management-scope key (bypasses ACL checks). */
+  isManagement?: boolean;
+  /** Throttle: minimum ms between requests. 0 = no throttle. */
+  throttleDelayMs?: number;
+  /** Rate limit: max requests per minute. 0 = unlimited. */
+  maxRequestsPerMinute?: number;
+  /** Rate limit: max requests per day. 0 = unlimited. */
+  maxRequestsPerDay?: number;
+  /** Access schedule (cron-like). Undefined = always allowed. */
+  accessSchedule?: {
+    daysOfWeek?: number[]; // 0=Sun, 6=Sat
+    startHour?: number; // 0-23
+    endHour?: number; // 0-23
+    timezone?: string;
+  };
+  /** Whether to log requests made with this key. */
+  noLog?: boolean;
 }
 
 /** A combo from the sync bundle. */
@@ -40,6 +57,32 @@ export interface BundleCombo {
   sortOrder?: number;
 }
 
+/** A reasoning routing rule from the sync bundle. */
+export interface BundleReasoningRule {
+  id: string;
+  name?: string;
+  description?: string;
+  scope?: string; // "global" | "apiKey" | "combo" | "connection"
+  apiKeyId?: string;
+  comboId?: string;
+  connectionId?: string;
+  modelPattern?: string;
+  sourceEffort?: string;
+  requestTags?: string[];
+  tagMatchMode?: string; // "any" | "all" | "none"
+  effortMode?: string; // "map" | "strip" | "passthrough"
+  targetEffort?: string; // "low" | "medium" | "high" | "xhigh" | "max"
+  targetKind?: string; // "model" | "combo"
+  targetModel?: string;
+  targetComboId?: string;
+  budgetAction?: string;
+  budgetTokens?: number;
+  priority?: number;
+  enabled?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 /** The full sync bundle stored in KV. */
 export interface SyncBundle {
   version: string;
@@ -49,6 +92,8 @@ export interface SyncBundle {
   combos: BundleCombo[];
   apiKeys: BundleApiKey[];
   settings: Record<string, unknown>;
+  /** Reasoning routing rules — applied before forwarding to upstream. */
+  reasoningRoutingRules?: BundleReasoningRule[];
   /** Timestamp of last sync (ISO string). */
   syncedAt?: string;
 }
