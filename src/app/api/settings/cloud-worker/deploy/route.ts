@@ -158,32 +158,22 @@ export async function POST(request: Request) {
       }),
     }).catch(() => {});
 
-    // ── Step 8: Save worker URL + secret to settings DB ──
+    // ── Step 8: Save worker URL + cloud sync secret to settings DB ──
+    // Both cloudUrl AND cloudSyncSecret are stored in the DB so the local
+    // OmniRoute instance can use them without requiring manual .env edits.
+    // cloudSync.ts reads the secret from env first, then falls back to DB.
     await updateSettings({
       cloudUrl: workerUrl,
+      cloudSyncSecret: cloudSecret,
     });
-
-    // Also save the secret to env for the local sync client to use
-    // (the local client needs it to verify HMAC signatures)
-    try {
-      const { getSettings } = await import("@/lib/db/settings");
-      const settings = await getSettings();
-      // Store the secret in key_value so cloudSync.ts can read it
-      // cloudSync.ts reads from process.env.OMNIROUTE_CLOUD_SYNC_SECRET
-      // We can't set env at runtime, but we can store it in DB and
-      // have cloudSync.ts fall back to DB if env is empty.
-      // For now, instruct the user to set it in .env.
-    } catch {
-      // best-effort
-    }
 
     return NextResponse.json({
       success: true,
       workerUrl,
       kvNamespaceId,
-      secret: cloudSecret, // returned once so user can set it in .env
+      secret: cloudSecret, // also saved to DB — returned for transparency
       message:
-        "Worker deployed successfully. Set OMNIROUTE_CLOUD_SYNC_SECRET in .env to enable HMAC verification.",
+        "Worker deployed successfully. Cloud sync secret saved to database — HMAC verification is active. No manual .env edit required.",
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

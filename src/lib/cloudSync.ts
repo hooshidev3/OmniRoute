@@ -4,6 +4,39 @@ import { buildConfigSyncEnvelope, toLegacyCloudSyncPayload } from "@/lib/sync/bu
 
 const CLOUD_URL = process.env.CLOUD_URL || process.env.NEXT_PUBLIC_CLOUD_URL;
 const CLOUD_SYNC_TIMEOUT_MS = Number(process.env.CLOUD_SYNC_TIMEOUT_MS || 12000);
+
+// CLOUD_SYNC_SECRET: read from env first, then fall back to DB.
+// The DB fallback is set by:
+//   - POST /api/sync/cloud/setup (Deploy Button flow — calls Worker /setup)
+//   - POST /api/settings/cloud-worker/deploy (Auto-Deploy flow — generates secret)
+// This allows both flows to work without requiring the user to manually edit .env.
+let _CLOUD_SYNC_SECRET: string | null = null;
+let _CLOUD_SYNC_SECRET_LOADED = false;
+
+async function getCloudSyncSecret(): Promise<string> {
+  // Check env var first (highest priority — operators may override)
+  const envSecret = process.env.OMNIROUTE_CLOUD_SYNC_SECRET;
+  if (envSecret) return envSecret;
+
+  // Lazy-load from DB (cached after first read)
+  if (_CLOUD_SYNC_SECRET_LOADED) return _CLOUD_SYNC_SECRET || "";
+  _CLOUD_SYNC_SECRET_LOADED = true;
+  try {
+    const { getSettings } = await import("@/lib/db/settings");
+    const settings = await getSettings();
+    const dbSecret =
+      typeof settings.cloudSyncSecret === "string"
+        ? settings.cloudSyncSecret.trim()
+        : "";
+    _CLOUD_SYNC_SECRET = dbSecret || null;
+    return dbSecret;
+  } catch {
+    return "";
+  }
+}
+
+// Backward-compat: keep CLOUD_SYNC_SECRET as a synchronous getter for code
+// that expects a synchronous value. Falls back to env only (DB read is async).
 const CLOUD_SYNC_SECRET = process.env.OMNIROUTE_CLOUD_SYNC_SECRET || "";
 
 // Opt-in: only when explicitly set to "true" will updateLocalTokens overwrite
@@ -43,14 +76,15 @@ function toDateMs(value: unknown): number {
 // If `OMNIROUTE_CLOUD_SYNC_SECRET` is unset, signature validation is logged but
 // not enforced (back-compat for users on v3.8.x who haven't issued a shared
 // secret yet). The enforce-by-default switch will flip in v3.9.
-export function verifyCloudSignature(rawBody: string, sigHeader: string | null): boolean {
-  if (!CLOUD_SYNC_SECRET) {
+export async function verifyCloudSignature(rawBody: string, sigHeader: string | null): Promise<boolean> {
+  const secret = await getCloudSyncSecret();
+  if (!secret) {
     if (sigHeader) {
       // We can't verify, but the server is at least trying. Pass through.
       return true;
     }
     console.warn(
-      "[cloudSync] OMNIROUTE_CLOUD_SYNC_SECRET is not set and the Cloud response carries no X-Cloud-Sig. " +
+      "[cloudSync] cloudSyncSecret is not set (env or DB) and the Cloud response carries no X-Cloud-Sig. " +
         "Token sync runs in legacy unverified mode — set the secret to enforce HMAC verification."
     );
     return true;
@@ -59,7 +93,7 @@ export function verifyCloudSignature(rawBody: string, sigHeader: string | null):
     console.warn("[cloudSync] Cloud response missing X-Cloud-Sig — rejecting payload.");
     return false;
   }
-  const expected = crypto.createHmac("sha256", CLOUD_SYNC_SECRET).update(rawBody).digest("hex");
+  const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
   try {
     const expectedBuf = Buffer.from(expected, "hex");
     const actualBuf = Buffer.from(sigHeader, "hex");
@@ -122,7 +156,7 @@ export async function syncToCloud(machineId, createdKey = null) {
   // JSON-parsed field. Order matters: parse only after verification passes.
   const rawBody = await response.text();
   const sigHeader = response.headers.get("X-Cloud-Sig");
-  if (!verifyCloudSignature(rawBody, sigHeader)) {
+  if (!(await verifyCloudSignature(rawBody, sigHeader))) {
     return { error: "Cloud sync signature verification failed" };
   }
 
