@@ -164,7 +164,7 @@ export async function handleChat(request: Request, env: Env, machineId: string):
       }
 
       const responseText = await upstreamResponse.text();
-      const sig = signResponse(env, responseText);
+      const sig = await signResponse(env, responseText);
 
       return new Response(responseText, {
         status: 200,

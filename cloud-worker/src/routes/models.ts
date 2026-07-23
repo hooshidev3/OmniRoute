@@ -28,7 +28,7 @@ export async function handleModels(
 
   const modelsResponse = buildModelsResponse(bundle);
   const responseJson = JSON.stringify(modelsResponse);
-  const sig = signResponse(env, responseJson);
+  const sig = await signResponse(env, responseJson);
 
   return new Response(responseJson, {
     status: 200,

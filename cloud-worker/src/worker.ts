@@ -2,6 +2,7 @@
  * OmniRoute Cloud Worker — main entry point.
  *
  * Routes:
+ *   GET    /setup                               → one-time secret exchange
  *   POST   /sync/:machineId                    → store sync bundle
  *   DELETE /sync/:machineId                    → delete sync bundle
  *   GET    /:machineId/v1/verify               → health check
@@ -15,6 +16,7 @@ import { handleSync } from "./routes/sync.ts";
 import { handleVerify } from "./routes/verify.ts";
 import { handleModels } from "./routes/models.ts";
 import { handleChat } from "./routes/chat.ts";
+import { handleSetup } from "./routes/setup.ts";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -24,6 +26,11 @@ export default {
     // ── CORS preflight ──
     if (request.method === "OPTIONS") {
       return corsResponse();
+    }
+
+    // ── Route: /setup (one-time secret exchange) ──
+    if (path === "/setup") {
+      return handleSetup(request, env);
     }
 
     // ── Route: /sync/:machineId ──

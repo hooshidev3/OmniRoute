@@ -1,0 +1,20 @@
+# OmniRoute Cloud Worker — example secrets file.
+#
+# Copy this file to `.dev.vars` (for local dev with `wrangler dev`) or set
+# the secret in production with `wrangler secret put CLOUD_SYNC_SECRET`.
+#
+# When deploying via the Cloudflare "Deploy to Workers" button, you do NOT
+# need this file. Instead, after deploy, either:
+#   - Use the OmniRoute /setup endpoint (recommended), OR
+#   - Run: wrangler secret put CLOUD_SYNC_SECRET
+
+# HMAC signing secret for response verification.
+# The local OmniRoute instance must have the same value in
+# OMNIROUTE_CLOUD_SYNC_SECRET (env var) or cloudSyncSecret (DB setting).
+#
+# Generate with: openssl rand -hex 32
+CLOUD_SYNC_SECRET=
+
+# Optional: comma-separated list of allowed upstream provider hosts.
+# Empty = allow all.
+# ALLOWED_UPSTREAM_HOSTS=api.openai.com,api.anthropic.com

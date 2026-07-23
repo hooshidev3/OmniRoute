@@ -4,11 +4,12 @@
 
 ۱. [معرفی](#۱-معرفی)
 ۲. [پیش‌نیازها](#۲-پیش‌نیازها)
-۳. [نصب دستی](#۳-نصب-دستی)
-۴. [تنظیم OmniRoute محلی](#۴-تنظیم-omniroute-محلی)
-۵. [تأیید عملکرد](#۵-تأیید-عملکرد)
-۶. [مدیریت و نگهداری](#۶-مدیریت-و-نگهداری)
-۷. [عیب‌یابی](#۷-عیب‌یابی)
+۳. [نصب سریع (Deploy Button)](#۳-نصب-سریع-deploy-button)
+۴. [نصب دستی](#۴-نصب-دستی)
+۵. [تنظیم OmniRoute محلی](#۵-تنظیم-omniroute-محلی)
+۶. [تأیید عملکرد](#۶-تأیید-عملکرد)
+۷. [مدیریت و نگهداری](#۷-مدیریت-و-نگهداری)
+۸. [عیب‌یابی](#۸-عیب‌یابی)
 
 ---
 
@@ -54,13 +55,86 @@ OmniRoute محلی                          کلاینت distant
 ## ۲. پیش‌نیازها
 
 - حساب Cloudflare (رایگان کافی است)
-- `wrangler` CLI نصب‌شده: `npm install -g wrangler`
-- Node.js ≥ ۱۸
 - OmniRoute محلی با Cloud Sync فعال
 
 ---
 
-## ۳. نصب دستی
+## ۳. نصب سریع (Deploy Button)
+
+ساده‌ترین روش — فقط یک کلیک، بدون نیاز به API Token یا wrangler CLI.
+
+### مرحله ۱: کلیک روی دکمه Deploy
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/hooshidev3/OmniRoute/tree/main/cloud-worker)
+
+یا این لینک را در مرورگر باز کنید:
+
+```
+https://deploy.workers.cloudflare.com/?url=https://github.com/hooshidev3/OmniRoute/tree/main/cloud-worker
+```
+
+### مرحله ۲: لاگین در Cloudflare
+
+مرورگر شما به داشبورد Cloudflare هدایت می‌شود. اگر لاگین نکرده‌اید، وارد شوید یا حساب رایگان بسازید.
+
+### مرحله ۳: تنظیم پروژه
+
+Cloudflare به‌صورت خودکار:
+
+- ریپازیتوری را fork می‌کند (به حساب GitHub/GitLab شما)
+- KV namespace را می‌سازد و به Worker متصل می‌کند
+- Worker را build و deploy می‌کند
+- CI/CD را تنظیم می‌کند (هر push → deploy خودکار)
+
+نام Worker و ریپازیتوری را می‌توانید شخصی‌سازی کنید.
+
+### مرحله ۴: دریافت آدرس Worker
+
+پس از اتمام deploy، آدرس Worker را از داشبورد Cloudflare کپی کنید:
+
+```
+https://<worker-name>.<your-subdomain>.workers.dev
+```
+
+### مرحله ۵: تبادل خودکار Secret
+
+Worker یک endpoint `/setup` دارد که یک secret تولید و در KV ذخیره می‌کند. OmniRoute محلی این endpoint را صدا می‌زند:
+
+```bash
+# جای <worker-url> آدرس Worker خود را قرار دهید
+curl https://<worker-url>/setup
+```
+
+خروجی:
+
+```json
+{
+  "success": true,
+  "secret": "a1b2c3d4e5f6...",
+  "instructions": "Set this as OMNIROUTE_CLOUD_SYNC_SECRET..."
+}
+```
+
+این secret را فقط یک بار می‌توانید دریافت کنید. آن را کپی کنید.
+
+### مرحله ۶: تنظیم OmniRoute محلی
+
+در داشبورد OmniRoute → Settings → Cloud Sync:
+
+1. `CLOUD_URL` را برابر آدرس Worker قرار دهید
+2. `OMNIROUTE_CLOUD_SYNC_SECRET` را برابر secret دریافتی قرار دهید
+3. Cloud Sync را فعال کنید
+
+یا در فایل `.env`:
+
+```bash
+CLOUD_URL=https://<worker-name>.<your-subdomain>.workers.dev
+OMNIROUTE_CLOUD_SYNC_SECRET=<secret-from-step-5>
+```
+
+---
+
+## ۴. نصب دستی
 
 ### مرحله ۱: ورود به Cloudflare
 

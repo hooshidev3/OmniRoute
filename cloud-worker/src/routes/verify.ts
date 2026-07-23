@@ -36,7 +36,7 @@ export async function handleVerify(
   };
 
   const responseJson = JSON.stringify(responseData);
-  const sig = signResponse(env, responseJson);
+  const sig = await signResponse(env, responseJson);
 
   return new Response(responseJson, {
     status: 200,

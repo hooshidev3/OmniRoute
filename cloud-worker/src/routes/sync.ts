@@ -97,7 +97,7 @@ async function handleSyncPost(request: Request, env: Env, machineId: string): Pr
   };
 
   const responseJson = JSON.stringify(responseData);
-  const sig = signResponse(env, responseJson);
+  const sig = await signResponse(env, responseJson);
 
   return new Response(responseJson, {
     status: 200,
@@ -127,7 +127,7 @@ async function handleSyncDelete(request: Request, env: Env, machineId: string): 
 
   const responseData = { success: true, message: "Deleted successfully" };
   const responseJson = JSON.stringify(responseData);
-  const sig = signResponse(env, responseJson);
+  const sig = await signResponse(env, responseJson);
 
   return new Response(responseJson, {
     status: 200,

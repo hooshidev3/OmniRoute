@@ -4,17 +4,46 @@
  * The local OmniRoute instance verifies `X-Cloud-Sig` on every response
  * using `crypto.timingSafeEqual`. If the secret is not set on either side,
  * signing is skipped (backward-compat until v3.9 enforcement).
+ *
+ * Secret resolution order:
+ *   1. env.CLOUD_SYNC_SECRET (set via wrangler secret put or Deploy Button)
+ *   2. KV key "secret:cloud-sync" (set by the /setup endpoint)
+ *   3. null (no signing — backward-compat mode)
  */
 
 import type { Env } from "../types.ts";
+
+/** KV key where the /setup endpoint stores the generated secret. */
+const SECRET_KV_KEY = "secret:cloud-sync";
+
+/**
+ * Resolve the cloud sync secret from env or KV.
+ * Called by signResponse() and verifyApiKey() paths.
+ */
+async function getCloudSyncSecret(env: Env): Promise<string | null> {
+  // 1. Check env (set via wrangler secret put or Deploy Button)
+  if (env.CLOUD_SYNC_SECRET) return env.CLOUD_SYNC_SECRET;
+
+  // 2. Check KV (set by /setup endpoint)
+  try {
+    const kvSecret = await env.BUNDLES.get(SECRET_KV_KEY);
+    if (kvSecret) return kvSecret;
+  } catch {
+    // KV read failed — fall through to null
+  }
+
+  // 3. No secret configured
+  return null;
+}
 
 /**
  * Sign a response body with HMAC-SHA256.
  * Returns the hex digest, or null if no secret is configured.
  */
-export function signResponse(env: Env, body: string): string | null {
-  if (!env.CLOUD_SYNC_SECRET) return null;
-  return hmacSha256(env.CLOUD_SYNC_SECRET, body);
+export async function signResponse(env: Env, body: string): Promise<string | null> {
+  const secret = await getCloudSyncSecret(env);
+  if (!secret) return null;
+  return hmacSha256(secret, body);
 }
 
 /**
