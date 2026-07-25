@@ -161,15 +161,15 @@ export function stopFeVersionRefresh(): void {
  * @param hardcodedToken  If set, skip guest init and use this JWT directly.
  */
 export async function initializeSession(hardcodedToken?: string): Promise<ZaiSession> {
+  let feVersion = DEFAULT_FE_VERSION;
+  try {
+    feVersion = await scrapeFeVersion();
+  } catch {
+    // fall back to default if scrape fails
+  }
+
   if (hardcodedToken) {
     const { id, name } = decodeJwt(hardcodedToken);
-    // Always scrape the latest fe-version — Z.AI rejects stale versions with 405
-    let feVersion = DEFAULT_FE_VERSION;
-    try {
-      feVersion = await scrapeFeVersion();
-    } catch {
-      // fall back to default if scrape fails
-    }
     return {
       token: hardcodedToken,
       userId: id,
@@ -180,7 +180,6 @@ export async function initializeSession(hardcodedToken?: string): Promise<ZaiSes
     };
   }
 
-  const feVersion = await scrapeFeVersion();
   const headers: Record<string, string> = {
     Origin: BASE_URL,
     Referer: `${BASE_URL}/`,

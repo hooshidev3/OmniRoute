@@ -1,4 +1,4 @@
--- Migration 118: provider_session_mappings
+-- Migration 121: provider_session_mappings
 -- Maps (connectionId + agentChatId + provider) → providerConversationId
 -- Used by providerSessionRegistry.ts for multi-turn conversation continuity.
 

@@ -216,7 +216,9 @@ async function checkAndRefresh(): Promise<void> {
  *
  * @param dbPath  Path to the RouteChi SQLite database.
  */
-export function startAutoRefreshDaemon(dbPath: string): void {
+export function startAutoRefreshDaemon(): void {
+  const dbPath =
+    process.env.OMNIROUTE_DATA_DIR || (process.env.HOME ? `${process.env.HOME}/.omniroute` : ".");
   // Initialize settings store and device token pool
   initSettingsStore(dbPath);
   initDeviceTokenPool(dbPath);

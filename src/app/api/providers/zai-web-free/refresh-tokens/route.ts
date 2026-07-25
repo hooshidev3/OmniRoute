@@ -7,7 +7,6 @@ import {
   getPoolSize,
   initDeviceTokenPool,
 } from "@omniroute/open-sse/executors/zai-web-free/device-token-pool.ts";
-import { isZaiWebFreeDisabled } from "@omniroute/open-sse/executors/zai-web-free/feature-flag.ts";
 import { resolveProxyForScopeFromRegistry } from "@/lib/localDb";
 
 const log = logger("ZAI-WEB-FREE-ADMIN");
@@ -92,19 +91,6 @@ function proxyConfigToUrl(
 export async function POST(request: Request) {
   const authError = await requireManagementAuth(request);
   if (authError) return authError;
-
-  // Refuse to spawn a Playwright browser when the provider is disabled —
-  // it would collect tokens that the executor can never consume, wasting
-  // resources (each Playwright launch is ~50MB of memory + ~30s of CPU).
-  if (isZaiWebFreeDisabled()) {
-    return NextResponse.json(
-      {
-        error:
-          "zai-web-free is disabled via OMNIROUTE_ZAI_WEB_FREE_DISABLED env var. Token refresh refused.",
-      },
-      { status: 503 }
-    );
-  }
 
   let body: {
     tokens?: number;

@@ -478,56 +478,39 @@ export async function registerNodejs(): Promise<void> {
           console.warn("[STARTUP] Auto-refresh daemon failed to start (non-fatal):", msg);
         }),
 
-    // Z.AI Free Web device-token auto-refresh daemon — periodically checks the
-    // pool size and triggers a Playwright token-collection run when it drops
-    // below `minPoolSize` (default 10). Without this, the pool empties after
-    // ~20 requests and the executor falls back to slow browser-captcha on
-    // every call. Skipped when the provider is disabled via env or when
-    // background services are disabled. Non-fatal — Playwright may not be
-    // installed in all deployment shapes (e.g. minimal Docker images).
-    try {
-      const { isZaiWebFreeDisabled } =
-        await import("@omniroute/open-sse/executors/zai-web-free/feature-flag.ts");
-      if (!isZaiWebFreeDisabled()) {
-        const { startAutoRefreshDaemon } =
-          await import("@omniroute/open-sse/executors/zai-web-free/auto-refresh-daemon.ts");
-        const dataDir =
-          process.env.OMNIROUTE_DATA_DIR ||
-          (process.env.HOME ? `${process.env.HOME}/.omniroute` : ".");
-        startAutoRefreshDaemon(`${dataDir}/omniroute.db`);
-        console.log("[STARTUP] Z.AI Free Web device-token auto-refresh daemon started");
-      } else {
-        console.log("[STARTUP] Z.AI Free Web device-token daemon skipped (provider disabled)");
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.warn("[STARTUP] Z.AI Free Web daemon failed to start (non-fatal):", msg);
-    }
+      // Z.AI Free Web device-token auto-refresh daemon — periodically checks the
+      // pool size and triggers a Playwright token-collection run when it drops
+      // below `minPoolSize` (default 10). Without this, the pool empties after
+      // ~20 requests and the executor falls back to slow browser-captcha on
+      // every call. Skipped when the provider is disabled via env or when
+      // background services are disabled. Non-fatal — Playwright may not be
+      // installed in all deployment shapes (e.g. minimal Docker images).
+      import("@omniroute/open-sse/executors/zai-web-free/auto-refresh-daemon.ts")
+        .then((m) => m.startAutoRefreshDaemon())
+        .catch((err: unknown) => {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.warn("[STARTUP] Z.AI Free Web daemon failed to start (non-fatal):", msg);
+        }),
 
-    // Z.AI fe-version periodic refresh — scrapes chat.z.ai homepage every 5
-    // minutes to keep the x-fe-Version header current. Z.AI's nginx returns
-    // 405 for stale versions. Non-fatal if the scrape fails.
-    try {
-      const { startFeVersionRefresh } =
-        await import("@omniroute/open-sse/executors/zai-web-free/session.ts");
-      startFeVersionRefresh();
-      console.log("[STARTUP] Z.AI fe-version periodic refresh started (5 min interval)");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.warn("[STARTUP] Z.AI fe-version refresh failed to start (non-fatal):", msg);
-    }
+      // Z.AI fe-version periodic refresh — scrapes chat.z.ai homepage every 5
+      // minutes to keep the x-fe-Version header current. Z.AI's nginx returns
+      // 405 for stale versions. Non-fatal if the scrape fails.
+      import("@omniroute/open-sse/executors/zai-web-free/session.ts")
+        .then((m) => m.startFeVersionRefresh())
+        .catch((err: unknown) => {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.warn("[STARTUP] Z.AI fe-version refresh failed to start (non-fatal):", msg);
+        }),
 
-    // Proactive connection-cooldown recovery (#8): re-validate connections whose
-    // transient `rate_limited_until` window has elapsed OUTSIDE the request hot path,
-    // so the first request after a cooldown does not pay the probe latency.
-    // Lazy/self-recovery still happens in getProviderCredentials; this front-runs it.
-    try {
-      const { initConnectionRecoveryScheduler } = await import("@/lib/quota/connectionRecovery");
-      initConnectionRecoveryScheduler();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.warn("[STARTUP] Connection recovery scheduler failed to start (non-fatal):", msg);
-    }
+      // Proactive connection-cooldown recovery (#8): re-validate connections whose
+      // transient `rate_limited_until` window has elapsed OUTSIDE the request hot path,
+      // so the first request after a cooldown does not pay the probe latency.
+      import("@/lib/quota/connectionRecovery")
+        .then((m) => m.initConnectionRecoveryScheduler())
+        .catch((err: unknown) => {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.warn("[STARTUP] Connection recovery scheduler failed to start (non-fatal):", msg);
+        }),
 
       // Arena ELO sync: model intelligence from the Arena AI leaderboard, powering the
       // Free Provider Rankings page. On by default; non-blocking, never fatal.
