@@ -17,6 +17,7 @@ import { isValidationFailure, validateBody } from "@/shared/validation/helpers";
 import { requireManagementAuth } from "@/lib/api/requireManagementAuth";
 import { QUOTA_MODEL_PREFIX } from "@/lib/quota/quotaModelNaming";
 import { comboErrorResponse } from "@/lib/api/comboErrorResponse";
+import { ComboInvariantError } from "@/lib/combos/invariants";
 
 // Minimal shape for the fields we read off a combo row in this route.
 // `getComboById` returns a structurally `JsonRecord`-typed object, so we
@@ -149,17 +150,17 @@ export async function PUT(request, { params }) {
     const normalizedUpdate = { ...validation.data };
     if (normalizedUpdate.compressionOverride !== undefined) {
       const legacyCompressionOverride = normalizedUpdate.compressionOverride;
-    const nextConfig: Record<string, unknown> =
-      currentCombo.config &&
-      typeof currentCombo.config === "object" &&
-      !Array.isArray(currentCombo.config)
-        ? { ...(currentCombo.config as Record<string, unknown>) }
-        : {};
-    if (legacyCompressionOverride) {
-      nextConfig.compressionMode = legacyCompressionOverride;
-    } else {
-      delete nextConfig.compressionMode;
-    }
+      const nextConfig: Record<string, unknown> =
+        currentCombo.config &&
+        typeof currentCombo.config === "object" &&
+        !Array.isArray(currentCombo.config)
+          ? { ...(currentCombo.config as Record<string, unknown>) }
+          : {};
+      if (legacyCompressionOverride) {
+        nextConfig.compressionMode = legacyCompressionOverride;
+      } else {
+        delete nextConfig.compressionMode;
+      }
       normalizedUpdate.config = nextConfig;
       delete normalizedUpdate.compressionOverride;
     }
@@ -233,12 +234,7 @@ export async function PUT(request, { params }) {
               : dagError instanceof Error && /depth/i.test(dagError.message)
                 ? "max-depth-exceeded"
                 : "invalid-graph";
-          return comboErrorResponse(
-            "COMBO_005",
-            400,
-            { comboName, reason },
-            request
-          );
+          return comboErrorResponse("COMBO_005", 400, { comboName, reason }, request);
         }
       }
     }
@@ -250,6 +246,9 @@ export async function PUT(request, { params }) {
 
     return NextResponse.json(combo);
   } catch (error) {
+    if (error instanceof ComboInvariantError) {
+      return comboErrorResponse("COMBO_008", 400, { reason: error.message }, request);
+    }
     console.log("Error updating combo:", error);
     return comboErrorResponse("INTERNAL_001", 500, undefined, request);
   }
